@@ -211,8 +211,18 @@ for game in games:
 df = pd.DataFrame(rows)
 
 # Save to repo data folder
+import os
+from datetime import datetime
+
 os.makedirs("data", exist_ok=True)
-stamp = datetime.utcnow().strftime("%Y-%m-%d")
+
+# Add date + hour (UTC) stamp: YYYY-MM-DD-HHMM
+stamp = datetime.utcnow().strftime("%Y-%m-%d-%H%M")
+
 df.to_csv(f"data/odds_api_data_{stamp}.csv", index=False)
+df.to_csv("data/odds_api_data_latest.csv", index=False)
+
 print(f"Saved {len(df)} rows to data/odds_api_data_{stamp}.csv and data/odds_api_data_latest.csv")
+
+
 
