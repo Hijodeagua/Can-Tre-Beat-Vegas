@@ -214,5 +214,5 @@ df = pd.DataFrame(rows)
 os.makedirs("data", exist_ok=True)
 stamp = datetime.utcnow().strftime("%Y-%m-%d")
 df.to_csv(f"data/odds_api_data_{stamp}.csv", index=False)
-df.to_csv("data/odds_api_data_latest.csv", index=False)
 print(f"Saved {len(df)} rows to data/odds_api_data_{stamp}.csv and data/odds_api_data_latest.csv")
+
