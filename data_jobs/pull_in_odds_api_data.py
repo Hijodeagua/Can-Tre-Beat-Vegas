@@ -1,9 +1,6 @@
 # Imports
 
 # %%
-!pip install geopy
-
-# %%
 import requests
 import pandas as pd
 from datetime import datetime
@@ -271,4 +268,5 @@ df.to_csv(f"data/odds_api_data_{stamp}.csv", index=False)
 
 
 # %%
+
 
