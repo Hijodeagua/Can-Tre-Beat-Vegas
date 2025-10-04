@@ -1,21 +1,28 @@
-name: Run notebook daily
+# .github/workflows/run-odds-job.yml
+name: Run odds API job daily
 
 on:
   schedule:
-    # Runs every day at 13:00 UTC (9:00 AM Eastern during EDT; 8:00 AM during EST)
+    # Runs every day at 13:00 UTC (9:00 AM ET during DST; 8:00 AM ET during Standard Time)
     - cron: "0 13 * * *"
   workflow_dispatch: {}
 
 permissions:
-  contents: write  # required to push changes back
+  contents: write  # required to push changes back to the repo
+
+concurrency:
+  group: odds-api-daily
+  cancel-in-progress: false
 
 jobs:
-  run-notebook:
+  run-job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -28,19 +35,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Option A (recommended): run with papermill so outputs are saved
-      - name: Execute notebook with papermill
+      - name: Execute odds API job
         run: |
-          papermill pull_in_odds_api_data.py pull_in_odds_api_data.py
-
-      # If your notebook needs secrets (API keys), expose them as env vars:
-      # env:
-      #   MY_API_KEY: ${{ secrets.MY_API_KEY }}
+          python data_jobs/pull_in_odds_api_data.py
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
 
       - name: Commit and push changes (if any)
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: daily notebook run"
+          commit_message: "chore: daily odds API run"
           file_pattern: |
             data/**
-            pull_in_api_data.ipynb
+            data_jobs/pull_in_odds_api_data.py
