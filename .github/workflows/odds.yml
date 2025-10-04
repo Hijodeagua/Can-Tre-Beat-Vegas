@@ -31,7 +31,7 @@ jobs:
       # Option A (recommended): run with papermill so outputs are saved
       - name: Execute notebook with papermill
         run: |
-          papermill pull_in_odds_api_data.ipynb pull_in_odds_api_data.ipynb
+          papermill pull_in_odds_api_data.py pull_in_odds_api_data.py
 
       # If your notebook needs secrets (API keys), expose them as env vars:
       # env:
