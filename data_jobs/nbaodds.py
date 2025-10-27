@@ -10,7 +10,7 @@ from geopy.distance import geodesic
 
 # ===== API KEY CONFIG =====
 # Prefer environment variable in prod/CI; fall back to a local hard-coded key for dev.
-HARDCODED_API_KEY = "1410a90e2f6f7c6e6fedc348ed537d9a"  # 👈 replace this with your real Odds API key
+HARDCODED_API_KEY = "change in local"  # 👈 replace this with your real Odds API key
 
 API_KEY = os.environ.get("ODDS_API_KEY") or HARDCODED_API_KEY
 
@@ -228,4 +228,5 @@ df.to_csv(file_timestamped, index=False)
 df.to_csv(file_latest, index=False)
 
 print(f"Saved {len(df)} rows to {file_timestamped} and {file_latest}")
+
 
