@@ -1,17 +1,19 @@
-# .github/workflows/run-odds-job.yml
-name: Run odds API job daily
+# DEPRECATED: Consider using unified-odds.yml instead for better API quota management
+# This workflow is kept for backwards compatibility but runs less frequently
+
+name: NFL Odds (legacy - 1x daily)
 
 on:
   schedule:
-    # Runs every day at 13:00 UTC (9:00 AM ET during DST; 8:00 AM ET during Standard Time)
-    - cron: "0 */6 * * *"
+    # Reduced from every 6 hours to once daily to conserve API quota
+    - cron: "0 14 * * *"  # 2:00 PM UTC (9:00 AM ET / 10:00 AM ET DST)
   workflow_dispatch: {}
 
 permissions:
-  contents: write  # required to push changes back to the repo
+  contents: write
 
 concurrency:
-  group: odds-api-daily
+  group: odds-api-nfl
   cancel-in-progress: false
 
 jobs:
@@ -35,16 +37,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute odds API job
+      - name: Execute NFL odds job
         run: |
-          python data_jobs/pull_in_odds_api_data.py
+          python -m data_jobs.odds_api.fetch_odds --sport nfl
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
 
       - name: Commit and push changes (if any)
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: daily odds API run"
+          commit_message: "NFL odds update (legacy workflow)"
           file_pattern: |
-            data/**
-            data_jobs/pull_in_odds_api_data.py
+            data/*.csv
+            data/api_usage.json

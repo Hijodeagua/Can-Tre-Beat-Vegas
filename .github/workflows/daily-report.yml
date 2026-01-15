@@ -1,0 +1,75 @@
+# Daily Report Generator - Creates visualizations from odds data
+# Runs after odds are fetched to generate analysis reports
+
+name: Daily Odds Report
+
+on:
+  schedule:
+    # Run daily at 23:00 UTC (6:00 PM ET / 7:00 PM ET DST)
+    # This is after games start, giving a full day's worth of odds movement
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Days of history to analyze'
+        required: false
+        default: '7'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-report
+  cancel-in-progress: false
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate daily report
+        run: |
+          days="${{ github.event.inputs.days || '7' }}"
+          python -m data_jobs.reports.generate_daily_report --days "$days" --output reports --data-dir data
+
+      - name: Commit and push reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add reports/ || true
+
+          if [ -n "$(git status --porcelain)" ]; then
+            timestamp=$(date -u +'%Y-%m-%d')
+            git commit -m "Daily odds report: $timestamp"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Upload report artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-report-${{ github.run_number }}
+          path: |
+            reports/*.html
+            reports/*.png
+          retention-days: 30
