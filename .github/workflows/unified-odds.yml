@@ -1,0 +1,85 @@
+# Unified Odds API workflow - Fetches both NFL and NBA odds
+# Optimized for free tier: runs 2x daily to conserve API quota (~60 requests/month)
+
+name: Unified Odds (2x daily)
+
+on:
+  schedule:
+    # Run twice daily:
+    # - 10:00 UTC (5:00 AM ET / 6:00 AM ET DST) - Morning snapshot
+    # - 22:00 UTC (5:00 PM ET / 6:00 PM ET DST) - Evening snapshot before games
+    - cron: "0 10 * * *"
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+    inputs:
+      sport:
+        description: 'Sport to fetch (nfl, nba, or all)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - nfl
+          - nba
+
+permissions:
+  contents: write
+
+concurrency:
+  group: unified-odds
+  cancel-in-progress: false
+
+jobs:
+  fetch-odds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Fetch odds data
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          sport="${{ github.event.inputs.sport || 'all' }}"
+          python -m data_jobs.odds_api.fetch_odds --sport "$sport"
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Add all data files including usage tracking
+          git add data/*.csv data/**/*.csv data/api_usage.json || true
+
+          if [ -n "$(git status --porcelain)" ]; then
+            timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "Odds update: $timestamp"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: odds-data-${{ github.run_number }}
+          path: |
+            data/*_latest.csv
+            data/**/*_latest.csv
+            data/api_usage.json
+          retention-days: 7
