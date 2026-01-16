@@ -11,21 +11,21 @@ on:
   workflow_dispatch:
     inputs:
       days:
-        description: 'Days of history to analyze'
+        description: "Days of history to analyze"
         required: false
-        default: '7'
+        default: "7"
         type: string
       skip_email:
-        description: 'Skip sending email'
+        description: "Skip sending email"
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 permissions:
   contents: write
 
 concurrency:
-  group: daily-report
+  group: daily-report-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -78,7 +78,7 @@ jobs:
           fi
 
       - name: Send email report
-        if: ${{ github.event.inputs.skip_email != 'true' && secrets.SMTP_PASSWORD != '' }}
+        if: ${{ github.event.inputs.skip_email != true && secrets.SMTP_PASSWORD != '' }}
         uses: dawidd6/action-send-mail@v3
         with:
           # SMTP server configuration (Gmail example - configure secrets for your provider)
