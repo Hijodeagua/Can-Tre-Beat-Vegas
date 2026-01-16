@@ -3,47 +3,143 @@
 <head>
 <title>Daily Odds Report - 2026-01-16</title>
 <style>
-body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-h2 { color: #34495e; margin-top: 30px; }
-.sport-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-img { max-width: 100%; height: auto; margin: 10px 0; border-radius: 4px; }
-.timestamp { color: #7f8c8d; font-size: 0.9em; }
-.no-data { color: #95a5a6; font-style: italic; }
+
+        body { font-family: Arial, sans-serif; max-width: 1400px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 10px; }
+        h3 { color: #7f8c8d; margin-top: 20px; }
+        .sport-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        img { max-width: 100%; height: auto; margin: 10px 0; border-radius: 4px; }
+        .timestamp { color: #7f8c8d; font-size: 0.9em; }
+        .no-data { color: #95a5a6; font-style: italic; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #3498db; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .highlight { background: #fff3cd; }
+        .winner { color: #27ae60; font-weight: bold; }
+        .underdog { color: #e74c3c; }
+        .accuracy-best { background: #d4edda; }
+        .section-divider { border-top: 2px dashed #bdc3c7; margin: 30px 0; }
+        
 </style>
 </head>
 <body>
 <h1>Daily Odds Report</h1>
-<p class='timestamp'>Generated: 2026-01-16 17:44:14 UTC</p>
+<p class='timestamp'>Generated: 2026-01-16 20:46:02 UTC</p>
 <div class='sport-section'>
 <h2>NBA Odds Analysis</h2>
-<h3>Daily Summary</h3>
-<img src='nba_daily_summary.png' alt='daily_summary'>
+<h3>Daily Odds Summary</h3>
+<img src='nba_daily_summary.png' alt='Daily Summary'>
+<div class='section-divider'></div>
+<h3>FanDuel vs Market Average</h3>
+<p>Positive values mean FanDuel offers better odds than the market average for the home team.</p>
+<img src='nba_fanduel_comparison.png' alt='FanDuel Comparison'>
+<div class='section-divider'></div>
+<h3>Bookmaker Variance from Average</h3>
+<p>Shows which sportsbooks consistently offer odds that differ from the market average.</p>
+<img src='nba_bookmaker_variance.png' alt='Bookmaker Variance'>
+<div class='section-divider'></div>
 <h3>Odds Movement</h3>
-<img src='nba_odds_movement.png' alt='odds_movement'>
-<h3>Sportsbook Comparison</h3>
-<img src='nba_sportsbook_comparison.png' alt='sportsbook_comparison'>
-<h3>Team Sacramento Kings</h3>
-<img src='nba_sacramento_kings_odds_history.png' alt='team_sacramento_kings'>
-<h3>Team Miami Heat</h3>
-<img src='nba_miami_heat_odds_history.png' alt='team_miami_heat'>
-<h3>Team Utah Jazz</h3>
-<img src='nba_utah_jazz_odds_history.png' alt='team_utah_jazz'>
+<img src='nba_odds_movement.png' alt='Odds Movement'>
+<div class='section-divider'></div>
+<h3>Season Odds - Top 5 & Bottom 5 Teams</h3>
+<img src='nba_season_team_odds.png' alt='Season Team Odds'>
+<div class='section-divider'></div>
+<h3>Bookmaker Prediction Accuracy</h3>
+<p>How often each sportsbook's favorite actually won the game.</p>
+<img src='nba_bookmaker_accuracy.png' alt='Bookmaker Accuracy'>
+<div class='section-divider'></div>
+<h3>Recent Underdog Wins</h3>
+<table>
+<tr><th>Date</th><th>Game</th><th>Underdog Winner</th><th>Odds</th><th>Score</th></tr>
+<tr class='highlight'>
+<td>2026-01-08</td>
+<td>Dallas Mavericks @ Utah Jazz</td>
+<td class='underdog'>Utah Jazz</td>
+<td>+281</td>
+<td>116-114</td>
+</tr>
+<tr class='highlight'>
+<td>2025-12-01</td>
+<td>Houston Rockets @ Utah Jazz</td>
+<td class='underdog'>Utah Jazz</td>
+<td>+417</td>
+<td>133-125</td>
+</tr>
+<tr class='highlight'>
+<td>2025-11-11</td>
+<td>Indiana Pacers @ Utah Jazz</td>
+<td class='underdog'>Utah Jazz</td>
+<td>+116</td>
+<td>152-128</td>
+</tr>
+<tr class='highlight'>
+<td>2025-11-25</td>
+<td>Atlanta Hawks @ Washington Wizards</td>
+<td class='underdog'>Washington Wizards</td>
+<td>+380</td>
+<td>132-113</td>
+</tr>
+<tr class='highlight'>
+<td>2025-11-16</td>
+<td>Brooklyn Nets @ Washington Wizards</td>
+<td class='underdog'>Brooklyn Nets</td>
+<td>+123</td>
+<td>129-106</td>
+</tr>
+<tr class='highlight'>
+<td>2025-12-12</td>
+<td>Cleveland Cavaliers @ Washington Wizards</td>
+<td class='underdog'>Cleveland Cavaliers</td>
+<td>+180</td>
+<td>130-126</td>
+</tr>
+<tr class='highlight'>
+<td>2025-11-08</td>
+<td>Dallas Mavericks @ Washington Wizards</td>
+<td class='underdog'>Dallas Mavericks</td>
+<td>+197</td>
+<td>111-105</td>
+</tr>
+<tr class='highlight'>
+<td>2025-12-01</td>
+<td>Milwaukee Bucks @ Washington Wizards</td>
+<td class='underdog'>Washington Wizards</td>
+<td>+335</td>
+<td>129-126</td>
+</tr>
+<tr class='highlight'>
+<td>2025-12-01</td>
+<td>Milwaukee Bucks @ Washington Wizards</td>
+<td class='underdog'>Washington Wizards</td>
+<td>+470</td>
+<td>129-126</td>
+</tr>
+<tr class='highlight'>
+<td>2026-01-06</td>
+<td>Orlando Magic @ Washington Wizards</td>
+<td class='underdog'>Washington Wizards</td>
+<td>+240</td>
+<td>120-112</td>
+</tr>
+</table>
 </div>
 <div class='sport-section'>
 <h2>NFL Odds Analysis</h2>
-<h3>Daily Summary</h3>
-<img src='nfl_daily_summary.png' alt='daily_summary'>
+<h3>Daily Odds Summary</h3>
+<img src='nfl_daily_summary.png' alt='Daily Summary'>
+<div class='section-divider'></div>
+<h3>FanDuel vs Market Average</h3>
+<p>Positive values mean FanDuel offers better odds than the market average for the home team.</p>
+<img src='nfl_fanduel_comparison.png' alt='FanDuel Comparison'>
+<div class='section-divider'></div>
+<h3>Bookmaker Variance from Average</h3>
+<p>Shows which sportsbooks consistently offer odds that differ from the market average.</p>
+<img src='nfl_bookmaker_variance.png' alt='Bookmaker Variance'>
+<div class='section-divider'></div>
 <h3>Odds Movement</h3>
-<img src='nfl_odds_movement.png' alt='odds_movement'>
-<h3>Sportsbook Comparison</h3>
-<img src='nfl_sportsbook_comparison.png' alt='sportsbook_comparison'>
-<h3>Team San Francisco 49Ers</h3>
-<img src='nfl_san_francisco_49ers_odds_history.png' alt='team_san_francisco_49ers'>
-<h3>Team Houston Texans</h3>
-<img src='nfl_houston_texans_odds_history.png' alt='team_houston_texans'>
-<h3>Team Buffalo Bills</h3>
-<img src='nfl_buffalo_bills_odds_history.png' alt='team_buffalo_bills'>
+<img src='nfl_odds_movement.png' alt='Odds Movement'>
 </div>
 </body>
 </html>
