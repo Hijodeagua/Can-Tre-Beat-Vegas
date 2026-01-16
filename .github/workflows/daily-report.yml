@@ -98,9 +98,13 @@ jobs:
             <p>Your daily sports betting odds analysis is ready.</p>
             <p><strong>Report highlights:</strong></p>
             <ul>
-              <li>NBA and NFL odds summaries</li>
+              <li>NBA and NFL daily odds summaries</li>
+              <li>FanDuel vs Market Average comparison</li>
+              <li>Bookmaker variance analysis (who differs from average)</li>
               <li>Odds movement tracking</li>
-              <li>Sportsbook comparisons</li>
+              <li>Season odds for top 5 / bottom 5 NBA teams</li>
+              <li>Bookmaker prediction accuracy (if results available)</li>
+              <li>Underdog wins highlighting</li>
             </ul>
             <p>The full HTML report and charts are attached.</p>
             <p>You can also view the report in the repository:
@@ -115,8 +119,13 @@ jobs:
           attachments: |
             reports/daily_report_${{ steps.report.outputs.date }}.html
             reports/nba_daily_summary.png
-            reports/nfl_daily_summary.png
+            reports/nba_fanduel_comparison.png
+            reports/nba_bookmaker_variance.png
             reports/nba_odds_movement.png
+            reports/nba_season_team_odds.png
+            reports/nfl_daily_summary.png
+            reports/nfl_fanduel_comparison.png
+            reports/nfl_bookmaker_variance.png
             reports/nfl_odds_movement.png
 
           # Don't fail the workflow if email fails
