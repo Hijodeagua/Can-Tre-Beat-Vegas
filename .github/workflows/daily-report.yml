@@ -30,6 +30,8 @@ concurrency:
 
 env:
   REPORT_EMAIL: tremayne.watterson@gmail.com
+  # Map secret to env so we can safely use it in step-level if conditions
+  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
 
 jobs:
   generate-report:
@@ -48,37 +50,54 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
+        shell: bash
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Generate daily report
         id: report
+        shell: bash
         run: |
-          days="${{ github.event.inputs.days || '7' }}"
-          python -m data_jobs.reports.generate_daily_report --days "$days" --output reports --data-dir data
+          set -euo pipefail
 
-          # Set output for email
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-          echo "report_path=reports/daily_report_$(date +'%Y-%m-%d').html" >> $GITHUB_OUTPUT
+          # Use workflow input if present (manual dispatch), otherwise default to 7 (schedule)
+          DAYS="${{ github.event.inputs.days }}"
+          if [ -z "${DAYS:-}" ]; then
+            DAYS="7"
+          fi
+
+          python -m data_jobs.reports.generate_daily_report \
+            --days "$DAYS" \
+            --output reports \
+            --data-dir data
+
+          REPORT_DATE="$(date +'%Y-%m-%d')"
+          echo "date=$REPORT_DATE" >> "$GITHUB_OUTPUT"
+          echo "report_path=reports/daily_report_${REPORT_DATE}.html" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push reports
+        shell: bash
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add reports/ || true
 
           if [ -n "$(git status --porcelain)" ]; then
-            timestamp=$(date -u +'%Y-%m-%d')
-            git commit -m "Daily odds report: $timestamp"
+            timestamp="$(date -u +'%Y-%m-%d')"
+            git commit -m "Daily odds report: ${timestamp}"
             git push
           else
             echo "No changes to commit."
           fi
 
       - name: Send email report
-        if: ${{ github.event.inputs.skip_email != true && secrets.SMTP_PASSWORD != '' }}
+        # Do NOT reference secrets.* in if conditions. Use env.SMTP_PASSWORD.
+        if: ${{ github.event.inputs.skip_email != true && env.SMTP_PASSWORD != '' }}
         uses: dawidd6/action-send-mail@v3
         with:
           # SMTP server configuration (Gmail example - configure secrets for your provider)
@@ -124,8 +143,10 @@ jobs:
           convert_markdown: true
 
       - name: Email status
-        if: ${{ secrets.SMTP_PASSWORD == '' }}
+        if: ${{ env.SMTP_PASSWORD == '' }}
+        shell: bash
         run: |
+          set -euo pipefail
           echo "::warning::Email not sent - SMTP credentials not configured."
           echo "To enable email notifications, add these secrets to your repository:"
           echo "  - SMTP_USERNAME: Your email address"
