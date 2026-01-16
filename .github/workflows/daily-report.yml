@@ -1,12 +1,7 @@
-# Daily Report Generator - Creates visualizations from odds data
-# Runs after odds are fetched to generate analysis reports
-
 name: Daily Odds Report
 
 on:
   schedule:
-    # Run daily at 23:00 UTC (6:00 PM ET / 7:00 PM ET DST)
-    # This is after games start, giving a full day's worth of odds movement
     - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
@@ -30,8 +25,6 @@ concurrency:
 
 env:
   REPORT_EMAIL: tremayne.watterson@gmail.com
-  # Map secret to env so we can safely use it in step-level if conditions
-  SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
 
 jobs:
   generate-report:
@@ -95,23 +88,43 @@ jobs:
             echo "No changes to commit."
           fi
 
+      # No secrets referenced in `if:` anywhere.
+      # We decide in bash whether to attempt email.
+      - name: Decide whether to send email
+        id: emailgate
+        shell: bash
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          SKIP="${{ github.event.inputs.skip_email }}"
+          if [ "${SKIP:-false}" = "true" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "Email skipped by input."
+            exit 0
+          fi
+
+          if [ -z "${SMTP_USERNAME:-}" ] || [ -z "${SMTP_PASSWORD:-}" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Email not sent - SMTP credentials not configured."
+            exit 0
+          fi
+
+          echo "send=true" >> "$GITHUB_OUTPUT"
+
       - name: Send email report
-        # Do NOT reference secrets.* in if conditions. Use env.SMTP_PASSWORD.
-        if: ${{ github.event.inputs.skip_email != true && env.SMTP_PASSWORD != '' }}
+        if: ${{ steps.emailgate.outputs.send == 'true' }}
         uses: dawidd6/action-send-mail@v3
         with:
-          # SMTP server configuration (Gmail example - configure secrets for your provider)
           server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
           server_port: ${{ secrets.SMTP_PORT || 587 }}
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-
-          # Email details
           to: ${{ env.REPORT_EMAIL }}
           from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
           subject: "Daily Odds Report - ${{ steps.report.outputs.date }}"
-
-          # Email body (HTML)
           html_body: |
             <h2>Daily Odds Report - ${{ steps.report.outputs.date }}</h2>
             <p>Your daily sports betting odds analysis is ready.</p>
@@ -133,8 +146,6 @@ jobs:
             </p>
             <hr>
             <p><small>This is an automated email from your Can-Tre-Beat-Vegas odds tracking system.</small></p>
-
-          # Attachments - include the HTML report and key visualizations
           attachments: |
             reports/daily_report_${{ steps.report.outputs.date }}.html
             reports/nba_daily_summary.png
@@ -146,23 +157,8 @@ jobs:
             reports/nfl_fanduel_comparison.png
             reports/nfl_bookmaker_variance.png
             reports/nfl_odds_movement.png
-
-          # Don't fail the workflow if email fails
           ignore_cert: true
           convert_markdown: true
-
-      - name: Email status
-        if: ${{ env.SMTP_PASSWORD == '' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "::warning::Email not sent - SMTP credentials not configured."
-          echo "To enable email notifications, add these secrets to your repository:"
-          echo "  - SMTP_USERNAME: Your email address"
-          echo "  - SMTP_PASSWORD: Your email password or app-specific password"
-          echo "  - SMTP_SERVER: (optional) SMTP server, defaults to smtp.gmail.com"
-          echo "  - SMTP_PORT: (optional) SMTP port, defaults to 587"
-          echo "  - SMTP_FROM: (optional) From address, defaults to SMTP_USERNAME"
 
       - name: Upload report artifacts
         if: always()
