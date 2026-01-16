@@ -106,7 +106,10 @@ def load_season_data(data_dir: str, sport: str) -> pd.DataFrame:
 def load_actual_results(data_dir: str) -> pd.DataFrame:
     """
     Load actual game results from data/nba/actual_games/.
-    Expected CSV format: Date, Home Team, Away Team, Home Score, Away Score
+
+    Supports two formats:
+    1. Simple: Date, Home Team, Away Team, Home Score, Away Score
+    2. Basketball Reference: Date, Start (ET), Visitor/Neutral, PTS, Home/Neutral, PTS, ...
     """
     results_dir = os.path.join(data_dir, "nba", "actual_games")
 
@@ -119,24 +122,59 @@ def load_actual_results(data_dir: str) -> pd.DataFrame:
             try:
                 filepath = os.path.join(results_dir, filename)
                 df = pd.read_csv(filepath)
+
+                # Handle Basketball Reference format
+                # Columns: Date, Start (ET), Visitor/Neutral, PTS, Home/Neutral, PTS, Attend, LOG, Arena, Notes
+                if 'Visitor/Neutral' in df.columns or 'Home/Neutral' in df.columns:
+                    # Find the PTS columns by position
+                    cols = df.columns.tolist()
+
+                    # Rename columns to standard format
+                    new_df = pd.DataFrame()
+                    new_df['Date'] = df.get('Date', df.iloc[:, 0] if len(cols) > 0 else None)
+                    new_df['Away Team'] = df.get('Visitor/Neutral', df.iloc[:, 2] if len(cols) > 2 else None)
+                    new_df['Home Team'] = df.get('Home/Neutral', df.iloc[:, 4] if len(cols) > 4 else None)
+
+                    # Find PTS columns - first one is visitor, second is home
+                    pts_cols = [i for i, c in enumerate(cols) if c == 'PTS' or c.strip() == 'PTS']
+                    if len(pts_cols) >= 2:
+                        new_df['Away Score'] = df.iloc[:, pts_cols[0]]
+                        new_df['Home Score'] = df.iloc[:, pts_cols[1]]
+                    elif len(pts_cols) == 1:
+                        # Try to find by position (column 3 = away pts, column 5 = home pts)
+                        new_df['Away Score'] = df.iloc[:, 3] if len(cols) > 3 else None
+                        new_df['Home Score'] = df.iloc[:, 5] if len(cols) > 5 else None
+
+                    df = new_df
+                else:
+                    # Standard format - apply column mapping
+                    col_map = {
+                        'date': 'Date', 'game_date': 'Date', 'Date': 'Date',
+                        'home_team': 'Home Team', 'Home Team': 'Home Team', 'home': 'Home Team',
+                        'away_team': 'Away Team', 'Away Team': 'Away Team', 'away': 'Away Team',
+                        'home_score': 'Home Score', 'Home Score': 'Home Score', 'home_pts': 'Home Score',
+                        'away_score': 'Away Score', 'Away Score': 'Away Score', 'away_pts': 'Away Score',
+                    }
+                    df = df.rename(columns={k: v for k, v in col_map.items() if k in df.columns})
+
                 all_results.append(df)
-            except Exception:
+            except Exception as e:
+                print(f"  Warning: Could not load {filename}: {e}")
                 continue
 
     if all_results:
         combined = pd.concat(all_results, ignore_index=True)
-        # Standardize column names
-        col_map = {
-            'date': 'Date', 'game_date': 'Date', 'Date': 'Date',
-            'home_team': 'Home Team', 'Home Team': 'Home Team', 'home': 'Home Team',
-            'away_team': 'Away Team', 'Away Team': 'Away Team', 'away': 'Away Team',
-            'home_score': 'Home Score', 'Home Score': 'Home Score', 'home_pts': 'Home Score',
-            'away_score': 'Away Score', 'Away Score': 'Away Score', 'away_pts': 'Away Score',
-        }
-        combined = combined.rename(columns={k: v for k, v in col_map.items() if k in combined.columns})
 
         if 'Date' in combined.columns:
-            combined['Date'] = pd.to_datetime(combined['Date'])
+            combined['Date'] = pd.to_datetime(combined['Date'], errors='coerce')
+
+        # Convert scores to numeric
+        for col in ['Home Score', 'Away Score']:
+            if col in combined.columns:
+                combined[col] = pd.to_numeric(combined[col], errors='coerce')
+
+        # Drop rows with missing essential data
+        combined = combined.dropna(subset=['Date', 'Home Team', 'Away Team', 'Home Score', 'Away Score'])
 
         return combined
 

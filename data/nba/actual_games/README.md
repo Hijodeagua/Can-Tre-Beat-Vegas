@@ -5,40 +5,45 @@ Place CSV files with actual game results here to enable:
 - Underdog wins highlighting
 - Historical performance analysis
 
-## Expected CSV Format
+## Supported CSV Formats
 
-Each CSV should have these columns:
+### Format 1: Basketball Reference (Recommended)
 
-| Column | Description | Example |
-|--------|-------------|---------|
-| Date | Game date (YYYY-MM-DD) | 2026-01-15 |
-| Home Team | Full team name | Los Angeles Lakers |
-| Away Team | Full team name | Boston Celtics |
-| Home Score | Home team final score | 112 |
-| Away Score | Away team final score | 108 |
+Download schedule/results from Basketball Reference. The format is:
 
-## Example CSV
+| Date | Start (ET) | Visitor/Neutral | PTS | Home/Neutral | PTS | Attend | LOG | Arena | Notes |
+|------|------------|-----------------|-----|--------------|-----|--------|-----|-------|-------|
+| Mon, Oct 28, 2025 | 7:00p | Boston Celtics | 108 | New York Knicks | 112 | 19,812 | | Madison Square Garden | |
 
-```csv
-Date,Home Team,Away Team,Home Score,Away Score
-2026-01-15,Los Angeles Lakers,Boston Celtics,112,108
-2026-01-15,Golden State Warriors,Miami Heat,105,98
-2026-01-14,Phoenix Suns,Denver Nuggets,118,122
-```
+### Format 2: Simple Format
+
+A simpler custom format:
+
+| Date | Home Team | Away Team | Home Score | Away Score |
+|------|-----------|-----------|------------|------------|
+| 2026-01-15 | Los Angeles Lakers | Boston Celtics | 112 | 108 |
 
 ## File Naming
 
 Name files by month for easy organization:
-- `january_2026.csv`
-- `february_2026.csv`
+- `october_2025.csv`
+- `november_2025.csv`
+- `december_2025.csv`
 - etc.
 
 The report generator will automatically load all CSV files from this directory.
 
 ## Team Name Matching
 
-Make sure team names match exactly what's in the odds data:
-- "Los Angeles Lakers" (not "LA Lakers" or "Lakers")
-- "Golden State Warriors" (not "GS Warriors" or "Warriors")
+The team names in your results files should match the full names used in the odds data. Examples:
+- "Boston Celtics" (not "BOS" or "Celtics")
+- "Los Angeles Lakers" (not "LA Lakers" or "LAL")
+- "Golden State Warriors" (not "GS Warriors")
 
-Check `data/nba/nba_odds_api_data_latest.csv` for the exact team names used.
+Check `data/nba/nba_odds_api_data_latest.csv` for the exact team names used in odds data.
+
+## Notes
+
+- Empty rows or rows with missing scores are automatically skipped
+- Dates are parsed automatically (supports multiple formats)
+- The system tracks which bookmaker's favorite won each game
