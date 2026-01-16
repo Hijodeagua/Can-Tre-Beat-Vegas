@@ -78,8 +78,11 @@ jobs:
           fi
 
       - name: Send email report
-        if: ${{ github.event.inputs.skip_email != 'true' && secrets.SMTP_PASSWORD != '' }}
+        if: ${{ github.event.inputs.skip_email != 'true' }}
+        continue-on-error: true
         uses: dawidd6/action-send-mail@v3
+        env:
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         with:
           # SMTP server configuration (Gmail example - configure secrets for your provider)
           server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
@@ -131,17 +134,6 @@ jobs:
           # Don't fail the workflow if email fails
           ignore_cert: true
           convert_markdown: true
-
-      - name: Email status
-        if: ${{ secrets.SMTP_PASSWORD == '' }}
-        run: |
-          echo "::warning::Email not sent - SMTP credentials not configured."
-          echo "To enable email notifications, add these secrets to your repository:"
-          echo "  - SMTP_USERNAME: Your email address"
-          echo "  - SMTP_PASSWORD: Your email password or app-specific password"
-          echo "  - SMTP_SERVER: (optional) SMTP server, defaults to smtp.gmail.com"
-          echo "  - SMTP_PORT: (optional) SMTP port, defaults to 587"
-          echo "  - SMTP_FROM: (optional) From address, defaults to SMTP_USERNAME"
 
       - name: Upload report artifacts
         if: always()
