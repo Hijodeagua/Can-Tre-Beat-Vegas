@@ -15,6 +15,11 @@ on:
         required: false
         default: '7'
         type: string
+      skip_email:
+        description: 'Skip sending email'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
   contents: write
@@ -22,6 +27,9 @@ permissions:
 concurrency:
   group: daily-report
   cancel-in-progress: false
+
+env:
+  REPORT_EMAIL: tremayne.watterson@gmail.com
 
 jobs:
   generate-report:
@@ -45,9 +53,14 @@ jobs:
           pip install -r requirements.txt
 
       - name: Generate daily report
+        id: report
         run: |
           days="${{ github.event.inputs.days || '7' }}"
           python -m data_jobs.reports.generate_daily_report --days "$days" --output reports --data-dir data
+
+          # Set output for email
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "report_path=reports/daily_report_$(date +'%Y-%m-%d').html" >> $GITHUB_OUTPUT
 
       - name: Commit and push reports
         run: |
@@ -63,6 +76,63 @@ jobs:
           else
             echo "No changes to commit."
           fi
+
+      - name: Send email report
+        if: ${{ github.event.inputs.skip_email != 'true' && secrets.SMTP_PASSWORD != '' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # SMTP server configuration (Gmail example - configure secrets for your provider)
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+
+          # Email details
+          to: ${{ env.REPORT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: "Daily Odds Report - ${{ steps.report.outputs.date }}"
+
+          # Email body (HTML)
+          html_body: |
+            <h2>Daily Odds Report - ${{ steps.report.outputs.date }}</h2>
+            <p>Your daily sports betting odds analysis is ready.</p>
+            <p><strong>Report highlights:</strong></p>
+            <ul>
+              <li>NBA and NFL odds summaries</li>
+              <li>Odds movement tracking</li>
+              <li>Sportsbook comparisons</li>
+            </ul>
+            <p>The full HTML report and charts are attached.</p>
+            <p>You can also view the report in the repository:
+              <a href="https://github.com/${{ github.repository }}/blob/main/reports/daily_report_${{ steps.report.outputs.date }}.html">
+                View Report
+              </a>
+            </p>
+            <hr>
+            <p><small>This is an automated email from your Can-Tre-Beat-Vegas odds tracking system.</small></p>
+
+          # Attachments - include the HTML report and key visualizations
+          attachments: |
+            reports/daily_report_${{ steps.report.outputs.date }}.html
+            reports/nba_daily_summary.png
+            reports/nfl_daily_summary.png
+            reports/nba_odds_movement.png
+            reports/nfl_odds_movement.png
+
+          # Don't fail the workflow if email fails
+          ignore_cert: true
+          convert_markdown: true
+
+      - name: Email status
+        if: ${{ secrets.SMTP_PASSWORD == '' }}
+        run: |
+          echo "::warning::Email not sent - SMTP credentials not configured."
+          echo "To enable email notifications, add these secrets to your repository:"
+          echo "  - SMTP_USERNAME: Your email address"
+          echo "  - SMTP_PASSWORD: Your email password or app-specific password"
+          echo "  - SMTP_SERVER: (optional) SMTP server, defaults to smtp.gmail.com"
+          echo "  - SMTP_PORT: (optional) SMTP port, defaults to 587"
+          echo "  - SMTP_FROM: (optional) From address, defaults to SMTP_USERNAME"
 
       - name: Upload report artifacts
         if: always()
