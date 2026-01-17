@@ -593,11 +593,14 @@ def calculate_nba_future_games_analysis(df: pd.DataFrame) -> Dict[str, pd.DataFr
 
 def calculate_moneyline_accuracy_table(odds_df: pd.DataFrame, results_df: pd.DataFrame) -> pd.DataFrame:
     """
-    Calculate moneyline accuracy for Average and FanDuel odds.
-    Returns table with last week and full season stats.
+    Calculate moneyline accuracy for all bookmakers.
+    Returns table with last week, past month, and full season stats.
     """
     if odds_df.empty or results_df.empty:
         return pd.DataFrame()
+
+    # Get all sportsbooks
+    sportsbooks = get_sportsbooks(odds_df)
 
     # Map game dates to results
     results_dict = {}
@@ -618,13 +621,23 @@ def calculate_moneyline_accuracy_table(odds_df: pd.DataFrame, results_df: pd.Dat
     game_col = "Date of Game (ET)" if "Date of Game (ET)" in odds_df.columns else "Date of Game"
 
     # Track accuracy for different time periods
-    stats = {
-        "Avg of all": {"last_week": {"correct": 0, "total": 0}, "full_season": {"correct": 0, "total": 0}},
-        "FanDuel": {"last_week": {"correct": 0, "total": 0}, "full_season": {"correct": 0, "total": 0}}
-    }
+    # Initialize stats for Average + all sportsbooks
+    stats = {"Avg of all": {
+        "last_week": {"correct": 0, "total": 0},
+        "past_month": {"correct": 0, "total": 0},
+        "full_season": {"correct": 0, "total": 0}
+    }}
+
+    for book in sportsbooks:
+        stats[book] = {
+            "last_week": {"correct": 0, "total": 0},
+            "past_month": {"correct": 0, "total": 0},
+            "full_season": {"correct": 0, "total": 0}
+        }
 
     now = datetime.now()
     week_ago = now - timedelta(days=7)
+    month_ago = now - timedelta(days=30)
 
     # Group odds by game and get final pre-game snapshot
     for (home, away, game_date), group in odds_df.groupby(["Home Team", "Away Team", game_col]):
@@ -643,39 +656,58 @@ def calculate_moneyline_accuracy_table(odds_df: pd.DataFrame, results_df: pd.Dat
         # Get final pre-game odds
         final_odds = group.sort_values("Timestamp Pulled").iloc[-1]
 
-        # Average odds
+        # Determine time period
+        game_datetime = pd.to_datetime(game_date, errors='coerce')
+        is_last_week = game_datetime >= week_ago if pd.notna(game_datetime) else False
+        is_past_month = game_datetime >= month_ago if pd.notna(game_datetime) else False
+
+        # Check Average prediction
         avg_home_odds = final_odds.get("Avg Home H2H Odds")
         avg_away_odds = final_odds.get("Avg Away H2H Odds")
 
-        # FanDuel odds
-        fd_home_odds = final_odds.get("Home FanDuel H2H Odds")
-        fd_away_odds = final_odds.get("Away FanDuel H2H Odds")
-
-        # Determine if this game is in the last week
-        game_datetime = pd.to_datetime(game_date, errors='coerce')
-        is_last_week = game_datetime >= week_ago if pd.notna(game_datetime) else False
-
-        # Check Average prediction
         if pd.notna(avg_home_odds) and pd.notna(avg_away_odds):
             avg_predicted = home if avg_home_odds < avg_away_odds else away
-            if avg_predicted == actual_winner:
-                stats["Avg of all"]["full_season"]["correct"] += 1
-                if is_last_week:
-                    stats["Avg of all"]["last_week"]["correct"] += 1
+            correct = avg_predicted == actual_winner
+
             stats["Avg of all"]["full_season"]["total"] += 1
+            if correct:
+                stats["Avg of all"]["full_season"]["correct"] += 1
+
+            if is_past_month:
+                stats["Avg of all"]["past_month"]["total"] += 1
+                if correct:
+                    stats["Avg of all"]["past_month"]["correct"] += 1
+
             if is_last_week:
                 stats["Avg of all"]["last_week"]["total"] += 1
+                if correct:
+                    stats["Avg of all"]["last_week"]["correct"] += 1
 
-        # Check FanDuel prediction
-        if pd.notna(fd_home_odds) and pd.notna(fd_away_odds):
-            fd_predicted = home if fd_home_odds < fd_away_odds else away
-            if fd_predicted == actual_winner:
-                stats["FanDuel"]["full_season"]["correct"] += 1
+        # Check each sportsbook's prediction
+        for book in sportsbooks:
+            home_col = f"Home {book} H2H Odds"
+            away_col = f"Away {book} H2H Odds"
+
+            book_home_odds = final_odds.get(home_col)
+            book_away_odds = final_odds.get(away_col)
+
+            if pd.notna(book_home_odds) and pd.notna(book_away_odds):
+                book_predicted = home if book_home_odds < book_away_odds else away
+                correct = book_predicted == actual_winner
+
+                stats[book]["full_season"]["total"] += 1
+                if correct:
+                    stats[book]["full_season"]["correct"] += 1
+
+                if is_past_month:
+                    stats[book]["past_month"]["total"] += 1
+                    if correct:
+                        stats[book]["past_month"]["correct"] += 1
+
                 if is_last_week:
-                    stats["FanDuel"]["last_week"]["correct"] += 1
-            stats["FanDuel"]["full_season"]["total"] += 1
-            if is_last_week:
-                stats["FanDuel"]["last_week"]["total"] += 1
+                    stats[book]["last_week"]["total"] += 1
+                    if correct:
+                        stats[book]["last_week"]["correct"] += 1
 
     # Build table
     table_data = []
@@ -685,16 +717,23 @@ def calculate_moneyline_accuracy_table(odds_df: pd.DataFrame, results_df: pd.Dat
         # Last week
         if periods["last_week"]["total"] > 0:
             pct = round(100 * periods["last_week"]["correct"] / periods["last_week"]["total"])
-            row["Last week moneyline accuracy"] = f"{pct}%"
+            row["Last week money line accuracy"] = f"{pct}%"
         else:
-            row["Last week moneyline accuracy"] = ""
+            row["Last week money line accuracy"] = ""
+
+        # Past month
+        if periods["past_month"]["total"] > 0:
+            pct = round(100 * periods["past_month"]["correct"] / periods["past_month"]["total"])
+            row["past month money line accuracy"] = f"{pct}%"
+        else:
+            row["past month money line accuracy"] = ""
 
         # Full season
         if periods["full_season"]["total"] > 0:
             pct = round(100 * periods["full_season"]["correct"] / periods["full_season"]["total"])
-            row["Full Season moneyline Line Accuracy"] = f"{pct}%"
+            row["Full Season money Line Accuracy"] = f"{pct}%"
         else:
-            row["Full Season moneyline Line Accuracy"] = ""
+            row["Full Season money Line Accuracy"] = ""
 
         table_data.append(row)
 
@@ -1130,141 +1169,89 @@ def plot_nba_future_games(analysis: Dict, output_dir: str) -> Dict[str, str]:
 # ============================================================================
 
 def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_str: str) -> str:
-    """Generate an HTML report combining all visualizations with future/past game split."""
+    """Generate a simple HTML report focused on bookmaker accuracy."""
 
     html_parts = [
         "<!DOCTYPE html>",
         "<html>",
         "<head>",
-        f"<title>Daily Odds Report - {date_str}</title>",
+        f"<title>Bookmaker Accuracy Report - {date_str}</title>",
         "<style>",
         """
-        body { font-family: Arial, sans-serif; max-width: 1400px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        h2 { color: #34495e; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 10px; }
-        h3 { color: #7f8c8d; margin-top: 20px; font-size: 1.3em; background: #ecf0f1; padding: 10px; border-radius: 4px; }
-        h4 { color: #95a5a6; margin-top: 15px; }
-        .sport-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .future-section { border-left: 4px solid #27ae60; }
-        .past-section { border-left: 4px solid #e74c3c; }
-        img { max-width: 100%; height: auto; margin: 10px 0; border-radius: 4px; }
-        .timestamp { color: #7f8c8d; font-size: 0.9em; }
-        .no-data { color: #95a5a6; font-style: italic; }
-        table { border-collapse: collapse; width: 100%; margin: 15px 0; max-width: 800px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #3498db; color: white; }
-        tr:nth-child(even) { background: #f9f9f9; }
-        .highlight { background: #fff3cd; }
-        .winner { color: #27ae60; font-weight: bold; }
-        .underdog { color: #e74c3c; }
-        .accuracy-best { background: #d4edda; }
-        .section-divider { border-top: 2px dashed #bdc3c7; margin: 30px 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .timestamp {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 16px;
+            text-align: left;
+        }
+        th {
+            background: #f5f5f5;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+        tr:hover {
+            background: #fafafa;
+        }
+        .no-data {
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
         """,
         "</style>",
         "</head>",
         "<body>",
-        f"<h1>Daily Odds Report</h1>",
+        f"<h1>Bookmaker Moneyline Accuracy</h1>",
         f"<p class='timestamp'>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>",
     ]
 
-    for sport, sport_data in figures.items():
-        html_parts.append(f"<div class='sport-section'>")
-        html_parts.append(f"<h2>{sport.upper()} Odds Analysis</h2>")
+    # Only show NBA accuracy table
+    nba_extra = extra_data.get("nba", {}).get("past", {})
+    accuracy_table = nba_extra.get("accuracy_table")
 
-        if not sport_data:
-            html_parts.append("<p class='no-data'>No data available for this sport.</p>")
-        else:
-            # FUTURE GAMES SECTION (Next 48 hours)
-            future_figures = sport_data.get("future", {})
-            if future_figures:
-                html_parts.append("<div class='future-section' style='padding: 15px; margin: 20px 0;'>")
-                html_parts.append("<h3>🔮 Future Games (Next 48 Hours)</h3>")
-
-                # NBA-specific future game visualizations
-                if sport == "nba":
-                    if "biggest_underdogs" in future_figures:
-                        html_parts.append("<h4>Biggest Underdogs</h4>")
-                        html_parts.append(f"<img src='{os.path.basename(future_figures['biggest_underdogs'])}' alt='Biggest Underdogs'>")
-
-                    if "biggest_favorites" in future_figures:
-                        html_parts.append("<h4>Biggest Favorites</h4>")
-                        html_parts.append(f"<img src='{os.path.basename(future_figures['biggest_favorites'])}' alt='Biggest Favorites'>")
-
-                    if "fanduel_over_favored" in future_figures:
-                        html_parts.append("<h4>FanDuel Offers Better Odds Than Average</h4>")
-                        html_parts.append(f"<img src='{os.path.basename(future_figures['fanduel_over_favored'])}' alt='FanDuel Over Favored'>")
-
-                    if "fanduel_under_favored" in future_figures:
-                        html_parts.append("<h4>FanDuel Offers Worse Odds Than Average</h4>")
-                        html_parts.append(f"<img src='{os.path.basename(future_figures['fanduel_under_favored'])}' alt='FanDuel Under Favored'>")
-
-                # Daily Summary (if available for future games)
-                if "daily_summary" in future_figures:
-                    html_parts.append("<h4>Odds Summary</h4>")
-                    html_parts.append(f"<img src='{os.path.basename(future_figures['daily_summary'])}' alt='Daily Summary'>")
-
-                # Odds Movement
-                if "odds_movement" in future_figures:
-                    html_parts.append("<h4>Odds Movement</h4>")
-                    html_parts.append(f"<img src='{os.path.basename(future_figures['odds_movement'])}' alt='Odds Movement'>")
-
-                html_parts.append("</div>")
-
-            # PAST GAMES SECTION
-            past_figures = sport_data.get("past", {})
-            past_extra = extra_data.get(sport, {}).get("past", {})
-
-            if past_figures or past_extra:
-                html_parts.append("<div class='past-section' style='padding: 15px; margin: 20px 0;'>")
-                html_parts.append("<h3>📊 Past Games Analysis</h3>")
-
-                # Moneyline Accuracy Table (NBA only)
-                if sport == "nba":
-                    accuracy_table = past_extra.get("accuracy_table")
-                    if accuracy_table is not None and not accuracy_table.empty:
-                        html_parts.append("<h4>Moneyline Accuracy Tracker</h4>")
-                        html_parts.append("<table>")
-                        html_parts.append("<tr>")
-                        for col in accuracy_table.columns:
-                            html_parts.append(f"<th>{col}</th>")
-                        html_parts.append("</tr>")
-                        for _, row in accuracy_table.iterrows():
-                            html_parts.append("<tr>")
-                            for val in row:
-                                html_parts.append(f"<td>{val}</td>")
-                            html_parts.append("</tr>")
-                        html_parts.append("</table>")
-
-                # Season Team Odds (Moneyline only)
-                if "season_team_odds" in past_figures:
-                    html_parts.append("<h4>Season Moneyline Odds - Top 5 & Bottom 5 Teams</h4>")
-                    html_parts.append(f"<img src='{os.path.basename(past_figures['season_team_odds'])}' alt='Season Team Odds'>")
-
-                # Bookmaker Accuracy
-                if "bookmaker_accuracy" in past_figures:
-                    html_parts.append("<h4>Bookmaker Prediction Accuracy</h4>")
-                    html_parts.append("<p>How often each sportsbook's favorite actually won the game.</p>")
-                    html_parts.append(f"<img src='{os.path.basename(past_figures['bookmaker_accuracy'])}' alt='Bookmaker Accuracy'>")
-
-                # Underdog Wins Table
-                underdog_wins = past_extra.get("underdog_wins", [])
-                if underdog_wins:
-                    html_parts.append("<h4>Recent Underdog Wins</h4>")
-                    html_parts.append("<table>")
-                    html_parts.append("<tr><th>Date</th><th>Game</th><th>Underdog Winner</th><th>Odds</th><th>Score</th></tr>")
-                    for win in underdog_wins[-10:]:  # Last 10
-                        html_parts.append(f"<tr class='highlight'>")
-                        html_parts.append(f"<td>{win['Date']}</td>")
-                        html_parts.append(f"<td>{win['Game']}</td>")
-                        html_parts.append(f"<td class='underdog'>{win['Underdog']}</td>")
-                        html_parts.append(f"<td>+{win['Underdog Odds']:.0f}</td>" if win['Underdog Odds'] > 0 else f"<td>{win['Underdog Odds']:.0f}</td>")
-                        html_parts.append(f"<td>{win['Final Score']}</td>")
-                        html_parts.append("</tr>")
-                    html_parts.append("</table>")
-
-                html_parts.append("</div>")
-
-        html_parts.append("</div>")
+    if accuracy_table is not None and not accuracy_table.empty:
+        html_parts.append("<table>")
+        html_parts.append("<tr>")
+        for col in accuracy_table.columns:
+            html_parts.append(f"<th>{col}</th>")
+        html_parts.append("</tr>")
+        for _, row in accuracy_table.iterrows():
+            html_parts.append("<tr>")
+            for val in row:
+                html_parts.append(f"<td>{val}</td>")
+            html_parts.append("</tr>")
+        html_parts.append("</table>")
+    else:
+        html_parts.append("<p class='no-data'>No accuracy data available.</p>")
 
     html_parts.extend([
         "</body>",
