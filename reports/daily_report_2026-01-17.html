@@ -1,147 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Daily Odds Report - 2026-01-17</title>
+<title>Bookmaker Accuracy Report - 2026-01-17</title>
 <style>
 
-        body { font-family: Arial, sans-serif; max-width: 1400px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        h2 { color: #34495e; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 10px; }
-        h3 { color: #7f8c8d; margin-top: 20px; font-size: 1.3em; background: #ecf0f1; padding: 10px; border-radius: 4px; }
-        h4 { color: #95a5a6; margin-top: 15px; }
-        .sport-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .future-section { border-left: 4px solid #27ae60; }
-        .past-section { border-left: 4px solid #e74c3c; }
-        img { max-width: 100%; height: auto; margin: 10px 0; border-radius: 4px; }
-        .timestamp { color: #7f8c8d; font-size: 0.9em; }
-        .no-data { color: #95a5a6; font-style: italic; }
-        table { border-collapse: collapse; width: 100%; margin: 15px 0; max-width: 800px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #3498db; color: white; }
-        tr:nth-child(even) { background: #f9f9f9; }
-        .highlight { background: #fff3cd; }
-        .winner { color: #27ae60; font-weight: bold; }
-        .underdog { color: #e74c3c; }
-        .accuracy-best { background: #d4edda; }
-        .section-divider { border-top: 2px dashed #bdc3c7; margin: 30px 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+        }
+        h1 {
+            color: #1a1a1a;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .timestamp {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 16px;
+            text-align: left;
+        }
+        th {
+            background: #f5f5f5;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+        tr:hover {
+            background: #fafafa;
+        }
+        .no-data {
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
         
 </style>
 </head>
 <body>
-<h1>Daily Odds Report</h1>
-<p class='timestamp'>Generated: 2026-01-17 14:46:10 UTC</p>
-<div class='sport-section'>
-<h2>NBA Odds Analysis</h2>
-<div class='past-section' style='padding: 15px; margin: 20px 0;'>
-<h3>📊 Past Games Analysis</h3>
-<h4>Moneyline Accuracy Tracker</h4>
+<h1>Bookmaker Moneyline Accuracy</h1>
+<p class='timestamp'>Generated: 2026-01-17 16:19:04 UTC</p>
 <table>
 <tr>
 <th>Bookie</th>
-<th>Last week moneyline accuracy</th>
-<th>Full Season moneyline Line Accuracy</th>
+<th>Last week money line accuracy</th>
+<th>past month money line accuracy</th>
+<th>Full Season money Line Accuracy</th>
 </tr>
 <tr>
 <td>Avg of all</td>
 <td>70%</td>
+<td>68%</td>
 <td>73%</td>
+</tr>
+<tr>
+<td>DraftKings</td>
+<td>70%</td>
+<td>67%</td>
+<td>71%</td>
+</tr>
+<tr>
+<td>MyBookie.ag</td>
+<td>68%</td>
+<td>67%</td>
+<td>70%</td>
+</tr>
+<tr>
+<td>LowVig.ag</td>
+<td>65%</td>
+<td>67%</td>
+<td>68%</td>
+</tr>
+<tr>
+<td>BetOnline.ag</td>
+<td>65%</td>
+<td>67%</td>
+<td>68%</td>
+</tr>
+<tr>
+<td>BetUS</td>
+<td>66%</td>
+<td>67%</td>
+<td>68%</td>
 </tr>
 <tr>
 <td>FanDuel</td>
 <td>70%</td>
+<td>69%</td>
 <td>72%</td>
 </tr>
-</table>
-<h4>Season Moneyline Odds - Top 5 & Bottom 5 Teams</h4>
-<img src='nba_season_team_odds.png' alt='Season Team Odds'>
-<h4>Bookmaker Prediction Accuracy</h4>
-<p>How often each sportsbook's favorite actually won the game.</p>
-<img src='nba_bookmaker_accuracy.png' alt='Bookmaker Accuracy'>
-<h4>Recent Underdog Wins</h4>
-<table>
-<tr><th>Date</th><th>Game</th><th>Underdog Winner</th><th>Odds</th><th>Score</th></tr>
-<tr class='highlight'>
-<td>2026-01-08</td>
-<td>Dallas Mavericks @ Utah Jazz</td>
-<td class='underdog'>Utah Jazz</td>
-<td>+281</td>
-<td>116-114</td>
+<tr>
+<td>Bovada</td>
+<td>67%</td>
+<td>66%</td>
+<td>70%</td>
 </tr>
-<tr class='highlight'>
-<td>2025-12-01</td>
-<td>Houston Rockets @ Utah Jazz</td>
-<td class='underdog'>Utah Jazz</td>
-<td>+417</td>
-<td>133-125</td>
+<tr>
+<td>BetMGM</td>
+<td>69%</td>
+<td>68%</td>
+<td>72%</td>
 </tr>
-<tr class='highlight'>
-<td>2025-11-11</td>
-<td>Indiana Pacers @ Utah Jazz</td>
-<td class='underdog'>Utah Jazz</td>
-<td>+116</td>
-<td>152-128</td>
-</tr>
-<tr class='highlight'>
-<td>2025-11-25</td>
-<td>Atlanta Hawks @ Washington Wizards</td>
-<td class='underdog'>Washington Wizards</td>
-<td>+380</td>
-<td>132-113</td>
-</tr>
-<tr class='highlight'>
-<td>2025-11-16</td>
-<td>Brooklyn Nets @ Washington Wizards</td>
-<td class='underdog'>Brooklyn Nets</td>
-<td>+123</td>
-<td>129-106</td>
-</tr>
-<tr class='highlight'>
-<td>2025-12-12</td>
-<td>Cleveland Cavaliers @ Washington Wizards</td>
-<td class='underdog'>Cleveland Cavaliers</td>
-<td>+180</td>
-<td>130-126</td>
-</tr>
-<tr class='highlight'>
-<td>2025-11-08</td>
-<td>Dallas Mavericks @ Washington Wizards</td>
-<td class='underdog'>Dallas Mavericks</td>
-<td>+197</td>
-<td>111-105</td>
-</tr>
-<tr class='highlight'>
-<td>2025-12-01</td>
-<td>Milwaukee Bucks @ Washington Wizards</td>
-<td class='underdog'>Washington Wizards</td>
-<td>+335</td>
-<td>129-126</td>
-</tr>
-<tr class='highlight'>
-<td>2025-12-01</td>
-<td>Milwaukee Bucks @ Washington Wizards</td>
-<td class='underdog'>Washington Wizards</td>
-<td>+470</td>
-<td>129-126</td>
-</tr>
-<tr class='highlight'>
-<td>2026-01-06</td>
-<td>Orlando Magic @ Washington Wizards</td>
-<td class='underdog'>Washington Wizards</td>
-<td>+240</td>
-<td>120-112</td>
+<tr>
+<td>BetRivers</td>
+<td>68%</td>
+<td>66%</td>
+<td>70%</td>
 </tr>
 </table>
-</div>
-</div>
-<div class='sport-section'>
-<h2>NFL Odds Analysis</h2>
-<div class='future-section' style='padding: 15px; margin: 20px 0;'>
-<h3>🔮 Future Games (Next 48 Hours)</h3>
-<h4>Odds Summary</h4>
-<img src='nfl_future_daily_summary.png' alt='Daily Summary'>
-<h4>Odds Movement</h4>
-<img src='nfl_future_odds_movement.png' alt='Odds Movement'>
-</div>
-</div>
 </body>
 </html>
