@@ -182,6 +182,53 @@ def load_actual_results(data_dir: str) -> pd.DataFrame:
 
 
 # ============================================================================
+# GAME FILTERING
+# ============================================================================
+
+def split_future_past_games(df: pd.DataFrame, hours_ahead: int = 48) -> tuple:
+    """
+    Split games into future (upcoming within hours_ahead) and past games.
+
+    Returns: (future_df, past_df)
+    """
+    if df.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
+    # Determine the game date column
+    game_col = "Date of Game (ET)" if "Date of Game (ET)" in df.columns else "Date of Game"
+
+    if game_col not in df.columns:
+        return pd.DataFrame(), df
+
+    # Get current time and cutoff time (timezone-naive for comparison)
+    now = pd.Timestamp.now().tz_localize(None)
+    cutoff = now + pd.Timedelta(hours=hours_ahead)
+
+    # Parse game dates (ensure timezone-naive)
+    df_copy = df.copy()
+    df_copy['game_datetime'] = pd.to_datetime(df_copy[game_col], errors='coerce')
+
+    # Remove timezone if present
+    if hasattr(df_copy['game_datetime'].dtype, 'tz') and df_copy['game_datetime'].dtype.tz is not None:
+        df_copy['game_datetime'] = df_copy['game_datetime'].dt.tz_localize(None)
+
+    # Split into future and past
+    future_mask = (df_copy['game_datetime'] >= now) & (df_copy['game_datetime'] <= cutoff)
+    past_mask = df_copy['game_datetime'] < now
+
+    future_df = df_copy[future_mask].copy()
+    past_df = df_copy[past_mask].copy()
+
+    # Drop the temporary column
+    if 'game_datetime' in future_df.columns:
+        future_df = future_df.drop(columns=['game_datetime'])
+    if 'game_datetime' in past_df.columns:
+        past_df = past_df.drop(columns=['game_datetime'])
+
+    return future_df, past_df
+
+
+# ============================================================================
 # ANALYSIS FUNCTIONS
 # ============================================================================
 
@@ -457,6 +504,203 @@ def _safe_subtract(a, b) -> Optional[float]:
     return round(a - b, 2)
 
 
+def calculate_nba_future_games_analysis(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+    """
+    Analyze upcoming NBA games for the next 48 hours.
+
+    Returns dictionary with:
+    - biggest_underdogs: Teams with highest positive odds
+    - biggest_favorites: Teams with most negative odds
+    - fanduel_over_favored: Games where FanDuel odds are better than avg for home
+    - fanduel_under_favored: Games where FanDuel odds are worse than avg for home
+    """
+    if df.empty:
+        return {}
+
+    # Get latest odds for each game
+    latest = df.sort_values("Timestamp Pulled").groupby(["Home Team", "Away Team"]).last().reset_index()
+
+    # Biggest underdogs (highest positive odds or least negative)
+    underdogs = []
+    for _, row in latest.iterrows():
+        home_odds = row.get("Avg Home H2H Odds")
+        away_odds = row.get("Avg Away H2H Odds")
+
+        if pd.notna(home_odds):
+            underdogs.append({
+                "Team": row["Home Team"],
+                "Opponent": row["Away Team"],
+                "Location": "Home",
+                "Odds": home_odds,
+                "Game": f"{row['Away Team'][:3]} @ {row['Home Team'][:3]}"
+            })
+        if pd.notna(away_odds):
+            underdogs.append({
+                "Team": row["Away Team"],
+                "Opponent": row["Home Team"],
+                "Location": "Away",
+                "Odds": away_odds,
+                "Game": f"{row['Away Team'][:3]} @ {row['Home Team'][:3]}"
+            })
+
+    underdogs_df = pd.DataFrame(underdogs).sort_values("Odds", ascending=False)
+
+    # Biggest favorites (most negative odds)
+    favorites_df = pd.DataFrame(underdogs).sort_values("Odds", ascending=True)
+
+    # FanDuel comparison
+    fd_comparisons = []
+    for _, row in latest.iterrows():
+        fd_home = row.get("Home FanDuel H2H Odds")
+        avg_home = row.get("Avg Home H2H Odds")
+        fd_away = row.get("Away FanDuel H2H Odds")
+        avg_away = row.get("Avg Away H2H Odds")
+
+        if pd.notna(fd_home) and pd.notna(avg_home):
+            home_diff = fd_home - avg_home
+            fd_comparisons.append({
+                "Game": f"{row['Away Team'][:3]} @ {row['Home Team'][:3]}",
+                "Team": row["Home Team"],
+                "FanDuel": fd_home,
+                "Average": avg_home,
+                "Difference": home_diff
+            })
+
+        if pd.notna(fd_away) and pd.notna(avg_away):
+            away_diff = fd_away - avg_away
+            fd_comparisons.append({
+                "Game": f"{row['Away Team'][:3]} @ {row['Home Team'][:3]}",
+                "Team": row["Away Team"],
+                "FanDuel": fd_away,
+                "Average": avg_away,
+                "Difference": away_diff
+            })
+
+    fd_df = pd.DataFrame(fd_comparisons)
+
+    # Over-favored: FanDuel offers better odds (more positive difference)
+    fd_over = fd_df.sort_values("Difference", ascending=False)
+    # Under-favored: FanDuel offers worse odds (more negative difference)
+    fd_under = fd_df.sort_values("Difference", ascending=True)
+
+    return {
+        "biggest_underdogs": underdogs_df,
+        "biggest_favorites": favorites_df,
+        "fanduel_over_favored": fd_over,
+        "fanduel_under_favored": fd_under
+    }
+
+
+def calculate_moneyline_accuracy_table(odds_df: pd.DataFrame, results_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate moneyline accuracy for Average and FanDuel odds.
+    Returns table with last week and full season stats.
+    """
+    if odds_df.empty or results_df.empty:
+        return pd.DataFrame()
+
+    # Map game dates to results
+    results_dict = {}
+    for _, row in results_df.iterrows():
+        if pd.notna(row.get("Date")):
+            date_key = pd.to_datetime(row["Date"]).strftime("%Y-%m-%d")
+            home = row.get("Home Team", "")
+            away = row.get("Away Team", "")
+
+            if pd.notna(row.get("Home Score")) and pd.notna(row.get("Away Score")):
+                winner = home if row["Home Score"] > row["Away Score"] else away
+                results_dict[(date_key, home, away)] = {
+                    "winner": winner,
+                    "home_score": row["Home Score"],
+                    "away_score": row["Away Score"],
+                }
+
+    game_col = "Date of Game (ET)" if "Date of Game (ET)" in odds_df.columns else "Date of Game"
+
+    # Track accuracy for different time periods
+    stats = {
+        "Avg of all": {"last_week": {"correct": 0, "total": 0}, "full_season": {"correct": 0, "total": 0}},
+        "FanDuel": {"last_week": {"correct": 0, "total": 0}, "full_season": {"correct": 0, "total": 0}}
+    }
+
+    now = datetime.now()
+    week_ago = now - timedelta(days=7)
+
+    # Group odds by game and get final pre-game snapshot
+    for (home, away, game_date), group in odds_df.groupby(["Home Team", "Away Team", game_col]):
+        if not isinstance(game_date, str):
+            game_date = str(game_date)
+        date_key = game_date[:10]
+
+        # Check if we have results for this game
+        result_key = (date_key, home, away)
+        if result_key not in results_dict:
+            continue
+
+        result = results_dict[result_key]
+        actual_winner = result["winner"]
+
+        # Get final pre-game odds
+        final_odds = group.sort_values("Timestamp Pulled").iloc[-1]
+
+        # Average odds
+        avg_home_odds = final_odds.get("Avg Home H2H Odds")
+        avg_away_odds = final_odds.get("Avg Away H2H Odds")
+
+        # FanDuel odds
+        fd_home_odds = final_odds.get("Home FanDuel H2H Odds")
+        fd_away_odds = final_odds.get("Away FanDuel H2H Odds")
+
+        # Determine if this game is in the last week
+        game_datetime = pd.to_datetime(game_date, errors='coerce')
+        is_last_week = game_datetime >= week_ago if pd.notna(game_datetime) else False
+
+        # Check Average prediction
+        if pd.notna(avg_home_odds) and pd.notna(avg_away_odds):
+            avg_predicted = home if avg_home_odds < avg_away_odds else away
+            if avg_predicted == actual_winner:
+                stats["Avg of all"]["full_season"]["correct"] += 1
+                if is_last_week:
+                    stats["Avg of all"]["last_week"]["correct"] += 1
+            stats["Avg of all"]["full_season"]["total"] += 1
+            if is_last_week:
+                stats["Avg of all"]["last_week"]["total"] += 1
+
+        # Check FanDuel prediction
+        if pd.notna(fd_home_odds) and pd.notna(fd_away_odds):
+            fd_predicted = home if fd_home_odds < fd_away_odds else away
+            if fd_predicted == actual_winner:
+                stats["FanDuel"]["full_season"]["correct"] += 1
+                if is_last_week:
+                    stats["FanDuel"]["last_week"]["correct"] += 1
+            stats["FanDuel"]["full_season"]["total"] += 1
+            if is_last_week:
+                stats["FanDuel"]["last_week"]["total"] += 1
+
+    # Build table
+    table_data = []
+    for bookie, periods in stats.items():
+        row = {"Bookie": bookie}
+
+        # Last week
+        if periods["last_week"]["total"] > 0:
+            pct = round(100 * periods["last_week"]["correct"] / periods["last_week"]["total"])
+            row["Last week moneyline accuracy"] = f"{pct}%"
+        else:
+            row["Last week moneyline accuracy"] = ""
+
+        # Full season
+        if periods["full_season"]["total"] > 0:
+            pct = round(100 * periods["full_season"]["correct"] / periods["full_season"]["total"])
+            row["Full Season moneyline Line Accuracy"] = f"{pct}%"
+        else:
+            row["Full Season moneyline Line Accuracy"] = ""
+
+        table_data.append(row)
+
+    return pd.DataFrame(table_data)
+
+
 # ============================================================================
 # PLOTTING FUNCTIONS
 # ============================================================================
@@ -537,7 +781,7 @@ def plot_fanduel_comparison(fd_df: pd.DataFrame, output_dir: str, sport: str) ->
 
 
 def plot_season_team_odds(season_df: pd.DataFrame, output_dir: str, sport: str) -> Optional[str]:
-    """Plot season odds history for top 5 and bottom 5 teams."""
+    """Plot season MONEYLINE odds history for top 5 and bottom 5 teams."""
     if season_df.empty or len(season_df) < 10:
         return None
 
@@ -558,13 +802,14 @@ def plot_season_team_odds(season_df: pd.DataFrame, output_dir: str, sport: str) 
         history = row["History"]
         if history:
             dates = [h["timestamp"] for h in history]
+            # Only plot moneyline odds (H2H)
             odds = [h["odds"] for h in history]
             ax1.plot(dates, odds, label=f"{row['Team']} ({row['Avg Odds']:.0f})",
                     color=colors_top[i], linewidth=2, alpha=0.8)
 
     ax1.set_xlabel("Date")
     ax1.set_ylabel("Moneyline Odds")
-    ax1.set_title("Top 5 Teams (Most Favored)")
+    ax1.set_title("Top 5 Teams (Most Favored) - Moneyline Only")
     ax1.legend(loc='upper right', fontsize=8)
     ax1.grid(True, alpha=0.3)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
@@ -577,20 +822,21 @@ def plot_season_team_odds(season_df: pd.DataFrame, output_dir: str, sport: str) 
         history = row["History"]
         if history:
             dates = [h["timestamp"] for h in history]
+            # Only plot moneyline odds (H2H)
             odds = [h["odds"] for h in history]
             ax2.plot(dates, odds, label=f"{row['Team']} ({row['Avg Odds']:.0f})",
                     color=colors_bottom[i], linewidth=2, alpha=0.8)
 
     ax2.set_xlabel("Date")
     ax2.set_ylabel("Moneyline Odds")
-    ax2.set_title("Bottom 5 Teams (Biggest Underdogs)")
+    ax2.set_title("Bottom 5 Teams (Biggest Underdogs) - Moneyline Only")
     ax2.legend(loc='upper right', fontsize=8)
     ax2.grid(True, alpha=0.3)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
     ax2.axhline(y=100, color='gray', linestyle='--', alpha=0.3)
     plt.setp(ax2.xaxis.get_majorticklabels(), rotation=45)
 
-    plt.suptitle(f"{sport.upper()} Season Odds by Team", fontsize=14)
+    plt.suptitle(f"{sport.upper()} Season Moneyline Odds by Team", fontsize=14)
     plt.tight_layout()
 
     output_path = os.path.join(output_dir, f"{sport}_season_team_odds.png")
@@ -743,12 +989,148 @@ def plot_odds_movement(movements_df: pd.DataFrame, output_dir: str, sport: str) 
     return output_path
 
 
+def plot_nba_future_games(analysis: Dict, output_dir: str) -> Dict[str, str]:
+    """
+    Create 4 visualizations for upcoming NBA games (next 48 hours).
+
+    Returns dict with paths to:
+    - biggest_underdogs
+    - biggest_favorites
+    - fanduel_over_favored
+    - fanduel_under_favored
+    """
+    paths = {}
+
+    if not analysis:
+        return paths
+
+    # 1. Biggest Underdogs
+    underdogs_df = analysis.get("biggest_underdogs")
+    if underdogs_df is not None and not underdogs_df.empty:
+        top_underdogs = underdogs_df.head(10)
+        fig, ax = plt.subplots(figsize=(12, max(6, len(top_underdogs) * 0.5)))
+
+        labels = [f"{r['Team'][:10]} vs {r['Opponent'][:10]}" for _, r in top_underdogs.iterrows()]
+        odds = top_underdogs["Odds"].values
+        y_pos = range(len(labels))
+
+        bars = ax.barh(y_pos, odds, color='#e74c3c', alpha=0.8)
+
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels)
+        ax.set_xlabel("Moneyline Odds")
+        ax.set_title("NBA - Biggest Underdogs (Next 48 Hours)")
+        ax.grid(True, alpha=0.3, axis='x')
+
+        for bar, val in zip(bars, odds):
+            ax.text(val + 10, bar.get_y() + bar.get_height()/2,
+                    f'{val:+.0f}' if val >= 0 else f'{val:.0f}',
+                    va='center', ha='left', fontsize=9)
+
+        plt.tight_layout()
+        path = os.path.join(output_dir, "nba_future_biggest_underdogs.png")
+        plt.savefig(path, dpi=150, bbox_inches='tight')
+        plt.close(fig)
+        paths["biggest_underdogs"] = path
+
+    # 2. Biggest Favorites
+    favorites_df = analysis.get("biggest_favorites")
+    if favorites_df is not None and not favorites_df.empty:
+        top_favorites = favorites_df.head(10)
+        fig, ax = plt.subplots(figsize=(12, max(6, len(top_favorites) * 0.5)))
+
+        labels = [f"{r['Team'][:10]} vs {r['Opponent'][:10]}" for _, r in top_favorites.iterrows()]
+        odds = top_favorites["Odds"].values
+        y_pos = range(len(labels))
+
+        bars = ax.barh(y_pos, odds, color='#2ecc71', alpha=0.8)
+
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(labels)
+        ax.set_xlabel("Moneyline Odds")
+        ax.set_title("NBA - Biggest Favorites (Next 48 Hours)")
+        ax.grid(True, alpha=0.3, axis='x')
+
+        for bar, val in zip(bars, odds):
+            ax.text(val - 10, bar.get_y() + bar.get_height()/2,
+                    f'{val:.0f}',
+                    va='center', ha='right', fontsize=9)
+
+        plt.tight_layout()
+        path = os.path.join(output_dir, "nba_future_biggest_favorites.png")
+        plt.savefig(path, dpi=150, bbox_inches='tight')
+        plt.close(fig)
+        paths["biggest_favorites"] = path
+
+    # 3. FanDuel Over-Favored (better odds than avg)
+    fd_over_df = analysis.get("fanduel_over_favored")
+    if fd_over_df is not None and not fd_over_df.empty:
+        top_over = fd_over_df[fd_over_df["Difference"] > 0].head(10)
+        if not top_over.empty:
+            fig, ax = plt.subplots(figsize=(12, max(6, len(top_over) * 0.5)))
+
+            labels = [f"{r['Team'][:10]} ({r['Game']})" for _, r in top_over.iterrows()]
+            diffs = top_over["Difference"].values
+            y_pos = range(len(labels))
+
+            bars = ax.barh(y_pos, diffs, color='#27ae60', alpha=0.8)
+
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels(labels)
+            ax.set_xlabel("FanDuel vs Average Difference")
+            ax.set_title("NBA - FanDuel Offers Better Odds (Next 48 Hours)")
+            ax.grid(True, alpha=0.3, axis='x')
+
+            for bar, val in zip(bars, diffs):
+                ax.text(val + 1, bar.get_y() + bar.get_height()/2,
+                        f'{val:+.0f}',
+                        va='center', ha='left', fontsize=9)
+
+            plt.tight_layout()
+            path = os.path.join(output_dir, "nba_future_fanduel_over_favored.png")
+            plt.savefig(path, dpi=150, bbox_inches='tight')
+            plt.close(fig)
+            paths["fanduel_over_favored"] = path
+
+    # 4. FanDuel Under-Favored (worse odds than avg)
+    fd_under_df = analysis.get("fanduel_under_favored")
+    if fd_under_df is not None and not fd_under_df.empty:
+        top_under = fd_under_df[fd_under_df["Difference"] < 0].head(10)
+        if not top_under.empty:
+            fig, ax = plt.subplots(figsize=(12, max(6, len(top_under) * 0.5)))
+
+            labels = [f"{r['Team'][:10]} ({r['Game']})" for _, r in top_under.iterrows()]
+            diffs = top_under["Difference"].values
+            y_pos = range(len(labels))
+
+            bars = ax.barh(y_pos, diffs, color='#c0392b', alpha=0.8)
+
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels(labels)
+            ax.set_xlabel("FanDuel vs Average Difference")
+            ax.set_title("NBA - FanDuel Offers Worse Odds (Next 48 Hours)")
+            ax.grid(True, alpha=0.3, axis='x')
+
+            for bar, val in zip(bars, diffs):
+                ax.text(val - 1, bar.get_y() + bar.get_height()/2,
+                        f'{val:.0f}',
+                        va='center', ha='right', fontsize=9)
+
+            plt.tight_layout()
+            path = os.path.join(output_dir, "nba_future_fanduel_under_favored.png")
+            plt.savefig(path, dpi=150, bbox_inches='tight')
+            plt.close(fig)
+            paths["fanduel_under_favored"] = path
+
+    return paths
+
+
 # ============================================================================
 # HTML REPORT GENERATION
 # ============================================================================
 
 def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_str: str) -> str:
-    """Generate an HTML report combining all visualizations."""
+    """Generate an HTML report combining all visualizations with future/past game split."""
 
     html_parts = [
         "<!DOCTYPE html>",
@@ -760,12 +1142,15 @@ def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_
         body { font-family: Arial, sans-serif; max-width: 1400px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
         h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
         h2 { color: #34495e; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 10px; }
-        h3 { color: #7f8c8d; margin-top: 20px; }
+        h3 { color: #7f8c8d; margin-top: 20px; font-size: 1.3em; background: #ecf0f1; padding: 10px; border-radius: 4px; }
+        h4 { color: #95a5a6; margin-top: 15px; }
         .sport-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .future-section { border-left: 4px solid #27ae60; }
+        .past-section { border-left: 4px solid #e74c3c; }
         img { max-width: 100%; height: auto; margin: 10px 0; border-radius: 4px; }
         .timestamp { color: #7f8c8d; font-size: 0.9em; }
         .no-data { color: #95a5a6; font-style: italic; }
-        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; max-width: 800px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background: #3498db; color: white; }
         tr:nth-child(even) { background: #f9f9f9; }
@@ -782,68 +1167,102 @@ def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_
         f"<p class='timestamp'>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>",
     ]
 
-    for sport, sport_figures in figures.items():
+    for sport, sport_data in figures.items():
         html_parts.append(f"<div class='sport-section'>")
         html_parts.append(f"<h2>{sport.upper()} Odds Analysis</h2>")
 
-        if not sport_figures:
+        if not sport_data:
             html_parts.append("<p class='no-data'>No data available for this sport.</p>")
         else:
-            # Daily Summary
-            if "daily_summary" in sport_figures:
-                html_parts.append("<h3>Daily Odds Summary</h3>")
-                html_parts.append(f"<img src='{os.path.basename(sport_figures['daily_summary'])}' alt='Daily Summary'>")
+            # FUTURE GAMES SECTION (Next 48 hours)
+            future_figures = sport_data.get("future", {})
+            if future_figures:
+                html_parts.append("<div class='future-section' style='padding: 15px; margin: 20px 0;'>")
+                html_parts.append("<h3>🔮 Future Games (Next 48 Hours)</h3>")
 
-            # FanDuel Comparison
-            if "fanduel_comparison" in sport_figures:
-                html_parts.append("<div class='section-divider'></div>")
-                html_parts.append("<h3>FanDuel vs Market Average</h3>")
-                html_parts.append("<p>Positive values mean FanDuel offers better odds than the market average for the home team.</p>")
-                html_parts.append(f"<img src='{os.path.basename(sport_figures['fanduel_comparison'])}' alt='FanDuel Comparison'>")
+                # NBA-specific future game visualizations
+                if sport == "nba":
+                    if "biggest_underdogs" in future_figures:
+                        html_parts.append("<h4>Biggest Underdogs</h4>")
+                        html_parts.append(f"<img src='{os.path.basename(future_figures['biggest_underdogs'])}' alt='Biggest Underdogs'>")
 
-            # Bookmaker Variance
-            if "bookmaker_variance" in sport_figures:
-                html_parts.append("<div class='section-divider'></div>")
-                html_parts.append("<h3>Bookmaker Variance from Average</h3>")
-                html_parts.append("<p>Shows which sportsbooks consistently offer odds that differ from the market average.</p>")
-                html_parts.append(f"<img src='{os.path.basename(sport_figures['bookmaker_variance'])}' alt='Bookmaker Variance'>")
+                    if "biggest_favorites" in future_figures:
+                        html_parts.append("<h4>Biggest Favorites</h4>")
+                        html_parts.append(f"<img src='{os.path.basename(future_figures['biggest_favorites'])}' alt='Biggest Favorites'>")
 
-            # Odds Movement
-            if "odds_movement" in sport_figures:
-                html_parts.append("<div class='section-divider'></div>")
-                html_parts.append("<h3>Odds Movement</h3>")
-                html_parts.append(f"<img src='{os.path.basename(sport_figures['odds_movement'])}' alt='Odds Movement'>")
+                    if "fanduel_over_favored" in future_figures:
+                        html_parts.append("<h4>FanDuel Offers Better Odds Than Average</h4>")
+                        html_parts.append(f"<img src='{os.path.basename(future_figures['fanduel_over_favored'])}' alt='FanDuel Over Favored'>")
 
-            # Season Team Odds
-            if "season_team_odds" in sport_figures:
-                html_parts.append("<div class='section-divider'></div>")
-                html_parts.append("<h3>Season Odds - Top 5 & Bottom 5 Teams</h3>")
-                html_parts.append(f"<img src='{os.path.basename(sport_figures['season_team_odds'])}' alt='Season Team Odds'>")
+                    if "fanduel_under_favored" in future_figures:
+                        html_parts.append("<h4>FanDuel Offers Worse Odds Than Average</h4>")
+                        html_parts.append(f"<img src='{os.path.basename(future_figures['fanduel_under_favored'])}' alt='FanDuel Under Favored'>")
 
-            # Bookmaker Accuracy
-            if "bookmaker_accuracy" in sport_figures:
-                html_parts.append("<div class='section-divider'></div>")
-                html_parts.append("<h3>Bookmaker Prediction Accuracy</h3>")
-                html_parts.append("<p>How often each sportsbook's favorite actually won the game.</p>")
-                html_parts.append(f"<img src='{os.path.basename(sport_figures['bookmaker_accuracy'])}' alt='Bookmaker Accuracy'>")
+                # Daily Summary (if available for future games)
+                if "daily_summary" in future_figures:
+                    html_parts.append("<h4>Odds Summary</h4>")
+                    html_parts.append(f"<img src='{os.path.basename(future_figures['daily_summary'])}' alt='Daily Summary'>")
 
-            # Underdog Wins Table
-            sport_extra = extra_data.get(sport, {})
-            underdog_wins = sport_extra.get("underdog_wins", [])
-            if underdog_wins:
-                html_parts.append("<div class='section-divider'></div>")
-                html_parts.append("<h3>Recent Underdog Wins</h3>")
-                html_parts.append("<table>")
-                html_parts.append("<tr><th>Date</th><th>Game</th><th>Underdog Winner</th><th>Odds</th><th>Score</th></tr>")
-                for win in underdog_wins[-10:]:  # Last 10
-                    html_parts.append(f"<tr class='highlight'>")
-                    html_parts.append(f"<td>{win['Date']}</td>")
-                    html_parts.append(f"<td>{win['Game']}</td>")
-                    html_parts.append(f"<td class='underdog'>{win['Underdog']}</td>")
-                    html_parts.append(f"<td>+{win['Underdog Odds']:.0f}</td>" if win['Underdog Odds'] > 0 else f"<td>{win['Underdog Odds']:.0f}</td>")
-                    html_parts.append(f"<td>{win['Final Score']}</td>")
-                    html_parts.append("</tr>")
-                html_parts.append("</table>")
+                # Odds Movement
+                if "odds_movement" in future_figures:
+                    html_parts.append("<h4>Odds Movement</h4>")
+                    html_parts.append(f"<img src='{os.path.basename(future_figures['odds_movement'])}' alt='Odds Movement'>")
+
+                html_parts.append("</div>")
+
+            # PAST GAMES SECTION
+            past_figures = sport_data.get("past", {})
+            past_extra = extra_data.get(sport, {}).get("past", {})
+
+            if past_figures or past_extra:
+                html_parts.append("<div class='past-section' style='padding: 15px; margin: 20px 0;'>")
+                html_parts.append("<h3>📊 Past Games Analysis</h3>")
+
+                # Moneyline Accuracy Table (NBA only)
+                if sport == "nba":
+                    accuracy_table = past_extra.get("accuracy_table")
+                    if accuracy_table is not None and not accuracy_table.empty:
+                        html_parts.append("<h4>Moneyline Accuracy Tracker</h4>")
+                        html_parts.append("<table>")
+                        html_parts.append("<tr>")
+                        for col in accuracy_table.columns:
+                            html_parts.append(f"<th>{col}</th>")
+                        html_parts.append("</tr>")
+                        for _, row in accuracy_table.iterrows():
+                            html_parts.append("<tr>")
+                            for val in row:
+                                html_parts.append(f"<td>{val}</td>")
+                            html_parts.append("</tr>")
+                        html_parts.append("</table>")
+
+                # Season Team Odds (Moneyline only)
+                if "season_team_odds" in past_figures:
+                    html_parts.append("<h4>Season Moneyline Odds - Top 5 & Bottom 5 Teams</h4>")
+                    html_parts.append(f"<img src='{os.path.basename(past_figures['season_team_odds'])}' alt='Season Team Odds'>")
+
+                # Bookmaker Accuracy
+                if "bookmaker_accuracy" in past_figures:
+                    html_parts.append("<h4>Bookmaker Prediction Accuracy</h4>")
+                    html_parts.append("<p>How often each sportsbook's favorite actually won the game.</p>")
+                    html_parts.append(f"<img src='{os.path.basename(past_figures['bookmaker_accuracy'])}' alt='Bookmaker Accuracy'>")
+
+                # Underdog Wins Table
+                underdog_wins = past_extra.get("underdog_wins", [])
+                if underdog_wins:
+                    html_parts.append("<h4>Recent Underdog Wins</h4>")
+                    html_parts.append("<table>")
+                    html_parts.append("<tr><th>Date</th><th>Game</th><th>Underdog Winner</th><th>Odds</th><th>Score</th></tr>")
+                    for win in underdog_wins[-10:]:  # Last 10
+                        html_parts.append(f"<tr class='highlight'>")
+                        html_parts.append(f"<td>{win['Date']}</td>")
+                        html_parts.append(f"<td>{win['Game']}</td>")
+                        html_parts.append(f"<td class='underdog'>{win['Underdog']}</td>")
+                        html_parts.append(f"<td>+{win['Underdog Odds']:.0f}</td>" if win['Underdog Odds'] > 0 else f"<td>{win['Underdog Odds']:.0f}</td>")
+                        html_parts.append(f"<td>{win['Final Score']}</td>")
+                        html_parts.append("</tr>")
+                    html_parts.append("</table>")
+
+                html_parts.append("</div>")
 
         html_parts.append("</div>")
 
@@ -864,7 +1283,7 @@ def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_
 # ============================================================================
 
 def generate_report(data_dir: str = "data", output_dir: str = "reports", days: int = 7) -> dict:
-    """Generate complete daily report with all visualizations."""
+    """Generate complete daily report with all visualizations, split by future/past games."""
     os.makedirs(output_dir, exist_ok=True)
     date_str = datetime.now().strftime("%Y-%m-%d")
 
@@ -882,8 +1301,6 @@ def generate_report(data_dir: str = "data", output_dir: str = "reports", days: i
 
     for sport in ["nba", "nfl"]:
         print(f"\nProcessing {sport.upper()} data...")
-        sport_figures = {}
-        sport_extra = {}
 
         # Load recent data for daily analysis
         df = load_historical_data(data_dir, sport, days)
@@ -900,57 +1317,74 @@ def generate_report(data_dir: str = "data", output_dir: str = "reports", days: i
         season_df = load_season_data(data_dir, sport)
         print(f"  Loaded {len(season_df)} records for full season")
 
-        # 1. Daily Summary
-        summary_path = plot_daily_summary(df, output_dir, sport)
-        if summary_path:
-            sport_figures["daily_summary"] = summary_path
-            print(f"  Created daily summary")
+        # Split into future (next 48h) and past games
+        future_df, past_df = split_future_past_games(df, hours_ahead=48)
+        print(f"  Split: {len(future_df)} future games, {len(past_df)} past games")
 
-        # 2. FanDuel Comparison
-        fd_df = calculate_fanduel_comparison(df)
-        if not fd_df.empty:
-            fd_path = plot_fanduel_comparison(fd_df, output_dir, sport)
-            if fd_path:
-                sport_figures["fanduel_comparison"] = fd_path
-                print(f"  Created FanDuel comparison")
+        sport_figures = {"future": {}, "past": {}}
+        sport_extra = {"future": {}, "past": {}}
 
-        # 3. Bookmaker Variance
-        variance_df = calculate_bookmaker_variance(df)
-        if not variance_df.empty:
-            variance_path = plot_bookmaker_variance(variance_df, output_dir, sport)
-            if variance_path:
-                sport_figures["bookmaker_variance"] = variance_path
-                print(f"  Created bookmaker variance chart")
+        # =================================================================
+        # FUTURE GAMES ANALYSIS (Next 48 hours)
+        # =================================================================
+        if not future_df.empty:
+            print(f"  Processing future games...")
 
-        # 4. Odds Movement
-        movements = calculate_odds_movement(df)
-        if not movements.empty:
-            movement_path = plot_odds_movement(movements, output_dir, sport)
-            if movement_path:
-                sport_figures["odds_movement"] = movement_path
-                print(f"  Created odds movement chart")
+            if sport == "nba":
+                # NBA-specific future game analysis (4 charts)
+                nba_future_analysis = calculate_nba_future_games_analysis(future_df)
+                if nba_future_analysis:
+                    nba_future_paths = plot_nba_future_games(nba_future_analysis, output_dir)
+                    sport_figures["future"].update(nba_future_paths)
+                    print(f"    Created {len(nba_future_paths)} NBA future game charts")
 
-        # 5. Season Team Odds (Top 5 / Bottom 5)
-        if sport == "nba" and not season_df.empty:
-            team_odds_df = calculate_team_season_odds(season_df)
-            if not team_odds_df.empty:
-                season_path = plot_season_team_odds(team_odds_df, output_dir, sport)
-                if season_path:
-                    sport_figures["season_team_odds"] = season_path
-                    print(f"  Created season team odds chart")
+            # Daily Summary for future games
+            summary_path = plot_daily_summary(future_df, output_dir, f"{sport}_future")
+            if summary_path:
+                sport_figures["future"]["daily_summary"] = summary_path
+                print(f"    Created future games summary")
 
-        # 6. Bookmaker Accuracy (requires actual results)
-        if has_results and sport == "nba":
-            accuracy_data = calculate_bookmaker_accuracy(season_df, results_df)
-            if accuracy_data:
-                accuracy_path = plot_bookmaker_accuracy(accuracy_data, output_dir, sport)
-                if accuracy_path:
-                    sport_figures["bookmaker_accuracy"] = accuracy_path
-                    print(f"  Created bookmaker accuracy chart")
+            # Odds Movement for future games
+            movements = calculate_odds_movement(future_df)
+            if not movements.empty:
+                movement_path = plot_odds_movement(movements, output_dir, f"{sport}_future")
+                if movement_path:
+                    sport_figures["future"]["odds_movement"] = movement_path
+                    print(f"    Created future games odds movement chart")
 
-                sport_extra["underdog_wins"] = accuracy_data.get("underdog_wins", [])
-                if sport_extra["underdog_wins"]:
-                    print(f"  Found {len(sport_extra['underdog_wins'])} underdog wins")
+        # =================================================================
+        # PAST GAMES ANALYSIS
+        # =================================================================
+        if not past_df.empty or has_results:
+            print(f"  Processing past games...")
+
+            # Season Team Odds (Moneyline only - uses ALL season data, not just past_df)
+            if sport == "nba" and not season_df.empty:
+                team_odds_df = calculate_team_season_odds(season_df)
+                if not team_odds_df.empty:
+                    season_path = plot_season_team_odds(team_odds_df, output_dir, sport)
+                    if season_path:
+                        sport_figures["past"]["season_team_odds"] = season_path
+                        print(f"    Created season moneyline odds chart")
+
+            # Bookmaker Accuracy (requires actual results)
+            if has_results and sport == "nba":
+                accuracy_data = calculate_bookmaker_accuracy(season_df, results_df)
+                if accuracy_data:
+                    accuracy_path = plot_bookmaker_accuracy(accuracy_data, output_dir, sport)
+                    if accuracy_path:
+                        sport_figures["past"]["bookmaker_accuracy"] = accuracy_path
+                        print(f"    Created bookmaker accuracy chart")
+
+                    sport_extra["past"]["underdog_wins"] = accuracy_data.get("underdog_wins", [])
+                    if sport_extra["past"]["underdog_wins"]:
+                        print(f"    Found {len(sport_extra['past']['underdog_wins'])} underdog wins")
+
+                # Moneyline Accuracy Table
+                accuracy_table = calculate_moneyline_accuracy_table(season_df, results_df)
+                if not accuracy_table.empty:
+                    sport_extra["past"]["accuracy_table"] = accuracy_table
+                    print(f"    Created moneyline accuracy table")
 
         figures[sport] = sport_figures
         extra_data[sport] = sport_extra
