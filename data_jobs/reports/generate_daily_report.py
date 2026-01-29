@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
 """
-Daily Odds Report Generator
-Generates visualizations based on daily odds and week-to-week changes
+Daily Odds Report Generator - Hornets Focus
+Generates a weekly report focused on Charlotte Hornets games
 
 Features:
-- Daily odds summary by game
-- Odds movement tracking
-- Bookmaker variance analysis (who differs from average)
-- FanDuel vs Average comparison
-- Season-long team odds chart (top/bottom 5 teams)
-- Bookmaker accuracy tracking (using actual game results)
-- Underdog wins highlighting
+- All Hornets games from the past week with odds breakdown
+- Hornets-specific statistics (avg odds as favorite/underdog, home/away)
+- Bookmaker performance analysis (best and worst performing bookies)
 
 Usage:
     python -m data_jobs.reports.generate_daily_report [--days 7] [--output reports/]
@@ -226,6 +222,266 @@ def split_future_past_games(df: pd.DataFrame, hours_ahead: int = 48) -> tuple:
         past_df = past_df.drop(columns=['game_datetime'])
 
     return future_df, past_df
+
+
+# ============================================================================
+# TEAM-SPECIFIC ANALYSIS (HORNETS FOCUS)
+# ============================================================================
+
+def get_team_games(df: pd.DataFrame, team_name: str = "Charlotte Hornets") -> pd.DataFrame:
+    """
+    Filter dataframe to only include games involving the specified team.
+    Returns the latest odds snapshot for each unique game.
+    """
+    if df.empty:
+        return pd.DataFrame()
+
+    # Filter for games where team is home or away
+    team_mask = (df["Home Team"] == team_name) | (df["Away Team"] == team_name)
+    team_df = df[team_mask].copy()
+
+    if team_df.empty:
+        return pd.DataFrame()
+
+    # Get the game date column
+    game_col = "Date of Game (ET)" if "Date of Game (ET)" in team_df.columns else "Date of Game"
+
+    # Get the latest snapshot for each game
+    latest = team_df.sort_values("Timestamp Pulled").groupby(["Home Team", "Away Team", game_col]).last().reset_index()
+
+    # Add a column indicating if team is home or away
+    latest["Team Location"] = latest.apply(
+        lambda r: "Home" if r["Home Team"] == team_name else "Away", axis=1
+    )
+
+    # Add team's odds columns
+    latest["Team Odds"] = latest.apply(
+        lambda r: r["Avg Home H2H Odds"] if r["Home Team"] == team_name else r["Avg Away H2H Odds"],
+        axis=1
+    )
+    latest["Opponent Odds"] = latest.apply(
+        lambda r: r["Avg Away H2H Odds"] if r["Home Team"] == team_name else r["Avg Home H2H Odds"],
+        axis=1
+    )
+    latest["Opponent"] = latest.apply(
+        lambda r: r["Away Team"] if r["Home Team"] == team_name else r["Home Team"],
+        axis=1
+    )
+    latest["Is Favorite"] = latest["Team Odds"] < latest["Opponent Odds"]
+
+    return latest.sort_values(game_col)
+
+
+def calculate_team_odds_stats(team_df: pd.DataFrame, team_name: str = "Charlotte Hornets") -> Dict[str, Any]:
+    """
+    Calculate statistics on a team's odds across their games.
+    """
+    if team_df.empty:
+        return {}
+
+    stats = {
+        "team_name": team_name,
+        "total_games": len(team_df),
+        "home_games": len(team_df[team_df["Team Location"] == "Home"]),
+        "away_games": len(team_df[team_df["Team Location"] == "Away"]),
+        "games_as_favorite": len(team_df[team_df["Is Favorite"]]),
+        "games_as_underdog": len(team_df[~team_df["Is Favorite"]]),
+    }
+
+    # Average odds overall
+    stats["avg_odds"] = round(team_df["Team Odds"].mean(), 1)
+
+    # Average odds when home vs away
+    home_df = team_df[team_df["Team Location"] == "Home"]
+    away_df = team_df[team_df["Team Location"] == "Away"]
+
+    if not home_df.empty:
+        stats["avg_home_odds"] = round(home_df["Team Odds"].mean(), 1)
+    if not away_df.empty:
+        stats["avg_away_odds"] = round(away_df["Team Odds"].mean(), 1)
+
+    # Average odds when favorite vs underdog
+    fav_df = team_df[team_df["Is Favorite"]]
+    dog_df = team_df[~team_df["Is Favorite"]]
+
+    if not fav_df.empty:
+        stats["avg_favorite_odds"] = round(fav_df["Team Odds"].mean(), 1)
+    if not dog_df.empty:
+        stats["avg_underdog_odds"] = round(dog_df["Team Odds"].mean(), 1)
+
+    # Best and worst odds
+    stats["best_odds"] = round(team_df["Team Odds"].max(), 1)  # Highest (most plus or least minus)
+    stats["worst_odds"] = round(team_df["Team Odds"].min(), 1)  # Most negative
+
+    return stats
+
+
+def calculate_bookie_performance(df: pd.DataFrame, results_df: pd.DataFrame = None) -> pd.DataFrame:
+    """
+    Calculate how each bookmaker performs compared to market average.
+
+    If results_df is provided, calculates actual prediction accuracy.
+    Otherwise, calculates how much each bookie deviates from average (variance).
+
+    Returns a DataFrame with bookie rankings.
+    """
+    if df.empty:
+        return pd.DataFrame()
+
+    sportsbooks = get_sportsbooks(df)
+    if not sportsbooks:
+        return pd.DataFrame()
+
+    # Get latest snapshot per game
+    game_col = "Date of Game (ET)" if "Date of Game (ET)" in df.columns else "Date of Game"
+    latest = df.sort_values("Timestamp Pulled").groupby(["Home Team", "Away Team", game_col]).last().reset_index()
+
+    # If we have results, calculate accuracy
+    if results_df is not None and not results_df.empty:
+        return _calculate_bookie_accuracy(latest, results_df, sportsbooks, game_col)
+
+    # Otherwise calculate variance from average
+    return _calculate_bookie_variance(latest, sportsbooks)
+
+
+def _calculate_bookie_accuracy(latest: pd.DataFrame, results_df: pd.DataFrame,
+                                sportsbooks: List[str], game_col: str) -> pd.DataFrame:
+    """Calculate prediction accuracy for each bookie."""
+    # Build results lookup
+    results_dict = {}
+    for _, row in results_df.iterrows():
+        if pd.notna(row.get("Date")):
+            date_key = pd.to_datetime(row["Date"]).strftime("%Y-%m-%d")
+            home = row.get("Home Team", "")
+            away = row.get("Away Team", "")
+            if pd.notna(row.get("Home Score")) and pd.notna(row.get("Away Score")):
+                winner = home if row["Home Score"] > row["Away Score"] else away
+                results_dict[(date_key, home, away)] = winner
+
+    bookie_stats = {book: {"correct": 0, "total": 0} for book in sportsbooks}
+    bookie_stats["Market Average"] = {"correct": 0, "total": 0}
+
+    for _, row in latest.iterrows():
+        game_date = str(row.get(game_col, ""))[:10]
+        home = row["Home Team"]
+        away = row["Away Team"]
+        result_key = (game_date, home, away)
+
+        if result_key not in results_dict:
+            continue
+
+        actual_winner = results_dict[result_key]
+
+        # Market average prediction
+        avg_home = row.get("Avg Home H2H Odds")
+        avg_away = row.get("Avg Away H2H Odds")
+        if pd.notna(avg_home) and pd.notna(avg_away):
+            avg_predicted = home if avg_home < avg_away else away
+            bookie_stats["Market Average"]["total"] += 1
+            if avg_predicted == actual_winner:
+                bookie_stats["Market Average"]["correct"] += 1
+
+        # Each bookie's prediction
+        for book in sportsbooks:
+            home_col = f"Home {book} H2H Odds"
+            away_col = f"Away {book} H2H Odds"
+            book_home = row.get(home_col)
+            book_away = row.get(away_col)
+
+            if pd.notna(book_home) and pd.notna(book_away):
+                predicted = home if book_home < book_away else away
+                bookie_stats[book]["total"] += 1
+                if predicted == actual_winner:
+                    bookie_stats[book]["correct"] += 1
+
+    # Build results dataframe
+    results = []
+    for book, stats in bookie_stats.items():
+        if stats["total"] > 0:
+            pct = round(100 * stats["correct"] / stats["total"], 1)
+            results.append({
+                "Bookmaker": book,
+                "Correct Predictions": stats["correct"],
+                "Total Games": stats["total"],
+                "Accuracy %": pct,
+                "Metric": "Prediction Accuracy"
+            })
+
+    result_df = pd.DataFrame(results).sort_values("Accuracy %", ascending=False)
+    return result_df
+
+
+def _calculate_bookie_variance(latest: pd.DataFrame, sportsbooks: List[str]) -> pd.DataFrame:
+    """Calculate how much each bookie deviates from market average."""
+    bookie_diffs = {book: [] for book in sportsbooks}
+
+    for _, row in latest.iterrows():
+        avg_home = row.get("Avg Home H2H Odds")
+        avg_away = row.get("Avg Away H2H Odds")
+
+        if pd.isna(avg_home) or pd.isna(avg_away):
+            continue
+
+        for book in sportsbooks:
+            home_col = f"Home {book} H2H Odds"
+            away_col = f"Away {book} H2H Odds"
+            book_home = row.get(home_col)
+            book_away = row.get(away_col)
+
+            if pd.notna(book_home) and pd.notna(book_away):
+                diff = abs(book_home - avg_home) + abs(book_away - avg_away)
+                bookie_diffs[book].append(diff)
+
+    # Build results
+    results = []
+    for book, diffs in bookie_diffs.items():
+        if diffs:
+            avg_diff = round(np.mean(diffs), 2)
+            results.append({
+                "Bookmaker": book,
+                "Avg Deviation from Market": avg_diff,
+                "Games Analyzed": len(diffs),
+                "Metric": "Variance from Average"
+            })
+
+    result_df = pd.DataFrame(results).sort_values("Avg Deviation from Market")
+    return result_df
+
+
+def get_team_odds_by_bookie(team_df: pd.DataFrame, team_name: str = "Charlotte Hornets") -> pd.DataFrame:
+    """
+    Get odds from each bookmaker for team games.
+    Returns a DataFrame with game info and each bookie's odds for the team.
+    """
+    if team_df.empty:
+        return pd.DataFrame()
+
+    sportsbooks = get_sportsbooks(team_df)
+    game_col = "Date of Game (ET)" if "Date of Game (ET)" in team_df.columns else "Date of Game"
+
+    records = []
+    for _, row in team_df.iterrows():
+        is_home = row["Home Team"] == team_name
+        opponent = row["Away Team"] if is_home else row["Home Team"]
+
+        game_record = {
+            "Date": str(row.get(game_col, ""))[:10],
+            "Opponent": opponent,
+            "Location": "Home" if is_home else "Away",
+            "Avg Odds": row["Avg Home H2H Odds"] if is_home else row["Avg Away H2H Odds"],
+        }
+
+        # Add each bookie's odds
+        for book in sportsbooks:
+            if is_home:
+                odds_col = f"Home {book} H2H Odds"
+            else:
+                odds_col = f"Away {book} H2H Odds"
+            game_record[book] = row.get(odds_col)
+
+        records.append(game_record)
+
+    return pd.DataFrame(records)
 
 
 # ============================================================================
@@ -1168,57 +1424,123 @@ def plot_nba_future_games(analysis: Dict, output_dir: str) -> Dict[str, str]:
 # HTML REPORT GENERATION
 # ============================================================================
 
-def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_str: str) -> str:
-    """Generate a simple HTML report focused on bookmaker accuracy."""
+def generate_html_report(hornets_data: dict, bookie_performance: pd.DataFrame,
+                         output_dir: str, date_str: str) -> str:
+    """Generate a Hornets-focused HTML report with bookie performance analysis."""
+
+    team_name = hornets_data.get("team_name", "Charlotte Hornets")
+    team_games = hornets_data.get("games", pd.DataFrame())
+    team_stats = hornets_data.get("stats", {})
+    odds_by_bookie = hornets_data.get("odds_by_bookie", pd.DataFrame())
 
     html_parts = [
         "<!DOCTYPE html>",
         "<html>",
         "<head>",
-        f"<title>Bookmaker Accuracy Report - {date_str}</title>",
+        f"<title>{team_name} Weekly Odds Report - {date_str}</title>",
         "<style>",
         """
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 900px;
+            max-width: 1100px;
             margin: 40px auto;
             padding: 20px;
             background: #ffffff;
+            color: #333;
         }
         h1 {
-            color: #1a1a1a;
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            color: #1d428a;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            border-bottom: 4px solid #00788c;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1d428a;
+            font-size: 22px;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-left: 4px solid #00788c;
+            padding-left: 12px;
         }
         .timestamp {
             color: #666;
             font-size: 14px;
             margin-bottom: 30px;
         }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1d428a;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
         table {
             border-collapse: collapse;
             width: 100%;
             margin: 20px 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 14px;
         }
         th, td {
             border: 1px solid #e0e0e0;
-            padding: 12px 16px;
+            padding: 10px 12px;
             text-align: left;
         }
         th {
-            background: #f5f5f5;
-            color: #333;
+            background: #1d428a;
+            color: white;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
         td {
-            font-size: 14px;
             color: #333;
         }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
         tr:hover {
-            background: #fafafa;
+            background: #e8f4f8;
+        }
+        .favorite {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .underdog {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .best-bookie {
+            background: #d4edda !important;
+        }
+        .worst-bookie {
+            background: #f8d7da !important;
+        }
+        .section-note {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
         }
         .no-data {
             color: #999;
@@ -1230,28 +1552,212 @@ def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_
         "</style>",
         "</head>",
         "<body>",
-        f"<h1>Bookmaker Moneyline Accuracy</h1>",
-        f"<p class='timestamp'>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>",
+        f"<h1>{team_name} Weekly Odds Report</h1>",
+        f"<p class='timestamp'>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} UTC | Week ending: {date_str}</p>",
     ]
 
-    # Only show NBA accuracy table
-    nba_extra = extra_data.get("nba", {}).get("past", {})
-    accuracy_table = nba_extra.get("accuracy_table")
+    # =========================================================================
+    # SECTION 1: Hornets Games This Week
+    # =========================================================================
+    html_parts.append("<h2>Games This Week</h2>")
 
-    if accuracy_table is not None and not accuracy_table.empty:
+    if not team_games.empty:
         html_parts.append("<table>")
-        html_parts.append("<tr>")
-        for col in accuracy_table.columns:
-            html_parts.append(f"<th>{col}</th>")
-        html_parts.append("</tr>")
-        for _, row in accuracy_table.iterrows():
-            html_parts.append("<tr>")
-            for val in row:
-                html_parts.append(f"<td>{val}</td>")
-            html_parts.append("</tr>")
+        html_parts.append("<tr><th>Date</th><th>Opponent</th><th>Location</th><th>Team Odds</th><th>Opponent Odds</th><th>Status</th></tr>")
+
+        for _, row in team_games.iterrows():
+            game_col = "Date of Game (ET)" if "Date of Game (ET)" in row else "Date of Game"
+            date = str(row.get(game_col, ""))[:10]
+            opponent = row.get("Opponent", "")
+            location = row.get("Team Location", "")
+            team_odds = row.get("Team Odds", 0)
+            opp_odds = row.get("Opponent Odds", 0)
+            is_fav = row.get("Is Favorite", False)
+
+            status_class = "favorite" if is_fav else "underdog"
+            status_text = "Favorite" if is_fav else "Underdog"
+
+            team_odds_str = f"{team_odds:+.0f}" if team_odds >= 0 else f"{team_odds:.0f}"
+            opp_odds_str = f"{opp_odds:+.0f}" if opp_odds >= 0 else f"{opp_odds:.0f}"
+
+            html_parts.append(f"<tr>")
+            html_parts.append(f"<td>{date}</td>")
+            html_parts.append(f"<td>{opponent}</td>")
+            html_parts.append(f"<td>{location}</td>")
+            html_parts.append(f"<td>{team_odds_str}</td>")
+            html_parts.append(f"<td>{opp_odds_str}</td>")
+            html_parts.append(f"<td class='{status_class}'>{status_text}</td>")
+            html_parts.append(f"</tr>")
+
         html_parts.append("</table>")
     else:
-        html_parts.append("<p class='no-data'>No accuracy data available.</p>")
+        html_parts.append("<p class='no-data'>No games found this week.</p>")
+
+    # =========================================================================
+    # SECTION 2: Hornets Odds Statistics
+    # =========================================================================
+    html_parts.append("<h2>Odds Statistics</h2>")
+
+    if team_stats:
+        html_parts.append("<div class='stats-grid'>")
+
+        # Total games
+        html_parts.append(f"""
+        <div class='stat-card'>
+            <div class='stat-value'>{team_stats.get('total_games', 0)}</div>
+            <div class='stat-label'>Total Games</div>
+        </div>
+        """)
+
+        # Home/Away split
+        html_parts.append(f"""
+        <div class='stat-card'>
+            <div class='stat-value'>{team_stats.get('home_games', 0)} / {team_stats.get('away_games', 0)}</div>
+            <div class='stat-label'>Home / Away</div>
+        </div>
+        """)
+
+        # Favorite/Underdog split
+        html_parts.append(f"""
+        <div class='stat-card'>
+            <div class='stat-value'>{team_stats.get('games_as_favorite', 0)} / {team_stats.get('games_as_underdog', 0)}</div>
+            <div class='stat-label'>Favorite / Underdog</div>
+        </div>
+        """)
+
+        # Average odds
+        avg_odds = team_stats.get('avg_odds', 0)
+        odds_class = 'negative' if avg_odds < 0 else 'positive'
+        avg_odds_str = f"{avg_odds:+.0f}" if avg_odds >= 0 else f"{avg_odds:.0f}"
+        html_parts.append(f"""
+        <div class='stat-card'>
+            <div class='stat-value {odds_class}'>{avg_odds_str}</div>
+            <div class='stat-label'>Avg Odds</div>
+        </div>
+        """)
+
+        # Avg home odds
+        if 'avg_home_odds' in team_stats:
+            home_odds = team_stats['avg_home_odds']
+            home_class = 'negative' if home_odds < 0 else 'positive'
+            home_str = f"{home_odds:+.0f}" if home_odds >= 0 else f"{home_odds:.0f}"
+            html_parts.append(f"""
+            <div class='stat-card'>
+                <div class='stat-value {home_class}'>{home_str}</div>
+                <div class='stat-label'>Avg Home Odds</div>
+            </div>
+            """)
+
+        # Avg away odds
+        if 'avg_away_odds' in team_stats:
+            away_odds = team_stats['avg_away_odds']
+            away_class = 'negative' if away_odds < 0 else 'positive'
+            away_str = f"{away_odds:+.0f}" if away_odds >= 0 else f"{away_odds:.0f}"
+            html_parts.append(f"""
+            <div class='stat-card'>
+                <div class='stat-value {away_class}'>{away_str}</div>
+                <div class='stat-label'>Avg Away Odds</div>
+            </div>
+            """)
+
+        html_parts.append("</div>")
+    else:
+        html_parts.append("<p class='no-data'>No statistics available.</p>")
+
+    # =========================================================================
+    # SECTION 3: Odds by Bookmaker for Hornets Games
+    # =========================================================================
+    html_parts.append("<h2>Odds by Bookmaker</h2>")
+    html_parts.append("<p class='section-note'>Moneyline odds for each Hornets game from different sportsbooks</p>")
+
+    if not odds_by_bookie.empty:
+        html_parts.append("<table>")
+        html_parts.append("<tr>")
+        for col in odds_by_bookie.columns:
+            html_parts.append(f"<th>{col}</th>")
+        html_parts.append("</tr>")
+
+        for _, row in odds_by_bookie.iterrows():
+            html_parts.append("<tr>")
+            for col in odds_by_bookie.columns:
+                val = row[col]
+                if pd.isna(val):
+                    html_parts.append("<td>-</td>")
+                elif isinstance(val, (int, float)) and col not in ["Date", "Opponent", "Location"]:
+                    val_str = f"{val:+.0f}" if val >= 0 else f"{val:.0f}"
+                    html_parts.append(f"<td>{val_str}</td>")
+                else:
+                    html_parts.append(f"<td>{val}</td>")
+            html_parts.append("</tr>")
+
+        html_parts.append("</table>")
+    else:
+        html_parts.append("<p class='no-data'>No bookmaker data available.</p>")
+
+    # =========================================================================
+    # SECTION 4: Overall Bookie Performance
+    # =========================================================================
+    html_parts.append("<h2>Bookmaker Performance Rankings</h2>")
+
+    if not bookie_performance.empty:
+        metric = bookie_performance["Metric"].iloc[0] if "Metric" in bookie_performance.columns else "Performance"
+
+        if "Accuracy" in metric:
+            html_parts.append("<p class='section-note'>Based on correct winner predictions. Higher accuracy is better.</p>")
+            sort_col = "Accuracy %"
+            best_is_high = True
+        else:
+            html_parts.append("<p class='section-note'>Based on deviation from market average odds. Lower variance means closer to consensus.</p>")
+            sort_col = "Avg Deviation from Market"
+            best_is_high = False
+
+        html_parts.append("<table>")
+        html_parts.append("<tr>")
+        for col in bookie_performance.columns:
+            if col != "Metric":
+                html_parts.append(f"<th>{col}</th>")
+        html_parts.append("</tr>")
+
+        # Determine best and worst
+        if len(bookie_performance) > 0:
+            if best_is_high:
+                best_idx = bookie_performance[sort_col].idxmax()
+                worst_idx = bookie_performance[sort_col].idxmin()
+            else:
+                best_idx = bookie_performance[sort_col].idxmin()
+                worst_idx = bookie_performance[sort_col].idxmax()
+        else:
+            best_idx = worst_idx = None
+
+        for idx, row in bookie_performance.iterrows():
+            row_class = ""
+            if idx == best_idx:
+                row_class = "best-bookie"
+            elif idx == worst_idx:
+                row_class = "worst-bookie"
+
+            html_parts.append(f"<tr class='{row_class}'>")
+            for col in bookie_performance.columns:
+                if col != "Metric":
+                    val = row[col]
+                    if col == sort_col and best_is_high:
+                        html_parts.append(f"<td><strong>{val}%</strong></td>")
+                    elif col == sort_col:
+                        html_parts.append(f"<td><strong>{val}</strong></td>")
+                    else:
+                        html_parts.append(f"<td>{val}</td>")
+            html_parts.append("</tr>")
+
+        html_parts.append("</table>")
+
+        # Summary of best/worst
+        if best_idx is not None and worst_idx is not None:
+            best_bookie = bookie_performance.loc[best_idx, "Bookmaker"]
+            worst_bookie = bookie_performance.loc[worst_idx, "Bookmaker"]
+            html_parts.append(f"<p><strong>Best Performing:</strong> {best_bookie} (highlighted in green)</p>")
+            html_parts.append(f"<p><strong>Worst Performing:</strong> {worst_bookie} (highlighted in red)</p>")
+    else:
+        html_parts.append("<p class='no-data'>No bookmaker performance data available.</p>")
 
     html_parts.extend([
         "</body>",
@@ -1269,141 +1775,126 @@ def generate_html_report(figures: dict, extra_data: dict, output_dir: str, date_
 # MAIN REPORT GENERATION
 # ============================================================================
 
-def generate_report(data_dir: str = "data", output_dir: str = "reports", days: int = 7) -> dict:
-    """Generate complete daily report with all visualizations, split by future/past games."""
+def generate_report(data_dir: str = "data", output_dir: str = "reports", days: int = 7,
+                    team_name: str = "Charlotte Hornets") -> dict:
+    """Generate Hornets-focused weekly report with bookie performance analysis."""
     os.makedirs(output_dir, exist_ok=True)
     date_str = datetime.now().strftime("%Y-%m-%d")
 
-    figures = {}
-    extra_data = {}
+    print(f"\n{'='*60}")
+    print(f"  {team_name} Weekly Odds Report")
+    print(f"  Week ending: {date_str}")
+    print(f"{'='*60}")
 
     # Load actual results for accuracy tracking
     results_df = load_actual_results(data_dir)
     has_results = not results_df.empty
     if has_results:
-        print(f"Loaded {len(results_df)} game results for accuracy tracking")
+        print(f"\nLoaded {len(results_df)} game results for accuracy tracking")
     else:
-        print("No actual game results found in data/nba/actual_games/")
-        print("  To enable accuracy tracking, add CSVs with columns: Date, Home Team, Away Team, Home Score, Away Score")
+        print("\nNo actual game results found - using variance-based bookie analysis")
 
-    for sport in ["nba", "nfl"]:
-        print(f"\nProcessing {sport.upper()} data...")
+    # Load NBA data (this report focuses on basketball)
+    print(f"\nLoading NBA data from last {days} days...")
+    df = load_historical_data(data_dir, "nba", days)
 
-        # Load recent data for daily analysis
-        df = load_historical_data(data_dir, sport, days)
+    if df.empty:
+        print("  No NBA data found!")
+        return {"html_report": None, "error": "No data found"}
 
-        if df.empty:
-            print(f"  No {sport.upper()} data found")
-            figures[sport] = {}
-            extra_data[sport] = {}
-            continue
+    print(f"  Loaded {len(df)} total records")
 
-        print(f"  Loaded {len(df)} records for last {days} days")
+    # =========================================================================
+    # HORNETS ANALYSIS
+    # =========================================================================
+    print(f"\n--- {team_name} Analysis ---")
 
-        # Load full season data for season charts
-        season_df = load_season_data(data_dir, sport)
-        print(f"  Loaded {len(season_df)} records for full season")
+    # Get all Hornets games
+    hornets_games = get_team_games(df, team_name)
+    print(f"  Found {len(hornets_games)} {team_name} games this week")
 
-        # Split into future (next 48h) and past games
-        future_df, past_df = split_future_past_games(df, hours_ahead=48)
-        print(f"  Split: {len(future_df)} future games, {len(past_df)} past games")
+    # Calculate Hornets statistics
+    hornets_stats = calculate_team_odds_stats(hornets_games, team_name)
+    if hornets_stats:
+        print(f"  Average odds: {hornets_stats.get('avg_odds', 'N/A')}")
+        print(f"  Games as favorite: {hornets_stats.get('games_as_favorite', 0)}")
+        print(f"  Games as underdog: {hornets_stats.get('games_as_underdog', 0)}")
 
-        sport_figures = {"future": {}, "past": {}}
-        sport_extra = {"future": {}, "past": {}}
+    # Get odds breakdown by bookmaker for Hornets games
+    hornets_odds_by_bookie = get_team_odds_by_bookie(hornets_games, team_name)
+    print(f"  Odds data from {len(hornets_odds_by_bookie.columns) - 4} bookmakers")
 
-        # =================================================================
-        # FUTURE GAMES ANALYSIS (Next 48 hours)
-        # =================================================================
-        if not future_df.empty:
-            print(f"  Processing future games...")
+    # =========================================================================
+    # OVERALL BOOKIE PERFORMANCE
+    # =========================================================================
+    print(f"\n--- Bookmaker Performance Analysis ---")
 
-            if sport == "nba":
-                # NBA-specific future game analysis (4 charts)
-                nba_future_analysis = calculate_nba_future_games_analysis(future_df)
-                if nba_future_analysis:
-                    nba_future_paths = plot_nba_future_games(nba_future_analysis, output_dir)
-                    sport_figures["future"].update(nba_future_paths)
-                    print(f"    Created {len(nba_future_paths)} NBA future game charts")
+    # Load season data for more comprehensive bookie analysis
+    season_df = load_season_data(data_dir, "nba")
+    print(f"  Analyzing {len(season_df)} season records")
 
-            # Daily Summary for future games
-            summary_path = plot_daily_summary(future_df, output_dir, f"{sport}_future")
-            if summary_path:
-                sport_figures["future"]["daily_summary"] = summary_path
-                print(f"    Created future games summary")
+    # Calculate bookie performance (accuracy if we have results, variance otherwise)
+    bookie_performance = calculate_bookie_performance(season_df, results_df if has_results else None)
 
-            # Odds Movement for future games
-            movements = calculate_odds_movement(future_df)
-            if not movements.empty:
-                movement_path = plot_odds_movement(movements, output_dir, f"{sport}_future")
-                if movement_path:
-                    sport_figures["future"]["odds_movement"] = movement_path
-                    print(f"    Created future games odds movement chart")
+    if not bookie_performance.empty:
+        metric_type = bookie_performance["Metric"].iloc[0] if "Metric" in bookie_performance.columns else "Performance"
+        print(f"  Metric: {metric_type}")
 
-        # =================================================================
-        # PAST GAMES ANALYSIS
-        # =================================================================
-        if not past_df.empty or has_results:
-            print(f"  Processing past games...")
+        if "Accuracy" in metric_type:
+            best = bookie_performance.loc[bookie_performance["Accuracy %"].idxmax()]
+            worst = bookie_performance.loc[bookie_performance["Accuracy %"].idxmin()]
+            print(f"  Best: {best['Bookmaker']} ({best['Accuracy %']}%)")
+            print(f"  Worst: {worst['Bookmaker']} ({worst['Accuracy %']}%)")
+        else:
+            best = bookie_performance.loc[bookie_performance["Avg Deviation from Market"].idxmin()]
+            worst = bookie_performance.loc[bookie_performance["Avg Deviation from Market"].idxmax()]
+            print(f"  Closest to market: {best['Bookmaker']} ({best['Avg Deviation from Market']} avg deviation)")
+            print(f"  Most different: {worst['Bookmaker']} ({worst['Avg Deviation from Market']} avg deviation)")
 
-            # Season Team Odds (Moneyline only - uses ALL season data, not just past_df)
-            if sport == "nba" and not season_df.empty:
-                team_odds_df = calculate_team_season_odds(season_df)
-                if not team_odds_df.empty:
-                    season_path = plot_season_team_odds(team_odds_df, output_dir, sport)
-                    if season_path:
-                        sport_figures["past"]["season_team_odds"] = season_path
-                        print(f"    Created season moneyline odds chart")
+    # =========================================================================
+    # GENERATE HTML REPORT
+    # =========================================================================
+    hornets_data = {
+        "team_name": team_name,
+        "games": hornets_games,
+        "stats": hornets_stats,
+        "odds_by_bookie": hornets_odds_by_bookie,
+    }
 
-            # Bookmaker Accuracy (requires actual results)
-            if has_results and sport == "nba":
-                accuracy_data = calculate_bookmaker_accuracy(season_df, results_df)
-                if accuracy_data:
-                    accuracy_path = plot_bookmaker_accuracy(accuracy_data, output_dir, sport)
-                    if accuracy_path:
-                        sport_figures["past"]["bookmaker_accuracy"] = accuracy_path
-                        print(f"    Created bookmaker accuracy chart")
-
-                    sport_extra["past"]["underdog_wins"] = accuracy_data.get("underdog_wins", [])
-                    if sport_extra["past"]["underdog_wins"]:
-                        print(f"    Found {len(sport_extra['past']['underdog_wins'])} underdog wins")
-
-                # Moneyline Accuracy Table
-                accuracy_table = calculate_moneyline_accuracy_table(season_df, results_df)
-                if not accuracy_table.empty:
-                    sport_extra["past"]["accuracy_table"] = accuracy_table
-                    print(f"    Created moneyline accuracy table")
-
-        figures[sport] = sport_figures
-        extra_data[sport] = sport_extra
-
-    # Generate HTML report
-    html_path = generate_html_report(figures, extra_data, output_dir, date_str)
-    print(f"\nGenerated HTML report: {html_path}")
+    html_path = generate_html_report(hornets_data, bookie_performance, output_dir, date_str)
+    print(f"\n{'='*60}")
+    print(f"  Report generated: {html_path}")
+    print(f"{'='*60}")
 
     return {
         "html_report": html_path,
-        "figures": figures,
-        "extra_data": extra_data,
+        "hornets_data": hornets_data,
+        "bookie_performance": bookie_performance,
         "date": date_str,
     }
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate daily odds visualization report")
+    parser = argparse.ArgumentParser(description="Generate Hornets-focused weekly odds report")
     parser.add_argument("--days", type=int, default=7, help="Days of history to analyze")
     parser.add_argument("--output", default="reports", help="Output directory")
     parser.add_argument("--data-dir", default="data", help="Data directory")
+    parser.add_argument("--team", default="Charlotte Hornets", help="Team to focus on")
 
     args = parser.parse_args()
 
     result = generate_report(
         data_dir=args.data_dir,
         output_dir=args.output,
-        days=args.days
+        days=args.days,
+        team_name=args.team
     )
 
     print(f"\nReport generation complete!")
-    print(f"HTML Report: {result['html_report']}")
+    if result.get("html_report"):
+        print(f"HTML Report: {result['html_report']}")
+    else:
+        print(f"Error: {result.get('error', 'Unknown error')}")
 
 
 if __name__ == "__main__":
