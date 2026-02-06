@@ -66,9 +66,17 @@ jobs:
             --output reports \
             --data-dir data
 
-          REPORT_DATE="$(date +'%Y-%m-%d')"
+          # Find the newest daily report by filename (YYYY-MM-DD sorts correctly)
+          LATEST_REPORT="$(ls reports/daily_report_*.html 2>/dev/null | sort -r | head -1)"
+          if [ -z "$LATEST_REPORT" ]; then
+            echo "::error::No daily report files found"
+            exit 1
+          fi
+
+          # Extract date from filename (daily_report_YYYY-MM-DD.html)
+          REPORT_DATE="$(basename "$LATEST_REPORT" .html | sed 's/daily_report_//')"
           echo "date=$REPORT_DATE" >> "$GITHUB_OUTPUT"
-          echo "report_path=reports/daily_report_${REPORT_DATE}.html" >> "$GITHUB_OUTPUT"
+          echo "report_path=$LATEST_REPORT" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push reports
         shell: bash
