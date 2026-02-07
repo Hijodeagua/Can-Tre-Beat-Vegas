@@ -55,16 +55,15 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Use workflow input if present (manual dispatch), otherwise default to 7 (schedule)
+          # Use workflow input if present (manual dispatch), otherwise default to 30 (schedule)
           DAYS="${{ github.event.inputs.days }}"
           if [ -z "${DAYS:-}" ]; then
-            DAYS="7"
+            DAYS="30"
           fi
 
-          python -m data_jobs.reports.generate_daily_report \
+          python -m data_jobs.reports.simplified_daily_report \
             --days "$DAYS" \
-            --output reports \
-            --data-dir data
+            --no-email
 
           REPORT_DATE="$(date +'%Y-%m-%d')"
           echo "date=$REPORT_DATE" >> "$GITHUB_OUTPUT"
@@ -78,7 +77,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add reports/ || true
+          git add reports/ data/predictions/ || true
 
           if [ -n "$(git status --porcelain)" ]; then
             timestamp="$(date -u +'%Y-%m-%d')"
@@ -124,20 +123,17 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           to: ${{ env.REPORT_EMAIL }}
           from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
-          subject: "Daily Odds Report - ${{ steps.report.outputs.date }}"
+          subject: "🏀 NBA Daily Report - ${{ steps.report.outputs.date }}"
           html_body: |
-            <h2>Daily Odds Report - ${{ steps.report.outputs.date }}</h2>
-            <p>Your daily sports betting odds analysis is ready.</p>
-            <p><strong>Report highlights:</strong></p>
-            <ul>
-              <li>NBA and NFL daily odds summaries</li>
-              <li>FanDuel vs Market Average comparison</li>
-              <li>Bookmaker variance analysis (who differs from average)</li>
-              <li>Odds movement tracking</li>
-              <li>Season odds for top 5 / bottom 5 NBA teams</li>
-              <li>Bookmaker prediction accuracy (if results available)</li>
-              <li>Underdog wins highlighting</li>
-            </ul>
+            <h2>🏀 NBA Daily Report - ${{ steps.report.outputs.date }}</h2>
+            <p>Your simplified daily NBA report is ready.</p>
+            <p><strong>Today's 4 observations:</strong></p>
+            <ol>
+              <li>🐝 <strong>Hornets</strong> — Next game odds & past month performance vs bookies</li>
+              <li>📊 <strong>Bookmaker Rankings</strong> — Prediction accuracy across all sportsbooks</li>
+              <li>🤖 <strong>ML Predictions</strong> — Winner & score predictions for next 48 hours</li>
+              <li>📈 <strong>Prediction History</strong> — How our models have performed over time</li>
+            </ol>
             <p>The full HTML report and charts are attached.</p>
             <p>You can also view the report in the repository:
               <a href="https://github.com/${{ github.repository }}/blob/main/reports/daily_report_${{ steps.report.outputs.date }}.html">
@@ -148,15 +144,9 @@ jobs:
             <p><small>This is an automated email from your Can-Tre-Beat-Vegas odds tracking system.</small></p>
           attachments: |
             reports/daily_report_${{ steps.report.outputs.date }}.html
-            reports/nba_daily_summary.png
-            reports/nba_fanduel_comparison.png
-            reports/nba_bookmaker_variance.png
-            reports/nba_odds_movement.png
-            reports/nba_season_team_odds.png
-            reports/nfl_daily_summary.png
-            reports/nfl_fanduel_comparison.png
-            reports/nfl_bookmaker_variance.png
-            reports/nfl_odds_movement.png
+            reports/charts/hornets_performance_${{ steps.report.outputs.date }}.png
+            reports/charts/bookie_performance_${{ steps.report.outputs.date }}.png
+            reports/charts/ml_models_${{ steps.report.outputs.date }}.png
           ignore_cert: true
           convert_markdown: true
 
@@ -167,5 +157,5 @@ jobs:
           name: daily-report-${{ github.run_number }}
           path: |
             reports/*.html
-            reports/*.png
+            reports/charts/*.png
           retention-days: 30
