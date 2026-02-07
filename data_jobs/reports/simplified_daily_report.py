@@ -387,14 +387,18 @@ def get_sportsbooks(df: pd.DataFrame) -> List[str]:
     return sportsbooks
 
 
-def calculate_bookie_accuracy(odds_df: pd.DataFrame, results_df: pd.DataFrame) -> pd.DataFrame:
-    """Calculate prediction accuracy for each bookmaker."""
+def calculate_bookie_accuracy(odds_df: pd.DataFrame, results_df: pd.DataFrame) -> Tuple[pd.DataFrame, List[Dict]]:
+    """Calculate prediction accuracy for each bookmaker, plus notable calls.
+    
+    Returns:
+        Tuple of (bookie_rankings DataFrame, list of notable game dicts)
+    """
     if odds_df.empty or results_df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(), []
     
     sportsbooks = get_sportsbooks(odds_df)
     if not sportsbooks:
-        return pd.DataFrame()
+        return pd.DataFrame(), []
     
     game_col = "Date of Game (ET)" if "Date of Game (ET)" in odds_df.columns else "Date of Game"
     latest_odds = odds_df.sort_values("Timestamp Pulled").groupby(
@@ -402,6 +406,8 @@ def calculate_bookie_accuracy(odds_df: pd.DataFrame, results_df: pd.DataFrame) -
     ).last().reset_index()
     
     bookie_stats = {book: {"correct": 0, "total": 0, "deviation_sum": 0} for book in sportsbooks}
+    # Track per-game bookie predictions for notable calls
+    game_details = []
     
     for _, result in results_df.iterrows():
         home_team = result.get("Home Team")
@@ -427,11 +433,18 @@ def calculate_bookie_accuracy(odds_df: pd.DataFrame, results_df: pd.DataFrame) -
             continue
         
         home_won = home_score > away_score
+        actual_winner = home_team if home_won else away_team
         avg_home = odds_row.get("Avg Home H2H Odds")
         avg_away = odds_row.get("Avg Away H2H Odds")
         
         if pd.isna(avg_home) or pd.isna(avg_away):
             continue
+        
+        # Market consensus: who did the average predict?
+        market_predicted_home = avg_home < avg_away
+        market_correct = market_predicted_home == home_won
+        
+        game_bookie_calls = {}
         
         for book in sportsbooks:
             home_col = f"Home {book} H2H Odds"
@@ -447,14 +460,45 @@ def calculate_bookie_accuracy(odds_df: pd.DataFrame, results_df: pd.DataFrame) -
                 continue
             
             book_predicted_home = book_home < book_away
+            book_correct = book_predicted_home == home_won
             
             bookie_stats[book]["total"] += 1
-            if book_predicted_home == home_won:
+            if book_correct:
                 bookie_stats[book]["correct"] += 1
             
             deviation = abs(book_home - avg_home) + abs(book_away - avg_away)
             bookie_stats[book]["deviation_sum"] += deviation
+            
+            game_bookie_calls[book] = {
+                "predicted_home": book_predicted_home,
+                "correct": book_correct,
+                "home_odds": book_home,
+                "away_odds": book_away,
+            }
+        
+        if game_bookie_calls:
+            correct_books = [b for b, c in game_bookie_calls.items() if c["correct"]]
+            wrong_books = [b for b, c in game_bookie_calls.items() if not c["correct"]]
+            total_books = len(game_bookie_calls)
+            
+            game_details.append({
+                "home_team": home_team,
+                "away_team": away_team,
+                "home_score": int(home_score),
+                "away_score": int(away_score),
+                "actual_winner": actual_winner,
+                "market_correct": market_correct,
+                "correct_books": correct_books,
+                "wrong_books": wrong_books,
+                "num_correct": len(correct_books),
+                "num_wrong": len(wrong_books),
+                "total_books": total_books,
+                "score_margin": abs(home_score - away_score),
+                "avg_home_odds": avg_home,
+                "avg_away_odds": avg_away,
+            })
     
+    # Build rankings
     results = []
     for book, stats in bookie_stats.items():
         if stats["total"] > 0:
@@ -466,10 +510,57 @@ def calculate_bookie_accuracy(odds_df: pd.DataFrame, results_df: pd.DataFrame) -
                 "Avg Deviation": round(stats["deviation_sum"] / stats["total"], 1),
             })
     
+    rankings_df = pd.DataFrame()
     if results:
-        df = pd.DataFrame(results)
-        return df.sort_values("Accuracy %", ascending=False).reset_index(drop=True)
-    return pd.DataFrame()
+        rankings_df = pd.DataFrame(results)
+        rankings_df = rankings_df.sort_values("Accuracy %", ascending=False).reset_index(drop=True)
+    
+    # Find notable calls
+    notable_calls = []
+    
+    # 1. Biggest upsets (market was wrong, large margin)
+    upsets = [g for g in game_details if not g["market_correct"]]
+    upsets.sort(key=lambda x: x["score_margin"], reverse=True)
+    for g in upsets[:3]:
+        notable_calls.append({
+            "type": "upset",
+            "label": "Biggest Upset",
+            "game": f"{g['away_team']} @ {g['home_team']}",
+            "score": f"{g['away_score']}-{g['home_score']}",
+            "winner": g["actual_winner"],
+            "margin": int(g["score_margin"]),
+            "detail": f"Market had {g['home_team'] if g['avg_home_odds'] < g['avg_away_odds'] else g['away_team']} winning",
+        })
+    
+    # 2. Best unique calls (only 1-2 bookies got it right, rest were wrong)
+    for g in game_details:
+        if 0 < g["num_correct"] <= 2 and g["num_wrong"] >= 4:
+            for book in g["correct_books"]:
+                notable_calls.append({
+                    "type": "unique_call",
+                    "label": "Lone Correct Call",
+                    "game": f"{g['away_team']} @ {g['home_team']}",
+                    "score": f"{g['away_score']}-{g['home_score']}",
+                    "winner": g["actual_winner"],
+                    "bookie": book,
+                    "detail": f"Only {len(g['correct_books'])} of {g['total_books']} bookies got it right",
+                })
+    
+    # 3. Biggest misses (everyone was wrong, large margin upset)
+    all_wrong = [g for g in game_details if g["num_correct"] == 0 and g["total_books"] > 0]
+    all_wrong.sort(key=lambda x: x["score_margin"], reverse=True)
+    for g in all_wrong[:3]:
+        notable_calls.append({
+            "type": "all_wrong",
+            "label": "Everyone Wrong",
+            "game": f"{g['away_team']} @ {g['home_team']}",
+            "score": f"{g['away_score']}-{g['home_score']}",
+            "winner": g["actual_winner"],
+            "margin": int(g["score_margin"]),
+            "detail": f"All {g['total_books']} bookies picked wrong",
+        })
+    
+    return rankings_df, notable_calls
 
 
 # ============================================================================
@@ -888,31 +979,107 @@ def evaluate_past_predictions(predictions_df: pd.DataFrame, results_df: pd.DataF
 # CHART GENERATION
 # ============================================================================
 
-def create_bookie_performance_chart(bookie_performance: pd.DataFrame, date_str: str) -> Optional[str]:
-    """Create a bar chart of bookmaker accuracy rankings."""
+def create_bookie_performance_chart(bookie_performance: pd.DataFrame, notable_calls: List[Dict], date_str: str) -> Optional[str]:
+    """Create a detailed bookie performance visual with table + notable calls."""
     if bookie_performance.empty:
         return None
     
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig = plt.figure(figsize=(14, 10))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.2, 1], hspace=0.35, wspace=0.3)
     
-    # Take top 10 bookies
+    # --- Top left: Tabular performance heatmap ---
+    ax_table = fig.add_subplot(gs[0, :])
+    ax_table.axis('off')
+    
     top_bookies = bookie_performance.head(10)
+    table_data = []
+    for idx, row in top_bookies.iterrows():
+        table_data.append([
+            f"#{idx+1}",
+            row['Bookmaker'],
+            f"{row['Accuracy %']}%",
+            f"{row['Correct Predictions']}/{row['Games Analyzed']}",
+            f"{row['Avg Deviation']:.0f}",
+        ])
     
-    colors = ['#28a745' if i == 0 else '#1d428a' for i in range(len(top_bookies))]
-    bars = ax.barh(range(len(top_bookies)), top_bookies['Accuracy %'], color=colors, alpha=0.8)
+    col_labels = ['Rank', 'Bookmaker', 'Accuracy', 'Record', 'Avg Dev']
+    table = ax_table.table(cellText=table_data, colLabels=col_labels,
+                           cellLoc='center', loc='center', colWidths=[0.08, 0.25, 0.15, 0.2, 0.15])
+    table.auto_set_font_size(False)
+    table.set_fontsize(11)
+    table.scale(1, 1.6)
     
-    ax.set_yticks(range(len(top_bookies)))
-    ax.set_yticklabels(top_bookies['Bookmaker'])
-    ax.set_xlabel('Prediction Accuracy (%)', fontsize=12, fontweight='bold')
-    ax.set_title('Bookmaker Performance Rankings', fontsize=14, fontweight='bold', pad=20)
-    ax.grid(axis='x', alpha=0.3)
+    # Style header
+    for j in range(len(col_labels)):
+        table[0, j].set_facecolor('#1d428a')
+        table[0, j].set_text_props(color='white', fontweight='bold')
     
-    # Add value labels
-    for i, (bar, val) in enumerate(zip(bars, top_bookies['Accuracy %'])):
-        ax.text(val + 0.5, bar.get_y() + bar.get_height()/2, f'{val}%', 
-                va='center', fontsize=10, fontweight='bold')
+    # Color accuracy cells by value
+    for i in range(len(table_data)):
+        acc = top_bookies.iloc[i]['Accuracy %']
+        if acc >= 66:
+            color = '#d4edda'
+        elif acc >= 63:
+            color = '#fff3cd'
+        else:
+            color = '#f8d7da'
+        table[i+1, 2].set_facecolor(color)
+        # Highlight #1
+        if i == 0:
+            for j in range(len(col_labels)):
+                if j != 2:
+                    table[i+1, j].set_facecolor('#e8f5e9')
     
-    plt.tight_layout()
+    ax_table.set_title('Bookmaker Performance Rankings', fontsize=14, fontweight='bold', pad=20)
+    
+    # --- Bottom left: Notable calls - Unique/Best calls ---
+    ax_unique = fig.add_subplot(gs[1, 0])
+    ax_unique.axis('off')
+    
+    unique_calls = [c for c in notable_calls if c['type'] == 'unique_call'][:5]
+    if unique_calls:
+        unique_text = ""
+        for c in unique_calls:
+            unique_text += f"\u2705 {c['bookie']} called {c['winner']}\n"
+            unique_text += f"   {c['game']} ({c['score']})\n"
+            unique_text += f"   {c['detail']}\n\n"
+        ax_unique.text(0.05, 0.95, unique_text.strip(), transform=ax_unique.transAxes,
+                      fontsize=10, verticalalignment='top', fontfamily='monospace',
+                      bbox=dict(boxstyle='round,pad=0.5', facecolor='#e8f5e9', alpha=0.8))
+        ax_unique.set_title('Best Unique Calls', fontsize=12, fontweight='bold', color='#28a745')
+    else:
+        ax_unique.text(0.5, 0.5, 'No standout unique calls\nthis period', 
+                      transform=ax_unique.transAxes, ha='center', va='center',
+                      fontsize=11, color='#666')
+        ax_unique.set_title('Best Unique Calls', fontsize=12, fontweight='bold', color='#28a745')
+    
+    # --- Bottom right: Biggest misses ---
+    ax_miss = fig.add_subplot(gs[1, 1])
+    ax_miss.axis('off')
+    
+    all_wrong = [c for c in notable_calls if c['type'] == 'all_wrong'][:3]
+    upsets = [c for c in notable_calls if c['type'] == 'upset'][:3]
+    misses = all_wrong if all_wrong else upsets
+    
+    if misses:
+        miss_text = ""
+        for c in misses:
+            emoji = "\u274c" if c['type'] == 'all_wrong' else "\u26a0\ufe0f"
+            miss_text += f"{emoji} {c['game']} ({c['score']})\n"
+            miss_text += f"   Winner: {c['winner']} (+{c.get('margin', '?')} pts)\n"
+            miss_text += f"   {c['detail']}\n\n"
+        ax_miss.text(0.05, 0.95, miss_text.strip(), transform=ax_miss.transAxes,
+                    fontsize=10, verticalalignment='top', fontfamily='monospace',
+                    bbox=dict(boxstyle='round,pad=0.5', facecolor='#f8d7da', alpha=0.8))
+        ax_miss.set_title('Biggest Misses', fontsize=12, fontweight='bold', color='#dc3545')
+    else:
+        ax_miss.text(0.5, 0.5, 'No major misses\nthis period',
+                    transform=ax_miss.transAxes, ha='center', va='center',
+                    fontsize=11, color='#666')
+        ax_miss.set_title('Biggest Misses', fontsize=12, fontweight='bold', color='#dc3545')
+    
+    plt.suptitle(f'Bookmaker Analysis — Past 30 Days', fontsize=16, fontweight='bold', y=0.98)
+    
     output_path = os.path.join(CHARTS_DIR, f"bookie_performance_{date_str}.png")
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     plt.close(fig)
@@ -920,55 +1087,140 @@ def create_bookie_performance_chart(bookie_performance: pd.DataFrame, date_str: 
     return output_path
 
 
-def create_hornets_performance_chart(hornets_data: Dict, date_str: str) -> Optional[str]:
-    """Create a chart showing Hornets performance vs bookies."""
+def create_hornets_performance_chart(hornets_data: Dict, results_df: pd.DataFrame, date_str: str) -> Optional[str]:
+    """Create a detailed Hornets performance chart with game-by-game results."""
     perf = hornets_data.get("performance", {})
     league_avg = hornets_data.get("league_avg", {})
     
-    if not perf:
+    if not perf or perf.get('games_analyzed', 0) == 0:
         return None
     
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    # Get recent Hornets game results for the timeline
+    team_name = "Charlotte Hornets"
+    hornets_games = results_df[
+        (results_df["Home Team"] == team_name) | (results_df["Away Team"] == team_name)
+    ].copy()
     
-    # Chart 1: Win/Loss breakdown
-    categories = ['As Favorite', 'As Underdog']
-    wins = [perf.get('wins_as_favorite', 0), perf.get('wins_as_underdog', 0)]
-    losses = [perf.get('losses_as_favorite', 0), perf.get('losses_as_underdog', 0)]
+    if hornets_games.empty:
+        return None
     
-    x = np.arange(len(categories))
-    width = 0.35
+    # Calculate per-game data
+    game_data = []
+    for _, row in hornets_games.iterrows():
+        try:
+            hs = float(row["Home Score"])
+            aws = float(row["Away Score"])
+        except (ValueError, TypeError):
+            continue
+        is_home = row["Home Team"] == team_name
+        team_score = hs if is_home else aws
+        opp_score = aws if is_home else hs
+        opponent = row["Away Team"] if is_home else row["Home Team"]
+        won = team_score > opp_score
+        margin = team_score - opp_score
+        game_data.append({
+            "opponent": opponent,
+            "team_score": int(team_score),
+            "opp_score": int(opp_score),
+            "won": won,
+            "margin": margin,
+            "is_home": is_home,
+            "date": row.get("Game Date", row.get("Date", "")),
+        })
     
-    ax1.bar(x - width/2, wins, width, label='Wins', color='#28a745', alpha=0.8)
-    ax1.bar(x + width/2, losses, width, label='Losses', color='#dc3545', alpha=0.8)
+    if not game_data:
+        return None
     
-    ax1.set_ylabel('Games', fontweight='bold')
-    ax1.set_title('Hornets: Wins vs Losses', fontweight='bold')
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(categories)
-    ax1.legend()
+    # Take last 15 games max
+    game_data = game_data[-15:]
+    
+    fig = plt.figure(figsize=(14, 7))
+    gs = fig.add_gridspec(1, 2, width_ratios=[2, 1], wspace=0.25)
+    
+    # --- Left: Game-by-game margin chart ---
+    ax1 = fig.add_subplot(gs[0, 0])
+    
+    margins = [g['margin'] for g in game_data]
+    colors = ['#28a745' if m > 0 else '#dc3545' for m in margins]
+    x_labels = [f"{'vs' if g['is_home'] else '@'} {g['opponent'][:3]}" for g in game_data]
+    
+    bars = ax1.bar(range(len(margins)), margins, color=colors, alpha=0.85, edgecolor='white', linewidth=0.5)
+    
+    # Add score labels on bars
+    for i, (bar, g) in enumerate(zip(bars, game_data)):
+        label = f"{g['team_score']}-{g['opp_score']}"
+        y_pos = bar.get_height() if bar.get_height() > 0 else bar.get_height()
+        va = 'bottom' if bar.get_height() > 0 else 'top'
+        ax1.text(bar.get_x() + bar.get_width()/2, y_pos, label,
+                ha='center', va=va, fontsize=7, fontweight='bold', color='#333')
+    
+    ax1.set_xticks(range(len(x_labels)))
+    ax1.set_xticklabels(x_labels, rotation=45, ha='right', fontsize=8)
+    ax1.axhline(y=0, color='black', linewidth=0.8)
+    ax1.set_ylabel('Point Margin', fontweight='bold')
+    ax1.set_title('Hornets Game-by-Game Results', fontweight='bold', fontsize=13)
     ax1.grid(axis='y', alpha=0.3)
     
-    # Chart 2: Win rate comparison
-    hornets_fav_rate = perf.get('favorite_win_rate', 0)
-    league_fav_rate = league_avg.get('favorite_win_rate', 0)
+    # Add W-L record annotation
+    wins = sum(1 for m in margins if m > 0)
+    losses = len(margins) - wins
+    ax1.text(0.02, 0.98, f"Record: {wins}-{losses}", transform=ax1.transAxes,
+            fontsize=12, fontweight='bold', va='top',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='#f0f0f0', alpha=0.9))
     
-    comparison = ['Hornets\n(as Favorite)', 'NBA Average\n(Favorites)']
-    rates = [hornets_fav_rate, league_fav_rate]
-    colors_comp = ['#00788c', '#6c757d']
+    # --- Right: Summary stats ---
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax2.axis('off')
     
-    bars = ax2.bar(comparison, rates, color=colors_comp, alpha=0.8)
-    ax2.set_ylabel('Win Rate (%)', fontweight='bold')
-    ax2.set_title('Hornets vs NBA Average', fontweight='bold')
-    ax2.set_ylim(0, 100)
-    ax2.grid(axis='y', alpha=0.3)
+    # Build summary text block
+    total_w = perf.get('total_wins', 0)
+    total_l = perf.get('total_losses', 0)
+    fav_w = perf.get('wins_as_favorite', 0)
+    fav_l = perf.get('losses_as_favorite', 0)
+    dog_w = perf.get('wins_as_underdog', 0)
+    dog_l = perf.get('losses_as_underdog', 0)
+    fav_rate = perf.get('favorite_win_rate', 0)
+    dog_rate = perf.get('underdog_win_rate', 0)
+    league_fav = league_avg.get('favorite_win_rate', 0)
     
-    # Add value labels
-    for bar, val in zip(bars, rates):
-        ax2.text(bar.get_x() + bar.get_width()/2, val + 2, f'{val}%', 
-                ha='center', fontweight='bold')
+    avg_margin = np.mean(margins) if margins else 0
     
-    plt.suptitle(f'Charlotte Hornets Performance (Past Month)', fontsize=14, fontweight='bold', y=1.02)
-    plt.tight_layout()
+    summary_lines = [
+        ("Overall Record", f"{total_w}-{total_l}"),
+        ("Win Rate", f"{perf.get('win_rate', 0)}%"),
+        ("Avg Margin", f"{avg_margin:+.1f} pts"),
+        ("", ""),
+        ("As Favorite", f"{fav_w}-{fav_l} ({fav_rate}%)"),
+        ("As Underdog", f"{dog_w}-{dog_l} ({dog_rate}%)"),
+        ("", ""),
+        ("NBA Avg (Fav Win)", f"{league_fav}%"),
+        ("Hornets vs Avg", f"{fav_rate - league_fav:+.1f}%"),
+    ]
+    
+    y_start = 0.92
+    for i, (label, value) in enumerate(summary_lines):
+        if not label:
+            y_start -= 0.04
+            continue
+        color = '#333'
+        if 'vs Avg' in label:
+            diff = fav_rate - league_fav
+            color = '#28a745' if diff > 0 else '#dc3545' if diff < 0 else '#666'
+        
+        ax2.text(0.05, y_start - i * 0.09, label, transform=ax2.transAxes,
+                fontsize=11, fontweight='bold', color='#555')
+        ax2.text(0.95, y_start - i * 0.09, value, transform=ax2.transAxes,
+                fontsize=12, fontweight='bold', color=color, ha='right')
+    
+    ax2.set_title('Performance Summary', fontweight='bold', fontsize=13)
+    # Add border
+    ax2.patch.set_edgecolor('#1d428a')
+    ax2.patch.set_linewidth(2)
+    ax2.patch.set_visible(True)
+    ax2.patch.set_facecolor('#f8f9fa')
+    
+    plt.suptitle('Charlotte Hornets — Past Month', fontsize=16, fontweight='bold', y=1.0,
+                color='#1d428a')
     
     output_path = os.path.join(CHARTS_DIR, f"hornets_performance_{date_str}.png")
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
@@ -1106,8 +1358,11 @@ def send_email_report(html_content: str, chart_paths: List[str], date_str: str) 
 
 def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
                          model_results: Dict, predictions: pd.DataFrame,
-                         prediction_eval: Dict, date_str: str) -> str:
+                         prediction_eval: Dict, date_str: str,
+                         notable_calls: List[Dict] = None) -> str:
     """Generate mobile-friendly HTML report."""
+    if notable_calls is None:
+        notable_calls = []
     
     next_game = hornets_data.get("next_game")
     perf = hornets_data.get("performance", {})
@@ -1192,6 +1447,25 @@ def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
                 <td>{row['Games Analyzed']}</td>
                 <td>{row['Avg Deviation']}</td>
             </tr>'''
+        # Build notable calls HTML
+        notable_html = ""
+        unique_calls = [c for c in notable_calls if c['type'] == 'unique_call'][:5]
+        all_wrong_calls = [c for c in notable_calls if c['type'] == 'all_wrong'][:3]
+        upset_calls = [c for c in notable_calls if c['type'] == 'upset'][:3]
+        
+        if unique_calls:
+            unique_items = ""
+            for c in unique_calls:
+                unique_items += f'<div class="notable-item good"><strong>{c["bookie"]}</strong> correctly called {c["winner"]}<br><span style="font-size:11px;">{c["game"]} ({c["score"]}) — {c["detail"]}</span></div>'
+            notable_html += f'<h3>Best Unique Calls</h3>{unique_items}'
+        
+        miss_calls = all_wrong_calls if all_wrong_calls else upset_calls
+        if miss_calls:
+            miss_items = ""
+            for c in miss_calls:
+                miss_items += f'<div class="notable-item bad"><strong>{c["game"]}</strong> ({c["score"]})<br><span style="font-size:11px;">{c["winner"]} won by {c.get("margin", "?")} pts — {c["detail"]}</span></div>'
+            notable_html += f'<h3>Biggest Misses</h3>{miss_items}'
+        
         bookie_html = f'''
         <div class="card">
             <table>
@@ -1199,7 +1473,8 @@ def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
                 {rows}
             </table>
             <p style="font-size:11px;color:#666;margin-top:10px;">* Accuracy = correct winner predictions</p>
-        </div>'''
+        </div>
+        {f'<div class="card">{notable_html}</div>' if notable_html else ''}'''
     else:
         bookie_html = '<div class="card"><p>No bookmaker data available.</p></div>'
     
@@ -1343,6 +1618,9 @@ def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
         .prediction-card .matchup {{ font-weight: 600; font-size: 14px; }}
         .prediction-card .details {{ font-size: 12px; color: #666; margin-top: 5px; }}
         .prediction-card .winner {{ color: #28a745; font-weight: 700; }}
+        .notable-item {{ border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; font-size: 13px; line-height: 1.5; }}
+        .notable-item.good {{ background: #d4edda; border-left: 4px solid #28a745; }}
+        .notable-item.bad {{ background: #f8d7da; border-left: 4px solid #dc3545; }}
         .timestamp {{ text-align: center; color: #666; font-size: 12px; margin-bottom: 20px; }}
         @media (max-width: 480px) {{ .stat-grid {{ grid-template-columns: repeat(2, 1fr); }} table {{ font-size: 11px; }} th, td {{ padding: 6px 4px; }} }}
     </style>
@@ -1416,10 +1694,12 @@ def generate_report(days: int = 30) -> Dict:
     
     # Bookie Performance
     print("\n[3/6] Calculating bookie performance...")
-    bookie_performance = calculate_bookie_accuracy(odds_df, results_df)
+    bookie_performance, notable_calls = calculate_bookie_accuracy(odds_df, results_df)
     if not bookie_performance.empty:
         best_bookie = bookie_performance.iloc[0]
         print(f"  - Best bookie: {best_bookie['Bookmaker']} ({best_bookie['Accuracy %']}%)")
+    if notable_calls:
+        print(f"  - Notable calls found: {len(notable_calls)}")
     
     # ML Models
     print("\n[4/6] Training ML models...")
@@ -1482,7 +1762,8 @@ def generate_report(days: int = 30) -> Dict:
     
     html_content = generate_html_report(
         hornets_data, bookie_performance, model_results,
-        predictions, prediction_eval, date_str
+        predictions, prediction_eval, date_str,
+        notable_calls=notable_calls
     )
     
     output_path = os.path.join(REPORTS_DIR, f"daily_report_{date_str}.html")
@@ -1495,12 +1776,12 @@ def generate_report(days: int = 30) -> Dict:
     print("\nGenerating visual charts...")
     chart_paths = []
     
-    chart1 = create_hornets_performance_chart(hornets_data, date_str)
+    chart1 = create_hornets_performance_chart(hornets_data, results_df, date_str)
     if chart1:
         chart_paths.append(chart1)
         print(f"  ✓ Hornets performance chart")
     
-    chart2 = create_bookie_performance_chart(bookie_performance, date_str)
+    chart2 = create_bookie_performance_chart(bookie_performance, notable_calls, date_str)
     if chart2:
         chart_paths.append(chart2)
         print(f"  ✓ Bookie performance chart")

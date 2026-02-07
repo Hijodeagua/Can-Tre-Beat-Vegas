@@ -135,9 +135,9 @@ jobs:
               <li>📈 <strong>Prediction History</strong> — How our models have performed over time</li>
             </ol>
             <p>The full HTML report and charts are attached.</p>
-            <p>You can also view the report in the repository:
-              <a href="https://github.com/${{ github.repository }}/blob/main/reports/daily_report_${{ steps.report.outputs.date }}.html">
-                View Report
+            <p>View the rendered report:
+              <a href="https://htmlpreview.github.io/?https://github.com/${{ github.repository }}/blob/main/reports/daily_report_${{ steps.report.outputs.date }}.html">
+                View Report (Rendered HTML)
               </a>
             </p>
             <hr>
