@@ -1,20 +1,6 @@
 {
   "history": [
     {
-      "timestamp": "2026-02-06T22:24:27.683579",
-      "sport": "nfl",
-      "games_fetched": 1,
-      "requests_remaining": 401,
-      "requests_used": 99
-    },
-    {
-      "timestamp": "2026-02-06T22:24:27.797207",
-      "sport": "nba",
-      "games_fetched": 8,
-      "requests_remaining": 398,
-      "requests_used": 102
-    },
-    {
       "timestamp": "2026-02-07T10:21:48.175804",
       "sport": "nfl",
       "games_fetched": 1,
@@ -699,7 +685,21 @@
       "games_fetched": 10,
       "requests_remaining": 230,
       "requests_used": 270
+    },
+    {
+      "timestamp": "2026-02-26T22:33:44.600881",
+      "sport": "nfl",
+      "games_fetched": 0,
+      "requests_remaining": 230,
+      "requests_used": 270
+    },
+    {
+      "timestamp": "2026-02-26T22:33:44.858557",
+      "sport": "nba",
+      "games_fetched": 10,
+      "requests_remaining": 227,
+      "requests_used": 273
     }
   ],
-  "last_remaining": 230
+  "last_remaining": 227
 }
