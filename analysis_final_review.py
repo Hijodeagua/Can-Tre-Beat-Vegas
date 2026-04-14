@@ -1,6 +1,17 @@
 """
 Final NBA Season Review — Odds API data vs. Actual Results
-Coverage: Oct 27 2025 – Jan 31 2026 (months with both odds data and verified results)
+
+Automatically loads ALL Basketball Reference CSV files found in data/nba/actual_games/.
+To extend coverage beyond January 2026, download the monthly result files from:
+
+  https://www.basketball-reference.com/leagues/NBA_2026_games-february.html
+  https://www.basketball-reference.com/leagues/NBA_2026_games-march.html
+  https://www.basketball-reference.com/leagues/NBA_2026_games-april.html
+
+On each page: click "Share & Export" → "Get table as CSV", then save as:
+  data/nba/actual_games/february.csv
+  data/nba/actual_games/march.csv
+  data/nba/actual_games/april.csv
 
 Spread point lines were only added to the data schema in Feb 2026, so ATS analysis
 uses moneyline implied probability: "expected wins vs actual wins."
@@ -21,14 +32,24 @@ BOOKIES = ["FanDuel", "MyBookie.ag", "DraftKings", "BetRivers",
 # ── 1. Actual game results ────────────────────────────────────────────────────
 
 def load_actual_games():
+    # Discover all CSV files in the actual_games directory automatically
+    all_files = sorted(glob.glob(os.path.join(ACTUAL_DIR, "*.csv")))
+    csv_files = [f for f in all_files if not os.path.basename(f).lower().startswith("readme")]
+    if not csv_files:
+        raise FileNotFoundError(f"No result CSV files found in {ACTUAL_DIR}")
+    print(f"  Result files found: {[os.path.basename(f) for f in csv_files]}")
+
     frames = []
-    for fname in ["october.csv", "november.csv", "december.csv", "january.csv"]:
-        path = os.path.join(ACTUAL_DIR, fname)
-        if not os.path.exists(path):
-            continue
+    for path in csv_files:
         df = pd.read_csv(path, header=0)
-        df.columns = ["date","start_et","away_team","away_pts","home_team","home_pts",
-                      "box","ot","attend","log","arena","notes"]
+        # Normalise to the 12-column BBRef format regardless of how many cols the export has
+        ncols = len(df.columns)
+        base = ["date","start_et","away_team","away_pts","home_team","home_pts",
+                "box","ot","attend","log","arena","notes"]
+        if ncols >= len(base):
+            df.columns = base + list(df.columns[len(base):])
+        else:
+            df.columns = base[:ncols]
         df = df[df["date"].notna() & df["away_pts"].notna()].copy()
         df["away_pts"] = pd.to_numeric(df["away_pts"], errors="coerce")
         df["home_pts"] = pd.to_numeric(df["home_pts"], errors="coerce")
@@ -36,7 +57,16 @@ def load_actual_games():
         frames.append(df)
 
     g = pd.concat(frames, ignore_index=True)
-    g["game_date"] = pd.to_datetime(g["date"].str.strip(), format="%a %b %d %Y", errors="coerce")
+    # Handle both BBRef formats: "Tue Oct 21 2025" and "Mon, Oct 28, 2025"
+    def parse_bbref_date(s):
+        s = str(s).strip().replace(",", "")
+        for fmt in ("%a %b %d %Y", "%a %b %d %Y"):
+            try:
+                return pd.to_datetime(s, format=fmt)
+            except Exception:
+                pass
+        return pd.to_datetime(s, errors="coerce")
+    g["game_date"] = g["date"].apply(parse_bbref_date)
     g = g.dropna(subset=["game_date"])
     g["home_team"] = g["home_team"].str.strip()
     g["away_team"] = g["away_team"].str.strip()
