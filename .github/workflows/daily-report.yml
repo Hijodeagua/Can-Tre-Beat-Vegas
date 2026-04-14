@@ -10,21 +10,12 @@ on:
         required: false
         default: "7"
         type: string
-      skip_email:
-        description: "Skip sending email"
-        required: false
-        default: false
-        type: boolean
-
 permissions:
   contents: write
 
 concurrency:
   group: daily-report-${{ github.ref }}
   cancel-in-progress: false
-
-env:
-  REPORT_EMAIL: tremayne.watterson@gmail.com
 
 jobs:
   generate-report:
@@ -86,69 +77,6 @@ jobs:
           else
             echo "No changes to commit."
           fi
-
-      # No secrets referenced in `if:` anywhere.
-      # We decide in bash whether to attempt email.
-      - name: Decide whether to send email
-        id: emailgate
-        shell: bash
-        env:
-          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
-          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-        run: |
-          set -euo pipefail
-
-          SKIP="${{ github.event.inputs.skip_email }}"
-          if [ "${SKIP:-false}" = "true" ]; then
-            echo "send=false" >> "$GITHUB_OUTPUT"
-            echo "Email skipped by input."
-            exit 0
-          fi
-
-          if [ -z "${SMTP_USERNAME:-}" ] || [ -z "${SMTP_PASSWORD:-}" ]; then
-            echo "send=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Email not sent - SMTP credentials not configured."
-            exit 0
-          fi
-
-          echo "send=true" >> "$GITHUB_OUTPUT"
-
-      - name: Send email report
-        if: ${{ steps.emailgate.outputs.send == 'true' }}
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
-          server_port: ${{ secrets.SMTP_PORT || 587 }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          to: ${{ env.REPORT_EMAIL }}
-          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
-          subject: "🏀 NBA Daily Report - ${{ steps.report.outputs.date }}"
-          html_body: |
-            <h2>🏀 NBA Daily Report - ${{ steps.report.outputs.date }}</h2>
-            <p>Your simplified daily NBA report is ready.</p>
-            <p><strong>Today's 4 observations:</strong></p>
-            <ol>
-              <li>🐝 <strong>Hornets</strong> — Next game odds & past month performance vs bookies</li>
-              <li>📊 <strong>Bookmaker Rankings</strong> — Prediction accuracy across all sportsbooks</li>
-              <li>🤖 <strong>ML Predictions</strong> — Winner & score predictions for next 48 hours</li>
-              <li>📈 <strong>Prediction History</strong> — How our models have performed over time</li>
-            </ol>
-            <p>The full HTML report and charts are attached.</p>
-            <p>View the rendered report:
-              <a href="https://htmlpreview.github.io/?https://github.com/${{ github.repository }}/blob/main/reports/daily_report_${{ steps.report.outputs.date }}.html">
-                View Report (Rendered HTML)
-              </a>
-            </p>
-            <hr>
-            <p><small>This is an automated email from your Can-Tre-Beat-Vegas odds tracking system.</small></p>
-          attachments: |
-            reports/daily_report_${{ steps.report.outputs.date }}.html
-            reports/charts/hornets_performance_${{ steps.report.outputs.date }}.png
-            reports/charts/bookie_performance_${{ steps.report.outputs.date }}.png
-            reports/charts/ml_models_${{ steps.report.outputs.date }}.png
-          ignore_cert: true
-          convert_markdown: true
 
       - name: Upload report artifacts
         if: always()
