@@ -2,7 +2,7 @@ name: Daily Odds Report
 
 on:
   schedule:
-    - cron: "0 23 * * *"
+
   workflow_dispatch:
     inputs:
       days:
