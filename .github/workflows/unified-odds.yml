@@ -73,6 +73,35 @@ jobs:
             echo "No changes to commit."
           fi
 
+      # ── NFL model picks (reads the odds CSV committed above) ──────────────
+      - name: Generate model picks
+        run: python NFL/model/predict.py
+
+      - name: Commit picks_today.json
+        run: |
+          git add picks/picks_today.json || true
+          if [ -n "$(git status --porcelain picks/picks_today.json)" ]; then
+            timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "Picks update: $timestamp"
+            git push
+          else
+            echo "No pick changes to commit."
+          fi
+
+      - name: Grade picks against final scores
+        run: python data_jobs/grade_picks.py
+
+      - name: Commit record.json
+        run: |
+          git add picks/record.json || true
+          if [ -n "$(git status --porcelain picks/record.json)" ]; then
+            timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "Record update: $timestamp"
+            git push
+          else
+            echo "No record changes to commit."
+          fi
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4

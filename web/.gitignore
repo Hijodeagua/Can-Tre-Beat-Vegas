@@ -1,0 +1,8 @@
+/node_modules
+/.next
+/out
+next-env.d.ts
+*.tsbuildinfo
+
+# Generated at build time from the repo-root picks/ dir by scripts/copy-data.mjs
+/public/picks
