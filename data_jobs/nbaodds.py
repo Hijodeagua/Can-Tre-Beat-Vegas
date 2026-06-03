@@ -1,7 +1,11 @@
 # nba_odds_pull.py
+#
+# NOTE: This is a legacy standalone script. The maintained code path is
+# data_jobs/odds_api/ (used by the GitHub Actions workflows). It is kept
+# for reference / quick local runs.
+#
 # Imports
 import os
-import sys
 import requests
 import pandas as pd
 from datetime import datetime
@@ -9,15 +13,12 @@ import pytz
 from geopy.distance import geodesic
 
 # ===== API KEY CONFIG =====
-# Prefer environment variable in prod/CI; fall back to a local hard-coded key for dev.
-HARDCODED_API_KEY = "change in local"  # 👈 replace this with your real Odds API key
-
-API_KEY = os.environ.get("ODDS_API_KEY") or HARDCODED_API_KEY
-
-# Basic guard: force you to replace the placeholder before use
-if not API_KEY or API_KEY == "PASTE_TEMP_DEV_KEY_HERE":
+# Read the API key from the environment. Never hard-code secrets in source.
+API_KEY = os.environ.get("ODDS_API_KEY")
+if not API_KEY:
     raise RuntimeError(
-        "Missing ODDS_API_KEY. Set env var ODDS_API_KEY or put a temp key in HARDCODED_API_KEY for local testing."
+        "Missing ODDS_API_KEY. Set the ODDS_API_KEY environment variable "
+        "(or add it as a GitHub Actions secret) before running this script."
     )
 
 

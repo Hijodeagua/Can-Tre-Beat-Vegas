@@ -1822,7 +1822,10 @@ def generate_report(data_dir: str = "data", output_dir: str = "reports", days: i
 
     # Get odds breakdown by bookmaker for Hornets games
     hornets_odds_by_bookie = get_team_odds_by_bookie(hornets_games, team_name)
-    print(f"  Odds data from {len(hornets_odds_by_bookie.columns) - 4} bookmakers")
+    # The first 4 columns are game metadata (Date, Opponent, Location, Avg Odds);
+    # any remaining columns are per-bookmaker odds.
+    num_bookies = max(0, len(hornets_odds_by_bookie.columns) - 4)
+    print(f"  Odds data from {num_bookies} bookmakers")
 
     # =========================================================================
     # OVERALL BOOKIE PERFORMANCE
