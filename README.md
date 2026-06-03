@@ -19,7 +19,8 @@ snapshots committed back into the repo by GitHub Actions.
 2. **Daily NBA report** — Builds a mobile-friendly HTML report (Charlotte
    Hornets focus + league-wide bookmaker accuracy rankings + simple ML
    win/score predictions + historical accuracy tracking) and accompanying
-   PNG charts.
+   PNG charts. It also renders a **bookmaker accuracy leaderboard** and
+   **team against-the-spread (ATS) standings** — see below.
 3. **NFL model** — Trains a LightGBM classifier on engineered rolling
    team-stat features to predict straight-up winners and against-the-spread
    covers, with a temporal train/val/test split and baseline comparisons.
@@ -87,6 +88,29 @@ This writes `reports/daily_report_<date>.html` plus charts under
 `SENDER_EMAIL`, `SENDER_PASSWORD`, and `RECIPIENT_EMAIL` are set (omit
 `--no-email`). The Hornets-focused variant is
 `data_jobs.reports.generate_daily_report`.
+
+#### Bookmaker accuracy & ATS standings
+
+The report includes two data-driven views, computed entirely from committed
+data by `data_jobs/reports/ats_and_bookmakers.py` and embedded as HTML tables
+plus PNG bar charts:
+
+- **Bookmaker Accuracy Leaderboard (NBA)** — ranks each sportsbook by how
+  often its moneyline favorite actually won, with a record (`correct/games`)
+  and a bar chart (`reports/charts/bookmaker_accuracy_nba_<date>.png`). This
+  extends the existing league-wide bookie-accuracy logic in the NBA report.
+- **NFL Against-the-Spread Standings** — per-team ATS records (cover %,
+  ATS wins/losses/pushes, and average ATS margin) computed from the bundled
+  `data/2023-2025W3.csv`, shown as best/worst tables plus a cover-% and
+  ATS-margin bar chart (`reports/charts/nfl_ats_<date>.png`).
+- **NBA Against-the-Spread Standings** — rendered as a labelled note rather
+  than numbers: the committed NBA odds snapshots store spread *odds* (the
+  juice, e.g. -110) but not the spread *line* (the point handicap), so a true
+  NBA cover record cannot be computed from available data without fabricating
+  the missing lines.
+
+Each section degrades gracefully — if its source data is missing, the report
+shows a labelled note instead of failing.
 
 ### Train the NFL model (works offline on committed data)
 
