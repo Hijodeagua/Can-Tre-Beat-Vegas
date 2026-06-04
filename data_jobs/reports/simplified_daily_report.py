@@ -48,6 +48,9 @@ CHARTS_DIR = os.path.join(REPORTS_DIR, "charts")
 for d in [PREDICTIONS_DIR, MODELS_DIR, REPORTS_DIR, CHARTS_DIR]:
     os.makedirs(d, exist_ok=True)
 
+# ATS standings + bookmaker-accuracy visuals (computed from committed data).
+from data_jobs.reports import ats_and_bookmakers as ats_views
+
 # Email configuration - set these via environment variables or config file
 EMAIL_CONFIG = {
     "smtp_server": os.getenv("SMTP_SERVER", "smtp.gmail.com"),
@@ -1359,7 +1362,10 @@ def send_email_report(html_content: str, chart_paths: List[str], date_str: str) 
 def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
                          model_results: Dict, predictions: pd.DataFrame,
                          prediction_eval: Dict, date_str: str,
-                         notable_calls: List[Dict] = None) -> str:
+                         notable_calls: List[Dict] = None,
+                         bookmaker_section_html: str = "",
+                         nfl_ats_section_html: str = "",
+                         nba_ats_note_html: str = "") -> str:
     """Generate mobile-friendly HTML report."""
     if notable_calls is None:
         notable_calls = []
@@ -1622,6 +1628,7 @@ def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
         .notable-item.good {{ background: #d4edda; border-left: 4px solid #28a745; }}
         .notable-item.bad {{ background: #f8d7da; border-left: 4px solid #dc3545; }}
         .timestamp {{ text-align: center; color: #666; font-size: 12px; margin-bottom: 20px; }}
+        .data-note {{ background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px 12px; border-radius: 6px; font-size: 13px; color: #5a4a00; }}
         @media (max-width: 480px) {{ .stat-grid {{ grid-template-columns: repeat(2, 1fr); }} table {{ font-size: 11px; }} th, td {{ padding: 6px 4px; }} }}
     </style>
 </head>
@@ -1636,7 +1643,14 @@ def generate_html_report(hornets_data: Dict, bookie_performance: pd.DataFrame,
         
         <h2>📊 Bookmaker Rankings</h2>
         {bookie_html}
-        
+        {f'<h2>🏆 Bookmaker Accuracy Leaderboard (NBA)</h2>{bookmaker_section_html}' if bookmaker_section_html else ''}
+
+        <h2>🏈 NFL Against-the-Spread Standings</h2>
+        {nfl_ats_section_html or '<div class="card"><p class="data-note">NFL ATS standings unavailable.</p></div>'}
+
+        <h2>🏀 NBA Against-the-Spread Standings</h2>
+        {nba_ats_note_html or '<div class="card"><p class="data-note">No NBA ATS data.</p></div>'}
+
         <h2>🤖 ML Predictions (Next 48 Hours)</h2>
         {model_html}
         {pred_html}
@@ -1701,6 +1715,43 @@ def generate_report(days: int = 30) -> Dict:
     if notable_calls:
         print(f"  - Notable calls found: {len(notable_calls)}")
     
+    # ATS standings + bookmaker-accuracy visuals (from committed data only)
+    print("\n[3b] Building ATS standings and bookmaker-accuracy visuals...")
+    bookmaker_section_html = ""
+    nfl_ats_section_html = ""
+    nba_ats_note_html = ""
+    extra_chart_paths = []
+    try:
+        # (A) NBA bookmaker accuracy leaderboard chart (reuses bookie_performance)
+        bk_chart_rel = None
+        if not bookie_performance.empty:
+            bk_chart_rel = ats_views.create_bookmaker_accuracy_chart(
+                bookie_performance, date_str, league="NBA"
+            )
+            if bk_chart_rel:
+                extra_chart_paths.append(os.path.join(REPORTS_DIR, bk_chart_rel))
+        bookmaker_section_html = ats_views.build_bookmaker_section_html(
+            bookie_performance, bk_chart_rel, league="NBA"
+        )
+
+        # (B) NFL team ATS standings (table + cover% / margin charts)
+        nfl_ats_df = ats_views.load_nfl_ats_standings()
+        nfl_chart_rel = None
+        if not nfl_ats_df.empty:
+            nfl_chart_rel = ats_views.create_nfl_ats_chart(nfl_ats_df, date_str)
+            if nfl_chart_rel:
+                extra_chart_paths.append(os.path.join(REPORTS_DIR, nfl_chart_rel))
+            print(f"  - NFL ATS teams: {len(nfl_ats_df)} "
+                  f"(best: {nfl_ats_df.iloc[0]['Team']} {nfl_ats_df.iloc[0]['Cover %']}%)")
+        else:
+            print("  - NFL ATS data unavailable; section will be labeled.")
+        nfl_ats_section_html = ats_views.build_nfl_ats_section_html(nfl_ats_df, nfl_chart_rel)
+
+        # NBA team ATS: not computable (snapshots lack the spread line)
+        nba_ats_note_html = ats_views.build_nba_ats_note_html()
+    except Exception as e:
+        print(f"  ! ATS/bookmaker visuals skipped due to error: {e}")
+
     # ML Models
     print("\n[4/6] Training ML models...")
     team_features = prepare_ml_features(advanced_stats, per_100_team, per_100_opp)
@@ -1763,7 +1814,10 @@ def generate_report(days: int = 30) -> Dict:
     html_content = generate_html_report(
         hornets_data, bookie_performance, model_results,
         predictions, prediction_eval, date_str,
-        notable_calls=notable_calls
+        notable_calls=notable_calls,
+        bookmaker_section_html=bookmaker_section_html,
+        nfl_ats_section_html=nfl_ats_section_html,
+        nba_ats_note_html=nba_ats_note_html,
     )
     
     output_path = os.path.join(REPORTS_DIR, f"daily_report_{date_str}.html")
@@ -1790,6 +1844,11 @@ def generate_report(days: int = 30) -> Dict:
     if chart3:
         chart_paths.append(chart3)
         print(f"  ✓ ML models chart")
+
+    for extra in extra_chart_paths:
+        if extra and os.path.exists(extra):
+            chart_paths.append(extra)
+            print(f"  ✓ {os.path.basename(extra)}")
     
     # Send Email
     email_sent = send_email_report(html_content, chart_paths, date_str)

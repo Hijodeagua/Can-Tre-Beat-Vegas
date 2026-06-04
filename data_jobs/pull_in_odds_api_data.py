@@ -1,11 +1,13 @@
+# Legacy standalone NFL odds puller. The maintained code path is
+# data_jobs/odds_api/ (used by the GitHub Actions workflows). Kept for
+# reference / quick local runs.
+#
 # Imports
 import os
-import sys
 import requests
 import pandas as pd
 from datetime import datetime
 import pytz
-from bs4 import BeautifulSoup  # if you don't use it, feel free to remove from imports and requirements
 from geopy.distance import geodesic
 
 # Read API key from environment
@@ -211,9 +213,6 @@ for game in games:
 df = pd.DataFrame(rows)
 
 # Save to repo data folder
-import os
-from datetime import datetime
-
 os.makedirs("data", exist_ok=True)
 
 # Add date + hour (UTC) stamp: YYYY-MM-DD-HHMM

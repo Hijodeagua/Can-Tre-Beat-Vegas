@@ -2,7 +2,8 @@ name: Daily Odds Report
 
 on:
   schedule:
-
+    # 12:00 UTC daily (7:00 AM ET / 8:00 AM ET DST) - after morning odds snapshot
+    - cron: "0 12 * * *"
   workflow_dispatch:
     inputs:
       days:
