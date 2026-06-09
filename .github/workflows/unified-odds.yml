@@ -57,13 +57,16 @@ jobs:
           sport="${{ github.event.inputs.sport || 'all' }}"
           python -m data_jobs.odds_api.fetch_odds --sport "$sport"
 
+      - name: Export web slate JSON
+        run: python -m data_jobs.export_web_json
+
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # Add all data files including usage tracking
-          git add data/*.csv data/**/*.csv data/api_usage.json || true
+          git add data/*.csv data/**/*.csv data/api_usage.json web/public/data/*.json || true
 
           if [ -n "$(git status --porcelain)" ]; then
             timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')

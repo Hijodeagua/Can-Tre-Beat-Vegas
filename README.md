@@ -79,13 +79,39 @@ Saved models, metrics, and feature importances land in `NFL/model/artifacts/`.
 python -m data_jobs.reports.simplified_daily_report
 ```
 
+## Web Tracker (`web/`)
+
+A deployable Next.js 14 (App Router) static site — the **next-48-hours
+homepage**. For every upcoming NFL and NBA game it shows the consensus line
+(moneyline, spread, total), no-vig market win probability, line movement since
+open, model picks with edge-vs-market when available, and an expandable
+book-by-book odds table. It reads the static JSON in `web/public/data/`,
+produced by the Python pipeline; it runs no Python server itself.
+
+```bash
+# 1. Regenerate the static JSON from the committed odds snapshots
+python -m data_jobs.export_web_json
+
+# 2. Build / run the front end
+cd web
+npm install
+npm run dev        # http://localhost:3000/vegas
+npm run build      # production build (static, prerendered)
+```
+
+The site is served under the `/vegas` base path (see `web/next.config.mjs`)
+so it can be proxied at `whosyurgoat.app/vegas` by the
+[hub](https://github.com/Hijodeagua/whosyurgoat-hub). The unified odds
+workflow re-exports the JSON after every odds fetch, so a Vercel project
+pointed at `web/` redeploys with fresh lines 2x daily.
+
 ## Automated refresh
 
 GitHub Actions keep the data flowing without manual pulls:
 
 | Workflow | Schedule | What it does |
 |---|---|---|
-| `unified-odds.yml` | 2x daily (10:00 / 22:00 UTC) | Fetches NFL + NBA odds snapshots, commits CSVs |
+| `unified-odds.yml` | 2x daily (10:00 / 22:00 UTC) | Fetches NFL + NBA odds snapshots, re-exports web JSON, commits |
 | `daily-report.yml` | daily | Builds the HTML daily report and charts into `reports/` |
 
 The 2x-daily cadence is deliberate — it captures a morning line and an
@@ -101,7 +127,8 @@ Can-Tre-Beat-Vegas/
 │   │   ├── config.py        # Sports config, team metadata, stadium coords
 │   │   ├── fetch_odds.py    # CLI entry point (--sport nfl|nba|all)
 │   │   └── processors.py    # Raw API response → tidy CSV
-│   └── reports/             # Daily report generators
+│   ├── reports/             # Daily report generators
+│   └── export_web_json.py   # Next-48-hours slate → web/public/data/
 ├── NFL/
 │   ├── model/               # LightGBM win/ATS models
 │   │   ├── features.py      # Rolling feature engineering (79 features)
@@ -117,6 +144,9 @@ Can-Tre-Beat-Vegas/
 │   ├── schedules/           # Cached nflverse games.csv
 │   ├── models/              # Pickled model checkpoints
 │   └── predictions/         # Model prediction outputs
+├── web/                     # Next.js front end (basePath /vegas)
+│   ├── app/                 # Slate homepage + methodology
+│   └── public/data/         # Static JSON written by export_web_json.py
 ├── reports/                 # Generated daily HTML reports + charts
 └── .github/workflows/       # Automated odds fetch + report generation
 ```
@@ -134,13 +164,17 @@ NBA, and World Cup matchup coming up in the next two days, side by side with:
 
 Steps to get there:
 
-- [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API config)
-- [ ] NBA model (the odds history is already accumulating in `data/nba/`)
-- [ ] Wire `line_movement.py` output in as a model feature
-- [ ] Static JSON export of the upcoming-48-hours slate (odds + model picks),
+- [x] Static JSON export of the upcoming-48-hours slate (odds + model picks),
   same pattern as the [election tracker](https://github.com/Hijodeagua/Election-models-by-Tre)
-- [ ] Next.js front end reading that JSON — candidate for the
-  [whosyurgoat hub](https://github.com/Hijodeagua/whosyurgoat-hub) homepage
+  — `data_jobs/export_web_json.py`
+- [x] Next.js front end reading that JSON (`web/`, served at `/vegas`)
+- [ ] Deploy `web/` to Vercel and point the hub's `/vegas` rewrite at it
+- [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API config)
+- [ ] Wire NBA model predictions into the slate for current games
+  (the export already joins `data/predictions/*.csv` when dates match)
+- [ ] NFL model predictions for upcoming games (LightGBM models are trained;
+  need an inference script writing to `data/predictions/`)
+- [ ] Wire `line_movement.py` output in as a model feature
 
 ## License
 
