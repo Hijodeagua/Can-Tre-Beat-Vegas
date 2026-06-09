@@ -13,11 +13,13 @@ API_KEY = os.environ.get("ODDS_API_KEY")
 if not API_KEY:
     raise RuntimeError("Missing ODDS_API_KEY env var. Add it as a GitHub Actions secret.")
 
+REQUEST_TIMEOUT = 30  # seconds
+
 # ----- (optional) list available sports -----
 def get_available_sports():
     url = "https://api.the-odds-api.com/v4/sports"
     params = {"apiKey": API_KEY}
-    r = requests.get(url, params=params)
+    r = requests.get(url, params=params, timeout=REQUEST_TIMEOUT)
     r.raise_for_status()
     return r.json()
 
@@ -41,7 +43,7 @@ params = {
     "dateFormat": "iso",
 }
 
-resp = requests.get(url, params=params)
+resp = requests.get(url, params=params, timeout=REQUEST_TIMEOUT)
 try:
     resp.raise_for_status()
 except requests.HTTPError as e:
@@ -211,18 +213,12 @@ for game in games:
 df = pd.DataFrame(rows)
 
 # Save to repo data folder
-import os
-from datetime import datetime
-
 os.makedirs("data", exist_ok=True)
 
 # Add date + hour (UTC) stamp: YYYY-MM-DD-HHMM
-stamp = datetime.utcnow().strftime("%Y-%m-%d-%H%M")
+stamp = datetime.now(pytz.UTC).strftime("%Y-%m-%d-%H%M")
 
 df.to_csv(f"data/odds_api_data_{stamp}.csv", index=False)
 df.to_csv("data/odds_api_data_latest.csv", index=False)
 
 print(f"Saved {len(df)} rows to data/odds_api_data_{stamp}.csv and data/odds_api_data_latest.csv")
-
-
-

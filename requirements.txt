@@ -1,17 +1,17 @@
 # Core dependencies
-pandas
-requests
-geopy
-pytz
+pandas~=2.2
+requests~=2.32
+geopy~=2.4
+pytz~=2024.1
 
 # Visualization
-matplotlib
-numpy
+matplotlib~=3.9
+numpy~=1.26
 
 # Machine Learning
-scikit-learn
-lightgbm
+scikit-learn~=1.5
+lightgbm~=4.5
 
 # Optional (keep for backwards compatibility)
-papermill
-beautifulsoup4
+papermill~=2.6
+beautifulsoup4~=4.12

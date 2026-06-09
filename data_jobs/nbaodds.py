@@ -9,16 +9,17 @@ import pytz
 from geopy.distance import geodesic
 
 # ===== API KEY CONFIG =====
-# Prefer environment variable in prod/CI; fall back to a local hard-coded key for dev.
-HARDCODED_API_KEY = "change in local"  # 👈 replace this with your real Odds API key
-
-API_KEY = os.environ.get("ODDS_API_KEY") or HARDCODED_API_KEY
-
-# Basic guard: force you to replace the placeholder before use
-if not API_KEY or API_KEY == "PASTE_TEMP_DEV_KEY_HERE":
+# The key comes from the environment only (GitHub Actions secret or a local
+# `export ODDS_API_KEY=...`). No hard-coded fallback: keys committed to a
+# repo — even "temporarily" — have to be treated as burned and rotated.
+API_KEY = os.environ.get("ODDS_API_KEY")
+if not API_KEY:
     raise RuntimeError(
-        "Missing ODDS_API_KEY. Set env var ODDS_API_KEY or put a temp key in HARDCODED_API_KEY for local testing."
+        "Missing ODDS_API_KEY. Set the env var (GitHub Actions secret in CI, "
+        "`export ODDS_API_KEY=...` locally)."
     )
+
+REQUEST_TIMEOUT = 30  # seconds
 
 
 # ----- Pull NBA odds -----
@@ -32,7 +33,7 @@ params = {
     "dateFormat": "iso",
 }
 
-resp = requests.get(url, params=params)
+resp = requests.get(url, params=params, timeout=REQUEST_TIMEOUT)
 try:
     resp.raise_for_status()
 except requests.HTTPError as e:
@@ -218,7 +219,7 @@ save_dir = "data/nba"
 os.makedirs(save_dir, exist_ok=True)
 
 # Add date + hour (UTC) stamp: YYYY-MM-DD-HHMM
-stamp = datetime.utcnow().strftime("%Y-%m-%d-%H%M")
+stamp = datetime.now(pytz.UTC).strftime("%Y-%m-%d-%H%M")
 
 # League-specific filenames to avoid clobbering your NFL files
 file_timestamped = os.path.join(save_dir, f"nba_odds_api_data_{stamp}.csv")
@@ -228,5 +229,3 @@ df.to_csv(file_timestamped, index=False)
 df.to_csv(file_latest, index=False)
 
 print(f"Saved {len(df)} rows to {file_timestamped} and {file_latest}")
-
-
