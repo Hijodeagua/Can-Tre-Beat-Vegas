@@ -16,6 +16,10 @@ line.
 - **NFL LightGBM models** — straight-up winner (`win`) and against-the-spread
   cover (`ats`) targets, 79 rolling/schedule features, temporal train/val split,
   baseline comparison (`NFL/model/`)
+- **Soccer / World Cup model** — custom international Elo (fresh 2006 start,
+  tiered K-factors, friendlies barely weighted) plus a multinomial outcome
+  model with host effects and FIFA-rating squad-strength hooks; predicts the
+  2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
 - **Daily HTML reports** — automated odds breakdowns, bookmaker performance,
   and team odds-history charts (`reports/`)
 - **Weekly NFL picks** — model picks vs. Vegas, graded week by week
@@ -138,6 +142,10 @@ Can-Tre-Beat-Vegas/
 │   │   └── artifacts/       # Saved models, metrics, importances
 │   ├── Week_1/ ... Week_7/  # Weekly picks vs Vegas, graded
 │   └── Weeks.md             # Season-long results tally
+├── soccer/                  # World Cup / international soccer model
+│   ├── SPEC.md              # Model spec (Elo + squad-strength adjustments)
+│   ├── data/                # International results 1872–present + fixtures
+│   └── model/               # Elo engine, training, fixture predictions
 ├── data/                    # Odds snapshots + stats
 │   ├── odds_api_data_*.csv  # NFL odds snapshots (timestamped)
 │   ├── nba/                 # NBA odds snapshots + actual game results
@@ -169,7 +177,10 @@ Steps to get there:
   — `data_jobs/export_web_json.py`
 - [x] Next.js front end reading that JSON (`web/`, served at `/vegas`)
 - [ ] Deploy `web/` to Vercel and point the hub's `/vegas` rewrite at it
-- [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API config)
+- [x] Soccer Elo + outcome model predicting 2026 World Cup fixtures
+  (`soccer/`, see `soccer/SPEC.md` for the full roadmap)
+- [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API
+  config) and soccer model picks on the slate
 - [ ] Wire NBA model predictions into the slate for current games
   (the export already joins `data/predictions/*.csv` when dates match)
 - [ ] NFL model predictions for upcoming games (LightGBM models are trained;
