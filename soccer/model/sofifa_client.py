@@ -89,7 +89,20 @@ class SofifaClient:
         self.min_interval = 60.0 / rpm
         self.api_token = api_token or os.environ.get("SOFIFA_API_TOKEN")
         self.session = requests.Session()
-        self.session.headers.update({"User-Agent": "can-tre-beat-vegas/soccer-model"})
+        # Browser-like headers: the API sits behind Cloudflare, which rejects
+        # bare scripted user agents with 403.
+        self.session.headers.update(
+            {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+                ),
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Referer": "https://sofifa.com/",
+                "Origin": "https://sofifa.com",
+            }
+        )
         self._last = 0.0
 
     def _throttle(self) -> None:
