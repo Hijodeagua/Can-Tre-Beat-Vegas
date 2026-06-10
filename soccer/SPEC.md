@@ -138,8 +138,10 @@ soccer/
   0.8803 vs 0.8827 on 2024+ holdout). Early finding: **star power
   (top-5) carries far more signal than depth (top-25)** — β ≈ +0.35 vs
   α ≈ −0.07 on the home-win class, the opposite of the prior.
-- [ ] Upload FC 24–26 + FIFA 22/23 + FIFA 07–14 editions
-  (see `soccer/data/fifa_ratings/README.md`) and refit
+- [x] SoFIFA API client (`soccer/model/sofifa_client.py`) — pulls
+  national-team squad ratings per edition straight from api.sofifa.net (no
+  key needed), self-throttled and resumable. Run locally to fill FC 24–26 +
+  FIFA 22/23 + FIFA 07–14, then refit.
 - [ ] World Cup odds ingestion → model picks on the `/vegas` slate
 - [ ] Group vs knockout conditional version
 - [ ] Tournament Monte Carlo (group tables, brackets, championship odds)

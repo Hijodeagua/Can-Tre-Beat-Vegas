@@ -1,5 +1,43 @@
 # FIFA ratings uploads
 
+## Pulling editions from the SoFIFA API (recommended)
+
+`soccer/model/sofifa_client.py` pulls national-team squad ratings straight
+from SoFIFA's free REST API and writes the `fifa_<year>.csv` files for you —
+no manual download. **No API key needed** for the team/player endpoints (the
+apiToken in SoFIFA's docs is only for their customizedPlayers endpoints).
+
+Run it **locally** (api.sofifa.net is blocked from the Claude Code web
+sandbox), then commit the CSVs:
+
+    # Fill the editions we don't have yet (FIFA 07–14 and FC 22–26)
+    python -m soccer.model.sofifa_client
+
+    # Or re-pull all of 07–26 from one source for full consistency
+    python -m soccer.model.sofifa_client --versions all
+
+    # Sanity check first: one edition, 5 teams
+    python -m soccer.model.sofifa_client --versions 26 --limit 5
+
+It self-throttles under SoFIFA's 60 req/min limit and caches each squad to
+`.cache/` (git-ignored) so an interrupted run resumes cheaply. A full
+gap-fill is ~13 editions × ~180 national teams ≈ 40–60 min.
+
+If an edition's launch roster (`{YY}0001`) is wrong, pass a roster override:
+`--rosters rosters.json` with `{"26": "260012", ...}` (roster ids are on
+SoFIFA's version-select dropdown).
+
+**Attribution:** SoFIFA requires non-commercial use and a SoFIFA logo + link
+on the consuming site's landing page — add that to `/vegas` if it surfaces
+these ratings.
+
+> Note: the API path builds each national side from its **actual in-game
+> squad** (`/team/{id}/{roster}`), whereas the mirrored CSVs below use a
+> **nationality pool**. Both feed the same top-25 depth / top-5 star metrics;
+> for one consistent method across all editions, run `--versions all`.
+
+## Manual upload (alternative)
+
 Drop one CSV per game edition here, named `fifa_<edition_year>.csv`
 (e.g. `fifa_2007.csv` for FIFA 07), with columns:
 
