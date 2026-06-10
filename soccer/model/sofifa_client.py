@@ -133,6 +133,14 @@ class SofifaClient:
                 continue
             if resp.status_code == 404:
                 raise FileNotFoundError(f"404 {path}")
+            if resp.status_code == 403:
+                # Surface who is blocking us: Cloudflare's challenge page vs
+                # an API-level rejection read very differently.
+                server = resp.headers.get("Server", "?")
+                body = resp.text[:500].replace("\n", " ")
+                raise RuntimeError(
+                    f"403 on {path} (server: {server}). Response starts with: {body}"
+                )
             resp.raise_for_status()
             return resp.json()
         raise RuntimeError(f"Gave up on {path} after {max_retries} retries")
