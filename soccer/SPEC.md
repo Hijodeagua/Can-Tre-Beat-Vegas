@@ -133,8 +133,14 @@ soccer/
 ## Roadmap
 
 - [x] Elo engine, training, validation, upcoming-fixture predictions
+- [x] FIFA ratings layer + α/β fit — editions 2014–2020 (FIFA 15–21) loaded
+  from GitHub mirrors; the squad model beats the Elo-only baseline (log loss
+  0.8803 vs 0.8827 on 2024+ holdout). Early finding: **star power
+  (top-5) carries far more signal than depth (top-25)** — β ≈ +0.35 vs
+  α ≈ −0.07 on the home-win class, the opposite of the prior.
+- [ ] Upload FC 24–26 + FIFA 22/23 + FIFA 07–14 editions
+  (see `soccer/data/fifa_ratings/README.md`) and refit
 - [ ] World Cup odds ingestion → model picks on the `/vegas` slate
-- [ ] FIFA ratings upload + α/β fit (needs data drop)
 - [ ] Group vs knockout conditional version
 - [ ] Tournament Monte Carlo (group tables, brackets, championship odds)
 - [ ] Travel/altitude/rest effects
