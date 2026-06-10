@@ -51,34 +51,79 @@ COLUMN_LAYOUTS = [
 ]
 
 
+# Fallback aliases for arbitrary author dumps (FC25/FC26 from various Kaggle
+# uploaders). Checked case-insensitively, in order, when no exact layout matches.
+FIELD_ALIASES = {
+    "team": ["nationality", "nationality_name", "nation", "country", "country_name",
+             "Nationality", "Country"],
+    "player": ["short_name", "long_name", "name", "player_name", "full_name",
+               "Name", "Player"],
+    "overall": ["overall", "overall_rating", "OVA", "OVR", "ovr", "rating",
+                "Overall", "Rating"],
+}
+
+
+def _detect_layout(columns) -> dict:
+    layout = next(
+        (m for m in COLUMN_LAYOUTS if set(m.values()).issubset(columns)), None
+    )
+    if layout:
+        return layout
+
+    # Fallback: alias-match each field (case-insensitive) against the header.
+    lower = {c.lower(): c for c in columns}
+    guess = {}
+    for field, aliases in FIELD_ALIASES.items():
+        for alias in aliases:
+            if alias.lower() in lower:
+                guess[field] = lower[alias.lower()]
+                break
+    if len(guess) == 3:
+        print(f"  (auto-detected columns: {guess})")
+        return guess
+
+    raise SystemExit(
+        f"Unrecognized columns; could not find team/player/overall.\n"
+        f"Got: {sorted(columns)}\n"
+        f"Tell me which columns hold nationality, name, and overall rating."
+    )
+
+
 def convert(
     raw_path: str, release_year: int, game_version: int | None = None
 ) -> Path:
-    df = pd.read_csv(raw_path, low_memory=False)
+    # Read only the header first: the combined FIFA 23 dump is multi-GB, so we
+    # never load the whole thing — just the columns we need, streamed in chunks.
+    header = pd.read_csv(raw_path, nrows=0)
+    layout = _detect_layout(header.columns)
+    combined = "fifa_version" in header.columns
 
-    # Combined multi-edition dumps (e.g. the FIFA 23 Kaggle male_players.csv,
-    # editions 15-23 stacked) carry fifa_version/fifa_update columns: filter
-    # to the requested edition and keep only its latest roster update.
-    if "fifa_version" in df.columns:
-        if game_version is None:
-            versions = sorted(df["fifa_version"].unique())
-            raise SystemExit(
-                f"{raw_path} is a combined dump with fifa_version values "
-                f"{versions}; pass --game-version to pick one edition"
-            )
-        df = df[df["fifa_version"] == game_version]
-        if df.empty:
-            raise SystemExit(f"No rows with fifa_version == {game_version}")
-        if "fifa_update" in df.columns:
-            df = df[df["fifa_update"] == df["fifa_update"].max()]
+    usecols = list(layout.values())
+    if combined:
+        usecols.append("fifa_version")
+        if "fifa_update" in header.columns:
+            usecols.append("fifa_update")
 
-    layout = next(
-        (m for m in COLUMN_LAYOUTS if set(m.values()).issubset(df.columns)), None
-    )
-    if layout is None:
+    if combined and game_version is None:
         raise SystemExit(
-            f"Unrecognized columns in {raw_path}; expected one of {COLUMN_LAYOUTS}"
+            f"{raw_path} is a combined dump (has fifa_version); "
+            f"pass --game-version to pick one edition"
         )
+
+    parts = []
+    for chunk in pd.read_csv(raw_path, usecols=usecols, chunksize=200_000, low_memory=False):
+        if combined:
+            chunk = chunk[chunk["fifa_version"] == game_version]
+        if not chunk.empty:
+            parts.append(chunk)
+    if not parts:
+        raise SystemExit(f"No rows with fifa_version == {game_version}")
+    df = pd.concat(parts, ignore_index=True)
+
+    # Keep only the latest roster update within the chosen edition.
+    if combined and "fifa_update" in df.columns:
+        df = df[df["fifa_update"] == df["fifa_update"].max()]
+
     out = pd.DataFrame(
         {
             "team": df[layout["team"]].replace(NAME_MAP),
