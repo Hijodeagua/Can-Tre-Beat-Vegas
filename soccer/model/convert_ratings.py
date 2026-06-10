@@ -51,8 +51,27 @@ COLUMN_LAYOUTS = [
 ]
 
 
-def convert(raw_path: str, release_year: int) -> Path:
+def convert(
+    raw_path: str, release_year: int, game_version: int | None = None
+) -> Path:
     df = pd.read_csv(raw_path, low_memory=False)
+
+    # Combined multi-edition dumps (e.g. the FIFA 23 Kaggle male_players.csv,
+    # editions 15-23 stacked) carry fifa_version/fifa_update columns: filter
+    # to the requested edition and keep only its latest roster update.
+    if "fifa_version" in df.columns:
+        if game_version is None:
+            versions = sorted(df["fifa_version"].unique())
+            raise SystemExit(
+                f"{raw_path} is a combined dump with fifa_version values "
+                f"{versions}; pass --game-version to pick one edition"
+            )
+        df = df[df["fifa_version"] == game_version]
+        if df.empty:
+            raise SystemExit(f"No rows with fifa_version == {game_version}")
+        if "fifa_update" in df.columns:
+            df = df[df["fifa_update"] == df["fifa_update"].max()]
+
     layout = next(
         (m for m in COLUMN_LAYOUTS if set(m.values()).issubset(df.columns)), None
     )
@@ -67,6 +86,7 @@ def convert(raw_path: str, release_year: int) -> Path:
             "overall": pd.to_numeric(df[layout["overall"]], errors="coerce"),
         }
     ).dropna(subset=["overall"])
+    out = out.drop_duplicates(subset=["team", "player"])
 
     RATINGS_DIR.mkdir(parents=True, exist_ok=True)
     out_path = RATINGS_DIR / f"fifa_{release_year}.csv"
@@ -76,6 +96,15 @@ def convert(raw_path: str, release_year: int) -> Path:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit(__doc__)
-    convert(sys.argv[1], int(sys.argv[2]))
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("raw_csv")
+    parser.add_argument("release_year", type=int)
+    parser.add_argument(
+        "--game-version",
+        type=int,
+        help="edition to extract from a combined fifa_version dump (e.g. 23)",
+    )
+    args = parser.parse_args()
+    convert(args.raw_csv, args.release_year, args.game_version)
