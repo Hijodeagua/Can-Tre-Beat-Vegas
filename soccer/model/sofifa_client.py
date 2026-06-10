@@ -112,10 +112,14 @@ class SofifaClient:
 
     def get(self, path: str, max_retries: int = 5) -> dict:
         url = f"{BASE_URL}{path}"
+        # The docs only show apiToken on the customizedPlayers endpoints, but
+        # if a token is set, send it on every request — harmless if ignored,
+        # and it may be what authorizes partner access.
+        params = {"apiToken": self.api_token} if self.api_token else None
         for attempt in range(max_retries):
             self._throttle()
             try:
-                resp = self.session.get(url, timeout=30)
+                resp = self.session.get(url, params=params, timeout=30)
                 self._last = time.monotonic()
             except requests.RequestException as exc:
                 wait = 2 ** attempt
