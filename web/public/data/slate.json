@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-10T23:24:55Z",
+  "generated_at": "2026-06-11T13:55:47Z",
   "window_hours": 48,
   "sports": [
     {
       "key": "nfl",
       "name": "NFL",
       "snapshot": {
-        "file": "odds_api_data_2026-06-10-2324.csv",
-        "pulled_at_et": "2026-06-10 19:24:54"
+        "file": "odds_api_data_2026-06-11-1355.csv",
+        "pulled_at_et": "2026-06-11 09:55:47"
       },
       "games": []
     },
@@ -15,121 +15,10 @@
       "key": "nba",
       "name": "NBA",
       "snapshot": {
-        "file": "nba_odds_api_data_2026-06-10-2324.csv",
-        "pulled_at_et": "2026-06-10 19:24:54"
+        "file": "nba_odds_api_data_2026-06-11-1355.csv",
+        "pulled_at_et": "2026-06-11 09:55:47"
       },
-      "games": [
-        {
-          "game_id": "9ea306ebbe68ff94dfa5b88d1e250b37",
-          "commence_et": "2026-06-10 20:40",
-          "home_team": "New York Knicks",
-          "away_team": "San Antonio Spurs",
-          "consensus": {
-            "home_ml": -134.56,
-            "away_ml": 113.78,
-            "home_spread": -2.17,
-            "home_spread_odds": -110.56,
-            "away_spread_odds": -108.89,
-            "total": 216.56,
-            "over_odds": -111.56,
-            "under_odds": -108.33,
-            "home_win_prob": 0.5508426785732777
-          },
-          "books": [
-            {
-              "book": "FanDuel",
-              "home_ml": -130.0,
-              "away_ml": 110.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -132.0,
-              "away_ml": 107.0,
-              "home_spread_odds": -114.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -112.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "DraftKings",
-              "home_ml": -135.0,
-              "away_ml": 114.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -138.0,
-              "away_ml": 118.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -135.0,
-              "away_ml": 119.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -104.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -136.0,
-              "away_ml": 111.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-06-09 08:33:19",
-            "spread": -1.94,
-            "total": 216.44,
-            "home_ml": -126.88,
-            "away_ml": 106.25,
-            "spread_delta": -0.23,
-            "total_delta": 0.12
-          },
-          "model": null
-        }
-      ]
+      "games": []
     }
   ]
 }
