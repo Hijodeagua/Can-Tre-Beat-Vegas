@@ -89,7 +89,20 @@ class SofifaClient:
         self.min_interval = 60.0 / rpm
         self.api_token = api_token or os.environ.get("SOFIFA_API_TOKEN")
         self.session = requests.Session()
-        self.session.headers.update({"User-Agent": "can-tre-beat-vegas/soccer-model"})
+        # Browser-like headers: the API sits behind Cloudflare, which rejects
+        # bare scripted user agents with 403.
+        self.session.headers.update(
+            {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+                ),
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Referer": "https://sofifa.com/",
+                "Origin": "https://sofifa.com",
+            }
+        )
         self._last = 0.0
 
     def _throttle(self) -> None:
@@ -99,10 +112,14 @@ class SofifaClient:
 
     def get(self, path: str, max_retries: int = 5) -> dict:
         url = f"{BASE_URL}{path}"
+        # The docs only show apiToken on the customizedPlayers endpoints, but
+        # if a token is set, send it on every request — harmless if ignored,
+        # and it may be what authorizes partner access.
+        params = {"apiToken": self.api_token} if self.api_token else None
         for attempt in range(max_retries):
             self._throttle()
             try:
-                resp = self.session.get(url, timeout=30)
+                resp = self.session.get(url, params=params, timeout=30)
                 self._last = time.monotonic()
             except requests.RequestException as exc:
                 wait = 2 ** attempt
@@ -116,6 +133,14 @@ class SofifaClient:
                 continue
             if resp.status_code == 404:
                 raise FileNotFoundError(f"404 {path}")
+            if resp.status_code == 403:
+                # Surface who is blocking us: Cloudflare's challenge page vs
+                # an API-level rejection read very differently.
+                server = resp.headers.get("Server", "?")
+                body = resp.text[:500].replace("\n", " ")
+                raise RuntimeError(
+                    f"403 on {path} (server: {server}). Response starts with: {body}"
+                )
             resp.raise_for_status()
             return resp.json()
         raise RuntimeError(f"Gave up on {path} after {max_retries} retries")
