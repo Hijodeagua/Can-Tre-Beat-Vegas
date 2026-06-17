@@ -121,13 +121,34 @@ soccer/
 ├── data/
 │   ├── results.csv          # full international results + 2026 fixtures
 │   ├── shootouts.csv
+│   ├── fetch_results.py     # refresh results/shootouts from martj42 upstream
 │   └── fifa_ratings/        # fifa_<year>.csv uploads
 └── model/
     ├── elo.py               # tiered-K Elo engine (fresh 2006 start)
     ├── squad.py             # vintage-matched depth/star features
     ├── train.py             # multinomial LR + temporal validation
     ├── predict.py           # upcoming-fixture probabilities
-    └── artifacts/           # ratings snapshot, model pkl, metrics
+    ├── export_ratings.py    # dump the Elo table as portable JSON (see below)
+    └── artifacts/           # ratings snapshot, model pkl, metrics, elo_ratings.json
+```
+
+## Consuming the ratings elsewhere (export bridge)
+
+`export_ratings.py` replays the full history with the same `EloEngine` and
+writes `model/artifacts/elo_ratings.json` — `{team, elo, matches}` per side
+plus provenance (start date, base rating, home advantage, match count). It
+re-implements none of the Elo rules; it just serializes `run_history()` output
+so downstream projects can use this engine as their ratings source.
+
+The [World Cup Tickets](https://github.com/Hijodeagua/World_Cup_Tickets) site
+consumes this artifact: its nightly job runs `data.fetch_results` →
+`model.export_ratings`, then syncs the JSON into its own ratings file and
+re-runs its tournament Monte Carlo. That keeps a single Elo implementation
+(this one) behind both projects.
+
+```bash
+python -m soccer.data.fetch_results     # pull newly-played games (best effort)
+python -m soccer.model.export_ratings    # -> model/artifacts/elo_ratings.json
 ```
 
 ## Roadmap
@@ -142,6 +163,8 @@ soccer/
   national-team squad ratings per edition straight from api.sofifa.net (no
   key needed), self-throttled and resumable. Run locally to fill FC 24–26 +
   FIFA 22/23 + FIFA 07–14, then refit.
+- [x] Ratings export bridge (`export_ratings.py`) feeding the World Cup
+  Tickets site as its shared Elo source
 - [ ] World Cup odds ingestion → model picks on the `/vegas` slate
 - [ ] Group vs knockout conditional version
 - [ ] Tournament Monte Carlo (group tables, brackets, championship odds)
