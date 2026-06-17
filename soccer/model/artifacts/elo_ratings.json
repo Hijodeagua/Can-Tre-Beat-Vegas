@@ -1,0 +1,1351 @@
+{
+  "generatedAt": "2026-06-17T15:08:36+00:00",
+  "source": "Can-Tre-Beat-Vegas soccer Elo (soccer/model/elo.py)",
+  "startDate": "2006-01-01",
+  "baseRating": 1500.0,
+  "homeAdvantage": 80.0,
+  "minMatches": 10,
+  "matchesProcessed": 19646,
+  "ratings": [
+    {
+      "team": "Spain",
+      "elo": 2100.5,
+      "matches": 270
+    },
+    {
+      "team": "Argentina",
+      "elo": 2049.3,
+      "matches": 265
+    },
+    {
+      "team": "France",
+      "elo": 2010.4,
+      "matches": 268
+    },
+    {
+      "team": "England",
+      "elo": 1994.7,
+      "matches": 247
+    },
+    {
+      "team": "Japan",
+      "elo": 1949.4,
+      "matches": 294
+    },
+    {
+      "team": "Mexico",
+      "elo": 1947.2,
+      "matches": 354
+    },
+    {
+      "team": "Morocco",
+      "elo": 1937.8,
+      "matches": 232
+    },
+    {
+      "team": "Brazil",
+      "elo": 1924.1,
+      "matches": 270
+    },
+    {
+      "team": "Colombia",
+      "elo": 1920.7,
+      "matches": 235
+    },
+    {
+      "team": "Portugal",
+      "elo": 1902.2,
+      "matches": 257
+    },
+    {
+      "team": "Netherlands",
+      "elo": 1900.7,
+      "matches": 250
+    },
+    {
+      "team": "Ecuador",
+      "elo": 1898.8,
+      "matches": 229
+    },
+    {
+      "team": "Iran",
+      "elo": 1889.4,
+      "matches": 257
+    },
+    {
+      "team": "Australia",
+      "elo": 1889.3,
+      "matches": 233
+    },
+    {
+      "team": "Germany",
+      "elo": 1884.3,
+      "matches": 269
+    },
+    {
+      "team": "South Korea",
+      "elo": 1882.8,
+      "matches": 287
+    },
+    {
+      "team": "Senegal",
+      "elo": 1877.9,
+      "matches": 225
+    },
+    {
+      "team": "Uruguay",
+      "elo": 1865.6,
+      "matches": 242
+    },
+    {
+      "team": "Nigeria",
+      "elo": 1857.9,
+      "matches": 245
+    },
+    {
+      "team": "Panama",
+      "elo": 1856.5,
+      "matches": 278
+    },
+    {
+      "team": "Croatia",
+      "elo": 1853.6,
+      "matches": 241
+    },
+    {
+      "team": "Uzbekistan",
+      "elo": 1836.5,
+      "matches": 231
+    },
+    {
+      "team": "Canada",
+      "elo": 1835.9,
+      "matches": 199
+    },
+    {
+      "team": "Norway",
+      "elo": 1825.9,
+      "matches": 203
+    },
+    {
+      "team": "Turkey",
+      "elo": 1825.8,
+      "matches": 234
+    },
+    {
+      "team": "Belgium",
+      "elo": 1820.0,
+      "matches": 228
+    },
+    {
+      "team": "Switzerland",
+      "elo": 1818.2,
+      "matches": 228
+    },
+    {
+      "team": "United States",
+      "elo": 1817.9,
+      "matches": 322
+    },
+    {
+      "team": "Algeria",
+      "elo": 1814.1,
+      "matches": 228
+    },
+    {
+      "team": "Jordan",
+      "elo": 1795.9,
+      "matches": 291
+    },
+    {
+      "team": "Paraguay",
+      "elo": 1789.8,
+      "matches": 227
+    },
+    {
+      "team": "Egypt",
+      "elo": 1787.6,
+      "matches": 257
+    },
+    {
+      "team": "Denmark",
+      "elo": 1786.3,
+      "matches": 223
+    },
+    {
+      "team": "Italy",
+      "elo": 1782.9,
+      "matches": 255
+    },
+    {
+      "team": "Iraq",
+      "elo": 1772.3,
+      "matches": 295
+    },
+    {
+      "team": "Costa Rica",
+      "elo": 1763.4,
+      "matches": 295
+    },
+    {
+      "team": "Ivory Coast",
+      "elo": 1758.2,
+      "matches": 248
+    },
+    {
+      "team": "DR Congo",
+      "elo": 1745.3,
+      "matches": 198
+    },
+    {
+      "team": "New Zealand",
+      "elo": 1744.0,
+      "matches": 140
+    },
+    {
+      "team": "Scotland",
+      "elo": 1733.6,
+      "matches": 187
+    },
+    {
+      "team": "Austria",
+      "elo": 1732.6,
+      "matches": 206
+    },
+    {
+      "team": "Russia",
+      "elo": 1720.2,
+      "matches": 201
+    },
+    {
+      "team": "Haiti",
+      "elo": 1718.1,
+      "matches": 190
+    },
+    {
+      "team": "Honduras",
+      "elo": 1716.6,
+      "matches": 272
+    },
+    {
+      "team": "Saudi Arabia",
+      "elo": 1710.7,
+      "matches": 308
+    },
+    {
+      "team": "Tunisia",
+      "elo": 1707.2,
+      "matches": 258
+    },
+    {
+      "team": "Jersey",
+      "elo": 1706.9,
+      "matches": 61
+    },
+    {
+      "team": "Cameroon",
+      "elo": 1704.0,
+      "matches": 230
+    },
+    {
+      "team": "United Arab Emirates",
+      "elo": 1695.8,
+      "matches": 270
+    },
+    {
+      "team": "Ukraine",
+      "elo": 1695.2,
+      "matches": 220
+    },
+    {
+      "team": "Venezuela",
+      "elo": 1691.3,
+      "matches": 231
+    },
+    {
+      "team": "Mali",
+      "elo": 1687.0,
+      "matches": 193
+    },
+    {
+      "team": "Serbia",
+      "elo": 1680.8,
+      "matches": 222
+    },
+    {
+      "team": "Guatemala",
+      "elo": 1675.5,
+      "matches": 203
+    },
+    {
+      "team": "Jamaica",
+      "elo": 1673.0,
+      "matches": 248
+    },
+    {
+      "team": "Greece",
+      "elo": 1669.3,
+      "matches": 216
+    },
+    {
+      "team": "Guernsey",
+      "elo": 1661.4,
+      "matches": 53
+    },
+    {
+      "team": "Curaçao",
+      "elo": 1659.9,
+      "matches": 136
+    },
+    {
+      "team": "Wales",
+      "elo": 1659.0,
+      "matches": 196
+    },
+    {
+      "team": "South Africa",
+      "elo": 1658.4,
+      "matches": 276
+    },
+    {
+      "team": "Peru",
+      "elo": 1656.4,
+      "matches": 233
+    },
+    {
+      "team": "Qatar",
+      "elo": 1653.5,
+      "matches": 316
+    },
+    {
+      "team": "Padania",
+      "elo": 1653.0,
+      "matches": 45
+    },
+    {
+      "team": "Czech Republic",
+      "elo": 1652.4,
+      "matches": 222
+    },
+    {
+      "team": "Poland",
+      "elo": 1650.8,
+      "matches": 248
+    },
+    {
+      "team": "Syria",
+      "elo": 1650.4,
+      "matches": 234
+    },
+    {
+      "team": "Hungary",
+      "elo": 1650.2,
+      "matches": 205
+    },
+    {
+      "team": "Bolivia",
+      "elo": 1644.7,
+      "matches": 191
+    },
+    {
+      "team": "Isle of Man",
+      "elo": 1643.9,
+      "matches": 32
+    },
+    {
+      "team": "Northern Cyprus",
+      "elo": 1641.4,
+      "matches": 31
+    },
+    {
+      "team": "Chile",
+      "elo": 1640.2,
+      "matches": 259
+    },
+    {
+      "team": "Burkina Faso",
+      "elo": 1633.5,
+      "matches": 211
+    },
+    {
+      "team": "Republic of Ireland",
+      "elo": 1624.8,
+      "matches": 215
+    },
+    {
+      "team": "Kosovo",
+      "elo": 1624.3,
+      "matches": 104
+    },
+    {
+      "team": "Palestine",
+      "elo": 1622.3,
+      "matches": 180
+    },
+    {
+      "team": "Cape Verde",
+      "elo": 1619.2,
+      "matches": 151
+    },
+    {
+      "team": "Sweden",
+      "elo": 1617.7,
+      "matches": 256
+    },
+    {
+      "team": "Oman",
+      "elo": 1609.9,
+      "matches": 292
+    },
+    {
+      "team": "Ghana",
+      "elo": 1608.1,
+      "matches": 245
+    },
+    {
+      "team": "Slovakia",
+      "elo": 1603.9,
+      "matches": 215
+    },
+    {
+      "team": "Suriname",
+      "elo": 1603.8,
+      "matches": 124
+    },
+    {
+      "team": "Slovenia",
+      "elo": 1596.5,
+      "matches": 196
+    },
+    {
+      "team": "New Caledonia",
+      "elo": 1594.0,
+      "matches": 97
+    },
+    {
+      "team": "Occitania",
+      "elo": 1593.2,
+      "matches": 29
+    },
+    {
+      "team": "Iraqi Kurdistan",
+      "elo": 1587.5,
+      "matches": 27
+    },
+    {
+      "team": "Abkhazia",
+      "elo": 1582.8,
+      "matches": 33
+    },
+    {
+      "team": "Romania",
+      "elo": 1582.7,
+      "matches": 212
+    },
+    {
+      "team": "Thailand",
+      "elo": 1582.6,
+      "matches": 248
+    },
+    {
+      "team": "Réunion",
+      "elo": 1575.3,
+      "matches": 38
+    },
+    {
+      "team": "Trinidad and Tobago",
+      "elo": 1573.5,
+      "matches": 243
+    },
+    {
+      "team": "Guinea",
+      "elo": 1572.6,
+      "matches": 180
+    },
+    {
+      "team": "Bahrain",
+      "elo": 1572.4,
+      "matches": 293
+    },
+    {
+      "team": "Albania",
+      "elo": 1571.2,
+      "matches": 195
+    },
+    {
+      "team": "China",
+      "elo": 1571.2,
+      "matches": 233
+    },
+    {
+      "team": "Georgia",
+      "elo": 1569.6,
+      "matches": 198
+    },
+    {
+      "team": "Angola",
+      "elo": 1563.7,
+      "matches": 215
+    },
+    {
+      "team": "Tamil Eelam",
+      "elo": 1563.6,
+      "matches": 28
+    },
+    {
+      "team": "Isle of Wight",
+      "elo": 1559.3,
+      "matches": 17
+    },
+    {
+      "team": "Ynys Môn",
+      "elo": 1557.1,
+      "matches": 31
+    },
+    {
+      "team": "Kárpátalja",
+      "elo": 1556.3,
+      "matches": 11
+    },
+    {
+      "team": "Guadeloupe",
+      "elo": 1554.9,
+      "matches": 123
+    },
+    {
+      "team": "Zambia",
+      "elo": 1546.8,
+      "matches": 270
+    },
+    {
+      "team": "Menorca",
+      "elo": 1546.1,
+      "matches": 25
+    },
+    {
+      "team": "Tajikistan",
+      "elo": 1544.7,
+      "matches": 154
+    },
+    {
+      "team": "Ellan Vannin",
+      "elo": 1542.8,
+      "matches": 22
+    },
+    {
+      "team": "Indonesia",
+      "elo": 1542.6,
+      "matches": 200
+    },
+    {
+      "team": "Panjab",
+      "elo": 1541.4,
+      "matches": 19
+    },
+    {
+      "team": "North Macedonia",
+      "elo": 1540.7,
+      "matches": 195
+    },
+    {
+      "team": "Nicaragua",
+      "elo": 1539.5,
+      "matches": 133
+    },
+    {
+      "team": "Israel",
+      "elo": 1537.5,
+      "matches": 168
+    },
+    {
+      "team": "Benin",
+      "elo": 1537.1,
+      "matches": 149
+    },
+    {
+      "team": "Basque Country",
+      "elo": 1535.5,
+      "matches": 19
+    },
+    {
+      "team": "Zanzibar",
+      "elo": 1534.6,
+      "matches": 60
+    },
+    {
+      "team": "Rhodes",
+      "elo": 1533.9,
+      "matches": 10
+    },
+    {
+      "team": "Dominican Republic",
+      "elo": 1531.4,
+      "matches": 108
+    },
+    {
+      "team": "Artsakh",
+      "elo": 1530.5,
+      "matches": 11
+    },
+    {
+      "team": "Kyrgyzstan",
+      "elo": 1527.4,
+      "matches": 142
+    },
+    {
+      "team": "Uganda",
+      "elo": 1526.6,
+      "matches": 239
+    },
+    {
+      "team": "Guyana",
+      "elo": 1525.0,
+      "matches": 136
+    },
+    {
+      "team": "Gambia",
+      "elo": 1524.4,
+      "matches": 117
+    },
+    {
+      "team": "Bosnia and Herzegovina",
+      "elo": 1524.0,
+      "matches": 195
+    },
+    {
+      "team": "Malaysia",
+      "elo": 1523.5,
+      "matches": 221
+    },
+    {
+      "team": "Arameans Suryoye",
+      "elo": 1521.7,
+      "matches": 10
+    },
+    {
+      "team": "Gabon",
+      "elo": 1519.2,
+      "matches": 171
+    },
+    {
+      "team": "North Korea",
+      "elo": 1518.1,
+      "matches": 177
+    },
+    {
+      "team": "Catalonia",
+      "elo": 1517.9,
+      "matches": 14
+    },
+    {
+      "team": "Martinique",
+      "elo": 1517.3,
+      "matches": 119
+    },
+    {
+      "team": "Northern Ireland",
+      "elo": 1514.6,
+      "matches": 185
+    },
+    {
+      "team": "Székely Land",
+      "elo": 1511.2,
+      "matches": 27
+    },
+    {
+      "team": "Niger",
+      "elo": 1511.1,
+      "matches": 146
+    },
+    {
+      "team": "El Salvador",
+      "elo": 1510.7,
+      "matches": 245
+    },
+    {
+      "team": "Tahiti",
+      "elo": 1510.3,
+      "matches": 71
+    },
+    {
+      "team": "Western Armenia",
+      "elo": 1509.5,
+      "matches": 16
+    },
+    {
+      "team": "Mozambique",
+      "elo": 1504.1,
+      "matches": 195
+    },
+    {
+      "team": "Kuwait",
+      "elo": 1502.6,
+      "matches": 245
+    },
+    {
+      "team": "Felvidék",
+      "elo": 1500.7,
+      "matches": 12
+    },
+    {
+      "team": "Greenland",
+      "elo": 1499.6,
+      "matches": 30
+    },
+    {
+      "team": "Shetland",
+      "elo": 1498.1,
+      "matches": 24
+    },
+    {
+      "team": "United Koreans in Japan",
+      "elo": 1498.1,
+      "matches": 12
+    },
+    {
+      "team": "Vietnam",
+      "elo": 1496.3,
+      "matches": 189
+    },
+    {
+      "team": "Lebanon",
+      "elo": 1496.0,
+      "matches": 189
+    },
+    {
+      "team": "Libya",
+      "elo": 1495.0,
+      "matches": 172
+    },
+    {
+      "team": "Sápmi",
+      "elo": 1493.3,
+      "matches": 29
+    },
+    {
+      "team": "Fiji",
+      "elo": 1492.6,
+      "matches": 94
+    },
+    {
+      "team": "Orkney",
+      "elo": 1489.3,
+      "matches": 15
+    },
+    {
+      "team": "French Guiana",
+      "elo": 1489.0,
+      "matches": 98
+    },
+    {
+      "team": "Iceland",
+      "elo": 1488.3,
+      "matches": 224
+    },
+    {
+      "team": "Sealand",
+      "elo": 1481.9,
+      "matches": 11
+    },
+    {
+      "team": "Saint Barthélemy",
+      "elo": 1481.8,
+      "matches": 10
+    },
+    {
+      "team": "Sierra Leone",
+      "elo": 1481.7,
+      "matches": 106
+    },
+    {
+      "team": "Åland Islands",
+      "elo": 1480.5,
+      "matches": 25
+    },
+    {
+      "team": "South Ossetia",
+      "elo": 1479.8,
+      "matches": 17
+    },
+    {
+      "team": "Raetia",
+      "elo": 1479.6,
+      "matches": 26
+    },
+    {
+      "team": "Vanuatu",
+      "elo": 1478.8,
+      "matches": 76
+    },
+    {
+      "team": "Madagascar",
+      "elo": 1476.3,
+      "matches": 152
+    },
+    {
+      "team": "Mayotte",
+      "elo": 1475.2,
+      "matches": 36
+    },
+    {
+      "team": "Comoros",
+      "elo": 1475.2,
+      "matches": 132
+    },
+    {
+      "team": "Finland",
+      "elo": 1475.1,
+      "matches": 215
+    },
+    {
+      "team": "Provence",
+      "elo": 1474.9,
+      "matches": 21
+    },
+    {
+      "team": "Sudan",
+      "elo": 1472.3,
+      "matches": 206
+    },
+    {
+      "team": "Monaco",
+      "elo": 1471.7,
+      "matches": 16
+    },
+    {
+      "team": "Papua New Guinea",
+      "elo": 1471.1,
+      "matches": 55
+    },
+    {
+      "team": "Gozo",
+      "elo": 1469.6,
+      "matches": 14
+    },
+    {
+      "team": "Solomon Islands",
+      "elo": 1458.6,
+      "matches": 94
+    },
+    {
+      "team": "Hitra",
+      "elo": 1458.1,
+      "matches": 15
+    },
+    {
+      "team": "Gotland",
+      "elo": 1458.1,
+      "matches": 20
+    },
+    {
+      "team": "Kenya",
+      "elo": 1457.7,
+      "matches": 206
+    },
+    {
+      "team": "Turkmenistan",
+      "elo": 1455.2,
+      "matches": 99
+    },
+    {
+      "team": "Western Isles",
+      "elo": 1452.6,
+      "matches": 29
+    },
+    {
+      "team": "Equatorial Guinea",
+      "elo": 1451.6,
+      "matches": 137
+    },
+    {
+      "team": "Tanzania",
+      "elo": 1450.8,
+      "matches": 233
+    },
+    {
+      "team": "Togo",
+      "elo": 1450.2,
+      "matches": 167
+    },
+    {
+      "team": "Zimbabwe",
+      "elo": 1448.9,
+      "matches": 187
+    },
+    {
+      "team": "Liberia",
+      "elo": 1441.2,
+      "matches": 112
+    },
+    {
+      "team": "Puerto Rico",
+      "elo": 1437.4,
+      "matches": 87
+    },
+    {
+      "team": "Saare County",
+      "elo": 1436.0,
+      "matches": 18
+    },
+    {
+      "team": "Malawi",
+      "elo": 1435.3,
+      "matches": 215
+    },
+    {
+      "team": "Chagos Islands",
+      "elo": 1430.5,
+      "matches": 16
+    },
+    {
+      "team": "Barawa",
+      "elo": 1427.8,
+      "matches": 12
+    },
+    {
+      "team": "Cuba",
+      "elo": 1427.7,
+      "matches": 161
+    },
+    {
+      "team": "Rwanda",
+      "elo": 1426.9,
+      "matches": 179
+    },
+    {
+      "team": "Philippines",
+      "elo": 1423.6,
+      "matches": 190
+    },
+    {
+      "team": "Namibia",
+      "elo": 1421.6,
+      "matches": 174
+    },
+    {
+      "team": "Mauritania",
+      "elo": 1419.4,
+      "matches": 138
+    },
+    {
+      "team": "Belarus",
+      "elo": 1416.5,
+      "matches": 205
+    },
+    {
+      "team": "Lesotho",
+      "elo": 1410.6,
+      "matches": 176
+    },
+    {
+      "team": "Bulgaria",
+      "elo": 1409.6,
+      "matches": 184
+    },
+    {
+      "team": "Samoa",
+      "elo": 1406.3,
+      "matches": 36
+    },
+    {
+      "team": "Yemen",
+      "elo": 1405.9,
+      "matches": 156
+    },
+    {
+      "team": "Hong Kong",
+      "elo": 1399.1,
+      "matches": 166
+    },
+    {
+      "team": "Kazakhstan",
+      "elo": 1394.8,
+      "matches": 187
+    },
+    {
+      "team": "Singapore",
+      "elo": 1388.3,
+      "matches": 231
+    },
+    {
+      "team": "Ethiopia",
+      "elo": 1385.2,
+      "matches": 157
+    },
+    {
+      "team": "Saint Vincent and the Grenadines",
+      "elo": 1382.1,
+      "matches": 99
+    },
+    {
+      "team": "Montenegro",
+      "elo": 1381.5,
+      "matches": 167
+    },
+    {
+      "team": "Botswana",
+      "elo": 1378.4,
+      "matches": 204
+    },
+    {
+      "team": "Guinea-Bissau",
+      "elo": 1377.4,
+      "matches": 98
+    },
+    {
+      "team": "Burundi",
+      "elo": 1373.7,
+      "matches": 140
+    },
+    {
+      "team": "Bermuda",
+      "elo": 1368.7,
+      "matches": 103
+    },
+    {
+      "team": "Saint Martin",
+      "elo": 1367.4,
+      "matches": 52
+    },
+    {
+      "team": "Sint Maarten",
+      "elo": 1360.4,
+      "matches": 37
+    },
+    {
+      "team": "Tibet",
+      "elo": 1358.7,
+      "matches": 19
+    },
+    {
+      "team": "Grenada",
+      "elo": 1357.9,
+      "matches": 129
+    },
+    {
+      "team": "Cook Islands",
+      "elo": 1349.9,
+      "matches": 26
+    },
+    {
+      "team": "Falkland Islands",
+      "elo": 1349.4,
+      "matches": 24
+    },
+    {
+      "team": "Central African Republic",
+      "elo": 1344.7,
+      "matches": 86
+    },
+    {
+      "team": "Congo",
+      "elo": 1342.4,
+      "matches": 121
+    },
+    {
+      "team": "Armenia",
+      "elo": 1340.0,
+      "matches": 181
+    },
+    {
+      "team": "Tuvalu",
+      "elo": 1337.0,
+      "matches": 29
+    },
+    {
+      "team": "Saint Kitts and Nevis",
+      "elo": 1336.4,
+      "matches": 119
+    },
+    {
+      "team": "Belize",
+      "elo": 1336.4,
+      "matches": 96
+    },
+    {
+      "team": "Afghanistan",
+      "elo": 1335.1,
+      "matches": 114
+    },
+    {
+      "team": "Frøya",
+      "elo": 1334.1,
+      "matches": 23
+    },
+    {
+      "team": "Luxembourg",
+      "elo": 1333.4,
+      "matches": 191
+    },
+    {
+      "team": "Montserrat",
+      "elo": 1330.5,
+      "matches": 47
+    },
+    {
+      "team": "India",
+      "elo": 1322.6,
+      "matches": 189
+    },
+    {
+      "team": "Eritrea",
+      "elo": 1317.9,
+      "matches": 31
+    },
+    {
+      "team": "Saint Lucia",
+      "elo": 1316.7,
+      "matches": 88
+    },
+    {
+      "team": "Faroe Islands",
+      "elo": 1298.4,
+      "matches": 157
+    },
+    {
+      "team": "Eswatini",
+      "elo": 1298.1,
+      "matches": 157
+    },
+    {
+      "team": "Azerbaijan",
+      "elo": 1293.0,
+      "matches": 202
+    },
+    {
+      "team": "Alderney",
+      "elo": 1284.9,
+      "matches": 37
+    },
+    {
+      "team": "Aruba",
+      "elo": 1283.6,
+      "matches": 70
+    },
+    {
+      "team": "Tonga",
+      "elo": 1278.6,
+      "matches": 29
+    },
+    {
+      "team": "South Sudan",
+      "elo": 1278.1,
+      "matches": 78
+    },
+    {
+      "team": "Estonia",
+      "elo": 1266.5,
+      "matches": 244
+    },
+    {
+      "team": "American Samoa",
+      "elo": 1265.6,
+      "matches": 28
+    },
+    {
+      "team": "Dominica",
+      "elo": 1264.1,
+      "matches": 86
+    },
+    {
+      "team": "Myanmar",
+      "elo": 1255.2,
+      "matches": 175
+    },
+    {
+      "team": "Bonaire",
+      "elo": 1251.6,
+      "matches": 44
+    },
+    {
+      "team": "Cyprus",
+      "elo": 1247.3,
+      "matches": 177
+    },
+    {
+      "team": "Chad",
+      "elo": 1243.5,
+      "matches": 75
+    },
+    {
+      "team": "Latvia",
+      "elo": 1240.5,
+      "matches": 195
+    },
+    {
+      "team": "Bangladesh",
+      "elo": 1240.3,
+      "matches": 152
+    },
+    {
+      "team": "Barbados",
+      "elo": 1229.5,
+      "matches": 121
+    },
+    {
+      "team": "Northern Mariana Islands",
+      "elo": 1227.1,
+      "matches": 27
+    },
+    {
+      "team": "Pakistan",
+      "elo": 1221.0,
+      "matches": 88
+    },
+    {
+      "team": "Mauritius",
+      "elo": 1214.9,
+      "matches": 128
+    },
+    {
+      "team": "Lithuania",
+      "elo": 1214.8,
+      "matches": 195
+    },
+    {
+      "team": "Cambodia",
+      "elo": 1210.4,
+      "matches": 152
+    },
+    {
+      "team": "Antigua and Barbuda",
+      "elo": 1209.7,
+      "matches": 122
+    },
+    {
+      "team": "Moldova",
+      "elo": 1203.7,
+      "matches": 198
+    },
+    {
+      "team": "Malta",
+      "elo": 1199.8,
+      "matches": 187
+    },
+    {
+      "team": "São Tomé and Príncipe",
+      "elo": 1198.3,
+      "matches": 49
+    },
+    {
+      "team": "Nepal",
+      "elo": 1190.8,
+      "matches": 146
+    },
+    {
+      "team": "Sri Lanka",
+      "elo": 1183.7,
+      "matches": 118
+    },
+    {
+      "team": "Mongolia",
+      "elo": 1165.1,
+      "matches": 70
+    },
+    {
+      "team": "Somalia",
+      "elo": 1161.5,
+      "matches": 58
+    },
+    {
+      "team": "Cayman Islands",
+      "elo": 1160.6,
+      "matches": 62
+    },
+    {
+      "team": "Maldives",
+      "elo": 1153.9,
+      "matches": 136
+    },
+    {
+      "team": "Guam",
+      "elo": 1147.6,
+      "matches": 82
+    },
+    {
+      "team": "Taiwan",
+      "elo": 1144.3,
+      "matches": 108
+    },
+    {
+      "team": "Laos",
+      "elo": 1125.9,
+      "matches": 128
+    },
+    {
+      "team": "Djibouti",
+      "elo": 1112.6,
+      "matches": 73
+    },
+    {
+      "team": "Brunei",
+      "elo": 1101.6,
+      "matches": 69
+    },
+    {
+      "team": "Turks and Caicos Islands",
+      "elo": 1098.7,
+      "matches": 45
+    },
+    {
+      "team": "Timor-Leste",
+      "elo": 1098.6,
+      "matches": 81
+    },
+    {
+      "team": "Bahamas",
+      "elo": 1093.2,
+      "matches": 52
+    },
+    {
+      "team": "British Virgin Islands",
+      "elo": 1089.5,
+      "matches": 66
+    },
+    {
+      "team": "Bhutan",
+      "elo": 1082.4,
+      "matches": 78
+    },
+    {
+      "team": "United States Virgin Islands",
+      "elo": 1075.3,
+      "matches": 57
+    },
+    {
+      "team": "Macau",
+      "elo": 1058.1,
+      "matches": 81
+    },
+    {
+      "team": "Seychelles",
+      "elo": 1048.8,
+      "matches": 117
+    },
+    {
+      "team": "Andorra",
+      "elo": 1038.3,
+      "matches": 168
+    },
+    {
+      "team": "Anguilla",
+      "elo": 1019.3,
+      "matches": 62
+    },
+    {
+      "team": "Gibraltar",
+      "elo": 1012.8,
+      "matches": 129
+    },
+    {
+      "team": "Liechtenstein",
+      "elo": 905.9,
+      "matches": 174
+    },
+    {
+      "team": "San Marino",
+      "elo": 842.7,
+      "matches": 149
+    }
+  ]
+}
