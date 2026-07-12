@@ -25,6 +25,9 @@ on:
 permissions:
   contents: write
 
+env:
+  ALERT_EMAIL: tremayne.watterson@gmail.com
+
 concurrency:
   group: unified-odds
   cancel-in-progress: false
@@ -50,10 +53,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # fetch_odds now exits non-zero when any sport's fetch fails
+      # (a successful call returning zero games, e.g. offseason, is fine),
+      # so this step - and the job - fail loudly on an API outage.
       - name: Fetch odds data
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
+          set -euo pipefail
           sport="${{ github.event.inputs.sport || 'all' }}"
           python -m data_jobs.odds_api.fetch_odds --sport "$sport"
 
@@ -75,6 +82,59 @@ jobs:
           else
             echo "No changes to commit."
           fi
+
+      # Runs after the commit so fresh data from healthy sports is preserved
+      # even when another sport's _latest.csv has gone stale. Fails the job
+      # if a sport with upcoming games has data older than the threshold.
+      - name: Check data staleness
+        run: |
+          sport="${{ github.event.inputs.sport || 'all' }}"
+          python -m data_jobs.odds_api.check_staleness --sport "$sport" --threshold-days 3
+
+      # Secrets can't be referenced in `if:` expressions, so gate in bash
+      # (same pattern as daily-report.yml).
+      - name: Decide whether to send failure email
+        id: failgate
+        if: failure()
+        shell: bash
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SMTP_USERNAME:-}" ] || [ -z "${SMTP_PASSWORD:-}" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Failure email not sent - SMTP credentials not configured."
+            exit 0
+          fi
+          echo "send=true" >> "$GITHUB_OUTPUT"
+
+      - name: Send failure notification email
+        if: ${{ failure() && steps.failgate.outputs.send == 'true' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.ALERT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: "[can-tre-beat-vegas] Unified Odds workflow FAILED (run #${{ github.run_number }})"
+          html_body: |
+            <h2>Unified Odds workflow failed</h2>
+            <p>Repository: <strong>${{ github.repository }}</strong></p>
+            <p>Workflow: <strong>${{ github.workflow }}</strong> (run #${{ github.run_number }})</p>
+            <p>The odds fetch or staleness check failed. This usually means an
+            Odds API outage, an exhausted quota, or a stale
+            <code>_latest.csv</code> despite upcoming games.</p>
+            <p>
+              <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                View the failed run logs
+              </a>
+            </p>
+            <hr>
+            <p><small>Automated alert from the Can-Tre-Beat-Vegas odds tracking system.</small></p>
+          ignore_cert: true
 
       - name: Upload artifacts
         if: always()
