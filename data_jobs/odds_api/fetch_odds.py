@@ -11,6 +11,7 @@ Environment Variables:
 """
 
 import argparse
+import json
 import sys
 import os
 
@@ -107,6 +108,28 @@ def print_summary(results: list, client: OddsAPIClient):
         print(f"\n{warning}")
 
 
+def write_fetch_status(results: list, status_path: str):
+    """
+    Write per-sport fetch results to a JSON status file.
+
+    Used by the staleness checker to distinguish "API reported no upcoming
+    games" (offseason - fine) from "data file quietly went stale".
+    """
+    status = {
+        "sports": {
+            r["sport"]: {
+                "success": r["success"],
+                "games_count": r["games_count"],
+                "error": r["error"],
+            }
+            for r in results
+        }
+    }
+    os.makedirs(os.path.dirname(status_path) or ".", exist_ok=True)
+    with open(status_path, "w") as f:
+        json.dump(status, f, indent=2)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Fetch sports betting odds from The Odds API"
@@ -127,6 +150,12 @@ def main():
         default=".",
         help="Base directory for output files (default: current directory)",
     )
+    parser.add_argument(
+        "--status-file",
+        default=None,
+        help="Path for the per-run fetch status JSON "
+        "(default: <base-dir>/data/fetch_status.json)",
+    )
 
     args = parser.parse_args()
 
@@ -146,6 +175,20 @@ def main():
         results = [fetch_single_sport(client, args.sport, args.base_dir)]
 
     print_summary(results, client)
+
+    status_path = args.status_file or os.path.join(
+        args.base_dir, "data", "fetch_status.json"
+    )
+    write_fetch_status(results, status_path)
+
+    # Fail loudly if any requested sport's fetch actually failed
+    # (exception / HTTP error). A successful API call that returns zero
+    # games (e.g. NBA in the offseason) is NOT a failure.
+    failed = [r for r in results if not r["success"]]
+    if failed:
+        names = ", ".join(r["sport"].upper() for r in failed)
+        print(f"\nERROR: Fetch failed for: {names}. Exiting non-zero.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

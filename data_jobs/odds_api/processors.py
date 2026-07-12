@@ -197,9 +197,24 @@ def _safe_avg(values: list) -> Optional[float]:
     return round(sum(filtered) / len(filtered), 2)
 
 
+def _has_existing_data(path: str) -> bool:
+    """Return True if a CSV file exists at path and contains at least one data row"""
+    if not os.path.exists(path):
+        return False
+    try:
+        existing = pd.read_csv(path)
+    except (pd.errors.EmptyDataError, pd.errors.ParserError, OSError):
+        return False
+    return len(existing) > 0
+
+
 def save_odds_data(df: pd.DataFrame, sport: str, base_dir: str = ".") -> tuple[str, str]:
     """
     Save odds DataFrame to CSV files.
+
+    Guard: refuses to overwrite a non-empty `_latest.csv` with an empty
+    DataFrame (e.g. when every game in the API response was filtered out
+    because of unknown team names). In that case nothing is written.
 
     Args:
         df: DataFrame with odds data
@@ -218,6 +233,14 @@ def save_odds_data(df: pd.DataFrame, sport: str, base_dir: str = ".") -> tuple[s
 
     timestamped_path = os.path.join(save_dir, f"{prefix}_{stamp}.csv")
     latest_path = os.path.join(save_dir, f"{prefix}_latest.csv")
+
+    if df.empty and _has_existing_data(latest_path):
+        print(
+            f"WARNING: Refusing to overwrite non-empty {latest_path} with an "
+            f"empty DataFrame (all {sport.upper()} games were filtered out or "
+            f"the processed result was empty). Skipping write."
+        )
+        return timestamped_path, latest_path
 
     df.to_csv(timestamped_path, index=False)
     df.to_csv(latest_path, index=False)

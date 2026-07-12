@@ -5,6 +5,7 @@ Optimized for free tier (500 requests/month)
 
 import os
 import json
+import time
 import requests
 from datetime import datetime
 from pathlib import Path
@@ -97,6 +98,50 @@ class OddsAPIClient:
 
         return None
 
+    def _request_with_retry(
+        self,
+        url: str,
+        params: dict,
+        max_attempts: int = 3,
+        backoff_seconds: float = 2.0,
+        timeout: int = 30,
+    ) -> requests.Response:
+        """
+        GET with modest retry + exponential backoff (2s, 4s).
+
+        Retries on connection errors, timeouts, HTTP 429, and HTTP 5xx.
+        Does NOT retry other 4xx errors (bad key, quota exhausted, etc.).
+        """
+        last_exc: Optional[Exception] = None
+
+        for attempt in range(1, max_attempts + 1):
+            try:
+                response = requests.get(url, params=params, timeout=timeout)
+                response.raise_for_status()
+                return response
+
+            except requests.HTTPError as e:
+                status = e.response.status_code if e.response is not None else None
+                body = e.response.text if e.response is not None else ""
+                print(f"HTTP Error {status}: {body}")
+                retryable = status is not None and (status == 429 or status >= 500)
+                if not retryable or attempt >= max_attempts:
+                    raise
+                last_exc = e
+
+            except (requests.ConnectionError, requests.Timeout) as e:
+                print(f"Request failed: {e}")
+                if attempt >= max_attempts:
+                    raise
+                last_exc = e
+
+            wait = backoff_seconds * (2 ** (attempt - 1))
+            print(f"Retrying in {wait:.0f}s (attempt {attempt}/{max_attempts} failed)...")
+            time.sleep(wait)
+
+        # Unreachable in practice, but keeps the type checker honest
+        raise last_exc  # pragma: no cover
+
     def fetch_odds(
         self,
         sport: str,
@@ -138,30 +183,21 @@ class OddsAPIClient:
             "dateFormat": date_format,
         }
 
-        try:
-            response = requests.get(url, params=params, timeout=30)
-            response.raise_for_status()
+        response = self._request_with_retry(url, params)
 
-            # Extract quota info from headers
-            self.requests_remaining = int(response.headers.get("x-requests-remaining", -1))
-            self.requests_used = int(response.headers.get("x-requests-used", -1))
+        # Extract quota info from headers
+        self.requests_remaining = int(response.headers.get("x-requests-remaining", -1))
+        self.requests_used = int(response.headers.get("x-requests-used", -1))
 
-            games = response.json()
+        games = response.json()
 
-            # Log usage
-            self._log_usage(sport, len(games))
+        # Log usage
+        self._log_usage(sport, len(games))
 
-            print(f"Fetched {len(games)} {sport.upper()} games")
-            print(f"API Quota: {self.requests_remaining} requests remaining (used {self.requests_used})")
+        print(f"Fetched {len(games)} {sport.upper()} games")
+        print(f"API Quota: {self.requests_remaining} requests remaining (used {self.requests_used})")
 
-            return games
-
-        except requests.HTTPError as e:
-            print(f"HTTP Error {response.status_code}: {response.text}")
-            raise
-        except requests.RequestException as e:
-            print(f"Request failed: {e}")
-            raise
+        return games
 
     def fetch_all_sports(self) -> dict:
         """
