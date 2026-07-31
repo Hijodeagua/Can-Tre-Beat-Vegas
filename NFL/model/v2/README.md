@@ -140,3 +140,65 @@ two directions with a real prior:
 2. **Shop the books.** The snapshots already carry 8-10 books per game. Taking
    the best available number instead of the consensus is a known, mechanical
    edge and it does not require the model to be right about anything.
+
+## Production scorecard
+
+The rating engine is the **QB + talent adjusted Elo** from `elo_variants.py`
+(`dataset.DEFAULT_ELO = "qb_talent"`), with a graceful fallback to plain Elo
+when the roster/awards caches are absent. Picks model is a calibrated logistic
+on ten features, recency half-life 6 seasons.
+
+`python3 -m NFL.model.v2.scorecard --save` regenerates everything below.
+Walk-forward out of sample, 3,018 games, 2015-2025:
+
+| model | acc | AUC | log loss | Brier | McFadden R² | Efron R² | cal. slope | ECE | top-3 |
+|---|---|---|---|---|---|---|---|---|---|
+| **production (qb+talent Elo)** | **66.5%** | 0.7172 | 0.6140 | 0.2127 | 0.1079 | 0.1406 | 0.977 | 0.0131 | 77.9% |
+| previous (base Elo) | 66.5% | 0.7168 | 0.6140 | 0.2128 | 0.1079 | 0.1404 | 0.981 | 0.0152 | 78.2% |
+| market (closing line) | 66.1% | **0.7179** | **0.6121** | **0.2122** | **0.1106** | **0.1429** | 1.056 | 0.0181 | **79.6%** |
+| qb+talent Elo alone | 65.2% | 0.6976 | 0.6316 | 0.2201 | 0.0823 | 0.1108 | 0.808 | 0.0336 | 76.2% |
+| always base rate | 55.0% | 0.500 | 0.6882 | 0.2475 | 0.000 | 0.000 | 0.038 | — | 53.8% |
+
+### Reading these
+
+- **R² on a 0/1 outcome is not meaningful**, so two pseudo-R² are reported
+  instead. *McFadden* = 1 − LL/LL_null, the log-likelihood improvement over an
+  intercept-only model. *Efron* = 1 − Brier/Brier_null, the squared-error
+  version (identical to the Brier skill score). Both say the model explains
+  roughly 11-14% of what there is to explain, and the market explains slightly
+  more.
+- **Calibration slope** comes from refitting a logistic on the model's own
+  logit. 1.0 is perfect; **0.977 means the model is very slightly
+  overconfident**, the market at 1.056 is slightly *under*confident, and raw
+  Elo at 0.808 is materially overconfident — which is why it gets Platt-scaled
+  before use.
+- **ECE** (expected calibration error) is the average gap between predicted and
+  actual within probability bins. The model's 0.0131 is better than the
+  market's 0.0181 — the one metric where we beat the books, and it reflects
+  calibration, not discrimination.
+- **AUC vs accuracy**: the model edges the market on accuracy (66.5% vs 66.1%)
+  while losing on AUC (0.7172 vs 0.7179). It sorts games marginally worse but
+  places the 0.5 cut marginally better. Neither gap is significant.
+
+### The honest summary
+
+Beating the closing line on log loss remains out of reach: 0.6140 vs 0.6121.
+The flat-stake moneyline backtest returns +0.8% ROI over 1,813 bets with a
+standard error of 2.6% — indistinguishable from zero.
+
+**Wiring in the better Elo changed nothing downstream.** Standalone it is worth
+0.0055 log loss (0.6316 vs 0.6374 for plain Elo); inside the model both land on
+0.6140. The market features absorb it. It is kept because it is free, strictly
+better on its own, and would matter if the pipeline ever prices against opening
+lines.
+
+### Why the feature list did not change
+
+Regenerating the uniform ranking on the new Elo promoted `market_vig` and
+`travel_miles` into the top ten, displacing `home_roll_margin` and
+`away_ppg_diff_std`. Adopting that swap **costs 0.0014 of log loss**
+(0.6154 vs 0.6140), so it was not adopted. Importance rank measures what each
+feature contributes on its own; it does not identify the best-performing
+*combination*. `PICKS_FEATURES` in `weekly_nfl_report.py` stays pinned, and
+`scorecard.py` deliberately scores that pinned list rather than a freshly
+ranked one.

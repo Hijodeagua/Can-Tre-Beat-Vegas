@@ -246,16 +246,54 @@ def add_targets(g: pd.DataFrame) -> pd.DataFrame:
     return g
 
 
+DEFAULT_ELO = "qb_talent"
+
+
+def attach_elo(g: pd.DataFrame, variant: str = DEFAULT_ELO) -> pd.DataFrame:
+    """Attach Elo columns, using an adjusted variant when its inputs exist.
+
+    ``qb_talent`` prices the starting quarterback and roster honors into the
+    rating instead of waiting for results to reveal them. Validated on held-out
+    2021-2025 at 0.0061 better log loss and 2.3 points more accuracy than plain
+    Elo (see ``elo_variants.py``).
+
+    The variant needs the nflverse roster cache and the awards CSVs. When those
+    are absent — a fresh clone, or CI before the fetch step — this falls back to
+    the results-only engine rather than failing, so the pipeline always runs.
+    """
+    if variant == "base":
+        return compute_elo(g)
+    try:
+        from .elo_variants import build_variants
+        v = build_variants(g, which=(variant,))[variant]
+    except Exception as exc:  # missing rosters/awards, or a bad variant name
+        import warnings
+        warnings.warn(f"Elo variant {variant!r} unavailable ({exc}); "
+                      "falling back to base Elo", RuntimeWarning)
+        return compute_elo(g)
+
+    j = v.set_index("game_id")
+    g = compute_elo(g)  # keeps home_elo/away_elo for reporting
+    g["elo_diff"] = g["game_id"].map(j["v_elo_diff"])
+    g["elo_home_prob"] = g["game_id"].map(j["v_elo_prob"])
+    g["elo_spread"] = g["game_id"].map(j["v_elo_spread"])
+    g["elo_adj_home"] = g["game_id"].map(j["v_adj_home"])
+    g["elo_adj_away"] = g["game_id"].map(j["v_adj_away"])
+    return g
+
+
 def build_dataset(path: Path | str = GAMES_PATH, min_season: int = MIN_SEASON,
-                  with_squad: bool = False) -> pd.DataFrame:
+                  with_squad: bool = False, elo_variant: str = DEFAULT_ELO) -> pd.DataFrame:
     """Full feature frame, one row per game, chronologically sorted.
 
     ``with_squad`` merges the roster-quality columns from ``squad.py`` (draft
     pedigree, honors, QB quality, interim coach). It is opt-in so the models
     trained on the original 45 features keep loading unchanged.
+
+    ``elo_variant`` selects the rating engine; see ``attach_elo``.
     """
     g = load_games(path, min_season)
-    g = compute_elo(g)
+    g = attach_elo(g, elo_variant)
     g = add_market_features(g)
 
     t = add_rolling_form(to_team_rows(g))
