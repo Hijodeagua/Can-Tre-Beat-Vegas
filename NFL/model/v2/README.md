@@ -314,3 +314,93 @@ The blind line is the useful artefact, not the bet signal. Its value is that it
 is *market-independent*, which makes it the right tool for the one direction
 with a real prior: pricing against **opening** lines rather than closing ones.
 That needs opening numbers the fetch job does not yet capture early enough.
+
+## The market-blind spread model (`spread_model.py`)
+
+`margin.py` asked whether a line built without the market could match Vegas.
+This is the full treatment: six model families on one harness, walk-forward
+with a calibration step, and KPIs built around the only question that matters —
+**is our number closer to the final margin than the bookmaker's?**
+
+All models see 40 features. `spread_line`, `total_line`, `market_home_prob`,
+`market_vig` and `elo_vs_spread` are removed, so nothing can copy the answer.
+
+### Bake-off, walk-forward 2015-2025, 3,028 games
+
+| model | MAE | RMSE | R² | bias | cal. slope | closer than Vegas |
+|---|---|---|---|---|---|---|
+| **closing spread (Vegas)** | **9.81** | **12.72** | **0.193** | +0.05 | 1.038 | — |
+| ridge (uncalibrated) | 10.08 | 12.99 | 0.158 | -0.48 | 0.933 | 46.1% |
+| **ridge (calibrated)** | 10.09 | 13.00 | 0.157 | **-0.08** | **0.969** | 45.8% |
+| extra trees | 10.11 | 13.02 | 0.155 | -0.04 | 0.965 | 45.6% |
+| random forest | 10.11 | 13.06 | 0.150 | -0.05 | 0.955 | 45.2% |
+| xgboost | 10.13 | 13.08 | 0.147 | -0.15 | 0.970 | 46.1% |
+| huber | 10.18 | 13.26 | 0.123 | -0.10 | 0.850 | 45.6% |
+| lightgbm | 10.26 | 13.21 | 0.130 | -0.16 | 0.945 | 45.2% |
+
+**Ridge wins again.** Same result as the classifier: the simplest model beats
+every ensemble, and LightGBM comes last. With only 40 noisy football features
+and 3,000 games a season's worth of signal, there is nothing for a boosted tree
+to find that a linear fit misses.
+
+Our best line misses by **10.09 points against Vegas's 9.81** — a quarter of a
+point — and explains 15.7% of margin variance against their 19.3%.
+
+### What calibration bought
+
+Every uncalibrated model carries a bias of −0.5 points (systematically too low
+on home teams) and a slope away from 1. The linear recalibration on the prior
+season fixes both — ridge goes from bias −0.48 / slope 0.933 to −0.08 / 0.969.
+It does **not** improve MAE (10.083 → 10.089, marginally worse). Worth knowing:
+calibration buys you an unbiased line, not a more accurate one.
+
+### The result that settles it
+
+| disagreement | games | our MAE | Vegas MAE | we're closer | ATS on our side |
+|---|---|---|---|---|---|
+| 0-1 pts | 853 | 9.82 | 9.81 | 48.8% | 50.0% |
+| 1-2 pts | 718 | 9.61 | 9.52 | 46.4% | 50.9% |
+| 2-3 pts | 559 | 9.99 | 9.76 | 45.8% | 50.9% |
+| 3-5 pts | 620 | 10.63 | 10.13 | 42.9% | 51.0% |
+| 5+ pts | 278 | 11.16 | 9.91 | **41.4%** | 52.8% |
+
+**Confidence is anti-correlated with correctness.** The further our line strays
+from the bookmaker's, the more likely the bookmaker is right — monotonically,
+across every bucket. Our MAE climbs from 9.82 to 11.16 as disagreement grows
+while Vegas holds near 9.9.
+
+That is the opposite of a tradable signal. A useful model would be *no better*
+than Vegas on the games where they agree and *better* where they disagree;
+ours is worse exactly where it is loudest. Its disagreements are noise, and the
+54.8% of games where we differ by 2+ points are where that noise lives.
+
+The 52.8% ATS in the 5+ bucket is 273 games with a standard error of 3.0 —
+0.1 standard errors above break-even, and pointing the opposite way from the
+accuracy column beside it. Not a finding.
+
+### What actually predicts a football game
+
+This is the first ranking in the project not swamped by the market. Full charts
+in `artifacts/spread/importance/`; the top of the uniform ranking across all six
+models:
+
+| rank | feature | note |
+|---|---|---|
+| 1 | `roll_margin_diff` | 5-game scoring-margin differential — first for both linear models |
+| 2 | `elo_diff` | first for both boosted models |
+| 3 | `elo_home_prob` | first for both bagged-tree models |
+| 4 | `elo_spread` | |
+| 5 | `away_roll_pf` | |
+| 6 | `away_ppg_diff_std` | season-to-date point differential |
+| 7 | `home_roll_margin` | |
+| 8 | `away_qb_change` | the highest-ranked non-form feature |
+
+Recent scoring margin and Elo are the whole story, and they are near-duplicates
+of each other. Every model family picks one of the two as its top feature and
+the other close behind. Everything from rank 8 down — QB changes, travel,
+division games, weather — is worth less than a tenth of the leader.
+
+Which is the honest explanation for the quarter-point gap to Vegas: the
+bookmaker knows about injuries, personnel, and game-specific news that a
+schedule-and-scores dataset simply does not contain, and that knowledge is
+worth about 0.26 points of MAE.
