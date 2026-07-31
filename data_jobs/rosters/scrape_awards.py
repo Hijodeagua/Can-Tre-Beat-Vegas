@@ -141,25 +141,45 @@ def parse_allpro(html: str) -> pd.DataFrame:
                          for k, v in out.items()])
 
 
+MIN_TOP100_ROWS = 50
+
+
 def parse_wikipedia_top100(html: str) -> pd.DataFrame:
-    """Rank + player name from the list table."""
-    from io import StringIO
-    try:
-        # pandas >= 2 wants a file-like object for literal HTML, not a str.
-        tables = pd.read_html(StringIO(html))
-    except (ValueError, ImportError, FileNotFoundError):
-        tables = []
-    for t in tables:
-        cols = [str(c).lower() for c in t.columns]
-        rank_col = next((c for c, lc in zip(t.columns, cols) if "rank" in lc or lc == "#"), None)
-        name_col = next((c for c, lc in zip(t.columns, cols)
-                         if "player" in lc or "name" in lc), None)
-        if rank_col is not None and name_col is not None and len(t) >= 50:
-            d = t[[rank_col, name_col]].copy()
-            d.columns = ["rank", "player"]
-            d["rank"] = pd.to_numeric(d["rank"], errors="coerce")
-            d["player"] = d["player"].astype(str).str.replace(r"\[.*?\]", "", regex=True)
-            return d.dropna(subset=["rank"]).reset_index(drop=True)
+    """Rank + player name from the list table.
+
+    Parsed with BeautifulSoup rather than ``pandas.read_html``. read_html needs
+    lxml or html5lib, neither of which this project declares — it happened to
+    work in a dev environment where lxml had arrived as somebody's transitive
+    dependency, and returned an empty frame in CI. bs4 is already a declared
+    dependency and already used elsewhere in this module.
+    """
+    soup = _soup(html)
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if len(rows) < MIN_TOP100_ROWS:
+            continue
+
+        header = [c.get_text(strip=True).lower()
+                  for c in rows[0].find_all(["th", "td"])]
+        rank_i = next((i for i, h in enumerate(header) if "rank" in h or h == "#"), None)
+        name_i = next((i for i, h in enumerate(header)
+                       if "player" in h or "name" in h), None)
+        if rank_i is None or name_i is None:
+            continue
+
+        out = []
+        for tr in rows[1:]:
+            cells = tr.find_all(["td", "th"])
+            if len(cells) <= max(rank_i, name_i):
+                continue
+            rank = pd.to_numeric(cells[rank_i].get_text(strip=True), errors="coerce")
+            if pd.isna(rank):
+                continue
+            name = re.sub(r"\[.*?\]", "", cells[name_i].get_text(strip=True)).strip()
+            out.append({"rank": rank, "player": name})
+
+        if len(out) >= MIN_TOP100_ROWS:
+            return pd.DataFrame(out)
     return pd.DataFrame(columns=["rank", "player"])
 
 

@@ -319,3 +319,33 @@ class TestNameNormalisation:
 
     def test_handles_nan(self):
         assert normalize_name(pd.Series([None])).iloc[0] == ""
+
+
+class TestParserDependencies:
+    """CI installs only requirements.txt. Parsers must not need anything else.
+
+    `parse_wikipedia_top100` originally used `pandas.read_html`, which needs
+    lxml or html5lib — neither is declared. It passed locally (lxml had arrived
+    as a transitive dependency) and returned an empty frame in CI.
+    """
+
+    def test_top100_parser_works_without_lxml_or_html5lib(self, monkeypatch):
+        import builtins
+        real_import = builtins.__import__
+
+        def blocked(name, *args, **kwargs):
+            if name.split(".")[0] in {"lxml", "html5lib"}:
+                raise ImportError(f"{name} is not a declared dependency")
+            return real_import(name, *args, **kwargs)
+
+        monkeypatch.setattr(builtins, "__import__", blocked)
+        d = parse_wikipedia_top100(WIKI_HTML)
+        assert len(d) == 60
+        assert d.iloc[0]["rank"] == 1
+
+    def test_declared_deps_do_not_include_lxml(self):
+        """If lxml ever becomes a real requirement, declare it deliberately."""
+        from pathlib import Path
+        req = Path(__file__).resolve().parents[1] / "requirements.txt"
+        text = req.read_text().lower()
+        assert "beautifulsoup4" in text, "bs4 must stay declared — parsers rely on it"
