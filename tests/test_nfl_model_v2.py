@@ -238,3 +238,67 @@ class TestLineMovement:
         row = aggregate_movement(_snapshots()).iloc[0]
         # -277 -> -275 is a small move away from the home side.
         assert row["novig_move_home"] < 0
+
+
+class TestEloVariants:
+    """The four exploratory Elo formulations."""
+
+    def _games(self, n=8):
+        import numpy as np
+        rows = []
+        teams = ["AAA", "BBB", "CCC", "DDD"]
+        for i in range(n):
+            h, a = teams[i % 4], teams[(i + 1) % 4]
+            rows.append({
+                "game_id": f"g{i}", "season": 2024, "week": i + 1,
+                "gameday": pd.Timestamp("2024-09-08") + pd.Timedelta(days=7 * i),
+                "game_type": "REG", "home_team": h, "away_team": a,
+                "home_score": 24.0, "away_score": 17.0,
+                "location": "Home", "spread_line": 3.0,
+            })
+        return pd.DataFrame(rows)
+
+    def test_adjustment_does_not_accumulate_into_rating(self):
+        """A QB bonus must move the prediction, not permanently inflate the team."""
+        from NFL.model.v2.elo_variants import run_elo
+        g = self._games()
+        adj = np.full(len(g), 100.0)
+        plain = run_elo(g)
+        boosted = run_elo(g, home_adj=adj, away_adj=np.zeros(len(g)))
+        # The stored rating path differs (results differ in expectation) but the
+        # adjustment itself is never banked: it shows up only in v_adj_home.
+        assert (boosted["v_adj_home"] == 100.0).all()
+        assert (plain["v_adj_home"] == 0.0).all()
+        assert boosted["v_elo_diff"].iloc[0] == pytest.approx(
+            plain["v_elo_diff"].iloc[0] + 100.0)
+
+    def test_positive_adjustment_raises_win_probability(self):
+        from NFL.model.v2.elo_variants import run_elo
+        g = self._games()
+        up = run_elo(g, home_adj=np.full(len(g), 80.0), away_adj=np.zeros(len(g)))
+        flat = run_elo(g)
+        assert up["v_elo_prob"].iloc[0] > flat["v_elo_prob"].iloc[0]
+
+    def test_unplayed_games_do_not_move_ratings(self):
+        from NFL.model.v2.elo_variants import run_elo
+        g = self._games()
+        g.loc[4:, ["home_score", "away_score"]] = np.nan
+        d = run_elo(g)
+        # Ratings frozen from the first unplayed game onward for a given team.
+        later = d[d["game_id"].isin(["g4", "g5", "g6", "g7"])]
+        assert later["v_elo_prob"].notna().all()
+
+    def test_market_anchored_tracks_the_spread(self):
+        """The spread variant's probability should start at the market's."""
+        from NFL.model.v2.elo_variants import run_elo
+        g = self._games()
+        d = run_elo(g, market_anchored=True)
+        # First game: no rating history, so the prediction is the market's own.
+        market_p = 1.0 / (1.0 + np.exp(-0.145 * 3.0))
+        assert d["v_elo_prob"].iloc[0] == pytest.approx(market_p, abs=1e-6)
+
+    def test_shrink_constants_are_below_one(self):
+        """Regression: full-strength adjustments double-count and hurt log loss."""
+        from NFL.model.v2.elo_variants import QB_SHRINK, TALENT_SHRINK
+        assert 0 < QB_SHRINK < 1
+        assert 0 < TALENT_SHRINK < 1

@@ -362,3 +362,106 @@ worse (0.010 vs 0.022, both ~zero). Plain counts stay.
 QB-tier flags all get absorbed by the closing spread, same as the raw Top 100
 count did. Two threads to revisit with more seasons: wide receiver (+3.4 pp)
 and top-10 quarterbacks (53.2% ATS). Each season adds ~270 games.
+
+### 10. Is Pro Bowl help or hindrance?
+
+All-Pro and Pro Bowl landed via PR #17 (2000-2025, 2,176 and 2,824 rows, both
+100% id-resolved on arrival). Short answer: **Pro Bowl is not a hindrance —
+it is the equal-best of the three honor signals**, contrary to the prior that
+its reputation-voting noise would hurt.
+
+Raw signal quality on 6,499 played games:
+
+| signal | corr. with margin | corr. with spread | corr. with margin-vs-spread |
+|---|---|---|---|
+| All-Pro score | 0.239 | 0.472 | 0.051 |
+| **Pro Bowl count** | **0.239** | 0.464 | **0.055** |
+| Top 100 count | 0.233 | 0.509 | 0.024 |
+| 1st-round count | 0.122 | 0.231 | 0.031 |
+
+Pro Bowl ties All-Pro on correlation with final margin and has the *highest*
+correlation with margin-against-the-spread of the three. It also correlates
+slightly *less* with the closing spread than the others, which is the
+direction you want — more signal, less already-priced.
+
+Marginal model value, added singly on top of the ten production features:
+
+| added to top-10 | logistic | extra trees |
+|---|---|---|
+| nothing | 0.6140 | 0.6193 |
+| + All-Pro score | 0.6140 | **0.6178** |
+| + **Pro Bowl count** | **0.6135** | 0.6182 |
+| + Top 100 count | 0.6142 | 0.6187 |
+
+Pro Bowl is the only honor that improves the logistic model at all, and it is
+mid-pack for the trees. Top 100 is the weakest of the three despite being the
+most recent and most "modern" list.
+
+The likely reason is coverage rather than quality: Pro Bowl selects ~110
+players a season against All-Pro's ~87 and Top 100's exactly 100, and the
+feature uses a five-season lookback, so it is a denser, smoother measure of
+accumulated roster quality. Noisier per selection, but more selections.
+
+Caveat that applies to all of it: every difference above is ≤0.0007 log loss,
+which is noise. The honest statement is "Pro Bowl is no worse than the other
+two and possibly marginally better", not "Pro Bowl helps".
+
+### 11. Four Elo variants
+
+`NFL/model/v2/elo_variants.py`. Elo ranks 3rd-6th in the uniform feature
+importance, so this asks whether a better Elo is available. All four share the
+same MOV update and season regression; only the stated difference changes.
+
+Standalone (Elo probability alone, no model, 3,028 games 2015-2025):
+
+| variant | log loss | accuracy | AUC | vs base |
+|---|---|---|---|---|
+| market (closing spread) | 0.6121 | 66.1% | 0.718 | — |
+| **qb + talent** | **0.6319** | 65.2% | 0.698 | **-0.0055** |
+| talent | 0.6335 | 65.2% | 0.695 | -0.0039 |
+| qb | 0.6349 | 64.6% | 0.692 | -0.0025 |
+| base (production) | 0.6374 | 64.2% | 0.687 | 0.000 |
+| spread-anchored | 0.6744 | 65.4% | 0.702 | +0.0370 |
+
+**The headline: adjusting Elo for the quarterback and for roster talent is
+worth about 0.0055 of log loss and a point of accuracy.** That is the largest
+single improvement found in any of this work — though it still leaves Elo
+0.020 behind the closing spread.
+
+**The instructive failure.** At full strength both adjustments made Elo
+*worse* (qb alone: 0.6424 vs base 0.6374) while simultaneously improving
+accuracy and AUC — the signature of a correctly ordered but overconfident
+model. The cause is double counting: a team with an elite quarterback already
+has a high Elo *because he kept winning games*, so pricing him again
+overstates the edge. Shrinking the adjustments fixes it. Sweeping the shrink:
+
+| shrink | 0.0 | 0.15 | 0.25 | 0.4 | 0.6 | 0.8 | 1.0 |
+|---|---|---|---|---|---|---|---|
+| QB log loss | 0.6374 | 0.6356 | 0.6349 | **0.6346** | 0.6356 | 0.6382 | 0.6424 |
+
+Shrink factors were then re-fit on 2015-2020 and validated on **held-out
+2021-2025**, where the tuned combination (QB x0.25, talent x0.5) beat base Elo
+by **0.0061 log loss and 2.3 points of accuracy** (0.6426 -> 0.6365,
+63.2% -> 65.5%). Those are now the module defaults.
+
+**Spread-anchored** updates on the result versus the market's expectation, so
+the rating accumulates disagreement with the books rather than team strength.
+It has the best AUC of any variant (0.702) but much the worst log loss — it
+ranks games well and prices them badly. It is also circular by construction
+and cannot be used to argue the market is beatable.
+
+**None of it reaches the model.** Swapping each variant's columns into the
+ten production features moves walk-forward log loss between 0.6138 and 0.6140
+— the market features dominate so completely that the quality of the Elo input
+is irrelevant. Betting the Elo-vs-market disagreement clears nothing either;
+the best is talent-Elo at 52.35% on 1,236 bets with a 3-point minimum
+disagreement, which is exactly break-even.
+
+So: a genuinely better Elo, with no effect on anything downstream. Worth
+keeping because it is free and because it would matter if we ever price
+against openers instead of closers.
+
+**Known flaws** (exploratory by design, stated in the module docstring): the
+QB and talent adjustments double-count against the base rating even after
+shrinking; honors are season-granular so the talent term steps once a year;
+the spread variant only exists where a closing line does (97% of games).

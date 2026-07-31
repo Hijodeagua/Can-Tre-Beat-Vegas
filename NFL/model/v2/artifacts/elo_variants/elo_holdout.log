@@ -1,0 +1,8 @@
+=== tuning window 2015-2020 ===
+best on tune: qb x0.25 + talent x0.5  ll=0.6278
+
+=== held-out 2021-2025 ===
+                                     variant    n  log_loss    acc    auc  d_vs_base
+                                        base 1424    0.6426 0.6320 0.6853     0.0000
+   qb x0.25 + talent x0.5 (tuned on 2015-20) 1424    0.6365 0.6545 0.6976    -0.0061
+qb x0.4 + talent x0.5 (tuned on full window) 1424    0.6370 0.6552 0.6982    -0.0056
