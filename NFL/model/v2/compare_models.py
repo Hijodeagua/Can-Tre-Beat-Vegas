@@ -130,8 +130,7 @@ def walk_forward_model(
         w = recency_weights(fit["season"], int(season), half_life)
 
         def _X(frame):
-            X = feature_matrix(frame)
-            return X[features] if features is not None else X
+            return feature_matrix(frame, features)
 
         model.fit(_X(fit), fit[y_col].astype(int),
                   **{_sample_weight_param(model, kind): w})
@@ -195,11 +194,13 @@ def market_summary(preds: pd.DataFrame, target: str, k: int = 3) -> dict:
 
 
 def run_bakeoff(target: str, start_season: int, half_life: float,
-                kinds: list[str], df: pd.DataFrame | None = None) -> pd.DataFrame:
+                kinds: list[str], df: pd.DataFrame | None = None,
+                features: list[str] | None = None) -> pd.DataFrame:
     df = build_dataset() if df is None else df
     rows, all_preds = [], {}
     for kind in kinds:
-        preds = walk_forward_model(df, target, kind, start_season, half_life)
+        preds = walk_forward_model(df, target, kind, start_season, half_life,
+                                   features=features)
         if preds.empty:
             continue
         rows.append(summarize(preds, kind))
@@ -235,6 +236,8 @@ def main() -> None:
     ap.add_argument("--models", default=",".join(MODEL_KINDS))
     ap.add_argument("--half-life-sweep", action="store_true")
     ap.add_argument("--save", action="store_true")
+    ap.add_argument("--with-squad", action="store_true",
+                    help="include roster-quality features from squad.py")
     args = ap.parse_args()
 
     if args.half_life_sweep:
@@ -246,13 +249,23 @@ def main() -> None:
         return
 
     kinds = args.models.split(",")
+    df = build_dataset(with_squad=args.with_squad)
+    features = None
+    if args.with_squad:
+        from .dataset import FEATURE_COLS, available_squad_cols
+        extra = available_squad_cols(df)
+        features = list(FEATURE_COLS) + extra
+        print(f"squad features added ({len(extra)}): {', '.join(extra)}")
+
     print(f"=== bake-off: target={args.target}, seasons>={args.start_season}, "
-          f"half-life={args.half_life} ===")
-    table, all_preds = run_bakeoff(args.target, args.start_season, args.half_life, kinds)
+          f"half-life={args.half_life}, features={len(features) if features else 45} ===")
+    table, all_preds = run_bakeoff(args.target, args.start_season, args.half_life,
+                                   kinds, df=df, features=features)
     print()
     print(table.to_string(index=False))
     if args.save:
-        table.to_csv(ARTIFACTS / f"bakeoff_{args.target}.csv", index=False)
+        suffix = "_squad" if args.with_squad else ""
+        table.to_csv(ARTIFACTS / f"bakeoff_{args.target}{suffix}.csv", index=False)
         for kind, preds in all_preds.items():
             preds.to_csv(ARTIFACTS / f"bakeoff_preds_{args.target}_{kind}.csv", index=False)
         print(f"\nsaved -> {ARTIFACTS}")

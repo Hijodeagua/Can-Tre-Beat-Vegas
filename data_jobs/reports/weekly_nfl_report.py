@@ -49,6 +49,17 @@ PICKS_MODEL = "logistic"
 HALF_LIFE = 6.0
 TOP_K = 3
 
+# The top 10 of NFL/model/v2/artifacts/importance/uniform_ranking.csv. Pinned
+# rather than read at runtime so a regenerated ranking can never silently
+# change what the report ships. The ablation study found log loss flat across
+# 5-15 features (0.6140-0.6146) and clearly worse at all 45 (0.6178), so 10 is
+# chosen for being in the middle of a plateau, not for being the argmin.
+PICKS_FEATURES = [
+    "spread_line", "market_home_prob", "elo_diff", "roll_margin_diff",
+    "elo_vs_spread", "elo_spread", "away_roll_pf", "home_roll_margin",
+    "elo_home_prob", "away_ppg_diff_std",
+]
+
 # nflverse abbrev -> short display name for the "X over Y" line.
 NICKNAMES = {
     "ARI": "Cardinals", "ATL": "Falcons", "BAL": "Ravens", "BUF": "Bills",
@@ -98,9 +109,9 @@ def fit_picks_model(df: pd.DataFrame, target_season: int,
 
     model = make_model(PICKS_MODEL)
     w = recency_weights(fit["season"], target_season, HALF_LIFE)
-    model.fit(feature_matrix(fit), fit["home_win"].astype(int),
+    model.fit(feature_matrix(fit, PICKS_FEATURES), fit["home_win"].astype(int),
               clf__sample_weight=w)
-    raw_cal = model.predict_proba(feature_matrix(cal))[:, 1]
+    raw_cal = model.predict_proba(feature_matrix(cal, PICKS_FEATURES))[:, 1]
     platt = _platt(raw_cal, cal["home_win"].astype(int).to_numpy())
     return model, platt, cal_season, len(fit)
 
@@ -112,7 +123,7 @@ def score_week(df: pd.DataFrame, season: int, week: int) -> pd.DataFrame:
 
     model, platt, cal_season, n_fit = fit_picks_model(
         df, season, cutoff=games["gameday"].min())
-    raw = model.predict_proba(feature_matrix(games))[:, 1]
+    raw = model.predict_proba(feature_matrix(games, PICKS_FEATURES))[:, 1]
     games["prob_home"] = _apply_platt(platt, raw)
     games["pick_team"] = np.where(games["prob_home"] >= 0.5,
                                   games["home_team"], games["away_team"])
@@ -215,9 +226,10 @@ def render(scored: pd.DataFrame, df: pd.DataFrame, season: int, week: int) -> st
         f"# NFL weekly report — {season} week {week}",
         "",
         f"_Generated {now:%Y-%m-%d %H:%M UTC} ({now:%A})_",
-        f"_Model: calibrated {PICKS_MODEL} regression, recency half-life "
-        f"{HALF_LIFE:g} seasons, trained on {scored.attrs.get('n_fit', '?')} games "
-        f"(2002-present), calibrated on {scored.attrs.get('cal_season', '?')}._",
+        f"_Model: calibrated {PICKS_MODEL} regression on {len(PICKS_FEATURES)} features, "
+        f"recency half-life {HALF_LIFE:g} seasons, trained on "
+        f"{scored.attrs.get('n_fit', '?')} games (2002-present), calibrated on "
+        f"{scored.attrs.get('cal_season', '?')}._",
         "",
         f"## Top {TOP_K} confidence picks",
         "",

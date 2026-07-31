@@ -246,8 +246,14 @@ def add_targets(g: pd.DataFrame) -> pd.DataFrame:
     return g
 
 
-def build_dataset(path: Path | str = GAMES_PATH, min_season: int = MIN_SEASON) -> pd.DataFrame:
-    """Full feature frame, one row per game, chronologically sorted."""
+def build_dataset(path: Path | str = GAMES_PATH, min_season: int = MIN_SEASON,
+                  with_squad: bool = False) -> pd.DataFrame:
+    """Full feature frame, one row per game, chronologically sorted.
+
+    ``with_squad`` merges the roster-quality columns from ``squad.py`` (draft
+    pedigree, honors, QB quality, interim coach). It is opt-in so the models
+    trained on the original 45 features keep loading unchanged.
+    """
     g = load_games(path, min_season)
     g = compute_elo(g)
     g = add_market_features(g)
@@ -256,14 +262,24 @@ def build_dataset(path: Path | str = GAMES_PATH, min_season: int = MIN_SEASON) -
     g = merge_form_back(g, t)
     g = add_context_features(g)
     g = add_targets(g)
+    if with_squad:
+        from .squad import add_squad_features
+        g = add_squad_features(g)
     return g.sort_values(["gameday", "game_type", "home_team"]).reset_index(drop=True)
 
 
-def feature_matrix(df: pd.DataFrame) -> pd.DataFrame:
-    missing = [c for c in FEATURE_COLS if c not in df.columns]
+def available_squad_cols(df: pd.DataFrame) -> list[str]:
+    """Squad columns present and not entirely missing (honors need the scrape)."""
+    from .squad import SQUAD_FEATURE_COLS
+    return [c for c in SQUAD_FEATURE_COLS if c in df.columns and df[c].notna().any()]
+
+
+def feature_matrix(df: pd.DataFrame, features: list[str] | None = None) -> pd.DataFrame:
+    cols = features if features is not None else FEATURE_COLS
+    missing = [c for c in cols if c not in df.columns]
     if missing:
         raise KeyError(f"feature frame is missing columns: {missing}")
-    return df[FEATURE_COLS].astype(float)
+    return df[cols].astype(float)
 
 
 if __name__ == "__main__":

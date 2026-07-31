@@ -52,6 +52,18 @@ jobs:
       - name: Refresh nflverse schedule
         run: python3 NFL/model/schedule.py --refresh
 
+      # Rosters drive the squad-quality features. Only the current and prior
+      # season change week to week, so don't re-pull the whole archive.
+      # The honors CSVs come from a local-only scrape (see SQUAD_QUALITY_PLAN.md)
+      # and are read from the repo, never fetched here.
+      - name: Refresh rosters and rebuild squad features
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          year=$(date -u +%Y)
+          python -m data_jobs.rosters.fetch_nflverse --seasons $((year-1)) "$year" --force
+          python -m NFL.model.v2.squad --build
+
       - name: Snapshot prediction markets (best effort)
         continue-on-error: true
         run: python -m data_jobs.prediction_markets.fetch --sport nfl
@@ -69,7 +81,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/weekly/ data/schedules/nflverse_games.csv data/prediction_markets/ || true
+          git add reports/weekly/ data/schedules/nflverse_games.csv \
+                  data/prediction_markets/ data/rosters/squad_features.csv || true
           if [ -n "$(git status --porcelain)" ]; then
             timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
             git commit -m "Weekly NFL report: $timestamp"

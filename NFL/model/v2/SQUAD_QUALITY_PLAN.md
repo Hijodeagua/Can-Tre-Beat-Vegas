@@ -1,4 +1,9 @@
-# Squad-quality features — implementation plan (no code yet)
+# Squad-quality features — plan and build notes
+
+> **Status: built** (except PFF, dropped — no subscription). See
+> "6. Build results" at the bottom for what the features actually did, and
+> for the two constraints that changed the plan during implementation.
+
 
 Scope: per-team, per-game roster-quality features — draft pedigree counts,
 honors (All-Pro / Pro Bowl / NFL Top 100), and PFF-based player and unit
@@ -123,3 +128,85 @@ held-out log loss marginally *worse* (0.60801 → 0.60826): the spread already
 prices it. Verdict: ship the flag in this batch (it's free from data we
 already have, and trees may find interactions with rest/QB features), but
 expect nothing from it standalone.
+
+---
+
+## 6. Build results
+
+### What changed from the plan
+
+**PFF dropped** — no subscription, so no player grades and no unit averages.
+`qb_epa_prior` (passing EPA per attempt, prior seasons only, from nflverse
+weekly stats) is the open-data stand-in for the QB-grade signal.
+
+**PFR and Wikipedia are blocked from this environment.** The egress proxy
+answers 403 to CONNECT for both hosts, so the honors scrape could not be run
+here. `data_jobs/rosters/scrape_awards.py` is written and unit-tested against
+fixture HTML, but it **must be run on a local machine**:
+
+```bash
+python3 -m data_jobs.rosters.scrape_awards --first 2002 --last 2025
+python3 -m data_jobs.rosters.scrape_awards --report   # sanity-check coverage
+```
+
+It saves every fetched page under `data/rosters/awards/raw/` before parsing,
+so if a parser is wrong for some year's markup you can fix it and re-run with
+`--reparse` without touching the network again. Until that runs,
+`allpro_score`, `n_probowlers` and `n_top100` are emitted as NaN and every
+model treats them as missing — nothing else is affected.
+
+One trap worth recording: `draft_picks.csv` has `allpro` and `probowls`
+columns, which look like a free substitute for the scrape. They are **career
+totals as of today**, so using them for a 2015 game would count selections
+from 2016-2025. They are not used.
+
+### What shipped
+
+| Feature | Status |
+|---|---|
+| `n_first_rounders`, `n_top2_rounders`, `pct_drafted` | **live** — 96% of games |
+| `allpro_score`, `n_probowlers`, `n_top100` | wired, NaN until the local scrape runs |
+| `qb_epa_prior`, `qb_quality_drop` | **live** — 76% of games (rookies/low-volume QBs are NaN by design) |
+| `home/away_is_interim_coach` | **live** — 100% of games |
+| PFF unit grades | dropped |
+
+QB magnitude works as intended. 2025 Cincinnati, game by game: Burrow
+(0.177 EPA/att prior) → Browning (0.096, drop +0.080) → Flacco (0.008, drop
++0.088) → Burrow (drop −0.168, i.e. an upgrade). Previously all four
+transitions were an identical `qb_change = 1`.
+
+### Do they earn their place?
+
+Walk-forward, 2015-2025, 3,018 out-of-sample games (log loss):
+
+| model | top10 | top10 + squad | full45 | full45 + squad |
+|---|---|---|---|---|
+| logistic | **0.6140** | 0.6155 | 0.6178 | 0.6196 |
+| extra trees | 0.6193 | 0.6178 | 0.6205 | 0.6198 |
+| random forest | 0.6264 | 0.6208 | 0.6225 | 0.6204 |
+| xgboost | 0.6241 | 0.6234 | 0.6272 | 0.6256 |
+| lightgbm | 0.6324 | 0.6311 | 0.6339 | 0.6314 |
+
+**Squad features help every tree model and hurt logistic**, at both feature-set
+sizes — the same pattern the ablation study found for weak features generally.
+Tested one at a time on top of the top-10 set, no single squad feature moves
+logistic by more than 0.0003 (noise), while every one improves Extra Trees by
+0.0003-0.0012.
+
+The best top-3 hit rate in the whole study is now Extra Trees + squad at
+**79.1%**, against the market's 79.6% and logistic's 78.2% — but that is ~430
+picks with a standard error near 2 points, so it is not a real separation.
+
+**Recommendation: keep the features, keep logistic/top-10 as the picks model.**
+The features are cheap, correct, and leakage-safe; they are also further
+evidence that the closing line has already priced roster quality. The one
+scenario that would change the model choice is the honors scrape landing and
+moving Extra Trees clearly past logistic — worth re-running the grid then.
+
+### Re-running
+
+```bash
+python3 -m data_jobs.rosters.fetch_nflverse         # ~440 MB, gitignored
+python3 -m NFL.model.v2.squad --build               # -> data/rosters/squad_features.csv
+python3 -m NFL.model.v2.compare_models --target win --half-life 6 --with-squad --save
+```
