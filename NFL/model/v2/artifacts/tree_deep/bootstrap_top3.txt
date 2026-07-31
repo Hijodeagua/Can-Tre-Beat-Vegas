@@ -1,0 +1,31 @@
+logistic/top10 fitted
+extratrees/top10+sq fitted
+rf/top10+sq fitted
+
+=== overall ===
+              model  log_loss  top3_hit  picks
+     logistic/top10    0.6140    0.7822    675
+extratrees/top10+sq    0.6178    0.7911    675
+        rf/top10+sq    0.6208    0.7896    675
+         ens_log_et    0.6150    0.7881    675
+             market    0.6121    0.7956    675
+
+=== bootstrap top-3 diff vs logistic/top10 (5000 week-resamples) ===
+extratrees/top10+sq    mean=+0.0088 95%CI[-0.0102,+0.0272] P(better)=0.80
+rf/top10+sq            mean=+0.0074 95%CI[-0.0135,+0.0295] P(better)=0.73
+ens_log_et             mean=+0.0059 95%CI[-0.0060,+0.0183] P(better)=0.79
+market                 mean=+0.0134 95%CI[+0.0000,+0.0276] P(better)=0.96
+
+=== top-3 hit by season ===
+ season  logistic/top10  extratrees/top10+sq  rf/top10+sq  ens_log_et  market
+   2015           0.700                0.750        0.733       0.750   0.733
+   2016           0.783                0.817        0.817       0.833   0.833
+   2017           0.750                0.783        0.767       0.750   0.733
+   2018           0.800                0.783        0.750       0.767   0.767
+   2019           0.767                0.750        0.800       0.767   0.783
+   2020           0.817                0.800        0.817       0.817   0.867
+   2021           0.778                0.794        0.810       0.794   0.810
+   2022           0.857                0.825        0.825       0.841   0.810
+   2023           0.746                0.762        0.730       0.746   0.794
+   2024           0.762                0.794        0.794       0.762   0.778
+   2025           0.841                0.841        0.841       0.841   0.841

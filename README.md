@@ -5,6 +5,29 @@ system that snapshots bookmaker odds twice daily, tracks line movement across
 sportsbooks, and trains models to pick winners (and covers) against the closing
 line.
 
+## The 2025 answer: no
+
+The season is graded and the books are in
+([`NFL/inventory/INVENTORY_2025.md`](NFL/inventory/INVENTORY_2025.md),
+[`NFL/Weeks.md`](NFL/Weeks.md)). Over 4,350 out-of-sample games from 2010-2025,
+walking the model forward one retrain per season:
+
+| | model | closing line |
+|---|---|---|
+| straight up, 2010-2025 | 64.3% | **66.4%** |
+| straight up, 2025 only | 65.5% | **65.8%** |
+| ATS, 2010-2025 | 50.5% | — (52.4% needed) |
+| totals, 2010-2025 | 49.5% | — (52.4% needed) |
+
+Blending the model into the market makes the market *worse* out of sample
+(log loss 0.613 vs 0.610), which is the cleanest statement of the result: after
+the closing line has spoken, the model adds nothing. Flat-stake ROI is -4.9% on
+spreads and -4.5% on totals, both about what the vig costs.
+
+That is the honest baseline every future change here gets measured against.
+Details and the two places an edge might actually live are in
+[`NFL/model/v2/README.md`](NFL/model/v2/README.md).
+
 ## Features
 
 - **Multi-sport odds ingestion** — The Odds API (free tier) for NFL and NBA
@@ -13,9 +36,12 @@ line.
   bookmaker variance and accuracy analysis (which bookies move first, which are sharpest)
 - **Line movement** — opening vs. closing spread aggregation from timestamped
   odds snapshots (`data/odds_api_data_*.csv`)
-- **NFL LightGBM models** — straight-up winner (`win`) and against-the-spread
-  cover (`ats`) targets, 79 rolling/schedule features, temporal train/val split,
-  baseline comparison (`NFL/model/`)
+- **NFL LightGBM models** — win / ATS / total targets on an Elo + form + market
+  feature set, walk-forward validated one retrain per season, with a flat-stake
+  betting backtest (`NFL/model/v2/`; the older single-split v1 is kept in
+  `NFL/model/` for provenance)
+- **Season inventory** — end-of-season audit of what was captured, what was
+  missed, and how the closing line itself performed (`NFL/inventory/`)
 - **Soccer / World Cup model** — custom international Elo (fresh 2006 start,
   tiered K-factors, friendlies barely weighted) plus a multinomial outcome
   model with host effects and FIFA-rating squad-strength hooks; predicts the
@@ -69,15 +95,30 @@ python -m data_jobs.odds_api.fetch_odds --sport nfl
 ### 5. Train the NFL models
 
 ```bash
-cd NFL/model
-python3 schedule.py --refresh   # one-time: pull latest nflverse schedule
-python3 train.py --target win   # straight-up winner
-python3 train.py --target ats   # cover the spread (drops pushes)
+# from the repo root
+python3 NFL/model/schedule.py --refresh          # optional: pull latest nflverse schedule
+python3 -m NFL.model.v2.train --target all --save   # win + ATS + total, walk-forward
 ```
 
-Saved models, metrics, and feature importances land in `NFL/model/artifacts/`.
+Saved models, per-season metrics, backtests, feature importances, and the full
+out-of-sample prediction files land in `NFL/model/v2/artifacts/`.
 
-### 6. Generate a report
+### 6. Score upcoming games
+
+```bash
+python3 -m NFL.model.v2.predict --season 2026 --week 1 --write
+```
+
+Writes to `data/predictions/`.
+
+### 7. Audit a finished season
+
+```bash
+python3 -m NFL.inventory.audit --season 2025 --write         # data + Vegas report card
+python3 -m NFL.inventory.grade_season --season 2025 --write  # graded weekly ledger
+```
+
+### 8. Generate a report
 
 ```bash
 python -m data_jobs.reports.simplified_daily_report
@@ -134,13 +175,22 @@ Can-Tre-Beat-Vegas/
 │   ├── reports/             # Daily report generators
 │   └── export_web_json.py   # Next-48-hours slate → web/public/data/
 ├── NFL/
-│   ├── model/               # LightGBM win/ATS models
+│   ├── model/               # v1 (superseded, kept for provenance)
 │   │   ├── features.py      # Rolling feature engineering (79 features)
 │   │   ├── schedule.py      # nflverse schedule loader
-│   │   ├── line_movement.py # Opening vs closing spread aggregator
-│   │   ├── train.py         # Temporal split + LightGBM + baselines
-│   │   └── artifacts/       # Saved models, metrics, importances
-│   ├── Week_1/ ... Week_7/  # Weekly picks vs Vegas, graded
+│   │   ├── line_movement.py # Open vs close aggregator (shared with v2)
+│   │   ├── train.py         # Single temporal split + LightGBM
+│   │   └── v2/              # Current model
+│   │       ├── elo.py       # MOV-adjusted Elo, walk-forward
+│   │       ├── dataset.py   # 45 features off the nflverse schedule
+│   │       ├── train.py     # Season-by-season walk-forward + backtest
+│   │       ├── predict.py   # Score upcoming games → data/predictions/
+│   │       └── artifacts/   # Models, metrics, backtests, OOS predictions
+│   ├── inventory/           # End-of-season audit
+│   │   ├── audit.py         # Capture coverage + Vegas' report card
+│   │   ├── grade_season.py  # Writes the graded weekly ledger
+│   │   └── INVENTORY_*.md   # Generated season inventory
+│   ├── Week_1/ ... Week_22/ # Weekly picks vs Vegas, graded (out of sample)
 │   └── Weeks.md             # Season-long results tally
 ├── soccer/                  # World Cup / international soccer model
 │   ├── SPEC.md              # Model spec (Elo + squad-strength adjustments)
@@ -183,9 +233,29 @@ Steps to get there:
   config) and soccer model picks on the slate
 - [ ] Wire NBA model predictions into the slate for current games
   (the export already joins `data/predictions/*.csv` when dates match)
-- [ ] NFL model predictions for upcoming games (LightGBM models are trained;
-  need an inference script writing to `data/predictions/`)
-- [ ] Wire `line_movement.py` output in as a model feature
+- [x] NFL model predictions for upcoming games —
+  `python3 -m NFL.model.v2.predict --season 2026 --write`
+- [ ] Point `export_web_json.py` at the v2 prediction files
+
+### What the 2025 inventory says to fix next
+
+Ranked by how much they'd move the answer, not by effort:
+
+- [ ] **Capture the opener.** 2025 capture began a median of 11 days before
+  kickoff, and weeks 1-4, 17 and 21 were missed entirely (83 of 285 games have
+  no odds record). Beating the closing line is close to impossible; beating a
+  stale opener is the winnable version of this bet, and we can't test it
+  without openers.
+- [ ] **Store the spread number, not just the juice.** The legacy schema kept
+  `-110 / -110` but never `-3.5`, so the entire 2025 season has moneyline-only
+  line movement. The current schema fixed this; don't regress it.
+- [ ] **Log best-available price per book, not the average.** The snapshots
+  already carry 8-10 books. Line shopping is a mechanical edge that doesn't
+  require the model to be right about anything, and nothing in the repo
+  measures it yet.
+- [ ] Wire `line_movement.py` output in as a model feature (now that it
+  actually returns 2025 games)
+- [ ] EPA / success rate from nflverse play-by-play
 
 ## License
 
