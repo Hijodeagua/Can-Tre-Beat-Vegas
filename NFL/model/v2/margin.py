@@ -66,8 +66,19 @@ MARKET_FEATURES = {"spread_line", "total_line", "market_home_prob", "market_vig"
                    "elo_vs_spread"}
 
 
-def blind_features() -> list[str]:
-    return [c for c in FEATURE_COLS if c not in MARKET_FEATURES]
+def blind_features(df: pd.DataFrame | None = None) -> list[str]:
+    """Every non-market feature, plus the squad-quality columns when available.
+
+    Pass the dataframe from ``build_dataset(with_squad=True)`` to pick up draft
+    capital, All-Pro / Pro Bowl / Top 100 counts and prior-season QB EPA.
+    Without it you get the base set only — which silently dropped the roster
+    features the first time this ran.
+    """
+    feats = [c for c in FEATURE_COLS if c not in MARKET_FEATURES]
+    if df is not None:
+        from .dataset import available_squad_cols
+        feats += [c for c in available_squad_cols(df) if c not in feats]
+    return feats
 
 
 def make_regressor(kind: str = "ridge"):

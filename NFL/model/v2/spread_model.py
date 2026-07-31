@@ -237,7 +237,7 @@ def head_to_head_by_disagreement(preds: pd.DataFrame,
 
 def run(kinds: list[str], save: bool = False) -> tuple[pd.DataFrame, dict]:
     df = build_dataset(with_squad=True)
-    feats = blind_features()
+    feats = blind_features(df)
     print(f"blind feature set: {len(feats)} features "
           f"(removed {', '.join(sorted(MARKET_FEATURES))})\n", flush=True)
 

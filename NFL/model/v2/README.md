@@ -322,61 +322,74 @@ This is the full treatment: six model families on one harness, walk-forward
 with a calibration step, and KPIs built around the only question that matters —
 **is our number closer to the final margin than the bookmaker's?**
 
-All models see 40 features. `spread_line`, `total_line`, `market_home_prob`,
-`market_vig` and `elo_vs_spread` are removed, so nothing can copy the answer.
+All models see **54 features**: the 40 non-market columns plus the 14
+squad-quality ones (draft capital, All-Pro / Pro Bowl / Top 100 counts, prior
+season QB EPA, interim-coach flags). `spread_line`, `total_line`,
+`market_home_prob`, `market_vig` and `elo_vs_spread` are removed, so nothing
+can copy the answer.
+
+> The first run of this bake-off used 40 features, not 54. `blind_features()`
+> was derived from `FEATURE_COLS` alone, so `build_dataset(with_squad=True)`
+> merged the roster columns into the frame and `feature_matrix` then dropped
+> every one of them. Fixed, re-run, and pinned by `TestBlindFeatureSet`. The
+> conclusions below did not change — see "what the squad features bought".
 
 ### Bake-off, walk-forward 2015-2025, 3,028 games
 
 | model | MAE | RMSE | R² | bias | cal. slope | closer than Vegas |
 |---|---|---|---|---|---|---|
 | **closing spread (Vegas)** | **9.81** | **12.72** | **0.193** | +0.05 | 1.038 | — |
-| ridge (uncalibrated) | 10.08 | 12.99 | 0.158 | -0.48 | 0.933 | 46.1% |
-| **ridge (calibrated)** | 10.09 | 13.00 | 0.157 | **-0.08** | **0.969** | 45.8% |
-| extra trees | 10.11 | 13.02 | 0.155 | -0.04 | 0.965 | 45.6% |
-| random forest | 10.11 | 13.06 | 0.150 | -0.05 | 0.955 | 45.2% |
-| xgboost | 10.13 | 13.08 | 0.147 | -0.15 | 0.970 | 46.1% |
-| huber | 10.18 | 13.26 | 0.123 | -0.10 | 0.850 | 45.6% |
-| lightgbm | 10.26 | 13.21 | 0.130 | -0.16 | 0.945 | 45.2% |
+| extra trees (uncalibrated) | 10.08 | 13.02 | 0.155 | -0.46 | 1.129 | 45.4% |
+| extra trees | 10.09 | 13.01 | 0.156 | **-0.03** | 0.960 | 45.2% |
+| ridge | 10.10 | 13.01 | 0.156 | -0.07 | 0.968 | 45.4% |
+| random forest | 10.10 | 13.06 | 0.150 | -0.04 | 0.951 | 45.0% |
+| ridge (uncalibrated) | 10.11 | 13.01 | 0.156 | -0.45 | 0.916 | 45.8% |
+| xgboost | 10.12 | 13.11 | 0.143 | -0.13 | 0.960 | 46.3% |
+| huber | 10.18 | 13.23 | 0.127 | -0.09 | 0.872 | 45.7% |
+| lightgbm | 10.22 | 13.20 | 0.131 | -0.11 | 0.937 | 45.5% |
 
-**Ridge wins again.** Same result as the classifier: the simplest model beats
-every ensemble, and LightGBM comes last. With only 40 noisy football features
-and 3,000 games a season's worth of signal, there is nothing for a boosted tree
-to find that a linear fit misses.
+Extra trees now edges ridge by **0.009 points of MAE** — three thousandths of a
+percent, and the two swap places depending on which features are in the set.
+Read that as a tie, not a win. The honest statement is the one the classifier
+already made: **every model family lands within 0.13 points of every other**,
+LightGBM is reliably last, and nothing an ensemble finds is worth the variance
+it adds. With ~3,000 games and features this collinear there is no structure
+for a boosted tree to exploit that a linear fit misses.
 
 Our best line misses by **10.09 points against Vegas's 9.81** — a quarter of a
-point — and explains 15.7% of margin variance against their 19.3%.
+point — and explains 15.6% of margin variance against their 19.3%.
 
 ### What calibration bought
 
-Every uncalibrated model carries a bias of −0.5 points (systematically too low
-on home teams) and a slope away from 1. The linear recalibration on the prior
-season fixes both — ridge goes from bias −0.48 / slope 0.933 to −0.08 / 0.969.
-It does **not** improve MAE (10.083 → 10.089, marginally worse). Worth knowing:
-calibration buys you an unbiased line, not a more accurate one.
+Every uncalibrated model carries a bias near −0.5 points (systematically too
+low on home teams) and a slope away from 1. The linear recalibration on the
+prior season fixes both — extra trees goes from bias −0.46 / slope 1.129 to
+−0.03 / 0.960. It does **not** improve MAE (10.083 → 10.092, marginally worse).
+Worth knowing: calibration buys you an unbiased line, not a more accurate one.
 
 ### The result that settles it
 
 | disagreement | games | our MAE | Vegas MAE | we're closer | ATS on our side |
 |---|---|---|---|---|---|
-| 0-1 pts | 853 | 9.82 | 9.81 | 48.8% | 50.0% |
-| 1-2 pts | 718 | 9.61 | 9.52 | 46.4% | 50.9% |
-| 2-3 pts | 559 | 9.99 | 9.76 | 45.8% | 50.9% |
-| 3-5 pts | 620 | 10.63 | 10.13 | 42.9% | 51.0% |
-| 5+ pts | 278 | 11.16 | 9.91 | **41.4%** | 52.8% |
+| 0-1 pts | 832 | 9.72 | 9.69 | 47.1% | 48.8% |
+| 1-2 pts | 692 | 9.92 | 9.79 | 44.8% | 48.2% |
+| 2-3 pts | 514 | 9.38 | 9.27 | 47.7% | 53.4% |
+| 3-5 pts | 699 | 10.33 | 9.87 | 42.9% | 50.7% |
+| 5+ pts | 291 | 12.23 | 10.98 | **42.3%** | 51.8% |
 
-**Confidence is anti-correlated with correctness.** The further our line strays
-from the bookmaker's, the more likely the bookmaker is right — monotonically,
-across every bucket. Our MAE climbs from 9.82 to 11.16 as disagreement grows
-while Vegas holds near 9.9.
+**Confidence is anti-correlated with correctness.** Vegas is closer in every
+single bucket, and the gap widens as our line strays further from theirs: our
+MAE climbs from 9.72 to 12.23 while Vegas holds between 9.3 and 11.0.
 
 That is the opposite of a tradable signal. A useful model would be *no better*
-than Vegas on the games where they agree and *better* where they disagree;
-ours is worse exactly where it is loudest. Its disagreements are noise, and the
-54.8% of games where we differ by 2+ points are where that noise lives.
+than Vegas where they agree and *better* where they disagree; ours is worse
+exactly where it is loudest. Its disagreements are noise, and the 49% of games
+where we differ by 2+ points are where that noise lives.
 
-The 52.8% ATS in the 5+ bucket is 273 games with a standard error of 3.0 —
-0.1 standard errors above break-even, and pointing the opposite way from the
-accuracy column beside it. Not a finding.
+No ATS bucket clears the 52.4% break-even by anything close to its standard
+error (~3.0 points on 291-514 games), the largest reading sits in the middle of
+the range rather than at the confident end, and the buckets do not order
+consistently. Not a finding.
 
 ### What actually predicts a football game
 
@@ -388,19 +401,47 @@ models:
 |---|---|---|
 | 1 | `roll_margin_diff` | 5-game scoring-margin differential — first for both linear models |
 | 2 | `elo_diff` | first for both boosted models |
-| 3 | `elo_home_prob` | first for both bagged-tree models |
-| 4 | `elo_spread` | |
-| 5 | `away_roll_pf` | |
-| 6 | `away_ppg_diff_std` | season-to-date point differential |
-| 7 | `home_roll_margin` | |
-| 8 | `away_qb_change` | the highest-ranked non-form feature |
+| 3 | `elo_home_prob` | first for extra trees |
+| 4 | `away_roll_pf` | |
+| 5 | `away_ppg_diff_std` | season-to-date point differential |
+| 6 | `home_roll_margin` | |
+| 7 | `home_ppg_diff_std` | |
+| 8 | `elo_spread` | first for random forest |
+| 14 | `n_probowlers_diff` | **top squad feature** — 8th for RF, 7.5th for extra trees |
+| 15 | `away_pct_drafted` | |
 
 Recent scoring margin and Elo are the whole story, and they are near-duplicates
 of each other. Every model family picks one of the two as its top feature and
-the other close behind. Everything from rank 8 down — QB changes, travel,
-division games, weather — is worth less than a tenth of the leader.
+the other close behind. Everything below rank 8 is worth less than a fifth of
+the leader.
+
+### What the squad features bought
+
+Nothing measurable, but the *way* they fail is informative. MAE moved from
+10.089 to 10.092 for ridge and 10.107 to 10.092 for extra trees — noise in both
+directions. Where they land in the ranking splits hard by model family:
+
+| feature | ridge | huber | RF | extra trees | XGB | LGBM |
+|---|---|---|---|---|---|---|
+| `n_probowlers_diff` | 30.5 | 43.0 | **8.0** | **7.5** | 17.5 | 20.0 |
+| `allpro_score_diff` | 40.5 | 38.0 | 27.0 | **10.5** | 16.5 | **9.0** |
+| `n_top100_diff` | 33.0 | 26.0 | 14.5 | **11.0** | 38.0 | 36.0 |
+| `n_top2_rounders_diff` | 37.5 | 36.5 | 13.0 | 24.5 | 14.0 | 14.5 |
+
+The linear models bury all four in the bottom third; the tree models rank them
+in the top 15, and Pro Bowl count reaches the top 8 for both bagged families.
+Roster talent is not additively separable from form and Elo — a stacked roster
+matters *more* when the team is already good — and only the trees can express
+that interaction. It still buys no accuracy, because Elo has already absorbed
+the same information through results.
+
+The QB features are the clearest casualty: `home_qb_epa_prior` ranks 45th of 54
+and `qb_epa_prior_diff` 33rd. Prior-season QB EPA is stale by the time a season
+starts, and current-season QB quality is exactly the thing the leakage rules
+forbid us from using.
 
 Which is the honest explanation for the quarter-point gap to Vegas: the
-bookmaker knows about injuries, personnel, and game-specific news that a
-schedule-and-scores dataset simply does not contain, and that knowledge is
-worth about 0.26 points of MAE.
+bookmaker knows about injuries, personnel and game-specific news that a
+schedule-scores-and-accolades dataset does not contain, and that knowledge is
+worth about 0.28 points of MAE. Adding better *historical* roster data does not
+close it; only fresher information would.

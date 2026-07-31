@@ -372,3 +372,43 @@ class TestQbIncumbentNoLookahead:
         from NFL.model.v2.elo_variants import _incumbent_backup_flag
         f = _incumbent_backup_flag(self._starts(["Starter", None, "Starter"]))
         assert f.iloc[2] == 0.0
+
+
+class TestBlindFeatureSet:
+    """`blind_features` silently dropped every squad column on its first run.
+
+    The market columns must stay out; the roster-quality columns must come in
+    whenever a squad-enriched frame is supplied.
+    """
+
+    def _squad_frame(self):
+        from NFL.model.v2.squad import SQUAD_FEATURE_COLS
+        return pd.DataFrame({c: [1.0, 2.0] for c in SQUAD_FEATURE_COLS})
+
+    def test_market_columns_are_excluded(self):
+        from NFL.model.v2.margin import MARKET_FEATURES, blind_features
+        assert not MARKET_FEATURES & set(blind_features())
+        assert not MARKET_FEATURES & set(blind_features(self._squad_frame()))
+
+    def test_squad_columns_are_included_when_present(self):
+        from NFL.model.v2.margin import blind_features
+        from NFL.model.v2.squad import SQUAD_FEATURE_COLS
+        feats = set(blind_features(self._squad_frame()))
+        missing = [c for c in SQUAD_FEATURE_COLS if c not in feats]
+        assert not missing, f"squad columns dropped from the blind set: {missing}"
+
+    def test_all_nan_squad_columns_are_skipped(self):
+        """A column with no data anywhere is noise, not a feature."""
+        from NFL.model.v2.margin import blind_features
+        from NFL.model.v2.squad import SQUAD_FEATURE_COLS
+        df = self._squad_frame()
+        df["n_top100_diff"] = np.nan
+        feats = blind_features(df)
+        assert "n_top100_diff" not in feats
+        assert "allpro_score_diff" in feats
+
+    def test_no_duplicates_and_superset_of_base(self):
+        from NFL.model.v2.margin import blind_features
+        base, full = blind_features(), blind_features(self._squad_frame())
+        assert len(full) == len(set(full))
+        assert set(base) < set(full)

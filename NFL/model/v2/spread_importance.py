@@ -175,7 +175,7 @@ def main() -> None:
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     df = build_dataset(with_squad=True)
-    feats = blind_features()
+    feats = blind_features(df)
     per_model = {}
     for kind in args.kinds.split(","):
         print(f"[{kind}] fitting...", flush=True)
