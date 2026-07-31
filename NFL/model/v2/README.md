@@ -153,10 +153,10 @@ Walk-forward out of sample, 3,018 games, 2015-2025:
 
 | model | acc | AUC | log loss | Brier | McFadden R² | Efron R² | cal. slope | ECE | top-3 |
 |---|---|---|---|---|---|---|---|---|---|
-| **production (qb+talent Elo)** | **66.5%** | 0.7172 | 0.6140 | 0.2127 | 0.1079 | 0.1406 | 0.977 | 0.0131 | 77.9% |
+| **production (qb+talent Elo)** | **66.5%** | 0.7171 | 0.6140 | 0.2127 | 0.1078 | 0.1405 | 0.978 | **0.0126** | 78.1% |
 | previous (base Elo) | 66.5% | 0.7168 | 0.6140 | 0.2128 | 0.1079 | 0.1404 | 0.981 | 0.0152 | 78.2% |
 | market (closing line) | 66.1% | **0.7179** | **0.6121** | **0.2122** | **0.1106** | **0.1429** | 1.056 | 0.0181 | **79.6%** |
-| qb+talent Elo alone | 65.2% | 0.6976 | 0.6316 | 0.2201 | 0.0823 | 0.1108 | 0.808 | 0.0336 | 76.2% |
+| qb+talent Elo alone | 65.2% | 0.6972 | 0.6319 | 0.2202 | 0.0818 | 0.1102 | 0.806 | 0.0339 | 76.2% |
 | always base rate | 55.0% | 0.500 | 0.6882 | 0.2475 | 0.000 | 0.000 | 0.038 | — | 53.8% |
 
 ### Reading these
@@ -173,21 +173,21 @@ Walk-forward out of sample, 3,018 games, 2015-2025:
   Elo at 0.808 is materially overconfident — which is why it gets Platt-scaled
   before use.
 - **ECE** (expected calibration error) is the average gap between predicted and
-  actual within probability bins. The model's 0.0131 is better than the
+  actual within probability bins. The model's 0.0126 is better than the
   market's 0.0181 — the one metric where we beat the books, and it reflects
   calibration, not discrimination.
 - **AUC vs accuracy**: the model edges the market on accuracy (66.5% vs 66.1%)
-  while losing on AUC (0.7172 vs 0.7179). It sorts games marginally worse but
+  while losing on AUC (0.7171 vs 0.7179). It sorts games marginally worse but
   places the 0.5 cut marginally better. Neither gap is significant.
 
 ### The honest summary
 
 Beating the closing line on log loss remains out of reach: 0.6140 vs 0.6121.
-The flat-stake moneyline backtest returns +0.8% ROI over 1,813 bets with a
+The flat-stake moneyline backtest returns +0.5% ROI over 1,810 bets with a
 standard error of 2.6% — indistinguishable from zero.
 
 **Wiring in the better Elo changed nothing downstream.** Standalone it is worth
-0.0055 log loss (0.6316 vs 0.6374 for plain Elo); inside the model both land on
+0.0052 log loss (0.6322 vs 0.6374 for plain Elo); inside the model both land on
 0.6140. The market features absorb it. It is kept because it is free, strictly
 better on its own, and would matter if the pipeline ever prices against opening
 lines.
@@ -216,13 +216,13 @@ Almost all of it. This is the check that matters most on a 66% headline.
 
 The model beats the one-line rule "take whoever Vegas favours" by **0.43
 percentage points — 13 games out of 3,018 across eleven seasons.** The paired
-bootstrap puts that gap at 95% CI [-0.10, +0.96], so it does not clear
-significance (P(model better) = 0.94).
+bootstrap puts that gap at 95% CI [-0.07, +0.93], so it does not clear
+significance (P(model better) = 0.95).
 
 The reason is visible in the agreement rate: **the model picks the same side as
-the spread favourite in 98.0% of games.** It disagrees 61 times in eleven
-seasons. On those 61 it goes 37-24 (60.7%), which sounds good until you see the
-interval — [47.5, 72.1] on 61 games.
+the spread favourite in 98.0% of games.** It disagrees 59 times in eleven
+seasons, going 36-23 (61.0%) on them — which sounds good until you see the
+interval on 59 games.
 
 Accuracy by spread size shows where the difference lives, and where it does not:
 

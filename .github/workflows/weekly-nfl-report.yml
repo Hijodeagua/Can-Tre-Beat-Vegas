@@ -56,6 +56,12 @@ jobs:
       # season change week to week, so don't re-pull the whole archive.
       # The honors CSVs come from a local-only scrape (see SQUAD_QUALITY_PLAN.md)
       # and are read from the repo, never fetched here.
+      #
+      # `--build` merges by season rather than replacing the table. That matters
+      # here: the raw roster cache is gitignored, so a fresh runner only holds
+      # the two seasons fetched above, and a full rebuild would regenerate the
+      # file from those alone and commit away 2002-2023. Never add
+      # --rebuild-all to this job.
       - name: Refresh rosters and rebuild squad features
         continue-on-error: true
         run: |

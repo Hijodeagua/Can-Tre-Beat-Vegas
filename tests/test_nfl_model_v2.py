@@ -302,3 +302,73 @@ class TestEloVariants:
         from NFL.model.v2.elo_variants import QB_SHRINK, TALENT_SHRINK
         assert 0 < QB_SHRINK < 1
         assert 0 < TALENT_SHRINK < 1
+
+
+class TestQbIncumbentNoLookahead:
+    """The backup penalty must be decided on the past, never the season total.
+
+    Regression: the incumbent used to be whoever started the most games across
+    the *whole* season. A team whose starter got hurt in week 3 therefore had
+    weeks 1-2 flagged as "backup" games, because the eventual season-long
+    starter was the replacement. That leaked the future into adjusted Elo and
+    into every walk-forward number derived from it.
+    """
+
+    def _starts(self, qbs, season=2024, team="KC"):
+        return pd.DataFrame({
+            "game_id": [f"g{i}" for i in range(len(qbs))],
+            "season": season, "team": team,
+            "gameday": pd.date_range("2024-09-08", periods=len(qbs), freq="7D"),
+            "qb": qbs, "side": "home",
+        })
+
+    def test_week_one_has_no_incumbent_and_no_penalty(self):
+        from NFL.model.v2.elo_variants import _incumbent_backup_flag
+        f = _incumbent_backup_flag(self._starts(["Starter"]))
+        assert f.iloc[0] == 0.0
+
+    def test_incumbent_is_the_prior_leader_not_the_season_leader(self):
+        """Starter plays 2, then a backup takes over for 5.
+
+        Season-long counts make the backup the "primary", which would wrongly
+        flag the first two games. Chronologically, games 1-2 are the incumbent.
+        """
+        from NFL.model.v2.elo_variants import _incumbent_backup_flag
+        qbs = ["Starter", "Starter"] + ["Backup"] * 5
+        f = _incumbent_backup_flag(self._starts(qbs)).to_numpy()
+        assert f[0] == 0.0   # no prior info
+        assert f[1] == 0.0   # Starter is the incumbent
+        assert f[2] == 1.0   # Backup arrives -> flagged
+        # Once Backup has more starts than Starter he becomes the incumbent.
+        assert f[-1] == 0.0
+
+    def test_future_games_cannot_change_an_earlier_flag(self):
+        """The core leakage property, stated directly."""
+        from NFL.model.v2.elo_variants import _incumbent_backup_flag
+        early = ["Starter", "Starter", "Backup"]
+        short = _incumbent_backup_flag(self._starts(early)).to_numpy()
+        # Same first three games, but the season continues very differently.
+        extended = _incumbent_backup_flag(
+            self._starts(early + ["Backup"] * 12)).to_numpy()
+        assert list(short) == list(extended[:3])
+
+    def test_returning_starter_is_not_a_backup(self):
+        from NFL.model.v2.elo_variants import _incumbent_backup_flag
+        qbs = ["Starter"] * 4 + ["Backup", "Starter"]
+        f = _incumbent_backup_flag(self._starts(qbs)).to_numpy()
+        assert f[4] == 1.0   # the backup start
+        assert f[5] == 0.0   # starter returns to his own job
+
+    def test_seasons_do_not_bleed_into_each_other(self):
+        from NFL.model.v2.elo_variants import _incumbent_backup_flag
+        a = self._starts(["Starter"] * 3, season=2023)
+        b = self._starts(["NewGuy"] * 3, season=2024)
+        b["gameday"] = pd.date_range("2024-09-08", periods=3, freq="7D")
+        f = _incumbent_backup_flag(pd.concat([a, b], ignore_index=True)).to_numpy()
+        # 2024 week 1 starts fresh: no incumbent carried over from 2023.
+        assert f[3] == 0.0
+
+    def test_missing_qb_names_do_not_crash_or_penalise(self):
+        from NFL.model.v2.elo_variants import _incumbent_backup_flag
+        f = _incumbent_backup_flag(self._starts(["Starter", None, "Starter"]))
+        assert f.iloc[2] == 0.0

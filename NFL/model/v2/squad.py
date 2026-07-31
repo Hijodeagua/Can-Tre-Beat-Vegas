@@ -312,6 +312,26 @@ def interim_coach_flags(games: pd.DataFrame) -> pd.DataFrame:
 # assembly
 # --------------------------------------------------------------------------
 
+def merge_team_week(existing: pd.DataFrame, fresh: pd.DataFrame) -> pd.DataFrame:
+    """Replace only the seasons present in ``fresh``; keep every other row.
+
+    The scheduled job downloads just the current and prior season, so a plain
+    rebuild would regenerate the table from those two seasons alone and the
+    workflow would then commit a file with 2002-2023 deleted. Merging by season
+    makes a partial refresh safe: seasons the refresh did not cover survive
+    untouched.
+    """
+    if existing is None or existing.empty:
+        return fresh.reset_index(drop=True)
+    if fresh is None or fresh.empty:
+        return existing.reset_index(drop=True)
+
+    refreshed = set(fresh["season"].unique())
+    kept = existing[~existing["season"].isin(refreshed)]
+    out = pd.concat([kept, fresh], ignore_index=True)
+    return out.sort_values(["season", "team", "week"]).reset_index(drop=True)
+
+
 def build_team_week_table(seasons: list[int] | None = None) -> pd.DataFrame:
     games = pd.read_csv(GAMES_PATH)
     seasons = seasons or sorted(s for s in games["season"].unique() if s >= FIRST_SEASON)
@@ -393,7 +413,11 @@ SQUAD_FEATURE_COLS = [
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--build", action="store_true", help="write squad_features.csv")
+    ap.add_argument("--build", action="store_true",
+                    help="write squad_features.csv, merging into any existing table")
+    ap.add_argument("--rebuild-all", action="store_true",
+                    help="replace the whole table instead of merging by season "
+                         "(only safe with the full roster history downloaded)")
     ap.add_argument("--season", type=int, default=None)
     ap.add_argument("--week", type=int, default=None)
     args = ap.parse_args()
@@ -410,8 +434,18 @@ def main() -> None:
 
     if args.build:
         OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-        tw.to_csv(OUT_PATH, index=False)
-        print(f"wrote {OUT_PATH.relative_to(REPO_ROOT)}")
+        existing = pd.read_csv(OUT_PATH) if OUT_PATH.exists() else pd.DataFrame()
+        if args.rebuild_all or existing.empty:
+            out = tw
+            note = "full rebuild"
+        else:
+            out = merge_team_week(existing, tw)
+            refreshed = sorted(tw["season"].unique())
+            note = (f"merged seasons {refreshed[0]}-{refreshed[-1]} into "
+                    f"{len(existing)} existing rows")
+        out.to_csv(OUT_PATH, index=False)
+        print(f"wrote {OUT_PATH.relative_to(REPO_ROOT)} "
+              f"({len(out)} rows, seasons {out['season'].min()}-{out['season'].max()}; {note})")
 
 
 if __name__ == "__main__":

@@ -349,3 +349,49 @@ class TestParserDependencies:
         req = Path(__file__).resolve().parents[1] / "requirements.txt"
         text = req.read_text().lower()
         assert "beautifulsoup4" in text, "bs4 must stay declared — parsers rely on it"
+
+
+class TestPartialRefreshPreservesHistory:
+    """The scheduled job only downloads two seasons of rosters.
+
+    Regression: `--build` used to overwrite squad_features.csv outright, so a
+    partial refresh regenerated the table from those two seasons and the
+    workflow committed a file with 2002-2023 deleted.
+    """
+
+    def _table(self, seasons, marker=1.0):
+        rows = []
+        for s in seasons:
+            for team in ("KC", "DEN"):
+                for wk in (1, 2):
+                    rows.append({"season": s, "team": team, "week": wk,
+                                 "n_first_rounders": marker, "roster_size": 48})
+        return pd.DataFrame(rows)
+
+    def test_partial_refresh_keeps_unrelated_seasons(self):
+        from NFL.model.v2.squad import merge_team_week
+        existing = self._table(range(2002, 2026), marker=1.0)
+        fresh = self._table([2025, 2026], marker=9.0)
+
+        out = merge_team_week(existing, fresh)
+
+        # Every historical season survives.
+        assert set(out["season"]) == set(range(2002, 2027))
+        assert len(out[out["season"] < 2025]) == len(existing[existing["season"] < 2025])
+        # Untouched seasons keep their original values.
+        assert (out.loc[out["season"] == 2010, "n_first_rounders"] == 1.0).all()
+        # Refreshed seasons take the new values, and are not duplicated.
+        assert (out.loc[out["season"] == 2025, "n_first_rounders"] == 9.0).all()
+        assert not out.duplicated(["season", "team", "week"]).any()
+
+    def test_merge_into_empty_is_just_the_fresh_table(self):
+        from NFL.model.v2.squad import merge_team_week
+        fresh = self._table([2026])
+        assert len(merge_team_week(pd.DataFrame(), fresh)) == len(fresh)
+
+    def test_empty_refresh_never_deletes_history(self):
+        """A failed download must not wipe the table."""
+        from NFL.model.v2.squad import merge_team_week
+        existing = self._table(range(2002, 2026))
+        out = merge_team_week(existing, pd.DataFrame())
+        assert len(out) == len(existing)

@@ -417,14 +417,14 @@ Standalone (Elo probability alone, no model, 3,028 games 2015-2025):
 | variant | log loss | accuracy | AUC | vs base |
 |---|---|---|---|---|
 | market (closing spread) | 0.6121 | 66.1% | 0.718 | — |
-| **qb + talent** | **0.6319** | 65.2% | 0.698 | **-0.0055** |
+| **qb + talent** | **0.6322** | 65.2% | 0.698 | **-0.0052** |
 | talent | 0.6335 | 65.2% | 0.695 | -0.0039 |
-| qb | 0.6349 | 64.6% | 0.692 | -0.0025 |
+| qb | 0.6352 | 64.6% | 0.691 | -0.0022 |
 | base (production) | 0.6374 | 64.2% | 0.687 | 0.000 |
 | spread-anchored | 0.6744 | 65.4% | 0.702 | +0.0370 |
 
 **The headline: adjusting Elo for the quarterback and for roster talent is
-worth about 0.0055 of log loss and a point of accuracy.** That is the largest
+worth about 0.0052 of log loss and a point of accuracy.** That is the largest
 single improvement found in any of this work — though it still leaves Elo
 0.020 behind the closing spread.
 
@@ -441,8 +441,9 @@ overstates the edge. Shrinking the adjustments fixes it. Sweeping the shrink:
 
 Shrink factors were then re-fit on 2015-2020 and validated on **held-out
 2021-2025**, where the tuned combination (QB x0.25, talent x0.5) beat base Elo
-by **0.0061 log loss and 2.3 points of accuracy** (0.6426 -> 0.6365,
-63.2% -> 65.5%). Those are now the module defaults.
+by **0.0056 log loss and 2.1 points of accuracy** (0.6426 -> 0.6370,
+63.2% -> 65.3%). Those are now the module defaults. Re-tuning after the
+look-ahead fix below picked the same two values, so the defaults stand.
 
 **Spread-anchored** updates on the result versus the market's expectation, so
 the rating accumulates disagreement with the books rather than team strength.
@@ -465,3 +466,39 @@ against openers instead of closers.
 QB and talent adjustments double-count against the base rating even after
 shrinking; honors are season-granular so the talent term steps once a year;
 the spread variant only exists where a closing line does (97% of games).
+
+
+### 12. Look-ahead in the QB backup flag (found in review, fixed)
+
+`qb_adjustments` decided whether a starter was "the backup" by taking the most
+frequent starter **across the whole season**. That is future information: a
+team whose starter was hurt in week 3 had weeks 1-2 flagged as backup starts,
+because the eventual season-long starter was the replacement. Every adjusted-Elo
+number, and every walk-forward metric derived from it, was contaminated.
+
+Now the incumbent is whoever has made the most starts for that team *so far
+this season*, counting strictly earlier games only. Week 1 has no prior games,
+so no incumbent exists and no penalty applies; ties break toward the most
+recent starter.
+
+Scale of the error: **1,838 of 13,542 team-games (13.6%) had the wrong flag**,
+of which 1,180 were leak-driven false backups.
+
+Effect on the results, all of which were regenerated:
+
+| metric | leaky | corrected |
+|---|---|---|
+| qb+talent Elo, standalone log loss | 0.6319 | 0.6322 |
+| qb Elo alone, standalone log loss | 0.6349 | 0.6352 |
+| held-out 2021-25 gain vs base Elo | -0.0061 | -0.0056 |
+| held-out accuracy gain | +2.3 pp | +2.1 pp |
+| production model log loss | 0.6140 | 0.6140 |
+
+The headline barely moves, which is what you would expect: the QB term is
+shrunk to 0.25 and the penalty is only 25 Elo before shrinking, so a wrong flag
+is worth ~6 Elo. That does not make the leak acceptable — a walk-forward claim
+has to be true, not approximately true — but it does mean the conclusions were
+not resting on it.
+
+Six regression tests pin the property, the central one asserting that
+lengthening a season cannot change the flag on any earlier game.

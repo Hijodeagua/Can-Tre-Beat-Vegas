@@ -190,6 +190,45 @@ def run_elo(
 # adjustment builders
 # --------------------------------------------------------------------------
 
+def _incumbent_backup_flag(starts: pd.DataFrame) -> pd.Series:
+    """1 when this starter is not the team's incumbent, judged only on the past.
+
+    The incumbent is whoever has made the most starts for that team **so far
+    this season**, counting strictly earlier games. An earlier version took the
+    most-frequent starter across the whole season, which let week 2 know who
+    would end up the season-long starter — a team whose starter got hurt in
+    week 3 was flagged as playing a "backup" in weeks 1 and 2, information that
+    did not exist at the time.
+
+    Week 1 has no prior games, so no incumbent exists and no penalty applies.
+    Ties are broken toward the most recent starter, which is what "incumbent"
+    means when two quarterbacks have split starts evenly.
+    """
+    from collections import defaultdict
+
+    s = starts.sort_values(["gameday", "game_id"]).copy()
+    counts: dict[tuple, dict[str, int]] = defaultdict(dict)
+    last_seen: dict[tuple, str] = {}
+    flags = np.zeros(len(s), dtype=float)
+
+    for i, (season, team, qb) in enumerate(
+            zip(s["season"], s["team"], s["qb"])):
+        key = (season, team)
+        prior = counts[key]
+        if prior and pd.notna(qb):
+            best = max(prior.values())
+            leaders = [k for k, v in prior.items() if v == best]
+            incumbent = (last_seen[key] if len(leaders) > 1
+                         and last_seen.get(key) in leaders else leaders[0])
+            flags[i] = float(qb != incumbent)
+        # else: no prior starts this season -> no incumbent, no penalty
+        if pd.notna(qb):
+            prior[qb] = prior.get(qb, 0) + 1
+            last_seen[key] = qb
+
+    return pd.Series(flags, index=s.index).reindex(starts.index)
+
+
 def qb_adjustments(games: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     """Per-side Elo offset from the starting quarterback's prior-season EPA."""
     from .squad import load_players, load_qb_season_epa, qb_features
@@ -200,21 +239,14 @@ def qb_adjustments(games: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     if qb.empty:
         return np.zeros(len(games)), np.zeros(len(games))
 
-    # Primary starter = most frequent starter for that team-season.
     rows = []
     for side in ("home", "away"):
-        d = games[["game_id", "season", f"{side}_team", f"{side}_qb_name"]].copy()
-        d.columns = ["game_id", "season", "team", "qb"]
+        d = games[["game_id", "season", "gameday", f"{side}_team", f"{side}_qb_name"]].copy()
+        d.columns = ["game_id", "season", "gameday", "team", "qb"]
         d["side"] = side
         rows.append(d)
     starts = pd.concat(rows, ignore_index=True)
-    primary = (starts.dropna(subset=["qb"])
-               .groupby(["season", "team", "qb"]).size().rename("n").reset_index()
-               .sort_values("n", ascending=False)
-               .drop_duplicates(["season", "team"])[["season", "team", "qb"]]
-               .rename(columns={"qb": "primary_qb"}))
-    starts = starts.merge(primary, on=["season", "team"], how="left")
-    starts["is_backup"] = (starts["qb"] != starts["primary_qb"]).astype(float)
+    starts["is_backup"] = _incumbent_backup_flag(starts)
 
     q = qb.merge(starts[["game_id", "side", "is_backup"]], on=["game_id", "side"], how="left")
     q["epa"] = q["qb_epa_prior"].fillna(QB_UNKNOWN_EPA)
