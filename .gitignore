@@ -1,21 +1,26 @@
 # Python
+# These are setuptools/distutils build directories, which only ever appear at
+# the repo root — so they are anchored with a leading slash. Unanchored, `lib/`
+# matches a directory named lib at ANY depth, which silently swallowed
+# web/app/lib/data.ts and broke the Vercel build with a module-not-found that
+# looked like a missing file rather than a gitignore rule.
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
+/build/
+/develop-eggs/
+/dist/
+/downloads/
+/eggs/
+/.eggs/
+/lib/
+/lib64/
+/parts/
+/sdist/
+/var/
+/wheels/
 *.egg-info/
 .installed.cfg
 *.egg
