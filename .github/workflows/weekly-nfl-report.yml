@@ -1,0 +1,87 @@
+# Weekly NFL report - Tuesday and Friday nights
+#
+# Tuesday night: last week's games are final -> grade the pick ledger and the
+# bookmakers, preview the coming week.
+# Friday night: lines have settled -> refreshed picks before the weekend.
+#
+# Cron is UTC: 03:00 Wed/Sat = 10pm ET Tue/Fri during the season (11pm EST).
+
+name: Weekly NFL Report (Tue/Fri night)
+
+on:
+  schedule:
+    - cron: "0 3 * * 3,6"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "Season (blank = infer from schedule)"
+        required: false
+      week:
+        description: "Week (blank = infer from schedule)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-nfl-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Fresh scores + closing lines so the ledger and book grades are current.
+      - name: Refresh nflverse schedule
+        run: python3 NFL/model/schedule.py --refresh
+
+      - name: Snapshot prediction markets (best effort)
+        continue-on-error: true
+        run: python -m data_jobs.prediction_markets.fetch --sport nfl
+
+      - name: Generate weekly report
+        run: |
+          set -euo pipefail
+          args=""
+          if [ -n "${{ github.event.inputs.season || '' }}" ] && [ -n "${{ github.event.inputs.week || '' }}" ]; then
+            args="--season ${{ github.event.inputs.season }} --week ${{ github.event.inputs.week }}"
+          fi
+          python -m data_jobs.reports.weekly_nfl_report --write $args
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/weekly/ data/schedules/nflverse_games.csv data/prediction_markets/ || true
+          if [ -n "$(git status --porcelain)" ]; then
+            timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "Weekly NFL report: $timestamp"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-nfl-report-${{ github.run_number }}
+          path: reports/weekly/
+          retention-days: 30
