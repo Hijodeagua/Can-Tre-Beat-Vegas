@@ -202,3 +202,45 @@ feature contributes on its own; it does not identify the best-performing
 *combination*. `PICKS_FEATURES` in `weekly_nfl_report.py` stays pinned, and
 `scorecard.py` deliberately scores that pinned list rather than a freshly
 ranked one.
+
+### How much of that 66.5% is just "pick the favourite"?
+
+Almost all of it. This is the check that matters most on a 66% headline.
+
+| rule | accuracy | 95% CI | record |
+|---|---|---|---|
+| model (production) | **66.50%** | [64.81, 68.16] | 2007-1011 |
+| pick the spread favourite | 66.07% | [64.38, 67.76] | 1994-1024 |
+| pick the moneyline favourite | 66.14% | [64.41, 67.83] | 1996-1022 |
+| always pick home | 54.97% | [53.18, 56.73] | 1659-1359 |
+
+The model beats the one-line rule "take whoever Vegas favours" by **0.43
+percentage points — 13 games out of 3,018 across eleven seasons.** The paired
+bootstrap puts that gap at 95% CI [-0.10, +0.96], so it does not clear
+significance (P(model better) = 0.94).
+
+The reason is visible in the agreement rate: **the model picks the same side as
+the spread favourite in 98.0% of games.** It disagrees 61 times in eleven
+seasons. On those 61 it goes 37-24 (60.7%), which sounds good until you see the
+interval — [47.5, 72.1] on 61 games.
+
+Accuracy by spread size shows where the difference lives, and where it does not:
+
+| \|spread\| | games | model | favourite rule | gap |
+|---|---|---|---|---|
+| 0-1.5 | 312 | 52.9% | 49.7% | +3.2 |
+| 2-3.5 | 1,126 | 59.1% | 58.9% | +0.2 |
+| 4-7 | 891 | 69.0% | 69.0% | 0.0 |
+| 7.5+ | 689 | 81.4% | 81.4% | 0.0 |
+
+On any game with a spread of four points or more the model is **identical** to
+just taking the favourite — same pick, same record, every time. Its entire
+contribution is in near-pick'em games, which is exactly where the market has
+least to say and where a rating system should help most.
+
+So the honest framing of the headline: **66.5% is the spread's accuracy, not
+the model's skill.** The model's own contribution is a third of a percentage
+point, concentrated in coin-flip games, and not statistically separable from
+zero. That is not a failure of this particular model — it is the same
+efficient-market result every other measurement in this repo has produced,
+stated in the most direct way available.

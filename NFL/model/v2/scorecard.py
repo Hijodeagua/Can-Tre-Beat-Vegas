@@ -117,6 +117,50 @@ def ats_and_roi(preds: pd.DataFrame, edge: float = 0.02) -> dict:
     }
 
 
+def favourite_baseline(preds: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
+    """How much of the model's accuracy is just "pick the favourite"?
+
+    The single most important sanity check on a 66% headline. If the model
+    agrees with the spread favourite on almost every game, then its accuracy
+    *is* the spread's accuracy and the model is decoration on top.
+    """
+    y = preds["y"].to_numpy()
+    rng = np.random.default_rng(3)
+    B = 20000
+
+    picks = {
+        "model (production)": (preds["prob"] >= 0.5).to_numpy(),
+        "pick the spread favourite": (preds["spread_line"] > 0).to_numpy(),
+        "pick the moneyline favourite": (preds["market_prob"] >= 0.5).to_numpy(),
+        "always pick home": np.ones(len(preds), dtype=bool),
+    }
+    correct = {k: np.where(v, y == 1, y == 0).astype(float) for k, v in picks.items()}
+
+    rows = []
+    for name, c in correct.items():
+        s = rng.choice(c, (B, len(c)), True).mean(1)
+        rows.append({"rule": name, "n": len(c), "accuracy": round(float(c.mean()), 4),
+                     "ci_lo": round(float(np.percentile(s, 2.5)), 4),
+                     "ci_hi": round(float(np.percentile(s, 97.5)), 4),
+                     "wins": int(c.sum()), "losses": int(len(c) - c.sum())})
+
+    mc, sc = correct["model (production)"], correct["pick the spread favourite"]
+    diff = mc - sc
+    ds = rng.choice(diff, (B, len(diff)), True).mean(1)
+    agree = picks["model (production)"] == picks["pick the spread favourite"]
+    detail = {
+        "gap_vs_favourite": round(float(diff.mean()), 4),
+        "gap_ci": (round(float(np.percentile(ds, 2.5)), 4),
+                   round(float(np.percentile(ds, 97.5)), 4)),
+        "p_model_better": round(float((ds > 0).mean()), 2),
+        "agreement_rate": round(float(agree.mean()), 4),
+        "n_disagreements": int((~agree).sum()),
+        "model_acc_on_disagreements": round(float(mc[~agree].mean()), 4) if (~agree).any() else None,
+        "extra_games_won": int(mc.sum() - sc.sum()),
+    }
+    return pd.DataFrame(rows), detail
+
+
 def production_features() -> list[str]:
     """Score exactly what the weekly report ships, not a freshly-ranked list.
 
@@ -158,6 +202,17 @@ def run(save: bool = False) -> pd.DataFrame:
     print("=== KPIs, walk-forward out of sample, %d-2025 ===" % EVAL_FROM)
     print(table.to_string(index=False), flush=True)
 
+    fav_tbl, fav = favourite_baseline(ref)
+    print("\n=== Straight-up accuracy vs naive rules (same games) ===")
+    print(fav_tbl.to_string(index=False), flush=True)
+    print(f"\n  model minus spread-favourite: {fav['gap_vs_favourite']:+.4f} "
+          f"95% CI [{fav['gap_ci'][0]:+.4f}, {fav['gap_ci'][1]:+.4f}]  "
+          f"P(model better) = {fav['p_model_better']}")
+    print(f"  agrees with the favourite on {fav['agreement_rate']:.1%} of games "
+          f"({fav['n_disagreements']} disagreements)")
+    print(f"  accuracy on those disagreements: {fav['model_acc_on_disagreements']:.1%}")
+    print(f"  net games won over the naive rule: {fav['extra_games_won']}")
+
     print("\n=== Flat-stake moneyline backtest (edge >= 2 pts) ===")
     bt = pd.DataFrame([{"model": k, **ats_and_roi(v)} for k, v in preds_store.items()])
     print(bt.to_string(index=False), flush=True)
@@ -174,6 +229,8 @@ def run(save: bool = False) -> pd.DataFrame:
     if save:
         OUT_DIR.mkdir(parents=True, exist_ok=True)
         table.to_csv(OUT_DIR / "kpis.csv", index=False)
+        fav_tbl.to_csv(OUT_DIR / "favourite_baseline.csv", index=False)
+        pd.Series(fav).to_frame("value").to_csv(OUT_DIR / "favourite_detail.csv")
         bt.to_csv(OUT_DIR / "backtest.csv", index=False)
         per_df.to_csv(OUT_DIR / "by_season.csv", index=False)
         ref.to_csv(OUT_DIR / "oos_predictions.csv", index=False)
