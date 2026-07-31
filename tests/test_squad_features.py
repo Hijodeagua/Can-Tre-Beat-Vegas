@@ -21,6 +21,7 @@ from NFL.model.v2.squad import (
     qb_features,
 )
 from data_jobs.rosters.scrape_awards import (
+    normalize_name,
     parse_allpro,
     parse_pfr_players,
     parse_wikipedia_top100,
@@ -108,6 +109,40 @@ class TestHonorWeights:
         kc = h[(h["team"] == "KC") & (h["week"] == 1)].iloc[0]
         # 2024 selection is ignored (same season); 2022 is 2 seasons back -> 1.0
         assert kc["allpro_score"] == pytest.approx(1.0)
+
+    def test_missing_honor_is_nan_not_zero(self, rosters, players):
+        """Regression: a sum over an empty honor table must not read as 0.
+
+        With only the Top 100 scrape landed, `allpro_score` was coming out as
+        0.0 for every roster, which asserts "no All-Pros here" instead of
+        "unknown" — nine seasons of training data quietly stating a falsehood.
+        """
+        awards = {
+            "allpro": pd.DataFrame(),
+            "probowl": pd.DataFrame(),
+            "top100": pd.DataFrame({"season": [2024], "pfr_id": ["AaaA00"]}),
+        }
+        h = honor_features(rosters, players, awards)
+        assert h["allpro_score"].isna().all()
+        assert h["n_probowlers"].isna().all()
+        assert h["n_top100"].notna().any()   # the one we do have stays real
+
+    def test_top100_nan_before_the_list_existed(self, rosters, players):
+        """The Top 100 starts in 2011; earlier seasons must be NaN, not 0."""
+        r = rosters.copy()
+        r["season"] = 2008
+        awards = {"allpro": pd.DataFrame(), "probowl": pd.DataFrame(),
+                  "top100": pd.DataFrame({"season": [2024], "pfr_id": ["AaaA00"]})}
+        h = honor_features(r, players, awards)
+        assert h["n_top100"].isna().all()
+
+    def test_top100_counts_only_the_current_season_list(self, rosters, players):
+        awards = {"allpro": pd.DataFrame(), "probowl": pd.DataFrame(),
+                  "top100": pd.DataFrame({"season": [2024, 2019],
+                                          "pfr_id": ["AaaA00", "BbbB00"]})}
+        h = honor_features(rosters, players, awards)
+        kc = h[(h["team"] == "KC") & (h["week"] == 1)].iloc[0]
+        assert kc["n_top100"] == 1  # p1 only; the 2019 entry is a different year
 
     def test_probowl_lookback_window(self, rosters, players):
         awards = {
@@ -254,3 +289,33 @@ class TestAwardParsers:
     def test_short_tables_are_rejected(self):
         small = WIKI_HTML.replace("</table>", "")[:400] + "</table>"
         assert parse_wikipedia_top100(small).empty
+
+
+class TestNameNormalisation:
+    """Wikipedia and nflverse spell the same player differently."""
+
+    @pytest.mark.parametrize("wiki,nflverse", [
+        ("B. J. Raji", "B.J. Raji"),          # spaced vs unspaced initials
+        ("A. J. Green", "A.J. Green"),
+        ("Pierre Garçon", "Pierre Garcon"),   # accent
+        ("Chris Harris Jr.", "Chris Harris"), # suffix
+        ("Thomas Davis Sr.", "Thomas Davis"),
+        ("Mark Ingram II", "Mark Ingram"),
+        ("Odell Beckham Jr.", "Odell Beckham"),
+    ])
+    def test_variants_collapse_to_the_same_key(self, wiki, nflverse):
+        a = normalize_name(pd.Series([wiki])).iloc[0]
+        b = normalize_name(pd.Series([nflverse])).iloc[0]
+        assert a == b, f"{wiki!r} -> {a!r} but {nflverse!r} -> {b!r}"
+
+    def test_distinct_players_stay_distinct(self):
+        keys = normalize_name(pd.Series(["Josh Allen", "Keenan Allen",
+                                         "Justin Jefferson", "Van Jefferson"]))
+        assert keys.nunique() == 4
+
+    def test_alias_map_applies(self):
+        assert (normalize_name(pd.Series(["Tariq Woolen"])).iloc[0]
+                == normalize_name(pd.Series(["Riq Woolen"])).iloc[0])
+
+    def test_handles_nan(self):
+        assert normalize_name(pd.Series([None])).iloc[0] == ""

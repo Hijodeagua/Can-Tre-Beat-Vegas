@@ -227,15 +227,24 @@ def honor_features(rosters: pd.DataFrame, players: pd.DataFrame,
             t100_ids = set()
         s["t100"] = s["pfr_id"].isin(t100_ids).astype(int) if t100_ids else np.nan
 
-        rows.append(s.groupby(["season", "team", "week"], as_index=False).agg(
+        agg = s.groupby(["season", "team", "week"], as_index=False).agg(
             allpro_score=("w", "sum"),
             n_probowlers=("pb", "sum"),
             n_top100=("t100", "sum"),
-        ))
-    out = pd.concat(rows, ignore_index=True)
-    if top100.empty:
-        out["n_top100"] = np.nan
-    return out
+        )
+        # Each honor is missing independently — the Top 100 scrape can land
+        # before the PFR one, and the Top 100 list doesn't exist before 2011.
+        # A sum over nothing is 0.0, which would assert "this roster had no
+        # All-Pros" rather than "we don't know". Restore NaN per column.
+        if ap.empty:
+            agg["allpro_score"] = np.nan
+        if pb.empty:
+            agg["n_probowlers"] = np.nan
+        if not t100_ids:
+            agg["n_top100"] = np.nan
+        rows.append(agg)
+
+    return pd.concat(rows, ignore_index=True)
 
 
 def qb_features(games: pd.DataFrame, players: pd.DataFrame,

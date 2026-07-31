@@ -251,3 +251,54 @@ Left as-is for now: the shipped picks model is still logistic/top10. Switching
 to the ensemble is a reasonable call and is a two-line change in
 `weekly_nfl_report.py`, but it should be a deliberate decision rather than
 chasing a 0.6 pp difference inside its own confidence interval.
+
+### 8. Top 100 landed (2011-2025) — verdict unchanged
+
+The Wikipedia Top 100 scrape came in via PR #16: 1,500 rows, exactly 100 per
+season, 2011-2025.
+
+**Two fixes were needed before it was usable.**
+
+1. **`pfr_id` was 0% populated.** Wikipedia carries no player ids, so without
+   resolution every Top 100 entry silently fails to join a roster and
+   `n_top100` would have been a column of zeros. Exact name matching got
+   95.9%; the 62 misses were entirely systematic — spaced initials
+   (`B. J. Raji` vs `B.J. Raji`), accents (`Pierre Garçon`), and suffixes
+   (`Chris Harris Jr.`). Folding accents, dropping suffixes and stripping all
+   separators took it to 99.7%, and three genuine name changes
+   (Darius/Shaquille Leonard, Justin/Nnamdi Madubuike, Tariq/Riq Woolen) were
+   added to an explicit alias map rather than fuzzy-matched — a wrong id here
+   credits a star to the wrong roster. **Final: 1,500/1,500.**
+
+2. **Missing honors were reading as zero, not unknown.** `groupby.sum()` folds
+   an all-NaN group to `0.0`, so seasons before 2011 were asserting "this
+   roster had no Top 100 players", and — once `top100.csv` existed but the PFR
+   scrape still didn't — `allpro_score` and `n_probowlers` became all-zero
+   columns for all 13,540 team-weeks. Each honor is now NaN'd independently.
+   Both cases have regression tests.
+
+Sanity check after the fix: 78-91 of each year's 100 listed players are on a
+week-1 active roster (the rest injured, retired, or on the practice squad),
+averaging 2.4-2.7 per team. 2025 leaders are Philadelphia (9) and Detroit (7).
+
+**Does it move the model?** No.
+
+| model | top10 | top10 + squad |
+|---|---|---|
+| logistic | **0.6140** | 0.6156 |
+| extra trees | 0.6193 | 0.6179 |
+| random forest | 0.6264 | 0.6203 |
+| xgboost | 0.6241 | 0.6227 |
+| lightgbm | 0.6324 | 0.6301 |
+
+Same pattern as before Top 100 existed: helps every tree, hurts logistic.
+Dropping `n_top100_diff` back out changes Extra Trees by -0.0001 and Random
+Forest by +0.0000; dropping *all three* honor columns changes Extra Trees by
+-0.0001. The re-run bootstrap actually moved slightly against the trees
+(Extra Trees vs logistic now +0.58 pp, 95% CI [-1.31, +2.49], P(better)=0.70,
+down from +0.88 pp / P=0.80).
+
+Conclusion: the Top 100 data is correct, cheap and worth keeping wired, but it
+carries no signal the closing line hasn't already priced. Picks model stays
+logistic/top10. The All-Pro and Pro Bowl scrapes are unlikely to change this,
+so treat them as low priority.

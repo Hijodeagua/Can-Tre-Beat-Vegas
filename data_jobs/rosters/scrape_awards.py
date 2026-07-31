@@ -163,16 +163,60 @@ def parse_wikipedia_top100(html: str) -> pd.DataFrame:
     return pd.DataFrame(columns=["rank", "player"])
 
 
+SUFFIX_RE = re.compile(r"\b(jr|sr|ii|iii|iv|v)\b", re.IGNORECASE)
+
+# Wikipedia's preferred name vs the one nflverse files the player under.
+# Mostly players who changed the name they go by mid-career; verified against
+# players.csv one at a time rather than fuzzy-matched, because a wrong id here
+# silently credits the wrong roster.
+NAME_ALIASES = {
+    "michaelvick": "mikevick",
+    "robertgriffiniii": "robertgriffin",
+    "stevensmithsr": "stevensmith",
+    "dariusshaquilleleonard": "shaquilleleonard",  # PFR LeonDa00
+    "justinmadubuike": "nnamdimadubuike",          # PFR MaduJu00
+    "tariqwoolen": "riqwoolen",                    # PFR WoolTa00
+}
+
+
+def normalize_name(s: pd.Series) -> pd.Series:
+    """Fold the ways the same player gets written across sources.
+
+    Wikipedia writes ``B. J. Raji``, ``Pierre Garçon``, ``Chris Harris Jr.``;
+    nflverse writes ``B.J. Raji``, ``Pierre Garcon``, ``Chris Harris``. Dropping
+    accents, suffixes and *all* separators (spaces included, so spaced initials
+    collapse the same way unspaced ones do) reconciles them.
+    """
+    import unicodedata
+
+    def _strip_accents(x: str) -> str:
+        return "".join(c for c in unicodedata.normalize("NFKD", str(x))
+                       if not unicodedata.combining(c))
+
+    out = s.fillna("").map(_strip_accents).str.lower()
+    out = out.str.replace(r"[.\-']", " ", regex=True)
+    out = out.map(lambda x: SUFFIX_RE.sub(" ", x))
+    out = out.str.replace(r"[^a-z0-9]", "", regex=True)
+    return out.map(lambda x: NAME_ALIASES.get(x, x))
+
+
 def resolve_pfr_ids(names: pd.Series) -> pd.Series:
-    """Map display names to pfr_id via the nflverse player master."""
+    """Map display names to pfr_id via the nflverse player master.
+
+    Wikipedia carries no player ids, so this is the join that decides whether
+    a Top 100 entry can reach a roster at all. An unresolved name does not
+    error — it silently vanishes from ``n_top100`` — so the match rate is
+    reported by ``--report`` and worth watching.
+    """
     if not PLAYERS_CSV.exists():
         return pd.Series([pd.NA] * len(names), index=names.index)
     p = pd.read_csv(PLAYERS_CSV, low_memory=False,
                     usecols=["display_name", "pfr_id"]).dropna()
-    key = (p.assign(k=p["display_name"].str.lower().str.replace(r"[^a-z ]", "", regex=True))
-             .drop_duplicates("k").set_index("k")["pfr_id"])
-    clean = names.str.lower().str.replace(r"[^a-z ]", "", regex=True).str.strip()
-    return clean.map(key)
+    p = p.assign(k=normalize_name(p["display_name"]))
+    # Prefer the first listing for a name collision; ambiguous names are rare
+    # among Top 100 players and a wrong id would only mis-credit one roster.
+    key = p.drop_duplicates("k").set_index("k")["pfr_id"]
+    return normalize_name(names).map(key)
 
 
 def scrape(first: int, last: int, reparse: bool = False, force: bool = False) -> dict:
