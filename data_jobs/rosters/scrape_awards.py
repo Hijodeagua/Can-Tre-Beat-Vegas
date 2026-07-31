@@ -17,6 +17,20 @@ below were written against PFR's documented table structure but could not be
 verified against live HTML from the development sandbox — treat the first run
 as something to eyeball, and check ``--report`` output for unresolved names.
 
+## No-network path (save the pages by hand)
+
+``--reparse`` never touches the network: it just reads whatever HTML is
+already in ``data/rosters/awards/raw/``. So if the machine running this can't
+reach the sites either, open the pages in a browser, "Save Page As" into that
+folder using these exact names, and run ``--reparse``:
+
+    data/rosters/awards/raw/allpro_2024.html      <- .../years/2024/allpro.htm
+    data/rosters/awards/raw/probowl_2024.html     <- .../years/2024/probowl.htm
+    data/rosters/awards/raw/top100_2024.html      <- Wikipedia NFL Top 100 2024
+
+Partial coverage is fine — any season whose file is missing is simply skipped,
+and the honor features fall back to NaN for the rosters of that season.
+
 ## Output
 
 ``data/rosters/awards/allpro.csv``  — season, pfr_id, player, team_level

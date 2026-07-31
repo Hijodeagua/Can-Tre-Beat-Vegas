@@ -210,3 +210,44 @@ python3 -m data_jobs.rosters.fetch_nflverse         # ~440 MB, gitignored
 python3 -m NFL.model.v2.squad --build               # -> data/rosters/squad_features.csv
 python3 -m NFL.model.v2.compare_models --target win --half-life 6 --with-squad --save
 ```
+
+### 7. Is the tree advantage real? (bootstrap)
+
+The squad features clearly help the tree models, so the follow-up question is
+whether Extra Trees + squad should *replace* logistic for the weekly picks.
+Answer: directionally yes, statistically not established.
+
+Walk-forward 2015-2025, 675 top-3 picks (3 per week x 225 weeks):
+
+| model | log loss | top-3 hit |
+|---|---|---|
+| market (closing) | **0.6121** | **79.6%** |
+| logistic / top10 | 0.6140 | 78.2% |
+| ensemble (logistic + ET, averaged) | 0.6150 | 78.8% |
+| extra trees / top10 + squad | 0.6178 | 79.1% |
+| random forest / top10 + squad | 0.6208 | 79.0% |
+
+Bootstrapping 5,000 resamples **of whole weeks** (picks within a week are not
+independent, so resampling individual games would understate the error):
+
+| vs logistic/top10 | mean diff | 95% CI | P(better) |
+|---|---|---|---|
+| extra trees + squad | +0.88 pp | [-1.02, +2.72] | 0.80 |
+| random forest + squad | +0.74 pp | [-1.35, +2.95] | 0.73 |
+| ensemble | +0.59 pp | [-0.60, +1.83] | 0.79 |
+| market | +1.34 pp | [+0.00, +2.76] | 0.96 |
+
+Read: the trees are *probably* a bit better at picking the top 3 (80% odds),
+but the interval straddles zero, and by season they beat logistic in 6 of 11,
+tie 2, lose 3. The only comparison that clears significance is the market
+beating us, which has been the finding all along.
+
+The ensemble is the interesting row: middle of the pack on both metrics but
+with by far the tightest interval (±1.2 pp vs ±1.9 pp), which is what
+averaging two decorrelated models is supposed to buy. It is the option that is
+least likely to be much worse in any given season.
+
+Left as-is for now: the shipped picks model is still logistic/top10. Switching
+to the ensemble is a reasonable call and is a two-line change in
+`weekly_nfl_report.py`, but it should be a deliberate decision rather than
+chasing a 0.6 pp difference inside its own confidence interval.
