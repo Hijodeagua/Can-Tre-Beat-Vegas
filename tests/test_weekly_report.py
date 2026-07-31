@@ -237,3 +237,56 @@ class TestPickLedger:
             "home_score": [np.nan], "away_score": [np.nan],
         })
         assert wr.grade_ledger(results)["result"].iloc[0] == "pending"
+
+
+class TestBestPriceShopping:
+    """Report should name the book with the best number for the picked side."""
+
+    def _prices(self):
+        return pd.DataFrame([{
+            "game_key": "k1", "gameday": pd.Timestamp("2026-09-13"),
+            "home_team": "KC", "away_team": "DEN", "books": 9,
+            "best_home_odds": -250.0, "best_home_book": "DraftKings",
+            "best_away_odds": 215.0, "best_away_book": "FanDuel",
+            "consensus_home_prob": 0.73, "consensus_away_prob": 0.31,
+            "hold_consensus": 0.04, "hold_best": 0.02,
+        }])
+
+    def _row(self, pick, home="KC", away="DEN"):
+        from types import SimpleNamespace
+        return SimpleNamespace(pick_team=pick, home_team=home, away_team=away)
+
+    def test_home_pick_gets_the_home_book(self):
+        import data_jobs.reports.weekly_nfl_report as wr
+        assert wr._shop_line(self._prices(), self._row("KC")) == "-250 at DraftKings"
+
+    def test_away_pick_gets_the_away_book(self):
+        import data_jobs.reports.weekly_nfl_report as wr
+        assert wr._shop_line(self._prices(), self._row("DEN")) == "+215 at FanDuel"
+
+    def test_unknown_game_returns_none(self):
+        import data_jobs.reports.weekly_nfl_report as wr
+        assert wr._shop_line(self._prices(), self._row("SF", "SF", "LA")) is None
+
+    def test_no_price_data_is_not_fatal(self):
+        import data_jobs.reports.weekly_nfl_report as wr
+        assert wr._shop_line(pd.DataFrame(), self._row("KC")) is None
+
+
+class TestLineShoppingMath:
+    def test_american_to_decimal(self):
+        from NFL.inventory.line_shopping import american_to_decimal
+        import numpy as np
+        d = american_to_decimal([-110, 100, 200, -200])
+        assert d[0] == pytest.approx(1.9091, abs=1e-4)
+        assert d[1] == pytest.approx(2.0)
+        assert d[2] == pytest.approx(3.0)
+        assert d[3] == pytest.approx(1.5)
+
+    def test_best_price_never_worse_than_consensus(self):
+        """Shopping can only reduce the hold, never increase it."""
+        from NFL.inventory.line_shopping import per_game_prices
+        per = per_game_prices(2025)
+        if per.empty:
+            pytest.skip("no per-book prices captured")
+        assert (per["hold_best"] <= per["hold_consensus"] + 1e-9).all()

@@ -244,3 +244,73 @@ point, concentrated in coin-flip games, and not statistically separable from
 zero. That is not a failure of this particular model — it is the same
 efficient-market result every other measurement in this repo has produced,
 stated in the most direct way available.
+
+## Can we make a better spread? (`margin.py`)
+
+Everything else here predicts *whether* the home team wins. `margin.py`
+predicts *by how much* — the same question a bookmaker answers when it opens a
+number, and the only framing where "we made a better line" is testable.
+
+The headline model is **blind**: every market feature is removed (spread,
+total, moneyline probability, vig, elo-vs-spread), so it has to construct a
+line from Elo, form, rest, travel, weather and roster quality alone.
+
+Walk-forward 2015-2025, 3,028 games, predicting the actual margin:
+
+| line | MAE | RMSE | R² | bias |
+|---|---|---|---|---|
+| **closing spread (Vegas)** | **9.81** | **12.72** | **0.193** | +0.05 |
+| model, sees the market | 9.90 | 12.77 | 0.186 | -0.24 |
+| model, blind to the market | 10.06 | 12.97 | 0.161 | -0.39 |
+| always pick'em (0) | 11.12 | 14.29 | -0.018 | +1.90 |
+
+R² *is* meaningful here, unlike on the binary win target. The honest read:
+**a line built with no knowledge of the market lands within 0.26 points of
+Vegas's MAE** — closer than expected, and it explains 16.1% of margin variance
+against the closing line's 19.3%. It correlates 0.886 with the closing spread
+and disagrees by 3+ points on 28.4% of games.
+
+So: no, we cannot make a better spread. But we can make a *nearly as good* one
+from scratch, which is a more interesting result than it sounds — it means the
+gap to Vegas is small and specific rather than diffuse.
+
+### Betting the disagreement
+
+| min disagreement | bets | ATS | vs break-even | z |
+|---|---|---|---|---|
+| 0 pts | 2,953 | 51.9% | -0.5 | -0.51 |
+| 2 pts | 1,363 | 51.1% | -1.3 | -0.97 |
+| 4 pts | 457 | 52.1% | -0.3 | -0.13 |
+| 6 pts | 124 | 58.9% | +6.5 | 1.45 |
+
+Nothing clears break-even except the 6+ bucket, which is 124 games and z=1.45.
+Treat it as a hypothesis, not a strategy.
+
+### Is the closing spread shaded?
+
+The premise that a spread is set to split money evenly is the textbook story,
+not the practice — books knowingly run unbalanced positions because bettors
+overbet favourites and popular teams, and shading into that flow earns more
+than balancing would. If that happens here it should be visible as a non-zero
+average of (actual margin − spread) within a bucket:
+
+| side | spread size | games | avg margin vs spread | z | fav cover % |
+|---|---|---|---|---|---|
+| away favourite | 0-3 | 526 | +1.24 | **2.07** | 48.3% |
+| home favourite | 10.5+ | 226 | +1.32 | 1.60 | 54.4% |
+| home favourite | 0-3 | 610 | -0.86 | -1.71 | 44.8% |
+| away favourite | 3.5-7 | 439 | -0.99 | -1.65 | 49.7% |
+
+The suggestive cell is small away favourites: they underperform the number by
+1.24 points on average (z=2.07), i.e. the home dog has been the side. **But
+eight buckets were tested, and the largest |z| among eight independent draws
+from noise is typically 1.9-2.3 — so this is exactly what chance produces.**
+The corresponding cover rate (backing the dog at 51.7%) does not clear the
+52.4% break-even anyway.
+
+### Where this goes next
+
+The blind line is the useful artefact, not the bet signal. Its value is that it
+is *market-independent*, which makes it the right tool for the one direction
+with a real prior: pricing against **opening** lines rather than closing ones.
+That needs opening numbers the fetch job does not yet capture early enough.

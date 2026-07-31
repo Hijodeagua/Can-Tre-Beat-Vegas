@@ -78,6 +78,50 @@ def shopping_value(per: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def best_prices_upcoming() -> pd.DataFrame:
+    """Best available moneyline per side for games that have not kicked off.
+
+    Unlike the graded helpers above this needs no results, so it can price the
+    coming week. One row per game with the best price and which book posts it.
+    """
+    from NFL.model.line_movement import NAME_TO_NFLVERSE
+
+    closes = load_book_closes()
+    if closes.empty:
+        return pd.DataFrame()
+    now = pd.Timestamp.now()
+    upcoming = closes[closes["game_date"] >= now].copy()
+    if upcoming.empty:
+        return pd.DataFrame()
+
+    upcoming["dec_home"] = american_to_decimal(upcoming["h2h_home"])
+    upcoming["dec_away"] = american_to_decimal(upcoming["h2h_away"])
+    upcoming["home_nfl"] = upcoming["home_team"].map(NAME_TO_NFLVERSE)
+    upcoming["away_nfl"] = upcoming["away_team"].map(NAME_TO_NFLVERSE)
+
+    rows = []
+    for key, g in upcoming.groupby("game_key"):
+        h = g.loc[g["dec_home"].idxmax()]
+        a = g.loc[g["dec_away"].idxmax()]
+        rows.append({
+            "game_key": key,
+            "gameday": g["game_date"].iloc[0].normalize(),
+            "home_team": g["home_nfl"].iloc[0], "away_team": g["away_nfl"].iloc[0],
+            "books": int(len(g)),
+            "best_home_odds": float(h["h2h_home"]), "best_home_book": h["book"],
+            "best_away_odds": float(a["h2h_away"]), "best_away_book": a["book"],
+            "consensus_home_prob": float((1 / g["dec_home"]).mean()),
+            "consensus_away_prob": float((1 / g["dec_away"]).mean()),
+        })
+    out = pd.DataFrame(rows)
+    if out.empty:
+        return out
+    out["hold_consensus"] = out["consensus_home_prob"] + out["consensus_away_prob"] - 1
+    out["hold_best"] = 1 / american_to_decimal(out["best_home_odds"]) + \
+                       1 / american_to_decimal(out["best_away_odds"]) - 1
+    return out
+
+
 def best_price_by_book(season: int | None = None) -> pd.DataFrame:
     """How often each book posts the best number, split by side.
 

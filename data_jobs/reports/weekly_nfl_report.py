@@ -77,6 +77,37 @@ def _nick(team: str) -> str:
     return NICKNAMES.get(team, team)
 
 
+def _best_prices() -> pd.DataFrame:
+    """Best available moneyline per side for upcoming games, or empty."""
+    try:
+        from NFL.inventory.line_shopping import best_prices_upcoming
+        return best_prices_upcoming()
+    except Exception:
+        return pd.DataFrame()
+
+
+def _shop_line(prices: pd.DataFrame, row) -> str | None:
+    """"+164 at DraftKings" for the picked side, if we have a price for it.
+
+    Shopping is worth ~2.9 points of ROI per bet versus taking the consensus
+    (see NFL/inventory/line_shopping.py), so the report names the book rather
+    than leaving the reader to take whatever their default app shows.
+    """
+    if prices.empty:
+        return None
+    m = prices[(prices["home_team"] == row.home_team)
+               & (prices["away_team"] == row.away_team)]
+    if m.empty:
+        return None
+    r = m.iloc[0]
+    picked_home = row.pick_team == row.home_team
+    odds = r["best_home_odds"] if picked_home else r["best_away_odds"]
+    book = r["best_home_book"] if picked_home else r["best_away_book"]
+    if pd.isna(odds):
+        return None
+    return f"{int(odds):+d} at {book}"
+
+
 def infer_week(df: pd.DataFrame, today: pd.Timestamp) -> tuple[int, int]:
     """The (season, week) of the next unplayed game on or after today.
 
@@ -216,11 +247,13 @@ def render(scored: pd.DataFrame, df: pd.DataFrame, season: int, week: int) -> st
         "edge": (scored["edge"] * 100).round(1),
     }).sort_values("date")
 
-    picks_lines = [
-        f"{i}. **{_nick(r.pick_team)} over {_nick(r.opp_team)}** — "
-        f"model {r.confidence:.0%}, market {r.market_conf:.0%}"
-        for i, r in enumerate(top.itertuples(index=False), 1)
-    ]
+    prices = _best_prices()
+    picks_lines = []
+    for i, r in enumerate(top.itertuples(index=False), 1):
+        line = (f"{i}. **{_nick(r.pick_team)} over {_nick(r.opp_team)}** — "
+                f"model {r.confidence:.0%}, market {r.market_conf:.0%}")
+        shop = _shop_line(prices, r)
+        picks_lines.append(line + (f" — best price **{shop}**" if shop else ""))
 
     lines = [
         f"# NFL weekly report — {season} week {week}",
