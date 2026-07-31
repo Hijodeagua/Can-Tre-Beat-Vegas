@@ -106,8 +106,14 @@ def _sample_weight_param(model, kind: str) -> str:
 def walk_forward_model(
     df: pd.DataFrame, target: str, kind: str,
     start_season: int, half_life: float,
+    features: list[str] | None = None,
+    model_factory=None,
 ) -> pd.DataFrame:
-    """Out-of-sample predictions for one model family."""
+    """Out-of-sample predictions for one model family.
+
+    ``features`` restricts the design matrix to a subset (ablation studies);
+    ``model_factory`` overrides make_model (e.g. fewer trees for sweeps).
+    """
     y_col = TARGETS[target]
     played = df.dropna(subset=[y_col]).copy()
     seasons = sorted(s for s in played["season"].unique() if s >= start_season)
@@ -120,14 +126,19 @@ def walk_forward_model(
         if len(fit) < 500 or test.empty:
             continue
 
-        model = make_model(kind)
+        model = (model_factory or make_model)(kind)
         w = recency_weights(fit["season"], int(season), half_life)
-        X_fit, y_fit = feature_matrix(fit), fit[y_col].astype(int)
-        model.fit(X_fit, y_fit, **{_sample_weight_param(model, kind): w})
 
-        raw_cal = model.predict_proba(feature_matrix(cal))[:, 1]
+        def _X(frame):
+            X = feature_matrix(frame)
+            return X[features] if features is not None else X
+
+        model.fit(_X(fit), fit[y_col].astype(int),
+                  **{_sample_weight_param(model, kind): w})
+
+        raw_cal = model.predict_proba(_X(cal))[:, 1]
         platt = _platt(raw_cal, cal[y_col].astype(int).to_numpy())
-        raw_test = model.predict_proba(feature_matrix(test))[:, 1]
+        raw_test = model.predict_proba(_X(test))[:, 1]
 
         rec = test[["game_id", "season", "week", "gameday", "home_team", "away_team",
                     "spread_line", "total_line", "market_home_prob"]].copy()
