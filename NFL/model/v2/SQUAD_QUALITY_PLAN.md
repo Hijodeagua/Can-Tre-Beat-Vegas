@@ -302,3 +302,63 @@ Conclusion: the Top 100 data is correct, cheap and worth keeping wired, but it
 carries no signal the closing line hasn't already priced. Picks model stays
 logistic/top10. The All-Pro and Pro Bowl scrapes are unlikely to change this,
 so treat them as low priority.
+
+### 9. Top 100 by position, by rank, and at quarterback
+
+Follow-up analysis in `NFL/model/v2/top100_analysis.py`; tables and the
+rendered report in `artifacts/top100/`. 2011-2025, 4,096 games. Every rate is
+reported straight up **and** against the closing spread, because those answer
+different questions — "do better rosters win" (yes, and it pays nothing) vs
+"does the market underprice them" (the only version worth money).
+
+**Position groups.** Split each roster's Top 100 count by position group and
+compare games where the home team had an advantage at that group against games
+where it had a deficit:
+
+| group | win-rate gap | spread already moves | cover gap | 95% CI |
+|---|---|---|---|---|
+| QB | +22.6 pp | 7.2 pts | +1.7 pp | [-3.4, +6.7] |
+| OL | +11.6 pp | 4.1 pts | +1.3 pp | [-4.6, +7.2] |
+| WR | +10.6 pp | 2.8 pts | **+3.4 pp** | [-1.5, +8.2] |
+| TE | +10.2 pp | 3.5 pts | +1.6 pp | [-5.1, +8.5] |
+| DB | +8.1 pp | 2.3 pts | +0.5 pp | [-4.7, +5.6] |
+| LB | +7.3 pp | 2.1 pts | -1.5 pp | [-6.5, +3.5] |
+| RB | +7.2 pp | 1.7 pts | +1.5 pp | [-4.1, +7.2] |
+| DL | -4.5 pp | -0.4 pts | -2.4 pp | [-7.4, +2.5] |
+
+No group weighs out: all eight intervals cross zero. The two middle columns are
+the real story — the win gap and the spread swing move together, group by
+group. Wide receiver is the least-bad candidate for a genuine leftover edge
+(+3.4 pp, P(real)=0.91) because its spread swing is small relative to its win
+gap. Defensive line runs the other way and is the one group where more Top 100
+talent goes with a slightly worse record.
+
+**Rank weighting** (flat count vs linear `(101-rank)/100` vs log
+`1/log2(rank+1)`): log weighting describes reality better — correlation with
+final margin 0.214 vs 0.201 for a plain count — but it also correlates *more*
+with the closing spread (0.508 vs 0.448). The books weight by rank too, and
+slightly better than we do, so against the number weighting is marginally
+worse (0.010 vs 0.022, both ~zero). Plain counts stay.
+
+**Quarterbacks.**
+
+- Top 100 QB vs unlisted QB (n=1,925): **64.0% SU**, **50.5% ATS**, and his
+  team lays 4.3 points on average. The largest single roster effect in the
+  data, priced almost exactly.
+- Both listed (n=509): the better-ranked QB wins **57.4%** (CI [53.1, 61.7],
+  clears 50% cleanly) but covers only **51.1%** (CI [46.9, 55.5]).
+- By tier, SU falls monotonically across the top three tiers — 68.4% (1-10),
+  60.4% (11-25), 53.8% (26-50) — with the 51-100 tier breaking rank at 55.3%.
+  So yes, higher-ranked quarterbacks demonstrably win more.
+- ATS by tier flattens: 53.2% / 51.1% / 47.9% / 49.3%. The top-10 tier is the
+  most interesting number in this whole batch — it clears the 52.4% break-even
+  with P(ATS>50%)=0.95 — but its interval [49.5, 56.8] contains both
+  break-even and the coin flip on 729 games.
+- Bucketed by rank gap the head-to-head is not monotone and the 0-10 bucket
+  inverts (better-ranked QB goes 47.0% on 83 games). The list ordering carries
+  real information in broad strokes and essentially none in fine ones.
+
+**Verdict: no model change.** Position-split counts, rank-weighted scores and
+QB-tier flags all get absorbed by the closing spread, same as the raw Top 100
+count did. Two threads to revisit with more seasons: wide receiver (+3.4 pp)
+and top-10 quarterbacks (53.2% ATS). Each season adds ~270 games.
