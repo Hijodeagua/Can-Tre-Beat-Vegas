@@ -1,0 +1,17 @@
+cut,level,forecast,games,mean_resid,se,t,p,flag
+fav_size,0-3,ours,1136,-0.177,0.374,-0.47,0.637,
+fav_size,0-3,vegas,1136,0.113,0.367,0.31,0.7584,
+fav_size,3-7,ours,1202,-0.59,0.343,-1.72,0.0869,
+fav_size,3-7,vegas,1202,-0.308,0.344,-0.9,0.3717,
+fav_size,7-10,ours,400,0.159,0.723,0.22,0.8257,
+fav_size,7-10,vegas,400,0.041,0.704,0.06,0.9533,
+fav_size,10+,ours,290,2.606,0.872,2.99,0.0033,*
+fav_size,10+,vegas,290,1.255,0.813,1.54,0.1246,
+half,weeks 1-9,ours,1480,-0.261,0.315,-0.83,0.4106,
+half,weeks 1-9,vegas,1480,-0.24,0.312,-0.77,0.4444,
+half,weeks 10+,ours,1548,0.191,0.323,0.59,0.5552,
+half,weeks 10+,vegas,1548,0.319,0.3,1.06,0.2896,
+side,away favoured,ours,1141,-0.901,0.39,-2.31,0.0217,*
+side,away favoured,vegas,1141,0.209,0.373,0.56,0.5748,
+side,home favoured,ours,1887,0.497,0.293,1.7,0.091,
+side,home favoured,vegas,1887,-0.053,0.288,-0.18,0.8542,

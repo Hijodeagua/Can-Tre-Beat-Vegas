@@ -445,3 +445,103 @@ bookmaker knows about injuries, personnel and game-specific news that a
 schedule-scores-and-accolades dataset does not contain, and that knowledge is
 worth about 0.28 points of MAE. Adding better *historical* roster data does not
 close it; only fresher information would.
+
+## Is the predicted spread *efficient*? (`spread_efficiency.py`)
+
+MAE says how wrong a forecast is. Efficiency says whether what remains is
+**exploitable** — a forecast can be less accurate than a rival and still carry
+information the rival lacks. Standard errors are clustered on `season-week`
+throughout (236 clusters over 3,028 games); treating games in a week as
+independent would overstate every t-stat below by roughly 3.5x.
+
+### 1. Both forecasts are individually efficient
+
+`margin = a + b * forecast`, efficient iff `(a, b) = (0, 1)`:
+
+| forecast | a | b | t(b=1) | joint chi2 | p | efficient |
+|---|---|---|---|---|---|---|
+| ours (extra trees) | 0.048 | 0.960 | −1.02 | 1.06 | 0.587 | **yes** |
+| closing spread | −0.024 | 1.038 | 0.97 | 0.99 | 0.609 | **yes** |
+
+Our calibrated spread is a properly scaled, unbiased forecast. It is not too
+timid, not too aggressive, and needs no shrinkage. That is a real result: the
+number is usable as a number, whatever its accuracy.
+
+### 2. The market encompasses us
+
+`margin = a + b1 * ours + b2 * vegas`:
+
+| | coefficient | SE | t | p |
+|---|---|---|---|---|
+| ours | 0.148 | 0.085 | 1.74 | 0.084 |
+| vegas | 0.914 | 0.086 | 10.63 | <0.001 |
+
+The optimal combination puts ~0.15 on us and ~0.91 on the close. Our weight is
+**not significant at 5%**, though it is not comfortably zero either — this is
+the one number in the project that has ever hinted at independent information,
+and it is a hint, not a finding. Ridge gives the same answer (0.150, p=0.084),
+so it is a property of the feature set rather than of one learner.
+
+### 3. Diebold-Mariano: the market is decisively more accurate
+
+| loss | mean difference | DM stat | p | verdict |
+|---|---|---|---|---|
+| absolute | +0.284 | 5.18 | <0.001 | **vegas better** |
+| squared | +7.49 | 4.55 | <0.001 | **vegas better** |
+
+The quarter-point MAE gap is not sampling noise. It survives week clustering at
+five standard errors.
+
+### 4. The edge is real-ish, and economically useless
+
+Regressing the book's error on our disagreement gives **b = 0.110** (SE 0.084,
+p = 0.19) — each point we differ from the close is worth about a ninth of a
+point of expected edge. Converting that to a cover probability with a residual
+SD of 12.72:
+
+> break-even at −110 needs `Phi(b*x/sigma) = 52.38%`, which requires a
+> **6.9-point disagreement**. Only **88 of 3,028 games** are ever that far off
+> the line — and in the 7+ bucket we actually covered **42.7%**.
+
+| disagreement | n | implied cover | actual cover | SE |
+|---|---|---|---|---|
+| 0-1 | 804 | 50.2% | 48.8% | 1.8% |
+| 1-2 | 679 | 50.5% | 48.2% | 1.9% |
+| 2-3 | 502 | 50.9% | 53.4% | 2.2% |
+| 3-5 | 682 | 51.3% | 50.7% | 1.9% |
+| 5-7 | 204 | 52.0% | 55.4% | 3.5% |
+| 7+ | 82 | 53.0% | **42.7%** | 5.5% |
+
+The edge model and reality agree on the shape until the tail, where they invert.
+Nothing here clears 52.38% with the sample to back it.
+
+### The bias that wasn't
+
+Slicing residuals by **Vegas's** favourite size appeared to show a large,
+significant defect: on games the book lined at 10+, the favourite beat our
+number by 2.6 points (p = 0.003) while beating theirs by only 1.3.
+
+That was an artifact of conditioning on the other forecast. Re-bucketing by our
+**own** prediction dissolves it:
+
+| our |forecast| | games | our number | vegas number | favourite residual |
+|---|---|---|---|---|---|
+| 0-3 | 1,055 | 1.49 | 3.04 | −0.12 |
+| 3-7 | 1,162 | 4.82 | 4.76 | +0.22 |
+| 7-10 | 479 | 8.35 | 7.58 | −0.26 |
+| 10+ | 332 | 12.02 | 10.59 | −1.02 |
+
+Our forecast is unbiased inside its own distribution, and the two distributions
+are near-identical in spread (SD 3.55 vs 3.45). Selecting on `|vegas| >= 10`
+picks games where the *book* is extreme; ours is lower there because we disagree
+about **which** games are mismatches — only 192 of 370 overlap — not because we
+compress the scale. Mincer-Zarnowitz, which conditions on nothing, said so
+correctly all along.
+
+Confirmed by construction: re-fitting the per-season calibration with tail-
+expanding forms (quadratic, hinge at 7, hinges at 5 and 10) moves MAE from
+10.093 to 10.080 and leaves the 10+ residual at +2.79 instead of +2.99. There
+was no scale defect to fix.
+
+**Conditioning on a rival forecast to diagnose your own is a trap.** Bucket by
+your own prediction, or use a test that conditions on neither.
