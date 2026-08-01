@@ -545,3 +545,83 @@ was no scale defect to fix.
 
 **Conditioning on a rival forecast to diagnose your own is a trap.** Bucket by
 your own prediction, or use a test that conditions on neither.
+
+## Early-season ATS (`early_season.py`)
+
+The one place in this project where the market looks beatable — and a good case
+study in why "looks beatable" and "is beatable" differ.
+
+### The effect
+
+Backing **every underdog** in weeks 1-4, 2010-2025:
+
+| slice | games | dogs cover | week-block 95% CI | ROI at -110 |
+|---|---|---|---|---|
+| weeks 1-4 | 990 | **54.6%** | [52.8%, 56.5%] | **+4.33%** |
+| weeks 5+ | 3,079 | 50.0% | [48.7%, 51.3%] | −4.51% |
+
+Break-even is 52.38%. The pooled bootstrap puts P(rate <= break-even) at 0.009.
+
+### It survives the obvious robustness checks
+
+**Not cherry-picked on the window.** Every cutoff from 2 to 6 weeks pays:
+
+| weeks 1..k | 1 | 2 | 3 | **4** | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|
+| dogs cover | 53.8% | 55.2% | 55.2% | **54.6%** | 54.1% | 54.1% | 53.6% | 52.8% | 52.4% |
+| ROI | +2.7% | +5.4% | +5.4% | **+4.3%** | +3.2% | +3.3% | +2.2% | +0.7% | −0.0% |
+
+**The decay has the right shape.** Per week, uncumulated: 53.8%, 56.6%, 55.2%,
+52.9%, then noise around 50% and gone by week 9. That is what you would expect
+if the mechanism is real — opening numbers lean on preseason priors and the
+market needs results to correct them — rather than a spike in one arbitrary
+bucket.
+
+**It held out of sample.** Discovered on 2010-2017 (54.9%), it returned 54.4%
+on 2018-2025 — through legalisation and a much sharper market.
+
+### Why it is still not a green light
+
+The pooled test treats 990 games as ~236 week-clusters. But **you do not deploy
+this 990 times; you deploy it once a year.** At the season level:
+
+| seasons | mean ROI | median | SD | t | p (one-sided) | winning | worst |
+|---|---|---|---|---|---|---|---|
+| 16 | +4.3% | +4.1% | 10.3% | **1.67** | **0.058** | 11 | 2025, −16.5% |
+
+`t = 1.67` misses the one-sided 5% bar. Five losing seasons, a 10.3% ROI
+standard deviation, and **the worst season in the sample is the most recent
+one** — 2025 went 43.8%. The gap between p = 0.009 and p = 0.058 *is* the
+finding: week-clustered resampling still understates the risk, because a whole
+season can be a regime.
+
+The breakdown by spread size is the other warning. If this were the classic
+favourite-longshot bias it should strengthen with the number; instead it is
+non-monotone (0-3: +10.3%, 3-6: −3.4%, 6-10: +7.9%, 10+: −6.2%), which is what
+noise looks like.
+
+### Neither model captures it
+
+The ATS classifier goes **49.6%** in weeks 1-4 — no better than its 50.2%
+full-season rate. The signal is sitting in the data unexploited.
+
+The market-blind spread model *appears* to capture it at 53.3%, but it doesn't:
+
+| slice | our line on the dog side | model ATS | naive dog rule |
+|---|---|---|---|
+| weeks 1-4 | 58.6% | 53.3% | **54.2%** |
+| weeks 5-9 | 59.5% | 49.9% | 50.9% |
+| weeks 10+ | 59.3% | 48.4% | 50.7% |
+
+The blind line sits on the underdog side of the close ~59% of the time in
+*every* part of the season. It has a constant dog tilt that pays only in the
+weeks when the market's dog bias exists — and the naive rule beats it in all
+three slices. That is attribution, not discovery.
+
+### Verdict
+
+A real, documented, decaying market bias that our models do not use, worth about
++4% ROI in a window of ~60 games a year, at t = 1.67. That is a hypothesis to
+track forward with the opening-line capture, not a strategy to fund. If it is
+genuine it should be **larger against openers than closers**, which is the
+cleanest forward test available and needs no new modelling.
