@@ -625,3 +625,89 @@ A real, documented, decaying market bias that our models do not use, worth about
 track forward with the opening-line capture, not a strategy to fund. If it is
 genuine it should be **larger against openers than closers**, which is the
 cleanest forward test available and needs no new modelling.
+
+## Hot streaks, cold streaks, QB bounce-backs (`streaks.py`)
+
+Form is the most intuitive place to look for an edge and the most heavily
+travelled. The framing matters: **"do hot teams win more" is the wrong
+question** — they do, and the spread already prices it. The tradable question is
+whether the market *over*-adjusts. So every test is ATS, on the team carrying
+the streak, against a 50% null.
+
+Sixteen hypotheses at 5% will produce a "significant" result about half the time
+by construction, so everything reports a week-block bootstrap CI, a season-level
+t, and Benjamini-Hochberg FDR plus Bonferroni across the whole family.
+
+### Team form, 10,134 team-games, 2006-2025
+
+| hypothesis | n | cover | 95% CI | raw p | season t |
+|---|---|---|---|---|---|
+| **won last 2 by 14+** | 356 | **43.5%** | [39.8%, 47.2%] | **0.017** | −2.15 |
+| scored 30+ in each of last 3 | 258 | 44.6% | [40.4%, 48.8%] | 0.093 | −1.49 |
+| scored 30+ in each of last 2 | 715 | 48.1% | [45.5%, 50.7%] | 0.331 | −0.77 |
+| covered last 3 | 1,000 | 48.8% | [46.6%, 51.0%] | 0.467 | −1.18 |
+| won last 3 outright | 1,313 | 49.7% | [48.0%, 51.5%] | 0.869 | −0.44 |
+| last-3 scoring 10+ above avg | 95 | 49.5% | [41.5%, 57.6%] | 1.000 | −0.15 |
+| scored <=17 in each of last 2 | 1,210 | 50.3% | [48.4%, 52.1%] | 0.886 | +0.46 |
+| last-3 scoring 10+ below avg | 92 | 51.1% | [43.6%, 58.6%] | 0.917 | +0.11 |
+| lost last 3 outright | 1,356 | 51.5% | [49.7%, 53.3%] | 0.290 | +1.46 |
+| failed to cover last 3 | 982 | 51.9% | [49.8%, 54.2%] | 0.238 | +1.85 |
+| lost last 2 by 14+ | 383 | 52.0% | [48.4%, 55.6%] | 0.474 | +0.68 |
+
+**Nothing survives FDR or Bonferroni.** The strongest single result — fading
+teams that won their last two by 14+, a 56.5% play — dies under correction, and
+356 games is a decade and a half of waiting.
+
+### But the signs are perfectly consistent
+
+All **6** hot buckets landed below 50%. All **5** cold buckets landed above it.
+11 of 11 in the direction the overreaction literature predicts — the market
+does shade toward recent success. (Sign-test p of 0.001 *if* the buckets were
+independent, which they are not: they overlap heavily. Directional evidence,
+not a clean p-value.)
+
+### Collapsing the family into one strategy
+
+The honest way to use a sign pattern is to bet it as a single pre-specified rule
+rather than mine the best bucket. Fade any team arriving hot, back any arriving
+cold:
+
+| | bets | cover | 95% CI | season t | ROI at -110 |
+|---|---|---|---|---|---|
+| all seasons | 3,446 | 51.4% | [50.1%, 52.5%] | 1.70 | **−1.94%** |
+| discovery (<= 2016) | 1,884 | 51.2% | [49.6%, 52.9%] | 1.01 | −2.21% |
+| hold-out (> 2016) | 1,562 | 51.5% | [49.7%, 53.4%] | 1.45 | −1.61% |
+
+Genuinely stable across eras — the hold-out matches the discovery block, which
+is more than most form systems manage. It is also **stably unprofitable**: 51.4%
+against a 52.38% break-even. The market over-adjusts to form by roughly 1.4
+points of cover probability, and the vig is 2.4. Real effect, too small to sell.
+
+### QB after a bad game
+
+This is the cleanest null in the project, because it separates the two questions
+people conflate:
+
+| | starts | prior EPA/att | next EPA/att | ATS next | raw p |
+|---|---|---|---|---|---|
+| after a bottom-20% game | 1,682 | **−0.420** | **−0.010** | 51.0% | 0.421 |
+| after a top-20% game | 1,682 | **+0.519** | **+0.125** | 49.6% | 0.751 |
+| after 2+ interceptions | 1,707 | −0.186 | +0.025 | 50.2% | 0.885 |
+| after 3+ interceptions | 491 | −0.309 | +0.025 | 50.3% | 0.928 |
+| after negative total EPA | 3,529 | −0.253 | +0.007 | 50.4% | 0.686 |
+
+Baseline is +0.055 EPA/attempt.
+
+**Yes, QBs bounce back — enormously.** A bottom-20% start (−0.420 EPA/att)
+is followed by −0.010, recovering ~97% of the gap to average. A top-20% start
+(+0.519) is followed by +0.125. That is textbook regression to the mean, and it
+is large enough to look like a gift.
+
+**And the market prices it essentially perfectly.** Every ATS cell sits between
+49.6% and 51.0%, none within reach of 52.38%, none close to significance. The
+reversion is real, well known, and already in the number.
+
+That gap — a huge, obvious, correctly-priced effect — is the single best
+illustration of why this project keeps landing where it does. Finding a real
+pattern in the football is easy. Finding one the market has not already found
+is the hard part.
