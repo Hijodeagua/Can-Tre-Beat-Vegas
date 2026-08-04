@@ -59,6 +59,18 @@ BREAK_EVEN = 110 / 210
 MIN_GAMES = 80          # below this a cover rate is unreadable
 SEED = 17
 
+# nflverse's schedule keeps the franchise's contemporaneous code while the
+# player-stats feed uses the current one. Joining them raw silently drops every
+# pre-relocation Raiders, Chargers and Rams game — ~5% of team-games, and not a
+# random 5%. Normalise both sides to the modern code.
+# The Rams are the awkward one: the schedule says STL then LAR, the stats feed
+# says LA throughout. Collapse all three spellings onto one code.
+TEAM_ALIASES = {"OAK": "LV", "SD": "LAC", "STL": "LA", "LAR": "LA"}
+
+
+def normalize_team(s: pd.Series) -> pd.Series:
+    return s.replace(TEAM_ALIASES)
+
 
 # --------------------------------------------------------------------------
 # team-game spine
@@ -92,6 +104,8 @@ def team_games(seasons_from: int = 2006) -> pd.DataFrame:
         rows.append(d)
 
     t = pd.concat(rows, ignore_index=True)
+    t["team"] = normalize_team(t["team"])
+    t["opp"] = normalize_team(t["opp"])
     t["ats_margin"] = t["margin"] - t["team_spread"]
     t = t[t["ats_margin"] != 0]                 # pushes are not a bet
     t["covered"] = t["ats_margin"] > 0
@@ -225,6 +239,7 @@ def qb_weeks(seasons_from: int = 2006) -> pd.DataFrame:
     # One QB per team-game: the one who threw the most.
     q = (q.sort_values("attempts", ascending=False)
            .drop_duplicates(["season", "week", "team"]))
+    q["team"] = normalize_team(q["team"])
     q["epa_per_att"] = q["passing_epa"] / q["attempts"]
     return q.sort_values(["player_id", "season", "week"]).reset_index(drop=True)
 
@@ -268,6 +283,79 @@ def qb_bounce_back(t: pd.DataFrame, q: pd.DataFrame) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------
+
+def top100_qb_flags() -> pd.DataFrame:
+    """Map each season's NFL Top 100 to nflverse player ids.
+
+    The list is published pre-season, so season S's list is legal information
+    for season S games — the same rule `squad.py` uses. Coverage starts 2011.
+    """
+    t100 = Path("data/rosters/awards/top100.csv")
+    players = ROSTER_DIR / "players.csv"
+    if not t100.exists() or not players.exists():
+        return pd.DataFrame()
+    t = pd.read_csv(t100)
+    p = pd.read_csv(players, usecols=["gsis_id", "pfr_id"], low_memory=False)
+    p = p.dropna(subset=["gsis_id", "pfr_id"]).drop_duplicates("pfr_id")
+    m = t.merge(p, on="pfr_id", how="inner")
+    return m[["season", "rank", "gsis_id"]].rename(columns={"gsis_id": "player_id"})
+
+
+def qb_bounce_by_tier(t: pd.DataFrame, q: pd.DataFrame) -> pd.DataFrame:
+    """Does an elite QB bounce back differently — and does the line know?
+
+    Two mechanisms pull in opposite directions. A Top 100 QB has a higher true
+    mean, so a bad game is more likely to be luck and should revert *further*.
+    But he is also the more heavily bet name, so any market overreaction should
+    be *larger* against him. The first shows up in EPA, the second in ATS.
+    """
+    if q.empty:
+        return pd.DataFrame()
+    flags = top100_qb_flags()
+    if flags.empty:
+        return pd.DataFrame()
+
+    g = q.groupby(["player_id", "season"], sort=False)
+    q = q.copy()
+    q["prev_epa"] = g["epa_per_att"].shift(1)
+    q["prev_int"] = g["passing_interceptions"].shift(1)
+
+    q = q.merge(flags, on=["season", "player_id"], how="left")
+    q["is_top100"] = q["rank"].notna()
+    # Top 100 coverage starts in 2011; earlier seasons are unknown, not "no".
+    q = q[q["season"] >= 2011]
+
+    m = t.merge(q[["season", "week", "team", "epa_per_att", "prev_epa",
+                   "prev_int", "is_top100", "rank"]],
+                on=["season", "week", "team"], how="inner")
+    m = m[m["prev_epa"].notna()]
+    lo_q = m["prev_epa"].quantile(.20)
+
+    rows = []
+    for tier_name, tier in (("Top 100 QB", m["is_top100"]),
+                            ("not Top 100", ~m["is_top100"])):
+        base = m[tier]
+        for cond_name, cond in (("after a bottom-20% game", base["prev_epa"] <= lo_q),
+                                ("after 2+ interceptions", base["prev_int"] >= 2),
+                                ("all starts", pd.Series(True, index=base.index))):
+            sub = base[cond.fillna(False)]
+            r = evaluate(sub, f"{tier_name} — {cond_name}")
+            r["prior_epa"] = round(float(sub["prev_epa"].mean()), 4) if len(sub) else np.nan
+            r["next_epa"] = round(float(sub["epa_per_att"].mean()), 4) if len(sub) else np.nan
+            r["tier_baseline_epa"] = round(float(base["epa_per_att"].mean()), 4)
+            rows.append(r)
+
+    # Within the Top 100, does where he ranks matter?
+    elite = m[m["is_top100"] & (m["prev_epa"] <= lo_q)]
+    for name, sub in (("Top 100 rank 1-25", elite[elite["rank"] <= 25]),
+                      ("Top 100 rank 26-100", elite[elite["rank"] > 25])):
+        r = evaluate(sub, f"{name} — after a bottom-20% game")
+        r["prior_epa"] = round(float(sub["prev_epa"].mean()), 4) if len(sub) else np.nan
+        r["next_epa"] = round(float(sub["epa_per_att"].mean()), 4) if len(sub) else np.nan
+        r["tier_baseline_epa"] = np.nan
+        rows.append(r)
+    return pd.DataFrame(rows)
+
 
 def hot_cold_sign_test(team: pd.DataFrame) -> dict:
     """Every hot bucket landed under 50% and every cold one over it. Is that luck?
@@ -350,7 +438,13 @@ def main() -> None:
                   "baseline_epa_per_att", "cover", "ci_lo", "ci_hi",
                   "p_raw", "season_t"]].to_string(index=False))
 
-    both = pd.concat([team, qb], ignore_index=True)
+    tier = qb_bounce_by_tier(t, q)
+    print("\n=== QB bounce-back split by NFL Top 100 status (2011-2025) ===")
+    if not tier.empty:
+        print(tier[["hypothesis", "n", "prior_epa", "next_epa", "tier_baseline_epa",
+                    "cover", "ci_lo", "ci_hi", "p_raw", "season_t"]].to_string(index=False))
+
+    both = pd.concat([team, qb, tier], ignore_index=True)
     tested = both[both["cover"].notna()].copy()
     tested["survives_fdr"] = bh_fdr(tested["p_raw"].tolist())
     tested["survives_bonferroni"] = tested["p_raw"] < 0.05 / len(tested)
@@ -379,6 +473,7 @@ def main() -> None:
         tested.to_csv(ARTIFACTS / "all_tests_corrected.csv", index=False)
         comp.to_csv(ARTIFACTS / "composite_fade.csv", index=False)
         pd.DataFrame([st]).to_csv(ARTIFACTS / "sign_test.csv", index=False)
+        tier.to_csv(ARTIFACTS / "qb_top100_tiers.csv", index=False)
         print(f"\nsaved -> {ARTIFACTS}")
 
 

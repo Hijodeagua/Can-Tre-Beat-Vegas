@@ -125,3 +125,54 @@ class TestTeamGames:
         t = team_games(2015)
         g = t.groupby("game_id")["team_spread"].sum()
         assert g.abs().max() < 1e-9   # the two sides must cancel
+
+
+class TestTeamAliases:
+    """The join that silently dropped 5% of team-games, pinned."""
+
+    def test_relocated_franchises_collapse_to_one_code(self):
+        from NFL.model.v2.streaks import normalize_team
+        out = normalize_team(pd.Series(["OAK", "LV", "SD", "LAC",
+                                        "STL", "LAR", "LA", "KC"]))
+        assert list(out) == ["LV", "LV", "LAC", "LAC", "LA", "LA", "LA", "KC"]
+
+    def test_no_legacy_codes_survive_in_the_spine(self):
+        from NFL.model.v2.streaks import team_games
+        t = team_games(2011)
+        assert not ({"OAK", "SD", "STL", "LAR"} & set(t["team"].unique()))
+        assert not ({"OAK", "SD", "STL", "LAR"} & set(t["opp"].unique()))
+
+    def test_qb_stats_join_covers_nearly_every_team_game(self):
+        """A silent join failure shows up here, not in any downstream p-value."""
+        from NFL.model.v2.streaks import qb_weeks, team_games
+        t, q = team_games(2011), qb_weeks(2011)
+        if q.empty:
+            pytest.skip("player stats not downloaded")
+        merged = t.merge(q[["season", "week", "team"]].drop_duplicates(),
+                         on=["season", "week", "team"], how="inner")
+        assert len(merged) / len(t) > 0.97
+
+    def test_every_stats_team_exists_in_the_schedule(self):
+        from NFL.model.v2.streaks import qb_weeks, team_games
+        t, q = team_games(2011), qb_weeks(2011)
+        if q.empty:
+            pytest.skip("player stats not downloaded")
+        assert not (set(q["team"].unique()) - set(t["team"].unique()))
+
+
+class TestTop100Flags:
+    def test_flags_map_to_nflverse_ids(self):
+        from NFL.model.v2.streaks import top100_qb_flags
+        f = top100_qb_flags()
+        if f.empty:
+            pytest.skip("awards data not present")
+        assert {"season", "rank", "player_id"} <= set(f.columns)
+        assert f["season"].min() >= 2011
+        assert f["rank"].between(1, 100).all()
+
+    def test_one_row_per_player_season(self):
+        from NFL.model.v2.streaks import top100_qb_flags
+        f = top100_qb_flags()
+        if f.empty:
+            pytest.skip("awards data not present")
+        assert not f.duplicated(["season", "player_id"]).any()

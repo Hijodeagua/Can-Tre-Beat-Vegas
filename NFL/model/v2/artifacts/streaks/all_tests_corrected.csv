@@ -1,17 +1,25 @@
-hypothesis,n,cover,ci_lo,ci_hi,p_raw,season_t,seasons,roi_at_110,next_epa_per_att,prior_epa_per_att,baseline_epa_per_att,survives_fdr,survives_bonferroni
-scored 30+ in each of last 2,715,0.4811,0.4548,0.5073,0.3309,-0.77,20,-0.0815,,,,False,False
-scored 30+ in each of last 3,258,0.4457,0.4035,0.4881,0.0926,-1.49,19,-0.149,,,,False,False
-scored <=17 in each of last 2,1210,0.5025,0.4837,0.5212,0.8857,0.46,20,-0.0407,,,,False,False
-won last 2 by 14+,356,0.4354,0.3983,0.4719,0.017,-2.15,20,-0.1688,,,,False,False
-lost last 2 by 14+,383,0.5196,0.484,0.556,0.4744,0.68,20,-0.0081,,,,False,False
-covered last 3,1000,0.488,0.4657,0.5099,0.467,-1.18,20,-0.0684,,,,False,False
-failed to cover last 3,982,0.5193,0.4975,0.5421,0.2377,1.85,20,-0.0085,,,,False,False
-won last 3 outright,1313,0.4973,0.4795,0.5148,0.8685,-0.44,20,-0.0505,,,,False,False
-lost last 3 outright,1356,0.5147,0.4971,0.5328,0.2896,1.46,20,-0.0173,,,,False,False
-last-3 scoring 10+ above season avg,95,0.4947,0.4154,0.5758,1.0,-0.15,13,-0.0555,,,,False,False
-last-3 scoring 10+ below season avg,92,0.5109,0.4364,0.5862,0.917,0.11,16,-0.0247,,,,False,False
-QB after a bottom-20% game,1682,0.5101,0.4937,0.5269,0.421,1.18,20,-0.0262,-0.0096,-0.4199,0.055,False,False
-QB after a top-20% game,1682,0.4958,0.4793,0.5118,0.7513,-0.22,20,-0.0534,0.1252,0.5187,0.055,False,False
-QB after 2+ interceptions,1707,0.5021,0.4864,0.5182,0.8845,0.1,20,-0.0415,0.0246,-0.1855,0.055,False,False
-QB after 3+ interceptions,491,0.5031,0.4693,0.538,0.9281,-0.02,20,-0.0396,0.0251,-0.3091,0.055,False,False
-QB after negative total EPA,3529,0.5035,0.4942,0.5132,0.6862,0.57,20,-0.0387,0.0066,-0.2525,0.055,False,False
+hypothesis,n,cover,ci_lo,ci_hi,p_raw,season_t,seasons,roi_at_110,next_epa_per_att,prior_epa_per_att,baseline_epa_per_att,prior_epa,next_epa,tier_baseline_epa,survives_fdr,survives_bonferroni
+scored 30+ in each of last 2,715,0.4811,0.4548,0.5083,0.3309,-0.77,20,-0.0815,,,,,,,False,False
+scored 30+ in each of last 3,258,0.4457,0.4024,0.4898,0.0926,-1.49,19,-0.149,,,,,,,False,False
+scored <=17 in each of last 2,1210,0.5025,0.4838,0.5214,0.8857,0.46,20,-0.0407,,,,,,,False,False
+won last 2 by 14+,356,0.4354,0.3991,0.4726,0.017,-2.15,20,-0.1688,,,,,,,False,False
+lost last 2 by 14+,383,0.5196,0.4837,0.5556,0.4744,0.68,20,-0.0081,,,,,,,False,False
+covered last 3,1000,0.488,0.4661,0.5097,0.467,-1.18,20,-0.0684,,,,,,,False,False
+failed to cover last 3,982,0.5193,0.4968,0.5418,0.2377,1.85,20,-0.0085,,,,,,,False,False
+won last 3 outright,1313,0.4973,0.4794,0.515,0.8685,-0.44,20,-0.0505,,,,,,,False,False
+lost last 3 outright,1356,0.5147,0.4971,0.5329,0.2896,1.46,20,-0.0173,,,,,,,False,False
+last-3 scoring 10+ above season avg,95,0.4947,0.4151,0.577,1.0,-0.15,13,-0.0555,,,,,,,False,False
+last-3 scoring 10+ below season avg,92,0.5109,0.4407,0.5849,0.917,0.11,16,-0.0247,,,,,,,False,False
+QB after a bottom-20% game,1777,0.5082,0.4924,0.5246,0.5066,1.13,20,-0.0299,-0.0137,-0.4213,0.0538,,,,False,False
+QB after a top-20% game,1777,0.4963,0.4803,0.5123,0.7759,-0.15,20,-0.0524,0.1239,0.5195,0.0538,,,,False,False
+QB after 2+ interceptions,1815,0.4975,0.4822,0.5127,0.8511,-0.25,20,-0.0502,0.0233,-0.1852,0.0538,,,,False,False
+QB after 3+ interceptions,521,0.4933,0.4611,0.5259,0.7927,-0.22,20,-0.0583,0.019,-0.31,0.0538,,,,False,False
+QB after negative total EPA,3744,0.5016,0.4926,0.5105,0.8573,0.34,20,-0.0424,0.0048,-0.2534,0.0538,,,,False,False
+Top 100 QB — after a bottom-20% game,333,0.5736,0.5333,0.6165,0.0084,3.23,15,0.095,,,,-0.3758,0.142,0.1387,False,False
+Top 100 QB — after 2+ interceptions,428,0.4953,0.4595,0.5328,0.8847,-0.06,15,-0.0544,,,,-0.1066,0.1161,0.1387,False,False
+Top 100 QB — all starts,2481,0.5087,0.4961,0.5212,0.3991,0.85,15,-0.0289,,,,0.1347,0.1387,0.1387,False,False
+not Top 100 — after a bottom-20% game,1009,0.4945,0.4733,0.5157,0.7529,-0.42,15,-0.0559,,,,-0.4222,-0.0561,0.0092,False,False
+not Top 100 — after 2+ interceptions,836,0.4988,0.4738,0.5232,0.9724,-0.25,15,-0.0477,,,,-0.2188,-0.0183,0.0092,False,False
+not Top 100 — all starts,4228,0.4967,0.4892,0.5042,0.678,-0.79,15,-0.0518,,,,0.018,0.0092,0.0092,False,False
+Top 100 rank 1-25 — after a bottom-20% game,114,0.6053,0.5395,0.6761,0.0308,2.47,14,0.1555,,,,-0.3738,0.1658,,False,False
+Top 100 rank 26-100 — after a bottom-20% game,219,0.5571,0.5036,0.6071,0.1046,1.73,14,0.0635,,,,-0.3768,0.1296,,False,False

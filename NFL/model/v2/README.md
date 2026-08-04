@@ -711,3 +711,72 @@ That gap — a huge, obvious, correctly-priced effect — is the single best
 illustration of why this project keeps landing where it does. Finding a real
 pattern in the football is easy. Finding one the market has not already found
 is the hard part.
+
+### Top 100 QBs bounce back differently
+
+Splitting the bounce-back by whether the starter made that season's NFL Top 100
+(published pre-season, so it is legal information) separates two mechanisms
+pulling opposite ways. An elite QB has a higher true mean, so a bad game is more
+likely to be luck and should revert *further*. He is also the more heavily
+backed name, so any market overreaction should be *larger* against him.
+
+| | starts | prior EPA/att | next EPA/att | tier baseline | ATS next | raw p | season t |
+|---|---|---|---|---|---|---|---|
+| **Top 100 — after a bottom-20% game** | 333 | −0.376 | **+0.142** | +0.139 | **57.4%** | **0.008** | **3.23** |
+| Top 100 — after 2+ INTs | 428 | −0.107 | +0.116 | +0.139 | 49.5% | 0.885 | −0.06 |
+| Top 100 — all starts | 2,481 | +0.135 | +0.139 | +0.139 | 50.9% | 0.399 | 0.85 |
+| not Top 100 — after a bottom-20% game | 1,009 | −0.422 | **−0.056** | +0.009 | 49.5% | 0.753 | −0.42 |
+| not Top 100 — after 2+ INTs | 836 | −0.219 | −0.018 | +0.009 | 49.9% | 0.972 | −0.25 |
+| not Top 100 — all starts | 4,228 | +0.018 | +0.009 | +0.009 | 49.7% | 0.678 | −0.79 |
+| Top 100 rank 1-25 — after a bottom-20% game | 114 | −0.374 | +0.166 | | 60.5% | 0.031 | 2.47 |
+| Top 100 rank 26-100 — after a bottom-20% game | 219 | −0.377 | +0.130 | | 55.7% | 0.105 | 1.73 |
+
+**The reversion mechanism is clean.** An elite QB coming off a stinker
+(−0.376 EPA/att) returns **+0.142** — that is his tier's full baseline of
++0.139, a complete recovery. A non-elite QB coming off an equally bad game
+(−0.422) returns only **−0.056**, well short of his tier's +0.009. Elite bad
+games are noise; ordinary bad games contain real signal. If the market applies
+one adjustment to "QB coming off a stinker", it underprices the elite bounce.
+
+**And the ATS column moves with it**: 57.4% for the elite bounce against 49.5%
+for the ordinary one, monotone in rank (60.5% top-25, 55.7% rank 26-100).
+
+### How hard this one was pushed
+
+| check | result |
+|---|---|
+| threshold sensitivity (bottom 10/15/20/25/30/40%) | every cutoff above break-even, ROI +2.7% to +12.1% |
+| leave-one-QB-out | 50 distinct QBs; worst-case removal (Brady, 12 games) leaves 55.8% |
+| era split | 56.4% (2011-17) then **58.0%** (2018-25) — stronger recently |
+| season by season | 12 of 15 winning, **season-level t = 3.23** |
+| control: elite QB *not* off a bad game | 49.9%, p=0.91 — so it is the bounce, not the tier |
+| bounce vs control difference | +7.5 points, two-proportion **z = 2.55, p = 0.011** |
+
+The control row is the one that matters most: elite QBs in general cover 50.9%,
+which is nothing. The effect lives entirely in the games after a bad start.
+
+**It still does not survive BH-FDR across all 24 tests in this module.** Rank 1
+of 24 needs p <= 0.002; it has 0.008. Over the 8 tier tests alone the threshold
+is 0.006 — still short. Whether 24 is the right family is a judgement call
+rather than a fact: the Top 100 split was a directed hypothesis asked *after*
+the pooled QB result came back null, not one of a sweep. The case does not rest
+on the raw p in any event — it rests on the season-level t of 3.23, the
+threshold robustness, and the control comparison, none of which are family
+sweeps.
+
+Season t = 3.23 is by a wide margin the strongest such number in this project;
+the early-season dog effect managed 1.67. **This is the best candidate found so
+far, at ~22 bets a season, and it is still one dataset.** The honest next step
+is forward paper-testing against opening lines, where the mispricing should be
+larger if it is real.
+
+### A data bug worth recording
+
+The first version of this join lost **5% of team-games** silently. nflverse's
+schedule uses the franchise code contemporaneous to the season (`OAK`, `SD`,
+`STL`) while the player-stats feed uses the current one (`LV`, `LAC`) — and for
+the Rams uses `LA` throughout, matching neither `STL` nor `LAR`. An inner join
+therefore dropped every pre-relocation Raiders, Chargers and Rams game: not a
+random 5%, and entire franchise-eras missing. `TEAM_ALIASES` collapses all
+spellings and four tests pin the join at >97% coverage with no legacy codes
+surviving. Coverage went 95.0% -> 99.0%; the headline moved 57.1% -> 57.4%.
