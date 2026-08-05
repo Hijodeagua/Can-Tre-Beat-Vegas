@@ -27,7 +27,7 @@ from .config import (
     GAME_COUNT_TOLERANCE,
     GAMES_PATH,
 )
-from . import gamelogs
+from . import gamelogs, pitching
 
 
 def refresh(force: bool = False, network: bool = True) -> pd.DataFrame:
@@ -46,14 +46,23 @@ def refresh(force: bool = False, network: bool = True) -> pd.DataFrame:
             )
         post_statuses = gamelogs.download_postseason(session, manifest, force=force)
         refs = gamelogs.download_reference_files(session)
+        pitching_statuses = {}
+        for year in range(FIRST_SEASON, date.today().year + 1):
+            pitching_statuses[year] = pitching.download_season(
+                year, session, manifest, force=force
+            )
         gamelogs.save_manifest(manifest)
 
         downloaded = [y for y, s in statuses.items() if s == "downloaded"]
         missing = [y for y, s in statuses.items() if s == "missing"]
+        p_downloaded = [y for y, s in pitching_statuses.items() if s == "downloaded"]
+        p_missing = [y for y, s in pitching_statuses.items() if s == "missing"]
         print(f"seasons downloaded: {downloaded or 'none'}")
         print(f"seasons not yet on the mirror: {missing or 'none'}")
         print(f"postseason files: {post_statuses}")
         print(f"reference files refreshed: {refs}")
+        print(f"pitching seasons downloaded: {p_downloaded or 'none'}")
+        print(f"pitching seasons not yet published: {p_missing or 'none'}")
 
     years = gamelogs.cached_seasons()
     if not years:
@@ -111,6 +120,21 @@ def coverage_report(games: pd.DataFrame, years: list) -> str:
         nulls = int(games[col].isna().sum())
         if nulls:
             problems.append(f"{nulls} null values in {col}")
+
+    # Cross-source join: retrosplits starters must line up with game-log SPs.
+    pitching_years = pitching.cached_seasons()
+    join_problems, join_notes = pitching.assert_join_coverage(games, pitching_years)
+    problems += join_problems
+    lines += [
+        "",
+        "## Pitching lines (retrosplits)",
+        "",
+        (f"Seasons {pitching_years[0]}–{pitching_years[-1]} cached; "
+         f"regular-season starter join is asserted exact."
+         if pitching_years else "None cached."),
+    ]
+    if join_notes:
+        lines += [""] + [f"- note: {n}" for n in join_notes]
 
     lines += ["", "## Assertions", ""]
     if problems:

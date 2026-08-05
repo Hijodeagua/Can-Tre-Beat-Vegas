@@ -23,6 +23,16 @@ version-controlled CSV so a re-run never re-downloads history.
   Pythagorean expectation, OPS, FIP and rolling pitcher/team form without
   another source.
 
+`MLB/data/pitching/` — **per-pitcher, per-game lines, 2005–2025** (~443k
+pitcher-games) from the Chadwick Bureau's
+[retrosplits](https://github.com/chadwickbureau/retrosplits) daily splits:
+outs recorded, TBF, H, HR, BB, SO, ER per appearance with a start flag.
+This is what rolling starter ERA / FIP / K-BB% and per-reliever bullpen
+usage (fatigue in the prior 2–3 days) are computed from. The regular-season
+starter join against the game logs is asserted exact on every refresh; known
+gaps are the two single-game wild-card rounds per year 2012–2021 and one
+2022 opener discrepancy, listed as notes in the coverage report.
+
 `MLB/data/reference/` — Retrosheet `ballparks.csv` and `teams.csv`.
 `MLB/data/raw/gamelogs/` — the raw season files, gzipped verbatim, so the
 parsed table can always be rebuilt offline (`refresh --no-network`).
@@ -39,6 +49,7 @@ have open internet.
 | source | role | status |
 |---|---|---|
 | Retrosheet game logs via the [Chadwick Bureau mirror](https://github.com/chadwickbureau/retrosheet) | historical spine 2005–2025, incl. postseason | **live, pulled** |
+| retrosplits daily splits ([chadwickbureau/retrosplits](https://github.com/chadwickbureau/retrosplits)) | per-start pitcher lines + reliever usage 2005–2025 | **live, pulled** |
 | MLB Stats API (`MLB/data_jobs/statsapi.py`) | in-progress season, probable pitchers, weather, umpires | runs in CI (blocked from dev session) |
 | The Odds API (`data_jobs/odds_api`, sport `mlb`) | moneyline / runline / totals snapshots | runs in CI, same job as NFL/NBA |
 | Baseball Savant / FanGraphs (Statcast era) | xwOBA, barrels, EV, xERA, wOBA/wRC+/xFIP | **deferred** — needs a CI-side fetch job; see below |
@@ -98,10 +109,10 @@ Decision deferred until the Elo baseline says what it's worth.
   "probable as of the morning" rather than "the guy who actually started".
   For the Retrosheet era the actual starter is the only record — a pitcher
   feature built on it must treat scratched starts as irreducible noise.
-- Bullpen usage in the prior 2–3 days is knowable in advance and is on the
-  feature list, but per-reliever innings need the Retrosheet **event files**
-  (same mirror, `seasons/{year}/*.EV[NA]`, not yet cached — they're ~10× the
-  size of game logs). Planned alongside times-through-the-order.
+- Bullpen usage in the prior 2–3 days is knowable in advance and computable
+  from the retrosplits pitching lines (per-reliever outs by date). Only
+  times-through-the-order still needs the raw Retrosheet **event files**
+  (same mirror, not yet cached — ~10× the size of game logs).
 - Historical weather is not backfilled (no reachable source); the statsapi
   job records condition/temp/wind for every final going forward.
 

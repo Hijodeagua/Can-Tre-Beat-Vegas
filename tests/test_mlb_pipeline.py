@@ -121,6 +121,48 @@ def test_home_advantage_sane(games):
     assert 0.52 < rate < 0.56, rate
 
 
+# ---------------------------------------------------------------------------
+# Pitching lines (retrosplits)
+# ---------------------------------------------------------------------------
+
+from MLB.data_jobs import pitching  # noqa: E402
+
+needs_pitching = pytest.mark.skipif(
+    not pitching.cached_seasons(), reason="pitching cache not built"
+)
+
+
+@needs_pitching
+@needs_cache
+def test_pitching_join_coverage(games):
+    problems, _notes = pitching.assert_join_coverage(
+        games, pitching.cached_seasons()
+    )
+    assert not problems, problems
+
+
+@needs_pitching
+def test_pitching_start_counts_sane():
+    """A full season has 2 starts per game: ~4,860 (2020: ~1,800)."""
+    for year in (2005, 2019, 2024):
+        if year not in pitching.cached_seasons():
+            continue
+        p = pitching.load_season(year)
+        starts = int((p["P_GS"] == 1).sum())
+        assert 4700 <= starts <= 5100, (year, starts)
+
+
+@needs_pitching
+def test_pitching_outs_plausible():
+    p = pitching.load_season(2024)
+    # No pitcher records more than 27 outs; team totals per game do.
+    assert p["P_OUT"].max() <= 27
+    starters = p[p["P_GS"] == 1]
+    # Mean start length in the modern era is ~5.1-5.5 innings.
+    mean_ip = (starters["P_OUT"].mean()) / 3
+    assert 4.5 < mean_ip < 6.5, mean_ip
+
+
 @needs_cache
 def test_innings_parse(games):
     reg = games[games["game_type"] == "regular"]
