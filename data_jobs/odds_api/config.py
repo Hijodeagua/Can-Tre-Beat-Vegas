@@ -27,6 +27,12 @@ SUPPORTED_SPORTS = {
         "data_dir": "data/nba",
         "file_prefix": "nba_odds_api_data",
     },
+    "mlb": {
+        "api_key": "baseball_mlb",
+        "name": "MLB",
+        "data_dir": "data/mlb",
+        "file_prefix": "mlb_odds_api_data",
+    },
 }
 
 # NFL Team metadata (conference, division, stadium coordinates)
@@ -114,11 +120,54 @@ NBA_TEAMS = {
 }
 
 
+# MLB team metadata (league, division, ballpark coordinates), keyed by
+# The Odds API display name. Kept in sync with MLB/data_jobs/config.py's
+# franchise crosswalk (tested in tests/test_mlb_pipeline.py). Renamed
+# franchises appear under both names so historical snapshots still resolve.
+MLB_TEAMS = {
+    "Arizona Diamondbacks": {"conf": "NL", "div": "West", "loc": (33.4453, -112.0667)},
+    "Atlanta Braves": {"conf": "NL", "div": "East", "loc": (33.8908, -84.4678)},
+    "Baltimore Orioles": {"conf": "AL", "div": "East", "loc": (39.2839, -76.6217)},
+    "Boston Red Sox": {"conf": "AL", "div": "East", "loc": (42.3467, -71.0972)},
+    "Chicago Cubs": {"conf": "NL", "div": "Central", "loc": (41.9484, -87.6553)},
+    "Chicago White Sox": {"conf": "AL", "div": "Central", "loc": (41.8299, -87.6338)},
+    "Cincinnati Reds": {"conf": "NL", "div": "Central", "loc": (39.0975, -84.5066)},
+    "Cleveland Guardians": {"conf": "AL", "div": "Central", "loc": (41.4962, -81.6852)},
+    "Cleveland Indians": {"conf": "AL", "div": "Central", "loc": (41.4962, -81.6852)},
+    "Colorado Rockies": {"conf": "NL", "div": "West", "loc": (39.7559, -104.9942)},
+    "Detroit Tigers": {"conf": "AL", "div": "Central", "loc": (42.3390, -83.0485)},
+    "Houston Astros": {"conf": "AL", "div": "West", "loc": (29.7573, -95.3555)},
+    "Kansas City Royals": {"conf": "AL", "div": "Central", "loc": (39.0517, -94.4803)},
+    "Los Angeles Angels": {"conf": "AL", "div": "West", "loc": (33.8003, -117.8827)},
+    "Los Angeles Dodgers": {"conf": "NL", "div": "West", "loc": (34.0739, -118.2400)},
+    "Miami Marlins": {"conf": "NL", "div": "East", "loc": (25.7781, -80.2196)},
+    "Milwaukee Brewers": {"conf": "NL", "div": "Central", "loc": (43.0280, -87.9712)},
+    "Minnesota Twins": {"conf": "AL", "div": "Central", "loc": (44.9817, -93.2776)},
+    "New York Mets": {"conf": "NL", "div": "East", "loc": (40.7571, -73.8458)},
+    "New York Yankees": {"conf": "AL", "div": "East", "loc": (40.8296, -73.9262)},
+    "Athletics": {"conf": "AL", "div": "West", "loc": (38.5802, -121.5133)},
+    "Oakland Athletics": {"conf": "AL", "div": "West", "loc": (37.7516, -122.2005)},
+    "Philadelphia Phillies": {"conf": "NL", "div": "East", "loc": (39.9061, -75.1665)},
+    "Pittsburgh Pirates": {"conf": "NL", "div": "Central", "loc": (40.4469, -80.0057)},
+    "San Diego Padres": {"conf": "NL", "div": "West", "loc": (32.7076, -117.1570)},
+    "Seattle Mariners": {"conf": "AL", "div": "West", "loc": (47.5914, -122.3325)},
+    "San Francisco Giants": {"conf": "NL", "div": "West", "loc": (37.7786, -122.3893)},
+    "St. Louis Cardinals": {"conf": "NL", "div": "Central", "loc": (38.6226, -90.1928)},
+    "St louis Cardinals": {"conf": "NL", "div": "Central", "loc": (38.6226, -90.1928)},
+    "Tampa Bay Rays": {"conf": "AL", "div": "East", "loc": (27.7683, -82.6534)},
+    "Texas Rangers": {"conf": "AL", "div": "West", "loc": (32.7473, -97.0842)},
+    "Toronto Blue Jays": {"conf": "AL", "div": "East", "loc": (43.6414, -79.3894)},
+    "Washington Nationals": {"conf": "NL", "div": "East", "loc": (38.8730, -77.0074)},
+}
+
+
 def get_team_info(sport: str) -> dict:
     """Get team metadata for a specific sport"""
     if sport.lower() == "nfl":
         return NFL_TEAMS
     elif sport.lower() == "nba":
         return NBA_TEAMS
+    elif sport.lower() == "mlb":
+        return MLB_TEAMS
     else:
         raise ValueError(f"Unsupported sport: {sport}")

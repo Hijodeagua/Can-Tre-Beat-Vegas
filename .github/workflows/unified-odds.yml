@@ -1,19 +1,24 @@
-# Unified Odds API workflow - Fetches both NFL and NBA odds
-# Optimized for free tier: runs 2x daily to conserve API quota (~60 requests/month)
+# Unified Odds API workflow - Fetches NFL, NBA and MLB odds
+# Optimized for free tier: ~7 requests/day (~210/month of the 500 quota)
 
 name: Unified Odds (2x daily)
 
 on:
   schedule:
-    # Run twice daily:
-    # - 10:00 UTC (5:00 AM ET / 6:00 AM ET DST) - Morning snapshot
-    # - 22:00 UTC (5:00 PM ET / 6:00 PM ET DST) - Evening snapshot before games
+    # Run twice daily for all sports:
+    # - 10:00 UTC (5:00 AM ET / 6:00 AM ET DST) - Morning snapshot. For MLB
+    #   this is the opening-line capture: books post most MLB lines overnight,
+    #   and the earliest snapshot per game is the as-captured opener.
+    # - 22:00 UTC (5:00 PM ET / 6:00 PM ET DST) - Evening snapshot before
+    #   games; for MLB this is the near-closing number for 7pm ET starts.
     - cron: "0 10 * * *"
     - cron: "0 22 * * *"
+    # Midday MLB-only top-up (probables land in the morning and move lines):
+    - cron: "0 16 * * *"
   workflow_dispatch:
     inputs:
       sport:
-        description: 'Sport to fetch (nfl, nba, or all)'
+        description: 'Sport to fetch (nfl, nba, mlb, or all)'
         required: false
         default: 'all'
         type: choice
@@ -21,6 +26,7 @@ on:
           - all
           - nfl
           - nba
+          - mlb
 
 permissions:
   contents: write
@@ -62,6 +68,10 @@ jobs:
         run: |
           set -euo pipefail
           sport="${{ github.event.inputs.sport || 'all' }}"
+          # The 16:00 UTC schedule is the MLB-only top-up snapshot.
+          if [ "${{ github.event.schedule }}" = "0 16 * * *" ]; then
+            sport="mlb"
+          fi
           python -m data_jobs.odds_api.fetch_odds --sport "$sport"
 
       - name: Export web slate JSON

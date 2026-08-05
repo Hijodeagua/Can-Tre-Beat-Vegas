@@ -1,0 +1,120 @@
+# MLB data pipeline
+# - Daily (08:00 UTC, ~3-4am ET, after West Coast games finish): pull the
+#   previous days' finals and the next week's probable pitchers from the
+#   MLB Stats API. Probables snapshots are timestamped so the announcement
+#   history is preserved (leakage discipline: each row carries pulled_at_utc).
+# - Weekly (Sunday 09:00 UTC): refresh the Retrosheet game-log cache from the
+#   Chadwick Bureau mirror. Cached seasons cost one conditional request each;
+#   the next annual release is picked up automatically.
+
+name: MLB Data (daily + weekly)
+
+on:
+  schedule:
+    - cron: "0 8 * * *"   # daily statsapi pull
+    - cron: "0 9 * * 0"   # weekly retrosheet refresh
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Which job to run"
+        required: false
+        default: "both"
+        type: choice
+        options:
+          - both
+          - statsapi
+          - retrosheet
+
+permissions:
+  contents: write
+
+env:
+  ALERT_EMAIL: tremayne.watterson@gmail.com
+
+concurrency:
+  group: mlb-data
+  cancel-in-progress: false
+
+jobs:
+  mlb-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Pull finals + probables from MLB Stats API
+        if: ${{ github.event.schedule == '0 8 * * *' || github.event.inputs.job == 'statsapi' || github.event.inputs.job == 'both' || github.event.inputs.job == '' }}
+        run: python -m MLB.data_jobs.statsapi --finals-days 3 --probables-days 7
+
+      - name: Refresh Retrosheet game-log cache
+        if: ${{ github.event.schedule == '0 9 * * 0' || github.event.inputs.job == 'retrosheet' || github.event.inputs.job == 'both' }}
+        run: python -m MLB.data_jobs.refresh
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add MLB/data || true
+
+          if [ -n "$(git status --porcelain)" ]; then
+            timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
+            git commit -m "MLB data update: $timestamp"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Decide whether to send failure email
+        id: failgate
+        if: failure()
+        shell: bash
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SMTP_USERNAME:-}" ] || [ -z "${SMTP_PASSWORD:-}" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Failure email not sent - SMTP credentials not configured."
+            exit 0
+          fi
+          echo "send=true" >> "$GITHUB_OUTPUT"
+
+      - name: Send failure notification email
+        if: ${{ failure() && steps.failgate.outputs.send == 'true' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.ALERT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: "[can-tre-beat-vegas] MLB data workflow FAILED (run #${{ github.run_number }})"
+          html_body: |
+            <h2>MLB data workflow failed</h2>
+            <p>Repository: <strong>${{ github.repository }}</strong></p>
+            <p>Workflow: <strong>${{ github.workflow }}</strong> (run #${{ github.run_number }})</p>
+            <p>The Stats API pull, the Retrosheet refresh, or a coverage
+            assertion failed. See the run log for the failing season or
+            endpoint.</p>
+            <p>
+              <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">
+                View the failed run
+              </a>
+            </p>

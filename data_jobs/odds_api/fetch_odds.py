@@ -4,7 +4,7 @@ Unified Odds Fetcher - Fetches odds for all supported sports
 Optimized for The Odds API free tier (500 requests/month)
 
 Usage:
-    python -m data_jobs.odds_api.fetch_odds [--sport nfl|nba|all] [--report]
+    python -m data_jobs.odds_api.fetch_odds [--sport nfl|nba|mlb|all] [--report]
 
 Environment Variables:
     ODDS_API_KEY: Required API key for The Odds API
@@ -136,7 +136,7 @@ def main():
     )
     parser.add_argument(
         "--sport",
-        choices=["nfl", "nba", "all"],
+        choices=["nfl", "nba", "mlb", "all"],
         default="all",
         help="Sport to fetch (default: all)",
     )
