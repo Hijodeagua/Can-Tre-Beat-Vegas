@@ -143,8 +143,12 @@ jobs:
 
           echo "send=true" >> "$GITHUB_OUTPUT"
 
+      # always() so a failed/skipped earlier send (e.g. one transient SMTP
+      # error) never blocks the others - each of the three is independent.
       - name: "Email 1: futures forecast"
-        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.futures_path != '' }}
+        id: email-futures
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.futures_path != '' }}
+        continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
@@ -158,7 +162,9 @@ jobs:
           ignore_cert: true
 
       - name: "Email 2: today's slate"
-        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.slate_path != '' }}
+        id: email-slate
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.slate_path != '' }}
+        continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
@@ -172,7 +178,9 @@ jobs:
           ignore_cert: true
 
       - name: "Email 3: yesterday's grade"
-        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.grade_path != '' }}
+        id: email-grade
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.grade_path != '' }}
+        continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
@@ -184,6 +192,22 @@ jobs:
           subject: ${{ steps.pipeline.outputs.grade_subject }}
           html_body: file://${{ steps.pipeline.outputs.grade_path }}
           ignore_cert: true
+
+      # The three sends above use continue-on-error so one bad send (e.g. a
+      # stale SMTP credential) never blocks the others - but that also hides
+      # the failure from the run's conclusion. Surface it explicitly here.
+      - name: Verify emails delivered
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.email-futures.outcome }}" = "failure" ] || \
+             [ "${{ steps.email-slate.outcome }}" = "failure" ] || \
+             [ "${{ steps.email-grade.outcome }}" = "failure" ]; then
+            echo "::error::One or more emails failed to send - check SMTP credentials."
+            exit 1
+          fi
+          echo "All attempted emails sent successfully."
 
       - name: Upload report artifacts
         if: always()
