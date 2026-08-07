@@ -61,6 +61,12 @@ def main(argv: list[str]) -> int:
         print(f"missing retro id ({len(no_retro)}): {sorted(no_retro)}")
     if no_mlbam:
         print(f"missing mlbam id ({len(no_mlbam)}): {sorted(no_mlbam)}")
+    if missing or no_retro or no_mlbam:
+        # Every 2009+ pitcher should resolve fully; a gap means either a bad
+        # bbref id in the seasons table or a stale register clone. Fail so
+        # automation can't quietly ship an incomplete crosswalk (the file is
+        # still written above to aid debugging).
+        return 1
     return 0
 
 

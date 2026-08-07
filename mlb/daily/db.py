@@ -59,6 +59,14 @@ CREATE TABLE IF NOT EXISTS mlb_futures (
 );
 """
 
+# Idempotent migrations for tables created before a column existed - the
+# CREATE TABLE IF NOT EXISTS above is a no-op on an existing database, so
+# every column added after first release must also appear here.
+MIGRATIONS = """
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp TEXT;
+"""
+
 
 def _upsert(cur, table: str, df: pd.DataFrame, key_cols: list[str]) -> None:
     cols = list(df.columns)
@@ -91,6 +99,7 @@ def write_postgres(run_date: str, slate: pd.DataFrame,
     try:
         with conn, conn.cursor() as cur:
             cur.execute(DDL)
+            cur.execute(MIGRATIONS)
             if not slate.empty:
                 _upsert(cur, "mlb_slate_predictions", slate,
                         ["date", "away", "home", "game_num"])
