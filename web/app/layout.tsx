@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 const NAV = [
   { href: '/', label: 'Next 48 Hours' },
+  { href: '/mlb', label: 'MLB Daily' },
   { href: '/methodology', label: 'Methodology' },
 ];
 
