@@ -1,0 +1,139 @@
+{
+  "n_team_seasons": 540,
+  "elo_params": {
+    "k": 3,
+    "home_advantage": 24,
+    "carryover": 0.6,
+    "use_mov": true,
+    "log_loss": 0.67961,
+    "accuracy": 0.5665,
+    "brier": 0.24332,
+    "baseline_log_loss": 0.69096,
+    "home_win_rate": 0.5331,
+    "n_games": 34205
+  },
+  "top_wl_correlates": [
+    {
+      "stat": "RunDiff/G",
+      "group": "combined",
+      "pearson_r": 0.9375
+    },
+    {
+      "stat": "WPA/G",
+      "group": "advanced",
+      "pearson_r": 0.8641
+    },
+    {
+      "stat": "REW",
+      "group": "advanced",
+      "pearson_r": 0.8389
+    },
+    {
+      "stat": "RE24/G",
+      "group": "advanced",
+      "pearson_r": 0.8388
+    },
+    {
+      "stat": "WPA/LI",
+      "group": "advanced",
+      "pearson_r": 0.8189
+    },
+    {
+      "stat": "PtchR/G",
+      "group": "pitching",
+      "pearson_r": 0.7988
+    },
+    {
+      "stat": "RA/G",
+      "group": "pitching",
+      "pearson_r": -0.7849
+    },
+    {
+      "stat": "ERA",
+      "group": "pitching",
+      "pearson_r": -0.7774
+    },
+    {
+      "stat": "ERA+",
+      "group": "pitching",
+      "pearson_r": 0.7765
+    },
+    {
+      "stat": "WHIP",
+      "group": "pitching",
+      "pearson_r": -0.7705
+    },
+    {
+      "stat": "H9",
+      "group": "pitching",
+      "pearson_r": -0.6958
+    },
+    {
+      "stat": "FIP",
+      "group": "pitching",
+      "pearson_r": -0.6913
+    }
+  ],
+  "top_elo_delta_correlates": [
+    {
+      "stat": "RunDiff/G",
+      "group": "combined",
+      "pearson_r": 0.8686
+    },
+    {
+      "stat": "RE24/G",
+      "group": "advanced",
+      "pearson_r": 0.7435
+    },
+    {
+      "stat": "REW",
+      "group": "advanced",
+      "pearson_r": 0.7435
+    },
+    {
+      "stat": "WPA/G",
+      "group": "advanced",
+      "pearson_r": 0.7251
+    },
+    {
+      "stat": "WPA/LI",
+      "group": "advanced",
+      "pearson_r": 0.7207
+    },
+    {
+      "stat": "PtchR/G",
+      "group": "pitching",
+      "pearson_r": 0.7179
+    },
+    {
+      "stat": "ERA+",
+      "group": "pitching",
+      "pearson_r": 0.6969
+    },
+    {
+      "stat": "RA/G",
+      "group": "pitching",
+      "pearson_r": -0.6956
+    },
+    {
+      "stat": "ERA",
+      "group": "pitching",
+      "pearson_r": -0.6896
+    },
+    {
+      "stat": "WHIP",
+      "group": "pitching",
+      "pearson_r": -0.6723
+    },
+    {
+      "stat": "R/Gm",
+      "group": "hitting",
+      "pearson_r": 0.6517
+    },
+    {
+      "stat": "H9",
+      "group": "pitching",
+      "pearson_r": -0.6167
+    }
+  ]
+}
