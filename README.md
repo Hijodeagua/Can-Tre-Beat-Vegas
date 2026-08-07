@@ -46,6 +46,11 @@ Details and the two places an edge might actually live are in
   tiered K-factors, friendlies barely weighted) plus a multinomial outcome
   model with host effects and FIFA-rating squad-strength hooks; predicts the
   2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
+- **MLB daily model** — betting-blind Elo (K=3, +24 home, MOV-weighted)
+  tested live against the 2026 season: three emails every morning (futures
+  Monte Carlo, today's slate with simulated scores, yesterday's graded
+  report card) plus the model card at `whosyurgoat.app/vegas/mlb`
+  (`mlb/daily/`, writeup in `reports/mlb_elo_stat_associations.md`)
 - **Daily HTML reports** — automated odds breakdowns, bookmaker performance,
   and team odds-history charts (`reports/`)
 - **Weekly NFL picks** — model picks vs. Vegas, graded week by week
@@ -157,7 +162,7 @@ GitHub Actions keep the data flowing without manual pulls:
 | Workflow | Schedule | What it does |
 |---|---|---|
 | `unified-odds.yml` | 2x daily (10:00 / 22:00 UTC) | Fetches NFL + NBA odds snapshots, re-exports web JSON, commits |
-| `daily-report.yml` | daily | Builds the HTML daily report and charts into `reports/` |
+| `daily-report.yml` | daily (10:00 UTC) | MLB daily pipeline: pulls new box scores, updates Elo, sends the futures / slate / grade emails, commits site data (see `mlb/daily/README.md`) |
 
 The 2x-daily cadence is deliberate — it captures a morning line and an
 evening line before games while conserving the free-tier API quota.

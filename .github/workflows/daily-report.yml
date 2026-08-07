@@ -1,14 +1,34 @@
-name: Daily Odds Report
+# Daily MLB prediction pipeline: pulls new results, updates Elo, simulates,
+# grades yesterday, emails three reports, and commits the site data.
+#
+# This is the formerly-paused daily cron (it used to build the NBA odds
+# report; that generator still exists at data_jobs/reports/ and can be run
+# via workflow_dispatch of a shell step if ever needed again).
+
+name: Daily MLB Report
 
 on:
   schedule:
+    # 10:00 UTC = 6:00 AM ET (DST) - overnight games are final, first pitch
+    # is hours away. The run dated D grades D-1 and predicts D's slate.
+    - cron: "0 10 * * *"
+
+  # Fires once immediately when the pipeline lands on main (and on any later
+  # fix to it), so the first emails go out on merge rather than waiting for
+  # the next 10:00 UTC. Commits made by this workflow itself use GITHUB_TOKEN
+  # and therefore cannot re-trigger it.
+  push:
+    branches: [main]
+    paths:
+      - "mlb/daily/**"
+      - ".github/workflows/daily-report.yml"
 
   workflow_dispatch:
     inputs:
-      days:
-        description: "Days of history to analyze"
+      run_date:
+        description: "Override run date (YYYY-MM-DD ET, default today)"
         required: false
-        default: "7"
+        default: ""
         type: string
       skip_email:
         description: "Skip sending email"
@@ -27,7 +47,7 @@ env:
   REPORT_EMAIL: tremayne.watterson@gmail.com
 
 jobs:
-  generate-report:
+  mlb-daily:
     runs-on: ubuntu-latest
 
     steps:
@@ -49,27 +69,36 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate daily report
-        id: report
+      - name: Run daily pipeline
+        id: pipeline
         shell: bash
+        env:
+          # Optional: set the DATABASE_URL repo secret (Neon Postgres) to
+          # mirror each day's outputs into mlb_slate_predictions,
+          # mlb_daily_grades and mlb_futures. Skipped cleanly when unset.
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           set -euo pipefail
 
-          # Use workflow input if present (manual dispatch), otherwise default to 30 (schedule)
-          DAYS="${{ github.event.inputs.days }}"
-          if [ -z "${DAYS:-}" ]; then
-            DAYS="30"
+          RUN_DATE="${{ github.event.inputs.run_date }}"
+          if [ -n "${RUN_DATE:-}" ]; then
+            python -m mlb.daily.run --date "$RUN_DATE"
+          else
+            python -m mlb.daily.run
           fi
 
-          python -m data_jobs.reports.simplified_daily_report \
-            --days "$DAYS" \
-            --no-email
+          MANIFEST=reports/mlb_daily/manifest_latest.json
+          {
+            echo "date=$(jq -r '.date' $MANIFEST)"
+            echo "futures_path=$(jq -r '.emails.futures.path // ""' $MANIFEST)"
+            echo "futures_subject=$(jq -r '.emails.futures.subject // ""' $MANIFEST)"
+            echo "slate_path=$(jq -r '.emails.slate.path // ""' $MANIFEST)"
+            echo "slate_subject=$(jq -r '.emails.slate.subject // ""' $MANIFEST)"
+            echo "grade_path=$(jq -r '.emails.grade.path // ""' $MANIFEST)"
+            echo "grade_subject=$(jq -r '.emails.grade.subject // ""' $MANIFEST)"
+          } >> "$GITHUB_OUTPUT"
 
-          REPORT_DATE="$(date +'%Y-%m-%d')"
-          echo "date=$REPORT_DATE" >> "$GITHUB_OUTPUT"
-          echo "report_path=reports/daily_report_${REPORT_DATE}.html" >> "$GITHUB_OUTPUT"
-
-      - name: Commit and push reports
+      - name: Commit and push outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -77,18 +106,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add reports/ data/predictions/ || true
+          git add data/mlb/ reports/mlb_daily/ web/public/data/mlb/
 
           if [ -n "$(git status --porcelain)" ]; then
-            timestamp="$(date -u +'%Y-%m-%d')"
-            git commit -m "Daily odds report: ${timestamp}"
-            git push
+            git commit -m "MLB daily: ${{ steps.pipeline.outputs.date }}"
+            for i in 1 2 3 4; do
+              git pull --rebase origin main && git push && break
+              echo "push attempt $i failed; retrying"
+              sleep $((2 ** i))
+            done
           else
             echo "No changes to commit."
           fi
 
-      # No secrets referenced in `if:` anywhere.
-      # We decide in bash whether to attempt email.
       - name: Decide whether to send email
         id: emailgate
         shell: bash
@@ -113,8 +143,8 @@ jobs:
 
           echo "send=true" >> "$GITHUB_OUTPUT"
 
-      - name: Send email report
-        if: ${{ steps.emailgate.outputs.send == 'true' }}
+      - name: "Email 1: futures forecast"
+        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.futures_path != '' }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
@@ -123,39 +153,42 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           to: ${{ env.REPORT_EMAIL }}
           from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
-          subject: "🏀 NBA Daily Report - ${{ steps.report.outputs.date }}"
-          html_body: |
-            <h2>🏀 NBA Daily Report - ${{ steps.report.outputs.date }}</h2>
-            <p>Your simplified daily NBA report is ready.</p>
-            <p><strong>Today's 4 observations:</strong></p>
-            <ol>
-              <li>🐝 <strong>Hornets</strong> — Next game odds & past month performance vs bookies</li>
-              <li>📊 <strong>Bookmaker Rankings</strong> — Prediction accuracy across all sportsbooks</li>
-              <li>🤖 <strong>ML Predictions</strong> — Winner & score predictions for next 48 hours</li>
-              <li>📈 <strong>Prediction History</strong> — How our models have performed over time</li>
-            </ol>
-            <p>The full HTML report and charts are attached.</p>
-            <p>View the rendered report:
-              <a href="https://htmlpreview.github.io/?https://github.com/${{ github.repository }}/blob/main/reports/daily_report_${{ steps.report.outputs.date }}.html">
-                View Report (Rendered HTML)
-              </a>
-            </p>
-            <hr>
-            <p><small>This is an automated email from your Can-Tre-Beat-Vegas odds tracking system.</small></p>
-          attachments: |
-            reports/daily_report_${{ steps.report.outputs.date }}.html
-            reports/charts/hornets_performance_${{ steps.report.outputs.date }}.png
-            reports/charts/bookie_performance_${{ steps.report.outputs.date }}.png
-            reports/charts/ml_models_${{ steps.report.outputs.date }}.png
+          subject: ${{ steps.pipeline.outputs.futures_subject }}
+          html_body: file://${{ steps.pipeline.outputs.futures_path }}
           ignore_cert: true
-          convert_markdown: true
+
+      - name: "Email 2: today's slate"
+        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.slate_path != '' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.REPORT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: ${{ steps.pipeline.outputs.slate_subject }}
+          html_body: file://${{ steps.pipeline.outputs.slate_path }}
+          ignore_cert: true
+
+      - name: "Email 3: yesterday's grade"
+        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.grade_path != '' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.REPORT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: ${{ steps.pipeline.outputs.grade_subject }}
+          html_body: file://${{ steps.pipeline.outputs.grade_path }}
+          ignore_cert: true
 
       - name: Upload report artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: daily-report-${{ github.run_number }}
-          path: |
-            reports/*.html
-            reports/charts/*.png
+          name: mlb-daily-${{ github.run_number }}
+          path: reports/mlb_daily/
           retention-days: 30
