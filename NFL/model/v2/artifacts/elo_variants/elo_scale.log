@@ -1,0 +1,23 @@
+raw adj sd: qb=73.4 elo  talent=63.3 elo
+
+=== QB adjustment, shrunk ===
+{'variant': 'qb x0.0', 'log_loss': 0.6374, 'acc': 0.6417, 'auc': 0.6873}
+{'variant': 'qb x0.15', 'log_loss': 0.6356, 'acc': 0.6433, 'auc': 0.6903}
+{'variant': 'qb x0.25', 'log_loss': 0.6349, 'acc': 0.6456, 'auc': 0.6917}
+{'variant': 'qb x0.4', 'log_loss': 0.6346, 'acc': 0.6486, 'auc': 0.6926}
+{'variant': 'qb x0.6', 'log_loss': 0.6356, 'acc': 0.6506, 'auc': 0.6924}
+{'variant': 'qb x0.8', 'log_loss': 0.6382, 'acc': 0.6496, 'auc': 0.691}
+{'variant': 'qb x1.0', 'log_loss': 0.6424, 'acc': 0.6463, 'auc': 0.6889}
+
+=== talent adjustment, shrunk ===
+{'variant': 'talent x0.25', 'log_loss': 0.6347, 'acc': 0.6486, 'auc': 0.692}
+{'variant': 'talent x0.5', 'log_loss': 0.6335, 'acc': 0.6516, 'auc': 0.6949}
+{'variant': 'talent x0.75', 'log_loss': 0.6338, 'acc': 0.6513, 'auc': 0.6965}
+{'variant': 'talent x1.0', 'log_loss': 0.6354, 'acc': 0.6519, 'auc': 0.6967}
+{'variant': 'talent x1.5', 'log_loss': 0.6431, 'acc': 0.6489, 'auc': 0.6953}
+{'variant': 'talent x2.0', 'log_loss': 0.6563, 'acc': 0.6473, 'auc': 0.6925}
+
+=== best combo ===
+best qb shrink: 0.4 {'variant': 'qb x0.4', 'log_loss': 0.6346, 'acc': 0.6486, 'auc': 0.6926}
+best talent shrink: 0.5 {'variant': 'talent x0.5', 'log_loss': 0.6335, 'acc': 0.6516, 'auc': 0.6949}
+{'variant': 'qb x0.4 + talent x0.5', 'log_loss': 0.6322, 'acc': 0.6526, 'auc': 0.6983}

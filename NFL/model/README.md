@@ -1,4 +1,11 @@
-# NFL LightGBM Model
+# NFL LightGBM Model (v1 — superseded)
+
+> **Superseded by [`v2/`](v2/README.md).** This model trains on
+> `data/2023-2025W3.csv`, which stops on 2025-10-02 and therefore never saw the
+> 2025 season. Its headline "57.9% ATS" came from a 140-game test set — about
+> one standard error from a coin flip. The v2 rebuild walks forward one retrain
+> per season over 4,300+ out-of-sample games and finds no edge over the closing
+> line. Kept here for provenance; `line_movement.py` is still live and shared.
 
 Predictive model for the upcoming season. Two targets: straight-up
 winner (`win`) and against-the-spread cover (`ats`).
@@ -82,26 +89,35 @@ home-field advantage (~2-3 points).
 
 ## What's not yet a feature (and why)
 
-- **Line movement** (open vs close spread/total). The `line_movement.py`
-  aggregator works, but the older snapshot schema (~Oct 2025 – Jan 2026,
-  the only NFL season we have games for) lacks spread *points* — only
-  juice/odds. The newer schema has spread points but only contains 84
-  games, all 2026 season (not yet played). So we have **zero historical
-  games with line movement**. The aggregator is ready to plug in once a
-  full 2026 season of snapshots accumulates.
+- **Line movement** (open vs close spread/total). This section used to claim
+  we had **zero historical games with line movement**. That was wrong, and the
+  cause was a bug rather than a data gap: the aggregator keyed on `Game ID`,
+  a column the legacy schema doesn't have, so it silently dropped all 332
+  legacy files. Keying on `home|away|date` instead recovers **202 games of the
+  2025 season** with full moneyline movement. The narrower true statement is
+  that the legacy schema stored the *juice* on each side but never the spread
+  *number*, so 2025 movement is moneyline-only.
+
+  `line_movement.py` also now drops in-play snapshots. The fetch job sometimes
+  caught a game after kickoff and stored live prices — a 3-point favourite at
+  -2490 because it was already up two scores. Treating those as the closing
+  line made "the line moved toward the winner" look 60% predictive when it was
+  reading the scoreboard. Post-fix, movement does not beat the closing price;
+  see `NFL/inventory/INVENTORY_2025.md`.
 
 ## Next steps
+
+Items 3 and 4 below are done in [`v2/`](v2/README.md), which also adds the
+walk-forward backtest item 6 asked for. The remaining ideas apply to v2:
 
 1. **EPA / DVOA** from nflverse play-by-play (`load_pbp_data`) —
    drive-level efficiency >> box-score stats.
 2. **QB on/off magnitude** — currently `qb_change` is just a flag; add
    the starter's career EPA and the backup's EPA to capture the size of
    the dropoff.
-3. **Travel + altitude** — already have lat/lon plumbing in
-   `data_jobs/`; merge in distance traveled.
-4. **Calibration** — Platt or isotonic on val before computing edge vs.
-   market line.
-5. **Hyperparameter search** — once feature signal is stronger;
-   premature now.
-6. **Backtest a betting strategy** — compute edge vs. market-implied
-   prob, simulate flat-stakes ROI on test set.
+3. ~~**Travel + altitude**~~ — travel distance is a v2 feature.
+4. ~~**Calibration**~~ — v2 Platt-calibrates on the prior season.
+5. **Hyperparameter search** — still premature. The v2 result says the
+   ceiling is set by the market, not by the tuning.
+6. ~~**Backtest a betting strategy**~~ — v2 runs a flat-stake backtest over
+   2010-2025. It loses at roughly the rate the vig predicts.

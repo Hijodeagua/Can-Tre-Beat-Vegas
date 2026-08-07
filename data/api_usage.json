@@ -1,202 +1,6 @@
 {
   "history": [
     {
-      "timestamp": "2026-07-07T19:55:00.391635",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 440,
-      "requests_used": 60
-    },
-    {
-      "timestamp": "2026-07-07T23:01:03.235889",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 437,
-      "requests_used": 63
-    },
-    {
-      "timestamp": "2026-07-07T23:01:03.410493",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 437,
-      "requests_used": 63
-    },
-    {
-      "timestamp": "2026-07-08T11:44:03.815184",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 434,
-      "requests_used": 66
-    },
-    {
-      "timestamp": "2026-07-08T11:44:03.957477",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 434,
-      "requests_used": 66
-    },
-    {
-      "timestamp": "2026-07-08T19:25:08.983126",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 431,
-      "requests_used": 69
-    },
-    {
-      "timestamp": "2026-07-08T23:06:42.715405",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 428,
-      "requests_used": 72
-    },
-    {
-      "timestamp": "2026-07-08T23:06:43.013258",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 428,
-      "requests_used": 72
-    },
-    {
-      "timestamp": "2026-07-09T12:30:45.843945",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 425,
-      "requests_used": 75
-    },
-    {
-      "timestamp": "2026-07-09T12:30:46.055862",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 425,
-      "requests_used": 75
-    },
-    {
-      "timestamp": "2026-07-09T19:46:19.672645",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 422,
-      "requests_used": 78
-    },
-    {
-      "timestamp": "2026-07-09T23:10:54.781002",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 419,
-      "requests_used": 81
-    },
-    {
-      "timestamp": "2026-07-09T23:10:54.935891",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 419,
-      "requests_used": 81
-    },
-    {
-      "timestamp": "2026-07-10T12:22:33.896732",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 416,
-      "requests_used": 84
-    },
-    {
-      "timestamp": "2026-07-10T12:22:34.207587",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 416,
-      "requests_used": 84
-    },
-    {
-      "timestamp": "2026-07-10T19:26:58.680920",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 413,
-      "requests_used": 87
-    },
-    {
-      "timestamp": "2026-07-10T22:58:34.841086",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 410,
-      "requests_used": 90
-    },
-    {
-      "timestamp": "2026-07-10T22:58:35.139012",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 410,
-      "requests_used": 90
-    },
-    {
-      "timestamp": "2026-07-11T11:00:13.198412",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 407,
-      "requests_used": 93
-    },
-    {
-      "timestamp": "2026-07-11T11:00:13.403242",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 407,
-      "requests_used": 93
-    },
-    {
-      "timestamp": "2026-07-11T19:02:50.234410",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 404,
-      "requests_used": 96
-    },
-    {
-      "timestamp": "2026-07-11T22:47:50.489572",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 401,
-      "requests_used": 99
-    },
-    {
-      "timestamp": "2026-07-11T22:47:50.656073",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 401,
-      "requests_used": 99
-    },
-    {
-      "timestamp": "2026-07-12T11:07:32.351493",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 398,
-      "requests_used": 102
-    },
-    {
-      "timestamp": "2026-07-12T11:07:32.522084",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 398,
-      "requests_used": 102
-    },
-    {
-      "timestamp": "2026-07-12T19:05:41.039419",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 395,
-      "requests_used": 105
-    },
-    {
-      "timestamp": "2026-07-12T22:47:48.561467",
-      "sport": "nfl",
-      "games_fetched": 75,
-      "requests_remaining": 392,
-      "requests_used": 108
-    },
-    {
-      "timestamp": "2026-07-12T22:47:48.725134",
-      "sport": "nba",
-      "games_fetched": 0,
-      "requests_remaining": 392,
-      "requests_used": 108
-    },
-    {
       "timestamp": "2026-07-13T12:28:27.250037",
       "sport": "nfl",
       "games_fetched": 75,
@@ -699,7 +503,203 @@
       "games_fetched": 0,
       "requests_remaining": 284,
       "requests_used": 216
+    },
+    {
+      "timestamp": "2026-07-31T11:55:09.611929",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 281,
+      "requests_used": 219
+    },
+    {
+      "timestamp": "2026-07-31T11:55:09.804997",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 281,
+      "requests_used": 219
+    },
+    {
+      "timestamp": "2026-07-31T22:59:30.539321",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 278,
+      "requests_used": 222
+    },
+    {
+      "timestamp": "2026-07-31T22:59:30.742476",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 278,
+      "requests_used": 222
+    },
+    {
+      "timestamp": "2026-08-01T11:13:23.969357",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 497,
+      "requests_used": 3
+    },
+    {
+      "timestamp": "2026-08-01T11:13:24.165416",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 497,
+      "requests_used": 3
+    },
+    {
+      "timestamp": "2026-08-01T22:55:13.229208",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 494,
+      "requests_used": 6
+    },
+    {
+      "timestamp": "2026-08-01T22:55:13.492192",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 494,
+      "requests_used": 6
+    },
+    {
+      "timestamp": "2026-08-02T11:13:39.165184",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 491,
+      "requests_used": 9
+    },
+    {
+      "timestamp": "2026-08-02T11:13:39.369383",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 491,
+      "requests_used": 9
+    },
+    {
+      "timestamp": "2026-08-02T22:56:11.153561",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 488,
+      "requests_used": 12
+    },
+    {
+      "timestamp": "2026-08-02T22:56:11.432274",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 488,
+      "requests_used": 12
+    },
+    {
+      "timestamp": "2026-08-03T12:52:52.113548",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 485,
+      "requests_used": 15
+    },
+    {
+      "timestamp": "2026-08-03T12:52:52.369345",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 485,
+      "requests_used": 15
+    },
+    {
+      "timestamp": "2026-08-03T22:59:31.510918",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 482,
+      "requests_used": 18
+    },
+    {
+      "timestamp": "2026-08-03T22:59:31.795787",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 482,
+      "requests_used": 18
+    },
+    {
+      "timestamp": "2026-08-04T12:00:11.754550",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 479,
+      "requests_used": 21
+    },
+    {
+      "timestamp": "2026-08-04T12:00:11.941328",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 479,
+      "requests_used": 21
+    },
+    {
+      "timestamp": "2026-08-04T23:02:40.370671",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 476,
+      "requests_used": 24
+    },
+    {
+      "timestamp": "2026-08-04T23:02:40.630325",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 476,
+      "requests_used": 24
+    },
+    {
+      "timestamp": "2026-08-05T11:55:51.585112",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 473,
+      "requests_used": 27
+    },
+    {
+      "timestamp": "2026-08-05T11:55:52.115783",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 473,
+      "requests_used": 27
+    },
+    {
+      "timestamp": "2026-08-05T22:57:53.407486",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 470,
+      "requests_used": 30
+    },
+    {
+      "timestamp": "2026-08-05T22:57:53.711421",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 470,
+      "requests_used": 30
+    },
+    {
+      "timestamp": "2026-08-06T11:59:56.487941",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 467,
+      "requests_used": 33
+    },
+    {
+      "timestamp": "2026-08-06T11:59:56.739926",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 467,
+      "requests_used": 33
+    },
+    {
+      "timestamp": "2026-08-07T01:29:34.446318",
+      "sport": "nfl",
+      "games_fetched": 272,
+      "requests_remaining": 464,
+      "requests_used": 36
+    },
+    {
+      "timestamp": "2026-08-07T01:29:34.667149",
+      "sport": "nba",
+      "games_fetched": 0,
+      "requests_remaining": 464,
+      "requests_used": 36
     }
   ],
-  "last_remaining": 284
+  "last_remaining": 464
 }
