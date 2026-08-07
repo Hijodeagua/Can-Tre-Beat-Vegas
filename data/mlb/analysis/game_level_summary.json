@@ -1,0 +1,158 @@
+{
+  "era_same_vs_prior": {
+    "same": {
+      "point_biserial_r": 0.1614,
+      "accuracy": 0.5703,
+      "log_loss": 0.67772,
+      "n": 35737
+    },
+    "prior": {
+      "point_biserial_r": 0.0989,
+      "accuracy": 0.5519,
+      "log_loss": 0.68601,
+      "n": 35737
+    }
+  },
+  "rolling_crossover": [
+    {
+      "games_played_cutoff": 5,
+      "n": 34560,
+      "r_prior": 0.1134,
+      "acc_prior": 0.5565,
+      "ll_prior": 0.68435,
+      "r_roll": 0.1208,
+      "acc_roll": 0.5561,
+      "ll_roll": 0.68344,
+      "acc_combo": 0.5624,
+      "ll_combo": 0.6814,
+      "combo_beta_prior": 0.1397,
+      "combo_beta_roll": 0.1322
+    },
+    {
+      "games_played_cutoff": 10,
+      "n": 33411,
+      "r_prior": 0.1129,
+      "acc_prior": 0.5568,
+      "ll_prior": 0.6844,
+      "r_roll": 0.1264,
+      "acc_roll": 0.5558,
+      "ll_roll": 0.68274,
+      "acc_combo": 0.5635,
+      "ll_combo": 0.68106,
+      "combo_beta_prior": 0.1281,
+      "combo_beta_roll": 0.1511
+    },
+    {
+      "games_played_cutoff": 20,
+      "n": 31116,
+      "r_prior": 0.1116,
+      "acc_prior": 0.5558,
+      "ll_prior": 0.6844,
+      "r_roll": 0.133,
+      "acc_roll": 0.557,
+      "ll_roll": 0.68174,
+      "acc_combo": 0.5635,
+      "ll_combo": 0.68047,
+      "combo_beta_prior": 0.114,
+      "combo_beta_roll": 0.1735
+    },
+    {
+      "games_played_cutoff": 30,
+      "n": 28858,
+      "r_prior": 0.1145,
+      "acc_prior": 0.5568,
+      "ll_prior": 0.68414,
+      "r_roll": 0.1369,
+      "acc_roll": 0.5583,
+      "ll_roll": 0.68126,
+      "acc_combo": 0.5641,
+      "ll_combo": 0.68004,
+      "combo_beta_prior": 0.1124,
+      "combo_beta_roll": 0.185
+    },
+    {
+      "games_played_cutoff": 40,
+      "n": 26592,
+      "r_prior": 0.1128,
+      "acc_prior": 0.5577,
+      "ll_prior": 0.68412,
+      "r_roll": 0.1427,
+      "acc_roll": 0.5608,
+      "ll_roll": 0.68024,
+      "acc_combo": 0.5645,
+      "ll_combo": 0.67935,
+      "combo_beta_prior": 0.0968,
+      "combo_beta_roll": 0.2059
+    },
+    {
+      "games_played_cutoff": 50,
+      "n": 24317,
+      "r_prior": 0.1126,
+      "acc_prior": 0.5576,
+      "ll_prior": 0.68427,
+      "r_roll": 0.145,
+      "acc_roll": 0.5625,
+      "ll_roll": 0.68002,
+      "acc_combo": 0.565,
+      "ll_combo": 0.67925,
+      "combo_beta_prior": 0.0908,
+      "combo_beta_roll": 0.2162
+    },
+    {
+      "games_played_cutoff": 60,
+      "n": 22088,
+      "r_prior": 0.1131,
+      "acc_prior": 0.5576,
+      "ll_prior": 0.68426,
+      "r_roll": 0.1456,
+      "acc_roll": 0.5636,
+      "ll_roll": 0.67997,
+      "acc_combo": 0.5664,
+      "ll_combo": 0.67924,
+      "combo_beta_prior": 0.0889,
+      "combo_beta_roll": 0.22
+    },
+    {
+      "games_played_cutoff": 81,
+      "n": 17346,
+      "r_prior": 0.1147,
+      "acc_prior": 0.5579,
+      "ll_prior": 0.68396,
+      "r_roll": 0.1548,
+      "acc_roll": 0.5679,
+      "ll_roll": 0.67844,
+      "acc_combo": 0.5705,
+      "ll_combo": 0.6779,
+      "combo_beta_prior": 0.0768,
+      "combo_beta_roll": 0.2488
+    },
+    {
+      "games_played_cutoff": 100,
+      "n": 13093,
+      "r_prior": 0.1124,
+      "acc_prior": 0.5572,
+      "ll_prior": 0.68441,
+      "r_roll": 0.1634,
+      "acc_roll": 0.5687,
+      "ll_roll": 0.67722,
+      "acc_combo": 0.5721,
+      "ll_combo": 0.67693,
+      "combo_beta_prior": 0.0563,
+      "combo_beta_roll": 0.2789
+    },
+    {
+      "games_played_cutoff": 130,
+      "n": 6622,
+      "r_prior": 0.1171,
+      "acc_prior": 0.5563,
+      "ll_prior": 0.68406,
+      "r_roll": 0.1672,
+      "acc_roll": 0.5711,
+      "ll_roll": 0.67679,
+      "acc_combo": 0.577,
+      "ll_combo": 0.67646,
+      "combo_beta_prior": 0.0607,
+      "combo_beta_roll": 0.2826
+    }
+  ]
+}
