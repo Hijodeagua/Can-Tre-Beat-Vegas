@@ -1,0 +1,56 @@
+# One-shot data utility: retrosheet.org is unreachable from the Claude
+# sandbox, so this fetches the 2009-2025 game logs on a runner (open egress),
+# extracts per-game starting pitchers, and commits the CSV back to the
+# branch. Re-run manually (workflow_dispatch) if the extraction ever needs a
+# refresh; the push trigger only fires when the extractor itself changes on
+# the development branch.
+
+name: Fetch historical starters
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/mlb-prediction-email-pipeline-e396nj]
+    paths:
+      - "mlb/build_starters.py"
+      - ".github/workflows/fetch-starters.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-starters-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Extract starting pitchers from Retrosheet game logs
+        run: python -m mlb.build_starters
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/mlb/starting_pitchers_2009_2025.csv
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Add Retrosheet starting pitchers 2009-2025"
+            for i in 1 2 3 4; do
+              git pull --rebase && git push && break
+              echo "push attempt $i failed; retrying"
+              sleep $((2 ** i))
+            done
+          else
+            echo "No changes."
+          fi

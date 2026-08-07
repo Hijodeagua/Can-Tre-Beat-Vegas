@@ -10,7 +10,8 @@ from mlb.daily.config import ALL_TEAMS, DIVISIONS
 from mlb.daily.update_games import parse_games
 
 
-def _api_game(away, home, state="F", away_score=None, home_score=None, num=1):
+def _api_game(away, home, state="F", away_score=None, home_score=None, num=1,
+              away_sp=None, home_sp=None):
     g = {
         "gameNumber": num,
         "status": {"codedGameState": state},
@@ -22,6 +23,10 @@ def _api_game(away, home, state="F", away_score=None, home_score=None, num=1):
     if away_score is not None:
         g["teams"]["away"]["score"] = away_score
         g["teams"]["home"]["score"] = home_score
+    if away_sp is not None:
+        g["teams"]["away"]["probablePitcher"] = {"id": 1, "fullName": away_sp}
+    if home_sp is not None:
+        g["teams"]["home"]["probablePitcher"] = {"id": 2, "fullName": home_sp}
     return g
 
 
@@ -30,7 +35,8 @@ def test_parse_games_splits_finals_and_upcoming():
         "date": "2026-08-06",
         "games": [
             _api_game("Houston Astros", "St. Louis Cardinals", "F", 9, 3),
-            _api_game("New York Yankees", "Boston Red Sox", "S"),
+            _api_game("New York Yankees", "Boston Red Sox", "S",
+                      away_sp="Gerrit Cole"),  # home SP not yet announced
             _api_game("Athletics", "Seattle Mariners", "F", 2, 4, num=2),
             _api_game("Toronto Blue Jays", "Detroit Tigers", "D"),  # postponed
             _api_game("Fake Exhibition Team", "Boston Red Sox", "F", 1, 2),
@@ -43,6 +49,9 @@ def test_parse_games_splits_finals_and_upcoming():
     assert (hou["away_score"], hou["home_score"]) == (9, 3)
     assert finals[1]["game_num"] == 2
     assert upcoming[0]["home_fr"] == "BOS"
+    # Probable starters ride along on upcoming games; missing -> empty string.
+    assert upcoming[0]["away_sp"] == "Gerrit Cole"
+    assert upcoming[0]["home_sp"] == ""
 
 
 @pytest.fixture
@@ -152,6 +161,25 @@ def test_grading_math(tmp_path, monkeypatch):
     graded2 = grade.grade_day("2026-08-06", games)
     row2 = grade.update_ledger("2026-08-06", graded2)
     assert int(row2["cum_games"]) == 2
+
+
+def test_slate_predictions_carry_probable_starters(params):
+    ratings = {"HOU": 1550.0, "STL": 1490.0}
+    slate = [{
+        "date": "2026-08-08", "away": "HOU", "home": "STL",
+        "away_fr": "HOU", "home_fr": "STL", "game_num": 1,
+        "away_sp": "Framber Valdez", "home_sp": "",
+    }]
+    df = simulate.slate_predictions(ratings, slate, params, n=500)
+    assert df.iloc[0].away_sp == "Framber Valdez"
+    assert df.iloc[0].home_sp == ""
+
+
+def test_pitcher_name_normalization():
+    from mlb.build_pitchers import normalize_name
+    assert normalize_name("Félix Hernández") == "felix hernandez"
+    assert normalize_name("Liván  Hernández") == "livan hernandez"
+    assert normalize_name("J.A. Happ") == "j a happ"
 
 
 def test_missing_slate_returns_none():

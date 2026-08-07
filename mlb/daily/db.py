@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS mlb_slate_predictions (
     away TEXT NOT NULL,
     home TEXT NOT NULL,
     game_num INT NOT NULL,
+    away_sp TEXT,
+    home_sp TEXT,
     p_home DOUBLE PRECISION,
     pick TEXT,
     pick_prob DOUBLE PRECISION,
