@@ -14,6 +14,9 @@ type SlateRow = {
   away: string;
   home: string;
   game_num: number;
+  /** Probable starters — display only, not a model input. */
+  away_sp?: string;
+  home_sp?: string;
   p_home: number;
   pick: string;
   pick_prob: number;
@@ -183,6 +186,7 @@ function SlateTab() {
         <thead>
           <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
             <th className="px-3 py-2">Matchup (home in bold)</th>
+            <th className="px-3 py-2">SP (away vs. home)</th>
             <th className="px-3 py-2">Pick</th>
             <th className="px-3 py-2">Win prob</th>
             <th className="px-3 py-2">Sim score</th>
@@ -203,6 +207,9 @@ function SlateTab() {
                   {teamName(g.away)} @ <b>{teamName(g.home)}</b>
                   {g.game_num > 1 ? ` (G${g.game_num})` : ''}
                 </td>
+                <td className="px-3 py-2 text-xs text-slate-500">
+                  {(g.away_sp || 'TBD') + ' vs. ' + (g.home_sp || 'TBD')}
+                </td>
                 <td className="px-3 py-2 font-semibold">{teamName(g.pick)}</td>
                 <td className="px-3 py-2">{pct(g.pick_prob)}</td>
                 <td className="px-3 py-2">{score}</td>
@@ -212,8 +219,10 @@ function SlateTab() {
         </tbody>
       </table>
       <p className="px-3 py-2 text-xs text-slate-400">
-        Score is the rounded mean of 10,000 sims, conditioned on the picked
-        side winning (winner&apos;s runs first).
+        Probable starters shown for context only — the model is team-level
+        Elo and does not use starter identity. Score is the rounded mean of
+        10,000 sims, conditioned on the picked side winning (winner&apos;s
+        runs first).
       </p>
     </div>
   );

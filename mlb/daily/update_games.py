@@ -26,7 +26,7 @@ from mlb.daily.config import CURRENT_SEASON, GAMES_CSV, SCHEDULE_CSV
 
 SCHEDULE_URL = (
     "https://statsapi.mlb.com/api/v1/schedule?sportId=1&gameType=R"
-    "&startDate={start}&endDate={end}"
+    "&startDate={start}&endDate={end}&hydrate=probablePitcher"
 )
 SEASON_END = f"{CURRENT_SEASON}-11-30"
 
@@ -68,8 +68,26 @@ def parse_games(data: dict) -> tuple[list[dict], list[dict]]:
                 })
             elif state not in ("C", "D"):  # skip cancelled; postponed games
                 # reappear on their makeup date in a later pull
-                upcoming.append(base)
+                upcoming.append({
+                    **base,
+                    # Probable starters (hydrate=probablePitcher). Display
+                    # only - the Elo model does not use starter identity.
+                    # Empty string when MLB hasn't announced one yet.
+                    "away_sp": _probable(teams["away"]),
+                    "home_sp": _probable(teams["home"]),
+                    "away_sp_id": _probable_id(teams["away"]),
+                    "home_sp_id": _probable_id(teams["home"]),
+                })
     return finals, upcoming
+
+
+def _probable(side: dict) -> str:
+    return (side.get("probablePitcher") or {}).get("fullName", "")
+
+
+def _probable_id(side: dict) -> str:
+    pid = (side.get("probablePitcher") or {}).get("id")
+    return str(pid) if pid is not None else ""
 
 
 def read_games() -> list[dict]:
@@ -126,7 +144,8 @@ def write_schedule(upcoming: list[dict]) -> None:
         w = csv.DictWriter(
             fh,
             fieldnames=["date", "season", "game_num", "away", "home",
-                        "away_fr", "home_fr"],
+                        "away_fr", "home_fr",
+                        "away_sp", "home_sp", "away_sp_id", "home_sp_id"],
         )
         w.writeheader()
         w.writerows(upcoming)
