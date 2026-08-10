@@ -45,12 +45,14 @@ QUICK = {
 }
 
 
-def run_grid(games: pd.DataFrame, grid: dict[str, list[float]]) -> pd.DataFrame:
+def run_grid(
+    games: pd.DataFrame, grid: dict[str, list[float]], clusters=None
+) -> pd.DataFrame:
     rows = []
     combos = list(itertools.product(*grid.values()))
     for i, combo in enumerate(combos, 1):
         params = dict(zip(grid.keys(), combo))
-        res = elo.evaluate(games, **params)
+        res = elo.evaluate(games, clusters=clusters, **params)
         rows.append({**params, **res})
         if i % 25 == 0 or i == len(combos):
             print(f"  {i}/{len(combos)} configs done")
@@ -91,13 +93,27 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--refine", action="store_true")
+    ap.add_argument(
+        "--clusters",
+        action="store_true",
+        help="regress toward conference-cluster means (CFB.conferences)",
+    )
     args = ap.parse_args()
 
+    clusters = None
+    if args.clusters:
+        from CFB.conferences import load_clusters
+
+        clusters = load_clusters()
+
     games = elo.load_games(pool=True)
-    print(f"{len(games)} games loaded (FCS pooled); scoring on {elo.EVAL_FROM}+")
+    print(
+        f"{len(games)} games loaded (FCS pooled); scoring on {elo.EVAL_FROM}+"
+        + ("; cluster-mean regression" if clusters else "")
+    )
 
     grid = QUICK if args.quick else COARSE
-    results = run_grid(games, grid)
+    results = run_grid(games, grid, clusters=clusters)
 
     if args.refine and not args.quick:
         # Keep bracketing the winner until it sits in a grid interior (or
@@ -106,7 +122,7 @@ def main() -> None:
         for i in range(3):
             print(f"refine pass {i + 1} around current best…")
             prev_best = tuple(results.iloc[0][["k", "hfa", "regression", "margin_cap"]])
-            fine = run_grid(games, refine_grid(results.iloc[0]))
+            fine = run_grid(games, refine_grid(results.iloc[0]), clusters=clusters)
             results = (
                 pd.concat([results, fine], ignore_index=True)
                 .drop_duplicates(subset=["k", "hfa", "regression", "margin_cap"])

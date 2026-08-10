@@ -11,10 +11,13 @@ How the fitted values landed vs the plan's §8 guesses:
 - **HFA = 50 Elo** — *lower* than the NFL's 55 in Elo, but at the fitted
   18.6 Elo/point it is **~2.7 points**, more than the NFL's ~2.2, matching
   the plan's expectation in the units that matter.
-- **Season regression = 0.20** toward 1500 — the plan guessed 0.35-0.50 for
-  roster churn and was wrong: with K this high the ratings re-sort quickly
-  anyway, so gentler carryover wins. Conference-mean regression (§3.1)
-  still untested — needs the standings pull.
+- **Season regression = 0.35 toward the conference-cluster mean** (see
+  ``CFB.conferences`` — clusters recovered from schedule structure, no
+  standings pull needed). The plan guessed 0.35-0.50 and was right *given
+  a meaningful target*: under flat-1500 regression the optimum collapses
+  to 0.20, because heavy regression toward a wrong target destroys
+  information. Cluster mode is the default whenever the cluster map
+  exists; ``--flat`` restores flat regression.
 - **No margin cap** — the engine's log MOV damping already discounts
   blowouts; every capped config graded worse.
 - **FCS opponents pooled** into one synthetic ``FCS`` team (plan §3.4);
@@ -30,23 +33,25 @@ Usage
 from __future__ import annotations
 
 import argparse
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from NFL.model.v2.elo import EloEngine
+from NFL.model.v2.elo import BASE_RATING as _BASE, EloEngine
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AGG_DIR = REPO_ROOT / "data" / "college_football" / "agg"
 
-# Fitted by CFB.fit on walk-forward log loss, 2005+ (grid in agg/fit_grid.csv).
+# Fitted by CFB.fit on walk-forward log loss, 2005+ (grid in agg/fit_grid.csv),
+# under the default conference-cluster regression.
 BASE_RATING = 1500.0
 K_FACTOR = 35.0
 POSTSEASON_K_MULT = 1.2
 HFA_ELO = 50.0
-SEASON_REGRESSION = 0.20
-ELO_PER_POINT = 18.6  # margin regression through the origin, 2005+
+SEASON_REGRESSION = 0.35  # toward cluster mean; flat-1500 mode optimises at 0.20
+ELO_PER_POINT = 16.5  # margin regression through the origin, 2005+
 MARGIN_CAP = 999.0  # grid preferred uncapped; log MOV damping suffices
 
 POSTSEASON_TYPES = {"BOWL", "CCG"}
@@ -119,6 +124,36 @@ def pool_fcs(
     return df[~both].reset_index(drop=True)
 
 
+class ClusterRegressEngine(EloEngine):
+    """Season roll regresses toward the team's *conference-cluster* mean.
+
+    ``clusters`` maps ``(season, team) -> cluster id`` (see
+    ``CFB.conferences``); membership of the season being entered is used,
+    which is known before kickoff. The target for a cluster is the mean of
+    its incoming members' carried-over ratings; teams without a cluster
+    that season (the pooled FCS side, programs entering FBS) regress toward
+    1500 exactly as the flat engine does.
+    """
+
+    def __init__(self, clusters: dict[tuple[int, str], int], **kwargs):
+        super().__init__(**kwargs)
+        self.clusters = clusters
+
+    def _roll_season(self, season: int) -> None:
+        if self._last_season is not None and season != self._last_season:
+            groups: dict[int, list[float]] = defaultdict(list)
+            for team, r in self.ratings.items():
+                c = self.clusters.get((season, team))
+                if c is not None:
+                    groups[c].append(r)
+            means = {c: sum(v) / len(v) for c, v in groups.items()}
+            for team, r in self.ratings.items():
+                c = self.clusters.get((season, team))
+                target = means[c] if c in means else _BASE
+                self.ratings[team] = target + (1 - self.regression) * (r - target)
+        self._last_season = season
+
+
 def walk_forward(
     games: pd.DataFrame,
     *,
@@ -126,6 +161,7 @@ def walk_forward(
     hfa: float = HFA_ELO,
     regression: float = SEASON_REGRESSION,
     margin_cap: float = MARGIN_CAP,
+    clusters: dict[tuple[int, str], int] | None = None,
 ) -> tuple[pd.DataFrame, EloEngine]:
     """One chronological pass: attach pregame Elo columns, update on results.
 
@@ -134,7 +170,10 @@ def walk_forward(
     tweak to the update rule cannot fork behaviour.
     """
     df = games.sort_values(["gameday", "home_team"]).reset_index(drop=True)
-    engine = EloEngine(k=k, hfa=hfa, regression=regression)
+    if clusters is None:
+        engine = EloEngine(k=k, hfa=hfa, regression=regression)
+    else:
+        engine = ClusterRegressEngine(clusters, k=k, hfa=hfa, regression=regression)
 
     home_elo, away_elo, probs = [], [], []
     for row in df.itertuples(index=False):
@@ -174,10 +213,12 @@ def compute_elo(games: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def ratings_board(games: pd.DataFrame) -> pd.DataFrame:
+def ratings_board(
+    games: pd.DataFrame, clusters: dict[tuple[int, str], int] | None = None
+) -> pd.DataFrame:
     """Final ratings plus each team's season line, sorted."""
     played = games.dropna(subset=["home_score", "away_score"])
-    _, engine = walk_forward(played)
+    _, engine = walk_forward(played, clusters=clusters)
 
     recs: dict[str, list[int]] = {}
     for row in played.itertuples(index=False):
@@ -204,7 +245,7 @@ def ratings_board(games: pd.DataFrame) -> pd.DataFrame:
 def evaluate(
     games: pd.DataFrame,
     eval_from: int | None = EVAL_FROM,
-    **constants: float,
+    **constants,
 ) -> dict[str, float]:
     """Walk-forward log loss and accuracy of pregame probabilities.
 
@@ -233,10 +274,22 @@ def main() -> None:
     ap.add_argument(
         "--no-pool", action="store_true", help="rate FCS opponents individually"
     )
+    ap.add_argument(
+        "--flat", action="store_true", help="flat-1500 season regression"
+    )
     args = ap.parse_args()
 
+    # Conference-cluster regression is the default whenever the cluster map
+    # exists (python3 -m CFB.conferences builds it).
+    clusters = None
+    if not args.flat and (AGG_DIR / "cfb_conference_clusters.csv").exists():
+        from CFB.conferences import load_clusters
+
+        clusters = load_clusters()
+        print("season regression: conference-cluster means")
+
     games = load_games(pool=not args.no_pool, verbose=True)
-    board = ratings_board(games)
+    board = ratings_board(games, clusters=clusters)
     board.to_csv(AGG_DIR / "cfb_elo_ratings.csv", index=False)
 
     fbs = board[~board["small_sample"]]
@@ -246,8 +299,8 @@ def main() -> None:
         r = fcs_row.iloc[0]
         print(f"\npooled FCS team: elo={r['elo']}  ({r['w']}-{r['l']} vs FBS)")
     print()
-    print("eval 2005+ :", evaluate(games))
-    print("eval all   :", evaluate(games, eval_from=None))
+    print("eval 2005+ :", evaluate(games, clusters=clusters))
+    print("eval all   :", evaluate(games, eval_from=None, clusters=clusters))
 
 
 if __name__ == "__main__":

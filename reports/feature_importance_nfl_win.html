@@ -416,9 +416,15 @@ function chart3() {
     const mark = el("path", { d: barPath(x(0), y, w, barH, better ? 1 : -1),
       fill: css(better ? "--div-pos" : "--div-neg") }, svg);
     el("text", { x: mL - 8, y: y + barH - 4, "text-anchor": "end", class: "cat" }, svg).textContent = d.v;
-    el("text", { x: x(0) + w + (better ? 6 : -6), y: y + barH - 4,
-      "text-anchor": better ? "start" : "end", class: "val" }, svg).textContent =
-      (d.d > 0 ? "+" : "") + d.d.toFixed(4);
+    // A long negative bar reaches the category gutter — when the outside
+    // label won't fit, set it inside the bar's data end (white on the
+    // saturated fill clears contrast).
+    const labelW = 52;
+    const inside = !better && x(0) + w - labelW < mL;
+    const lbl = el("text", { x: x(0) + w + (better ? 6 : inside ? 6 : -6), y: y + barH - 4,
+      "text-anchor": better || inside ? "start" : "end", class: "val" }, svg);
+    if (inside) lbl.setAttribute("fill", "#ffffff");
+    lbl.textContent = (d.d > 0 ? "+" : "") + d.d.toFixed(4);
     const hit = el("rect", { x: 0, y: mT + i * band, width: W, height: band, class: "hit", tabindex: 0, role: "img",
       "aria-label": `${d.v}: ${d.d > 0 ? "+" : ""}${d.d.toFixed(4)} log-loss vs base` }, svg);
     wireHit(hit, mark, (e) => showTip(e, (d.d > 0 ? "+" : "") + d.d.toFixed(4), d.v + " vs base Elo",

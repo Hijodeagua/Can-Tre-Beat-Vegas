@@ -38,6 +38,43 @@ def test_full_schedule_team_kept_small_sample_pooled(tmp_path, monkeypatch):
     assert len(pooled) == 6
 
 
+def test_cluster_regression_targets_cluster_mean():
+    clusters = {(2001, "A1"): 0, (2001, "A2"): 0, (2001, "B1"): 1, (2001, "B2"): 1}
+    eng = elo.ClusterRegressEngine(clusters, regression=0.5)
+    eng.ratings.update({"A1": 1700.0, "A2": 1500.0, "B1": 1300.0, "B2": 1400.0})
+    eng._last_season = 2000
+    eng._roll_season(2001)
+    # Cluster A mean 1600: A1 regresses 1700 -> 1650, A2 1500 -> 1550.
+    assert eng.ratings["A1"] == 1650.0
+    assert eng.ratings["A2"] == 1550.0
+    # Cluster B mean 1350: B1 -> 1325, B2 -> 1375.
+    assert eng.ratings["B1"] == 1325.0
+    assert eng.ratings["B2"] == 1375.0
+
+
+def test_cluster_regression_unclustered_falls_back_to_base():
+    eng = elo.ClusterRegressEngine({}, regression=0.5)
+    eng.ratings.update({"Lone U": 1700.0})
+    eng._last_season = 2000
+    eng._roll_season(2001)
+    assert eng.ratings["Lone U"] == 1600.0  # halfway to 1500
+
+
+def test_conference_clustering_separates_cliques():
+    from CFB.conferences import _cluster_graph
+
+    edges = []
+    conf_a = ["A1", "A2", "A3", "A4"]
+    conf_b = ["B1", "B2", "B3", "B4"]
+    for conf in (conf_a, conf_b):
+        edges += [(x, y) for i, x in enumerate(conf) for y in conf[i + 1:]]
+    edges.append(("A1", "B1"))  # one cross-conference game
+    labels = _cluster_graph(edges)
+    assert len({labels[t] for t in conf_a}) == 1
+    assert len({labels[t] for t in conf_b}) == 1
+    assert labels["A1"] != labels["B1"]
+
+
 def test_stats_universe_membership_counts(tmp_path, monkeypatch):
     monkeypatch.setattr(elo, "AGG_DIR", tmp_path)
     pd.DataFrame({"season": [2019], "team": ["Listed U"]}).to_csv(

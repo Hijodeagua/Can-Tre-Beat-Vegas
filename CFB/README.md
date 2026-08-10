@@ -1,8 +1,10 @@
 # College football model
 
 Built against the pulls described in `DATA_PULL_PLAN.md`. Current state:
-**Tier 0 complete** — full 26-season history ingested, FCS pooled, and the
-§8 Elo constants **fitted by grid search** rather than guessed.
+**Tier 0 complete and the useful half of Tier 1 delivered without the
+blocked pulls** — full 26-season history, FCS pooled, conference-cluster
+season regression, an SRS benchmark the model beats, and every §8 constant
+fitted by grid search.
 
 ## Layout
 
@@ -10,8 +12,11 @@ Built against the pulls described in `DATA_PULL_PLAN.md`. Current state:
 CFB/
 ├── DATA_PULL_PLAN.md   # the shopping list — what to pull from CFR and why
 ├── ingest.py           # raw CFR exports -> tidy aggregates
-├── elo.py              # base head-to-head Elo, FCS pooled, fitted constants
-└── fit.py              # grid search for the §8 constants
+├── elo.py              # Elo: FCS pooled, cluster regression, fitted constants
+├── conferences.py      # per-season conference clusters from schedule structure
+├── benchmark.py        # walk-forward SRS benchmark vs the Elo
+├── fit.py              # grid search for the §8 constants
+└── pull_cfr.py         # polite CFR puller — currently Cloudflare-blocked, kept for reference
 
 data/college_football/
 ├── raw/                # CFR exports, committed as-is, never edited
@@ -22,6 +27,7 @@ data/college_football/
     ├── cfb_games.csv                  # game spine, home perspective, 21,300 games
     ├── cfb_offense_team_season.csv    # 3,240 team-seasons
     ├── cfb_defense_team_season.csv    # 3,240 team-seasons
+    ├── cfb_conference_clusters.csv    # (season, team) -> cluster id
     ├── cfb_elo_ratings.csv
     └── fit_grid.csv                   # every grid-search config, ranked
 ```
@@ -30,9 +36,11 @@ Rebuild everything:
 
 ```bash
 python3 -m CFB.ingest --validate
+python3 -m CFB.conferences                     # cluster map (needed by elo)
 python3 -m pytest tests/test_cfb_ingest.py tests/test_cfb_elo.py
 python3 -m CFB.elo
-python3 -m CFB.fit --refine        # re-fit the constants
+python3 -m CFB.benchmark                       # SRS vs Elo comparison
+python3 -m CFB.fit --refine --clusters         # re-fit the constants
 ```
 
 ## Data status
@@ -87,34 +95,61 @@ FBS (8.2%)** at a final rating of ~810 — right where a buy-game aggregate
 should sit. `--no-pool` restores individual ratings. Known accepted flaw:
 North Dakota State and an FCS bottom-feeder are the same team to the pool.
 
-## Fitted constants (CFB.fit, walk-forward log loss on 2005+)
+## Conference clusters without the standings pull (§3.1, unblocked)
+
+CFR's standings/ratings/school pages **Cloudflare-block every automated
+route** (plain requests 403, headless Chrome gets the challenge page,
+WebFetch 403) — `pull_cfr.py` exists and is resumable if access ever
+works, but the manual *Share & Export* clicks or a CFBD API key remain the
+only ways to their actual tables. The two things the pull was *for* turned
+out not to need it:
+
+- **Per-season conference maps** (`CFB.conferences`): conferences are the
+  dense communities in each season's schedule graph (8-9 intra-conference
+  games vs 3-4 outside), recovered by one-level Louvain modularity
+  clustering. 2024 check: Big Ten (18) and Big 12 (16) exact; MWC includes
+  Oregon State/Washington State, which is their actual scheduling reality;
+  the 16-17 team SEC/ACC each split into two pods, which is fine for a
+  regression target. Realignment is free — every season clusters
+  independently. (Plain label propagation was tried first and merged the
+  P5 into mega-clusters; don't regress to it.)
+- **SRS** (`CFB.benchmark`): computed from our own spine — same published
+  algorithm, solved weekly walk-forward so it never sees the future.
+
+## Fitted constants (CFB.fit --clusters, walk-forward log loss on 2005+)
 
 | Parameter | NFL | Plan §8 guess | **Fitted** |
 |---|---|---|---|
 | K | 20 | 20-40 | **35** |
-| HFA (Elo) | 55 | 65-80 | **50** — but at 18.6 Elo/pt that's **~2.7 points**, more than the NFL's ~2.2, as predicted |
-| Season regression | 0.25 | 0.35-0.50 | **0.20** — the churn hypothesis was wrong; high K re-sorts ratings fast enough that gentler carryover wins |
+| HFA (Elo) | 55 | 65-80 | **50** — but at 16.5 Elo/pt that's **~3.0 points**, more than the NFL's ~2.2, as predicted |
+| Season regression | 0.25 | 0.35-0.50 | **0.35 toward the conference-cluster mean.** The churn hypothesis was right *given a meaningful target* — under flat-1500 regression the optimum collapses to 0.20 because heavy regression toward a wrong target destroys information |
 | Margin cap | none | 28-35 | **none** — every capped config graded worse; log MOV damping suffices |
-| Elo per point | 25 | 27-32 | **18.6** (margin regression) |
+| Elo per point | 25 | 27-32 | **16.5** (margin regression) |
 
-The surface is flat near the optimum (anything in K 32-35 / HFA 45-60 /
-regression 0.15-0.25 is within 0.0003 log loss), so these are stable. Full
-ranked grid: `data/college_football/agg/fit_grid.csv`.
+The surface is flat near the optimum, so these are stable. Full ranked
+grid: `data/college_football/agg/fit_grid.csv`.
 
-## Results (fitted constants, FCS pooled)
+## Results (fitted constants, FCS pooled, cluster regression)
 
 Walk-forward pregame win probabilities, ratings warmed up from 2000:
 
-- **2005+ (17,622 games): log loss 0.5079, accuracy 74.2%**
-- All seasons (21,300): 0.5095 / 74.2%
+| Model | eval set | log loss | accuracy |
+|---|---|---|---|
+| **Elo, cluster regression** | 2005+, all weeks (17,622) | **0.5014** | **74.6%** |
+| Elo, flat regression | 2005+, all weeks | 0.5079 | 74.2% |
+| **Elo, cluster** | 2005+, weeks 4+ (13,732 — SRS-comparable) | **0.5353** | 72.3% |
+| SRS benchmark | same 13,732 games | 0.5534 | 71.5% |
 
-Not comparable to the NFL numbers (~0.63 log loss) — CFB has cupcake
-blowouts the NFL doesn't, which any rating system calls correctly. The
-honest yardstick will be the market (§7) and SRS (§3.1) once those are in.
+**The model beats its SRS benchmark** on identical games — the §3.1
+"something to lose to" exists and we don't lose to it. (SRS carries no
+prior-season memory, so early weeks favour Elo by construction; that gap
+is real predictive value, not an artifact.) Not comparable to the NFL's
+~0.63 log loss — CFB has cupcake blowouts the NFL doesn't. The remaining
+honest yardstick is the market (§7), collecting from the 2026 opener.
 
-End-of-2025 board top 10: Indiana, Ohio State, Miami (FL), Notre Dame,
-Georgia, Oregon, Mississippi, Texas, Texas Tech, Utah — a sane list, from
-scores alone.
+End-of-2025 board top 10: Indiana, Georgia, Ohio State, Miami (FL),
+Oregon, Mississippi, Notre Dame, Texas, Texas Tech, Iowa — a sane list,
+from scores alone.
 
 ## Odds feed (plan §7) — wired
 
@@ -128,11 +163,12 @@ web slate (optional follow-up).
 
 ## Known gaps (in priority order)
 
-1. **Flat-1500 season regression.** Needs the standings pull for
-   conference-mean regression (plan §3.1) — a manual CFR export, and the
-   most likely next win now that flat regression is fitted.
-2. **No market benchmark yet** — the odds feed starts collecting when the
+1. **No market benchmark yet** — the odds feed starts collecting when the
    2026 season opens; historical CFB lines would come from CFBD.
-3. **School-name crosswalk** (plan §3.3) — 13 known schedule↔stats aliases;
-   needed before joining the scoring aggregates onto games.
-4. **Weekly polls** (plan §3.2) — manual pulls, not started.
+2. **School-name crosswalk** (plan §3.3) — 13 known schedule↔stats aliases
+   (list printed by `CFB.elo`); needed before joining the scoring
+   aggregates onto games as features.
+3. **Weekly polls / real conference names / AP ranks** (plan §3.1-3.2) —
+   blocked online (Cloudflare); manual CFR exports or a CFBD key. The
+   preseason-poll prior and ranked-opponent flag wait on this.
+4. **Tier 2 features** (QB stats, coaching changes) — plan §4, untouched.
