@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS mlb_slate_predictions (
     game_num INT NOT NULL,
     away_sp TEXT,
     home_sp TEXT,
+    pred_total DOUBLE PRECISION,
     p_home DOUBLE PRECISION,
     pick TEXT,
     pick_prob DOUBLE PRECISION,
@@ -65,6 +66,7 @@ CREATE TABLE IF NOT EXISTS mlb_futures (
 MIGRATIONS = """
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp TEXT;
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS pred_total DOUBLE PRECISION;
 """
 
 
