@@ -175,6 +175,60 @@ def test_slate_predictions_carry_probable_starters(params):
     assert df.iloc[0].home_sp == ""
 
 
+def test_team_rates_matchup_totals():
+    from mlb.daily.scoring import TeamRates
+    rates = TeamRates()
+    # Feed a stretch where HOU outscores and CLE gets shut down.
+    for _ in range(60):
+        rates.observe("HOU", "SEA", 7, 4)   # HOU hot at home
+        rates.observe("CLE", "DET", 2, 3)   # CLE cold
+    hot = rates.matchup_total("HOU", "SEA")
+    cold = rates.matchup_total("CLE", "DET")
+    assert hot > cold
+    # Shrinkage keeps totals inside the clip range and near sane MLB values.
+    assert 5.5 <= cold < hot <= 13.5
+    # Unknown teams fall back to the league-average environment.
+    neutral = rates.matchup_total("NYY", "BOS")
+    assert cold < neutral < hot
+
+
+def test_rates_from_games_is_walk_forward():
+    from mlb.daily.scoring import rates_from_games
+    games = pd.DataFrame([
+        {"date": "2026-06-01", "game_num": 1, "home_fr": "NYY",
+         "away_fr": "BOS", "home_score": 10, "away_score": 9},
+        {"date": "2026-06-02", "game_num": 1, "home_fr": "NYY",
+         "away_fr": "BOS", "home_score": 0, "away_score": 1},
+    ])
+    r1 = rates_from_games(games, before_date="2026-06-02")
+    r2 = rates_from_games(games)
+    # The cutoff excludes the later game entirely (strictly-before join).
+    assert r1.w.get("NYY", 0) == 1.0
+    assert r2.w.get("NYY", 0) > 1.0
+
+
+def test_slate_scores_track_matchup_total(params):
+    from mlb.daily.scoring import TeamRates
+    rates = TeamRates()
+    for _ in range(60):
+        rates.observe("COL", "ARI", 6, 6)   # slugfest environment
+        rates.observe("SFG", "SDP", 2, 2)   # pitcher's duel environment
+    ratings = {t: 1500.0 for t in ("COL", "ARI", "SFG", "SDP")}
+    slate = [
+        {"date": "2026-08-10", "away": "COL", "home": "ARI",
+         "away_fr": "COL", "home_fr": "ARI", "game_num": 1},
+        {"date": "2026-08-10", "away": "SFG", "home": "SDP",
+         "away_fr": "SFG", "home_fr": "SDP", "game_num": 1},
+    ]
+    df = simulate.slate_predictions(ratings, slate, params, n=500, rates=rates)
+    slug, duel = df.iloc[0], df.iloc[1]
+    assert slug.pred_total > duel.pred_total
+    assert (slug.pred_home_score + slug.pred_away_score
+            > duel.pred_home_score + duel.pred_away_score)
+    # Same Elo -> same pick side (home) and score consistent with it.
+    assert slug.pred_home_score > slug.pred_away_score
+
+
 def test_pitcher_name_normalization():
     from mlb.build_pitchers import normalize_name
     assert normalize_name("Félix Hernández") == "felix hernandez"

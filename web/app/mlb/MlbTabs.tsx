@@ -17,6 +17,8 @@ type SlateRow = {
   /** Probable starters — display only, not a model input. */
   away_sp?: string;
   home_sp?: string;
+  /** Matchup-specific expected total runs (recent-form attack/defense). */
+  pred_total?: number;
   p_home: number;
   pick: string;
   pick_prob: number;
@@ -189,7 +191,8 @@ function SlateTab() {
             <th className="px-3 py-2">SP (away vs. home)</th>
             <th className="px-3 py-2">Pick</th>
             <th className="px-3 py-2">Win prob</th>
-            <th className="px-3 py-2">Sim score</th>
+            <th className="px-3 py-2">Exp. runs</th>
+            <th className="px-3 py-2">Exp. total</th>
           </tr>
         </thead>
         <tbody>
@@ -213,6 +216,9 @@ function SlateTab() {
                 <td className="px-3 py-2 font-semibold">{teamName(g.pick)}</td>
                 <td className="px-3 py-2">{pct(g.pick_prob)}</td>
                 <td className="px-3 py-2">{score}</td>
+                <td className="px-3 py-2">
+                  {g.pred_total != null ? g.pred_total.toFixed(1) : '—'}
+                </td>
               </tr>
             );
           })}
@@ -220,9 +226,13 @@ function SlateTab() {
       </table>
       <p className="px-3 py-2 text-xs text-slate-400">
         Probable starters shown for context only — the model is team-level
-        Elo and does not use starter identity. Score is the rounded mean of
-        10,000 sims, conditioned on the picked side winning (winner&apos;s
-        runs first).
+        Elo and does not use starter identity. Expected total is
+        matchup-specific (each club&apos;s recent runs scored/allowed,
+        ~20-game half-life, shrunk to league average); the Elo margin is
+        carved out of it, so the pick and win probability stay pure Elo.
+        Expected runs are shown at one decimal — averages over 10,000 sims
+        (winner&apos;s first), not a literal final score; integer rounding
+        collapses nearly every game onto 6–3.
       </p>
     </div>
   );

@@ -114,6 +114,8 @@ def slate_html(date: str, slate: pd.DataFrame) -> str:
             dh = f" (G{r.game_num})" if r.game_num > 1 else ""
             away_sp = getattr(r, "away_sp", "") or "TBD"
             home_sp = getattr(r, "home_sp", "") or "TBD"
+            total = getattr(r, "pred_total", None)
+            total_txt = f"{total:.1f}" if total is not None else "&mdash;"
             rows += (
                 f"<tr><td style='{STYLE_TD}'>{_name(r.away)} @ "
                 f"<b>{_name(r.home)}</b>{dh}</td>"
@@ -121,7 +123,8 @@ def slate_html(date: str, slate: pd.DataFrame) -> str:
                 f"{away_sp} vs. {home_sp}</td>"
                 f"<td style='{STYLE_TD}'><b>{_name(r.pick)}</b></td>"
                 f"<td style='{STYLE_TD}'>{_pct(r.pick_prob)}</td>"
-                f"<td style='{STYLE_TD}'>{score}</td></tr>"
+                f"<td style='{STYLE_TD}'>{score}</td>"
+                f"<td style='{STYLE_TD}'>{total_txt}</td></tr>"
             )
         body = (
             f"<table style='{STYLE_TABLE}'><tr>"
@@ -129,17 +132,21 @@ def slate_html(date: str, slate: pd.DataFrame) -> str:
             f"<th style='{STYLE_TH}'>SP (away vs. home)</th>"
             f"<th style='{STYLE_TH}'>Pick</th>"
             f"<th style='{STYLE_TH}'>Win prob</th>"
-            f"<th style='{STYLE_TH}'>Sim score (winner first)</th></tr>{rows}</table>"
+            f"<th style='{STYLE_TH}'>Exp. runs (winner first)</th>"
+            f"<th style='{STYLE_TH}'>Exp. total</th></tr>{rows}</table>"
             "<p style='color:#666;font-size:12px;'>Probable starters from "
             "MLB (TBD when unannounced) &mdash; shown for context only; the "
             "model is a team-level Elo and does not adjust for starter "
-            "identity. Win probability from Elo "
-            "(+24 home advantage). Score is the rounded mean of 10,000 "
-            "simulated scores, conditioned on the picked side winning &mdash; "
-            "reported over the modal scoreline because baseball's modal "
-            "scores are degenerate (3&ndash;2 regardless of matchup); the "
-            "conditional mean tracks team strength and always agrees with "
-            "the pick.</p>"
+            "identity. Win probability from Elo (+24 home advantage). "
+            "Expected total is matchup-specific: each club's recent runs "
+            "scored/allowed (exponentially weighted, ~20-game half-life, "
+            "shrunk to league average) sets the run environment, and the "
+            "Elo-implied margin is carved out of it &mdash; so hot offenses "
+            "and pitcher's duels get different totals while the pick and "
+            "win probability stay pure Elo. Expected runs are shown at one "
+            "decimal (integer rounding collapses nearly every game onto "
+            "6&ndash;3); read them as averages, not a literal final "
+            "score.</p>"
         )
     return _wrap(
         f"MLB Slate &mdash; {date}",
@@ -163,9 +170,9 @@ def grade_html(date: str, graded: pd.DataFrame | None,
         mark = "&#9989;" if r.pick_correct else "&#10060;"
         fav_home = r.pick == r.home
         pred = (
-            f"{int(r.pred_home_score)}&ndash;{int(r.pred_away_score)}"
+            f"{r.pred_home_score:g}&ndash;{r.pred_away_score:g}"
             if fav_home
-            else f"{int(r.pred_away_score)}&ndash;{int(r.pred_home_score)}"
+            else f"{r.pred_away_score:g}&ndash;{r.pred_home_score:g}"
         )
         act = f"{int(r.home_score)}&ndash;{int(r.away_score)}"
         rows += (

@@ -94,13 +94,20 @@ def _nb_draw(rng: np.random.Generator, mean: np.ndarray | float,
 
 
 def simulate_game(p_home: float, params: ScoreParams,
-                  n: int = 10000, seed: int | None = None) -> dict:
+                  n: int = 10000, seed: int | None = None,
+                  total: float | None = None) -> dict:
     """Simulate one matchup n times; return pick, probability and the
-    rounded conditional-mean score."""
+    rounded conditional-mean score.
+
+    `total` overrides the league-average expected total with a
+    matchup-specific one (from scoring.TeamRates); the Elo-implied margin
+    is carved out of whichever total is used, so win probability and
+    expected margin are unchanged by the override."""
     rng = np.random.default_rng(seed)
     margin = params.expected_margin(p_home)
-    home_mean = max((params.total_mean + margin) / 2.0, 0.25)
-    away_mean = max((params.total_mean - margin) / 2.0, 0.25)
+    t = params.total_mean if total is None else total
+    home_mean = max((t + margin) / 2.0, 0.25)
+    away_mean = max((t - margin) / 2.0, 0.25)
 
     home_runs = _nb_draw(rng, home_mean, params.dispersion, n).astype(float)
     away_runs = _nb_draw(rng, away_mean, params.dispersion, n).astype(float)
@@ -112,19 +119,20 @@ def simulate_game(p_home: float, params: ScoreParams,
 
     home_wins = home_runs > away_runs
     pick_home = p_home >= 0.5
-    cond = home_wins if pick_home else ~home_wins
-    if not cond.any():  # pathological; fall back to all sims
-        cond = np.ones(n, dtype=bool)
 
-    home_score = int(round(home_runs[cond].mean()))
-    away_score = int(round(away_runs[cond].mean()))
-    # Rounding can collapse the margin; nudge the winner up one to keep the
-    # reported score consistent with the pick.
-    if home_score == away_score:
-        if pick_home:
-            home_score += 1
-        else:
-            away_score += 1
+    # Report expected runs at one decimal rather than a rounded integer
+    # line: integer rounding collapses nearly every MLB matchup onto the
+    # same few scorelines (6-3, 7-3) because game-to-game differences in
+    # expected margin and total are smaller than a run. One decimal keeps
+    # the estimate honest (it is just E[runs]) and lets matchups differ.
+    home_score = round(home_mean, 1)
+    away_score = round(away_mean, 1)
+    # Keep the line consistent with the pick: near p_home = 0.5 the margin
+    # fit's intercept can put the expected-runs edge on the other side.
+    if pick_home and home_score <= away_score:
+        home_score = round(away_score + 0.1, 1)
+    elif not pick_home and away_score <= home_score:
+        away_score = round(home_score + 0.1, 1)
 
     return {
         "pick_home": pick_home,
@@ -137,15 +145,20 @@ def simulate_game(p_home: float, params: ScoreParams,
 
 def slate_predictions(ratings: dict[str, float], slate: list[dict],
                       params: ScoreParams, n: int = 10000,
-                      seed: int | None = 7) -> pd.DataFrame:
+                      seed: int | None = 7,
+                      rates=None) -> pd.DataFrame:
     """Predictions for one day's games. `slate` rows need date, away, home,
-    away_fr, home_fr, game_num."""
+    away_fr, home_fr, game_num. `rates` (scoring.TeamRates) makes the
+    expected total matchup-specific; without it every game shares the
+    league-average total."""
     rows = []
     for g in slate:
         p_home = expected_score(
             ratings[g["home_fr"]] + HOME_ADVANTAGE, ratings[g["away_fr"]]
         )
-        sim = simulate_game(p_home, params, n=n, seed=seed)
+        total = (rates.matchup_total(g["home_fr"], g["away_fr"])
+                 if rates is not None else None)
+        sim = simulate_game(p_home, params, n=n, seed=seed, total=total)
         pick = g["home_fr"] if sim["pick_home"] else g["away_fr"]
         rows.append({
             "date": g["date"],
@@ -155,6 +168,8 @@ def slate_predictions(ratings: dict[str, float], slate: list[dict],
             # Probable starters, display only - not a model input.
             "away_sp": g.get("away_sp", ""),
             "home_sp": g.get("home_sp", ""),
+            "pred_total": round(total if total is not None
+                                else params.total_mean, 1),
             "p_home": round(p_home, 4),
             "pick": pick,
             "pick_prob": round(p_home if sim["pick_home"] else 1 - p_home, 4),

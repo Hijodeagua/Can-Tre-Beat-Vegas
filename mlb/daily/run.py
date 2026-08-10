@@ -27,7 +27,7 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
-from mlb.daily import export_site, grade, simulate, update_games
+from mlb.daily import export_site, grade, scoring, simulate, update_games
 from mlb.daily.config import (
     GAME_SIMS, PREDICTIONS_DIR, REPORTS_DIR, SEASON_SIMS,
 )
@@ -74,8 +74,9 @@ def main(argv=None) -> int:
     schedule = update_games.read_schedule()
     todays = [g for g in schedule if g["date"] == run_date]
     params = simulate.calibrate(state.history, state.games)
+    rates = scoring.rates_from_games(state.games)
     slate = simulate.slate_predictions(
-        state.ratings, todays, params, n=args.game_sims
+        state.ratings, todays, params, n=args.game_sims, rates=rates
     )
     if not slate.empty:
         PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
