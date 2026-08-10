@@ -1,20 +1,24 @@
 """Base head-to-head Elo for college football.
 
 Reuses the NFL engine (``NFL/model/v2/elo.py``) — same MOV-adjusted update,
-same walk-forward discipline — with CFB constants from
-``CFB/DATA_PULL_PLAN.md`` §8. None of these are fitted yet; they are the
-plan's starting guesses, to be grid-searched once more than one season of
-games is on disk.
+same walk-forward discipline — with CFB constants **fitted by
+``python3 -m CFB.fit``** (grid search on walk-forward log loss, scored on
+2005+ with 2000-2004 as burn-in; see ``data/college_football/agg/fit_grid.csv``).
 
-What differs from the NFL run:
+How the fitted values landed vs the plan's §8 guesses:
 
-- **K = 32** — fewer games per season and more true rating movement.
-- **HFA = 70 Elo** (~2.5 pts) — college home fields are worth more.
-- **Season regression = 0.40** toward 1500 — roster churn. The plan's real
-  recommendation is regression toward the *conference* mean, which needs the
-  standings pull (§3.1); flat 1500 is the base-model placeholder.
-- **Margin cap at 35** before the MOV multiplier — 60-point CFB blowouts
-  carry no information a 35-point one doesn't.
+- **K = 35** — top of the guessed 20-40 range; CFB ratings really do move.
+- **HFA = 50 Elo** — *lower* than the NFL's 55 in Elo, but at the fitted
+  18.6 Elo/point it is **~2.7 points**, more than the NFL's ~2.2, matching
+  the plan's expectation in the units that matter.
+- **Season regression = 0.20** toward 1500 — the plan guessed 0.35-0.50 for
+  roster churn and was wrong: with K this high the ratings re-sort quickly
+  anyway, so gentler carryover wins. Conference-mean regression (§3.1)
+  still untested — needs the standings pull.
+- **No margin cap** — the engine's log MOV damping already discounts
+  blowouts; every capped config graded worse.
+- **FCS opponents pooled** into one synthetic ``FCS`` team (plan §3.4);
+  see ``pool_fcs`` for how FBS membership is decided.
 - **Postseason** (bowls + conference championships) gets the playoff K
   multiplier, and bowls are treated as neutral-site (they are).
 
@@ -31,30 +35,106 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from NFL.model.v2.elo import EloEngine, expected_score
+from NFL.model.v2.elo import EloEngine
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AGG_DIR = REPO_ROOT / "data" / "college_football" / "agg"
 
+# Fitted by CFB.fit on walk-forward log loss, 2005+ (grid in agg/fit_grid.csv).
 BASE_RATING = 1500.0
-K_FACTOR = 32.0
+K_FACTOR = 35.0
 POSTSEASON_K_MULT = 1.2
-HFA_ELO = 70.0
-SEASON_REGRESSION = 0.40
-ELO_PER_POINT = 28.0  # plan's guess; fit against margins later
-MARGIN_CAP = 35.0
+HFA_ELO = 50.0
+SEASON_REGRESSION = 0.20
+ELO_PER_POINT = 18.6  # margin regression through the origin, 2005+
+MARGIN_CAP = 999.0  # grid preferred uncapped; log MOV damping suffices
 
 POSTSEASON_TYPES = {"BOWL", "CCG"}
 
+FCS_TEAM = "FCS"
+FBS_MIN_GAMES = 5  # a team with this many schedule games in a season is FBS
+BURN_IN_THROUGH = 2004  # plan §2.1: evaluate on 2005+
 
-def make_engine() -> EloEngine:
-    return EloEngine(k=K_FACTOR, hfa=HFA_ELO, regression=SEASON_REGRESSION)
+EVAL_FROM = BURN_IN_THROUGH + 1
 
 
-def compute_elo(games: pd.DataFrame) -> pd.DataFrame:
-    """Attach pregame Elo columns; update on played games, capped margins."""
+def pool_fcs(
+    games: pd.DataFrame, verbose: bool = False
+) -> pd.DataFrame:
+    """Replace non-FBS opponents with one synthetic ``FCS`` team (plan §3.4).
+
+    A team is FBS-in-a-season if **either** holds:
+
+    - the offense scoring aggregate lists it for that season, or
+    - it appears in ``FBS_MIN_GAMES``+ games that season.
+
+    The second clause exists because CFR's stat pages abbreviate some
+    schools (``LSU``, ``USC``, ``UCF``, ``BYU``) while the schedule exports
+    spell them out (``Louisiana State``, ``Southern California``, …). A
+    name-mismatched FBS team plays a full schedule; a genuine FCS opponent
+    appears in at most a handful of games (these exports contain FBS games
+    only), so the game count separates them cleanly — including 2020's
+    shortened seasons. ``verbose`` prints the mismatch suspects, which is
+    the raw material for the plan §3.3 crosswalk.
+
+    Known accepted flaw (plan §3.4): the pool treats North Dakota State the
+    same as an FCS bottom-feeder.
+    """
+    df = games.copy()
+
+    fbs: dict[int, set[str]] = {}
+    off_path = AGG_DIR / "cfb_offense_team_season.csv"
+    if off_path.exists():
+        off = pd.read_csv(off_path)
+        fbs = off.groupby("season")["team"].agg(set).to_dict()
+
+    counts: dict[int, pd.Series] = {
+        int(season): pd.concat([grp["home_team"], grp["away_team"]]).value_counts()
+        for season, grp in df.groupby("season")
+    }
+
+    empty: set[str] = set()
+    suspects: set[str] = set()
+    for col in ("home_team", "away_team"):
+        is_fcs = []
+        for s, t in zip(df["season"], df[col]):
+            s = int(s)
+            in_stats = t in fbs.get(s, empty)
+            plays_full = int(counts[s].get(t, 0)) >= FBS_MIN_GAMES
+            if plays_full and not in_stats:
+                suspects.add(t)
+            is_fcs.append(not in_stats and not plays_full)
+        df[col] = np.where(is_fcs, FCS_TEAM, df[col])
+
+    if verbose and suspects:
+        print(
+            f"stat-page name mismatches kept as FBS via game count "
+            f"({len(suspects)}): {', '.join(sorted(suspects))}"
+        )
+
+    # An FCS-vs-FCS pairing would have the synthetic team play itself;
+    # there should be none (CFR season schedules are FBS games), but drop
+    # defensively rather than corrupt the engine.
+    both = (df["home_team"] == FCS_TEAM) & (df["away_team"] == FCS_TEAM)
+    return df[~both].reset_index(drop=True)
+
+
+def walk_forward(
+    games: pd.DataFrame,
+    *,
+    k: float = K_FACTOR,
+    hfa: float = HFA_ELO,
+    regression: float = SEASON_REGRESSION,
+    margin_cap: float = MARGIN_CAP,
+) -> tuple[pd.DataFrame, EloEngine]:
+    """One chronological pass: attach pregame Elo columns, update on results.
+
+    The single source of truth for the update loop — the board, the
+    evaluation, and the ``CFB.fit`` grid search all run through here so a
+    tweak to the update rule cannot fork behaviour.
+    """
     df = games.sort_values(["gameday", "home_team"]).reset_index(drop=True)
-    engine = make_engine()
+    engine = EloEngine(k=k, hfa=hfa, regression=regression)
 
     home_elo, away_elo, probs = [], [], []
     for row in df.itertuples(index=False):
@@ -65,7 +145,7 @@ def compute_elo(games: pd.DataFrame) -> pd.DataFrame:
         probs.append(p)
         if pd.notna(row.home_score) and pd.notna(row.away_score):
             margin = float(row.home_score) - float(row.away_score)
-            capped = float(np.clip(margin, -MARGIN_CAP, MARGIN_CAP))
+            capped = float(np.clip(margin, -margin_cap, margin_cap))
             # Feed the engine capped scores so its MOV multiplier sees the
             # capped margin; the win/loss outcome is unchanged by the cap.
             engine.update(
@@ -81,30 +161,23 @@ def compute_elo(games: pd.DataFrame) -> pd.DataFrame:
     df["away_elo"] = away_elo
     df["elo_diff"] = (
         df["home_elo"] - df["away_elo"]
-        + np.where(df["location"].eq("Home"), HFA_ELO, 0.0)
+        + np.where(df["location"].eq("Home"), hfa, 0.0)
     )
     df["elo_home_prob"] = probs
     df["elo_spread"] = df["elo_diff"] / ELO_PER_POINT
+    return df, engine
+
+
+def compute_elo(games: pd.DataFrame) -> pd.DataFrame:
+    """Attach pregame Elo columns; update on played games, capped margins."""
+    df, _ = walk_forward(games)
     return df
 
 
 def ratings_board(games: pd.DataFrame) -> pd.DataFrame:
     """Final ratings plus each team's season line, sorted."""
-    engine = make_engine()
     played = games.dropna(subset=["home_score", "away_score"])
-    for row in played.sort_values(["gameday", "home_team"]).itertuples(index=False):
-        neutral = str(row.location) != "Home"
-        engine.pregame(int(row.season), row.home_team, row.away_team, neutral)
-        margin = float(row.home_score) - float(row.away_score)
-        capped = float(np.clip(margin, -MARGIN_CAP, MARGIN_CAP))
-        engine.update(
-            row.home_team,
-            row.away_team,
-            capped if capped > 0 else 0.0,
-            0.0 if capped > 0 else -capped,
-            neutral=neutral,
-            playoff=str(row.game_type) in POSTSEASON_TYPES,
-        )
+    _, engine = walk_forward(played)
 
     recs: dict[str, list[int]] = {}
     for row in played.itertuples(index=False):
@@ -121,16 +194,27 @@ def ratings_board(games: pd.DataFrame) -> pd.DataFrame:
     board["w"] = board["team"].map(lambda t: recs.get(t, [0, 0])[0])
     board["l"] = board["team"].map(lambda t: recs.get(t, [0, 0])[1])
     board["pts_vs_avg"] = ((board["elo"] - BASE_RATING) / ELO_PER_POINT).round(1)
-    # Teams seen fewer than 4 times are FCS opponents passing through; they
-    # have real ratings but tiny samples. Flag rather than hide.
+    # With FCS pooled, remaining tiny-sample teams are new FBS programs
+    # passing through. Flag rather than hide.
     board["games"] = board["w"] + board["l"]
     board["small_sample"] = board["games"] < 4
     return board.sort_values("elo", ascending=False).reset_index(drop=True)
 
 
-def evaluate(games: pd.DataFrame) -> dict[str, float]:
-    """In-sample-honest quick check: log loss and accuracy of pregame probs."""
-    df = compute_elo(games).dropna(subset=["home_score", "away_score"])
+def evaluate(
+    games: pd.DataFrame,
+    eval_from: int | None = EVAL_FROM,
+    **constants: float,
+) -> dict[str, float]:
+    """Walk-forward log loss and accuracy of pregame probabilities.
+
+    Ratings warm up on the full history, but scoring starts at
+    ``eval_from`` (default 2005 — the plan treats 2000-2004 as burn-in).
+    """
+    df, _ = walk_forward(games, **constants)
+    df = df.dropna(subset=["home_score", "away_score"])
+    if eval_from is not None:
+        df = df[df["season"] >= eval_from]
     y = (df["home_score"] > df["away_score"]).astype(float)
     p = df["elo_home_prob"].clip(1e-6, 1 - 1e-6)
     ll = float(-(y * np.log(p) + (1 - y) * np.log(1 - p)).mean())
@@ -138,19 +222,32 @@ def evaluate(games: pd.DataFrame) -> dict[str, float]:
     return {"games": len(df), "log_loss": round(ll, 4), "accuracy": round(acc, 4)}
 
 
+def load_games(pool: bool = True, verbose: bool = False) -> pd.DataFrame:
+    games = pd.read_csv(AGG_DIR / "cfb_games.csv")
+    return pool_fcs(games, verbose=verbose) if pool else games
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=25)
+    ap.add_argument(
+        "--no-pool", action="store_true", help="rate FCS opponents individually"
+    )
     args = ap.parse_args()
 
-    games = pd.read_csv(AGG_DIR / "cfb_games.csv")
+    games = load_games(pool=not args.no_pool, verbose=True)
     board = ratings_board(games)
     board.to_csv(AGG_DIR / "cfb_elo_ratings.csv", index=False)
 
     fbs = board[~board["small_sample"]]
     print(fbs.head(args.top).to_string(index=False))
+    fcs_row = board[board["team"] == FCS_TEAM]
+    if not fcs_row.empty:
+        r = fcs_row.iloc[0]
+        print(f"\npooled FCS team: elo={r['elo']}  ({r['w']}-{r['l']} vs FBS)")
     print()
-    print(evaluate(games))
+    print("eval 2005+ :", evaluate(games))
+    print("eval all   :", evaluate(games, eval_from=None))
 
 
 if __name__ == "__main__":
