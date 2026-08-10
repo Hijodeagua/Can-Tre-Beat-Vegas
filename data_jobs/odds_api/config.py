@@ -27,6 +27,16 @@ SUPPORTED_SPORTS = {
         "data_dir": "data/nba",
         "file_prefix": "nba_odds_api_data",
     },
+    # Quota note (CFB/DATA_PULL_PLAN.md §7): NFL + NCAAF in season is
+    # ~360 of the 500 free-tier credits/month; when NBA resumes in October
+    # something has to give — gate offseason sports or drop to one
+    # snapshot a day.
+    "ncaaf": {
+        "api_key": "americanfootball_ncaaf",
+        "name": "NCAAF",
+        "data_dir": "data/ncaaf",
+        "file_prefix": "ncaaf_odds_api_data",
+    },
 }
 
 # NFL Team metadata (conference, division, stadium coordinates)
@@ -115,10 +125,17 @@ NBA_TEAMS = {
 
 
 def get_team_info(sport: str) -> dict:
-    """Get team metadata for a specific sport"""
+    """Get team metadata for a specific sport.
+
+    Sports without a metadata table (e.g. NCAAF — 136 schools) return an
+    empty dict; the processors then skip the metadata-derived columns
+    instead of dropping every game.
+    """
     if sport.lower() == "nfl":
         return NFL_TEAMS
     elif sport.lower() == "nba":
         return NBA_TEAMS
+    elif sport.lower() in SUPPORTED_SPORTS:
+        return {}
     else:
         raise ValueError(f"Unsupported sport: {sport}")
