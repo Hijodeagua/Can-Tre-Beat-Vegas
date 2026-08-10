@@ -229,6 +229,40 @@ def test_slate_scores_track_matchup_total(params):
     assert slug.pred_home_score > slug.pred_away_score
 
 
+def test_calibration_idle_below_min_sample():
+    from mlb.daily import calibration
+    games = pd.DataFrame([
+        {"date": "2026-04-01", "game_num": 1, "season": 2026,
+         "home_fr": "NYY", "away_fr": "BOS", "home_score": 5, "away_score": 3},
+    ])
+    cal = calibration.fit(games)
+    assert not cal.applied and cal.n == 1
+    # Identity when idle.
+    assert cal.apply(9.3) == 9.3
+
+
+def test_calibration_apply_clamps_to_total_range():
+    from mlb.daily.calibration import Calibration
+    from mlb.daily.scoring import TOTAL_MAX, TOTAL_MIN
+    cal = Calibration(a=-20.0, b=1.0, n=500, applied=True)
+    assert cal.apply(9.0) == TOTAL_MIN
+    cal = Calibration(a=20.0, b=1.0, n=500, applied=True)
+    assert cal.apply(9.0) == TOTAL_MAX
+
+
+def test_calibration_fit_on_real_season():
+    """Integration: fitting the committed game file behaves sanely."""
+    from mlb.daily import calibration
+    games = pd.read_csv(calibration.REPO / "data" / "mlb" / "games_2009_2026.csv")
+    cal = calibration.fit(games)
+    assert cal.applied and cal.n >= calibration.MIN_GAMES
+    assert calibration.SLOPE_MIN <= cal.b <= calibration.SLOPE_MAX
+    # Calibrated MAE can never be materially worse than raw on the fit set.
+    assert cal.mae_calibrated <= cal.mae_raw + 0.01
+    # A sane correction maps a typical total to a typical total.
+    assert 7.0 <= cal.apply(9.0) <= 11.0
+
+
 def test_pitcher_name_normalization():
     from mlb.build_pitchers import normalize_name
     assert normalize_name("Félix Hernández") == "felix hernandez"

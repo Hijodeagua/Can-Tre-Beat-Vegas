@@ -22,16 +22,19 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dataclasses import asdict
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import pandas as pd
 
-from mlb.daily import export_site, grade, scoring, simulate, update_games
+from mlb.daily import calibration, export_site, grade, scoring, simulate, update_games
 from mlb.daily.config import (
     GAME_SIMS, PREDICTIONS_DIR, REPORTS_DIR, SEASON_SIMS,
 )
-from mlb.daily.emails import futures_html, grade_html, slate_html
+from mlb.daily.emails import (
+    calibration_html, futures_html, grade_html, slate_html,
+)
 from mlb.daily.ratings import build_state
 
 
@@ -75,8 +78,13 @@ def main(argv=None) -> int:
     todays = [g for g in schedule if g["date"] == run_date]
     params = simulate.calibrate(state.history, state.games)
     rates = scoring.rates_from_games(state.games)
+    # Refit the total-runs calibration on the season to date (games through
+    # yesterday) and apply it to today's totals - the self-tuning loop.
+    cal = calibration.fit(state.games)
+    calibration.save(cal)
     slate = simulate.slate_predictions(
-        state.ratings, todays, params, n=args.game_sims, rates=rates
+        state.ratings, todays, params, n=args.game_sims, rates=rates,
+        calibration=cal,
     )
     if not slate.empty:
         PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
@@ -125,6 +133,22 @@ def main(argv=None) -> int:
             ),
         }
 
+    # Email 4: score-accuracy tracking + the applied recalibration. Sent
+    # whenever there is anything to report (a fit, or graded games).
+    ledger = pd.read_csv(grade.GRADES_CSV) if grade.GRADES_CSV.exists() else None
+    (out / "calibration.html").write_text(
+        calibration_html(run_date, graded, ledger, cal), encoding="utf-8"
+    )
+    emails["calibration"] = {
+        "path": str((out / "calibration.html")
+                    .relative_to(REPORTS_DIR.parent.parent)),
+        "subject": (
+            f"⚾ MLB Score Calibration — {run_date}"
+            + (f" (b={cal.b:.2f}, bias {cal.bias_raw:+.1f})"
+               if cal.applied else " (warming up)")
+        ),
+    }
+
     # Rebuild yesterday's slate frame for the snapshot page footer.
     y_slate = None
     if grade.slate_path(yesterday).exists():
@@ -133,6 +157,7 @@ def main(argv=None) -> int:
     export_site.export_latest(
         run_date, slate, futures, state.standings, graded,
         yesterday if graded is not None else None,
+        calibration=asdict(cal),
     )
     print("6/7 emails + site JSON written")
 

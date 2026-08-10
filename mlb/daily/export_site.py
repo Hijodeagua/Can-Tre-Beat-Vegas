@@ -52,7 +52,8 @@ def write_history_snapshot(date: str, graded: pd.DataFrame | None,
 def export_latest(run_date: str, slate: pd.DataFrame,
                   futures: pd.DataFrame, standings: pd.DataFrame,
                   graded: pd.DataFrame | None,
-                  graded_date: str | None) -> None:
+                  graded_date: str | None,
+                  calibration: dict | None = None) -> None:
     SITE_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     st = standings.set_index("team")
@@ -98,6 +99,7 @@ def export_latest(run_date: str, slate: pd.DataFrame,
         "graded_date": graded_date,
         "graded": graded_out,
         "history": history,
+        "calibration": calibration,
         "team_names": TEAM_NAMES,
     }
     (SITE_DATA_DIR / "latest.json").write_text(

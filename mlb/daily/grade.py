@@ -21,7 +21,8 @@ from mlb.daily.config import GRADES_CSV, PREDICTIONS_DIR
 
 GRADE_COLUMNS = [
     "date", "games", "correct", "accuracy", "log_loss", "brier",
-    "avg_margin_err", "avg_total_err", "skipped",
+    "avg_margin_err", "avg_total_err", "total_bias", "margin_bias",
+    "skipped",
     "cum_games", "cum_correct", "cum_accuracy", "cum_log_loss", "cum_brier",
 ]
 
@@ -62,14 +63,18 @@ def grade_day(d: str, games: pd.DataFrame) -> pd.DataFrame | None:
             home_won * np.log(p) + (1 - home_won) * np.log(1 - p)
         )
         played["game_brier"] = (p - home_won) ** 2
-        played["margin_err"] = (
+        # Signed errors (pred - actual) feed the calibration email: a
+        # persistent positive total bias means we over-predict scoring.
+        played["margin_signed"] = (
             (played.pred_home_score - played.pred_away_score)
             - (played.home_score - played.away_score)
-        ).abs()
-        played["total_err"] = (
+        )
+        played["total_signed"] = (
             (played.pred_home_score + played.pred_away_score)
             - (played.home_score + played.away_score)
-        ).abs()
+        )
+        played["margin_err"] = played.margin_signed.abs()
+        played["total_err"] = played.total_signed.abs()
         unplayed = merged[merged.home_score.isna()].assign(played=False)
         graded = pd.concat([played, unplayed], ignore_index=True)
 
@@ -91,6 +96,8 @@ def update_ledger(d: str, graded: pd.DataFrame) -> pd.Series:
         "brier": round(played.game_brier.mean(), 4) if n else np.nan,
         "avg_margin_err": round(played.margin_err.mean(), 2) if n else np.nan,
         "avg_total_err": round(played.total_err.mean(), 2) if n else np.nan,
+        "total_bias": round(played.total_signed.mean(), 2) if n else np.nan,
+        "margin_bias": round(played.margin_signed.mean(), 2) if n else np.nan,
         "skipped": int((graded.played == False).sum()),  # noqa: E712
     }
 

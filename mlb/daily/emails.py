@@ -155,6 +155,106 @@ def slate_html(date: str, slate: pd.DataFrame) -> str:
     )
 
 
+def calibration_html(date: str, graded: pd.DataFrame | None,
+                     ledger: pd.DataFrame | None, cal) -> str:
+    """Email 4: how the predicted scores are tracking, and the correction
+    being applied to tomorrow's totals."""
+    parts = []
+
+    played = None
+    if graded is not None:
+        played = graded[graded.played == True]  # noqa: E712
+        if "pred_total" not in played.columns or played.pred_total.isna().all():
+            played = None
+    if played is not None and len(played):
+        rows = ""
+        for r in played.itertuples():
+            pred_t = r.pred_home_score + r.pred_away_score
+            act_t = int(r.home_score + r.away_score)
+            pred_m = r.pred_home_score - r.pred_away_score
+            act_m = int(r.home_score - r.away_score)
+            rows += (
+                f"<tr><td style='{STYLE_TD}'>{_name(r.away)} @ "
+                f"<b>{_name(r.home)}</b></td>"
+                f"<td style='{STYLE_TD}'>{pred_t:.1f}</td>"
+                f"<td style='{STYLE_TD}'>{act_t}</td>"
+                f"<td style='{STYLE_TD}'>{pred_t - act_t:+.1f}</td>"
+                f"<td style='{STYLE_TD}'>{pred_m:+.1f}</td>"
+                f"<td style='{STYLE_TD}'>{act_m:+d}</td></tr>"
+            )
+        parts.append(
+            f"<h3 style='margin-bottom:4px;'>Yesterday's score accuracy</h3>"
+            f"<table style='{STYLE_TABLE}'><tr>"
+            f"<th style='{STYLE_TH}'>Game</th>"
+            f"<th style='{STYLE_TH}'>Pred total</th>"
+            f"<th style='{STYLE_TH}'>Actual</th>"
+            f"<th style='{STYLE_TH}'>Err</th>"
+            f"<th style='{STYLE_TH}'>Pred margin</th>"
+            f"<th style='{STYLE_TH}'>Actual</th></tr>{rows}</table>"
+        )
+    else:
+        parts.append(
+            "<p>No graded games with total predictions yesterday (score "
+            "tracking starts with slates predicted after the matchup-total "
+            "model shipped).</p>"
+        )
+
+    if ledger is not None and len(ledger):
+        recent = ledger.dropna(subset=["avg_total_err"]).tail(14)
+        if len(recent):
+            g = recent.games
+            wt = lambda col: float((recent[col] * g).sum() / g.sum())  # noqa: E731
+            bias_cols = recent.dropna(subset=["total_bias"]) \
+                if "total_bias" in recent else recent.iloc[0:0]
+            bias_txt = ""
+            if len(bias_cols):
+                gb = bias_cols.games
+                tb = float((bias_cols.total_bias * gb).sum() / gb.sum())
+                mb = float((bias_cols.margin_bias * gb).sum() / gb.sum())
+                bias_txt = (f" &middot; total bias {tb:+.2f} "
+                            f"&middot; margin bias {mb:+.2f}")
+            parts.append(
+                f"<p style='font-size:14px;'><b>Trailing "
+                f"{int(g.sum())} graded games:</b> total MAE "
+                f"{wt('avg_total_err'):.2f} &middot; margin MAE "
+                f"{wt('avg_margin_err'):.2f}{bias_txt}</p>"
+            )
+
+    if cal is not None:
+        if cal.applied:
+            parts.append(
+                f"<p style='font-size:14px;'>Season calibration fit "
+                f"(n={cal.n} walk-forward games): "
+                f"actual &asymp; {cal.a:.2f} + {cal.b:.3f} &times; predicted "
+                f"&middot; raw bias {cal.bias_raw:+.2f} runs &middot; MAE "
+                f"raw {cal.mae_raw:.3f} &rarr; calibrated "
+                f"{cal.mae_calibrated:.3f} (league-constant baseline "
+                f"{cal.mae_constant:.3f}). <b>This correction is applied to "
+                f"tomorrow's expected totals.</b></p>"
+            )
+        else:
+            parts.append(
+                f"<p style='font-size:14px;'>Calibration idle: only "
+                f"{cal.n} season games so far (needs 300+); totals are "
+                f"used as modeled.</p>"
+            )
+
+    parts.append(
+        "<p style='color:#666;font-size:12px;'>The loop: every morning the "
+        "season's raw matchup totals are re-predicted walk-forward, "
+        "regressed against actual totals, and the fitted line is applied "
+        "to the next slate &mdash; so a drifting run environment or an "
+        "over-confident spread self-corrects with a one-day lag. Slope is "
+        "clamped to [0.5, 1.5]; the fit always uses raw (uncalibrated) "
+        "predictions, so the correction cannot feed back on itself.</p>"
+    )
+    return _wrap(
+        f"MLB Score Calibration &mdash; {date}",
+        "Predicted-score accuracy tracking and the applied recalibration",
+        "".join(parts),
+    )
+
+
 def grade_html(date: str, graded: pd.DataFrame | None,
                ledger_row: pd.Series | None) -> str:
     if graded is None or ledger_row is None:

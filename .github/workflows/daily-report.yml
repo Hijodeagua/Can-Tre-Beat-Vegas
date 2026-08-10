@@ -96,6 +96,8 @@ jobs:
             echo "slate_subject=$(jq -r '.emails.slate.subject // ""' $MANIFEST)"
             echo "grade_path=$(jq -r '.emails.grade.path // ""' $MANIFEST)"
             echo "grade_subject=$(jq -r '.emails.grade.subject // ""' $MANIFEST)"
+            echo "calibration_path=$(jq -r '.emails.calibration.path // ""' $MANIFEST)"
+            echo "calibration_subject=$(jq -r '.emails.calibration.subject // ""' $MANIFEST)"
           } >> "$GITHUB_OUTPUT"
 
       - name: Commit and push outputs
@@ -193,7 +195,23 @@ jobs:
           html_body: file://${{ steps.pipeline.outputs.grade_path }}
           ignore_cert: true
 
-      # The three sends above use continue-on-error so one bad send (e.g. a
+      - name: "Email 4: score calibration"
+        id: email-calibration
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.calibration_path != '' }}
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.REPORT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: ${{ steps.pipeline.outputs.calibration_subject }}
+          html_body: file://${{ steps.pipeline.outputs.calibration_path }}
+          ignore_cert: true
+
+      # The sends above use continue-on-error so one bad send (e.g. a
       # stale SMTP credential) never blocks the others - but that also hides
       # the failure from the run's conclusion. Surface it explicitly here.
       - name: Verify emails delivered
@@ -203,7 +221,8 @@ jobs:
           set -euo pipefail
           if [ "${{ steps.email-futures.outcome }}" = "failure" ] || \
              [ "${{ steps.email-slate.outcome }}" = "failure" ] || \
-             [ "${{ steps.email-grade.outcome }}" = "failure" ]; then
+             [ "${{ steps.email-grade.outcome }}" = "failure" ] || \
+             [ "${{ steps.email-calibration.outcome }}" = "failure" ]; then
             echo "::error::One or more emails failed to send - check SMTP credentials."
             exit 1
           fi
