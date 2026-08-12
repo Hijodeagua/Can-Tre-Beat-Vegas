@@ -9,10 +9,15 @@ Also fits ``ELO_PER_POINT`` by regressing the actual margin on the pregame
 Elo difference under the best config (through the origin: margin ≈
 elo_diff / epp).
 
+Season regression follows ``CFB.elo``'s default — conference-cluster means
+whenever the cluster map exists, ``--flat`` to force flat-1500. Fitting in a
+mode the engine does not run produces constants that do not apply to it.
+
 Usage
     python3 -m CFB.fit             # coarse grid, ~256 configs
     python3 -m CFB.fit --quick     # 16-config smoke test
     python3 -m CFB.fit --refine    # coarse pass, then a local refine pass
+    python3 -m CFB.fit --flat      # fit against flat-1500 regression
 
 Output: ranked grid to ``data/college_football/agg/fit_grid.csv`` and the
 best constants block printed ready to paste into ``CFB/elo.py``.
@@ -94,14 +99,15 @@ def main() -> None:
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--refine", action="store_true")
     ap.add_argument(
-        "--clusters",
-        action="store_true",
-        help="regress toward conference-cluster means (CFB.conferences)",
+        "--flat", action="store_true", help="flat-1500 season regression"
     )
     args = ap.parse_args()
 
+    # Mirror CFB.elo's default exactly. When these two disagreed, the grid
+    # silently fitted a model the engine does not run — which is how a
+    # flat-mode ELO_PER_POINT ended up shipped as the cluster-mode constant.
     clusters = None
-    if args.clusters:
+    if not args.flat and (AGG_DIR / "cfb_conference_clusters.csv").exists():
         from CFB.conferences import load_clusters
 
         clusters = load_clusters()

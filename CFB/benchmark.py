@@ -28,7 +28,9 @@ import pandas as pd
 from CFB import elo
 from CFB.conferences import load_clusters
 
-HFA_POINTS = 2.7  # the fitted Elo HFA in point terms (50 / 18.6)
+# The fitted Elo HFA in point terms. Derived, never hardcoded: a literal here
+# silently drifts from CFB.elo whenever the constants are refit.
+HFA_POINTS = elo.HFA_ELO / elo.ELO_PER_POINT
 SRS_ITERS = 200
 MIN_WEEK = 4  # earlier weeks have too few games for a stable SRS solve
 

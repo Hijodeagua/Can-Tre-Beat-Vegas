@@ -135,3 +135,39 @@ def test_double_listed_bowl_deduped_keeping_bowl_row(tmp_path):
     g = dedupe_games(parse_schedule(p))
     assert len(g) == 1
     assert g.iloc[0]["game_type"] == "BOWL"
+
+
+# --- the dedupe tie-break must be decided, not left to the sort ---
+
+
+@pytest.mark.parametrize("order", [(0, 1), (1, 0)])
+def test_double_listed_regular_season_keeps_neutral_site(tmp_path, order):
+    # A neutral-site REG game listed twice: the venue row carries the 'N'
+    # marker, the bare row does not. Both are REG, so the postseason key
+    # cannot separate them. Keeping the wrong twin invents home-field
+    # advantage — and the answer must not depend on the input row order.
+    rows = [
+        "1,1,Aug 31 2008,Sun,Colorado,31,N,Colorado State,28,Empower Field at Mile High - Denver Colorado",
+        "2,1,Aug 31 2008,Sun,Colorado,31,,Colorado State,28,",
+    ]
+    p = _schedule_csv(tmp_path, [rows[order[0]], rows[order[1]]])
+    g = dedupe_games(parse_schedule(p))
+    assert len(g) == 1
+    assert g.iloc[0]["location"] == "Neutral"
+
+
+def test_dedupe_is_order_independent(tmp_path):
+    # Same games, reversed input: identical output, not a coin flip.
+    rows = [
+        "1,16,Dec 29 2006,Fri,Winner U,44,N,Loser U,36,Liberty Bowl Memorial Stadium - Memphis Tennessee",
+        "2,16,Dec 29 2006,Fri,Winner U,44,N,Loser U,36,Liberty Bowl (Memphis TN)",
+        "3,1,Aug 31 2008,Sun,Colorado,31,N,Colorado State,28,Empower Field at Mile High - Denver Colorado",
+        "4,1,Aug 31 2008,Sun,Colorado,31,,Colorado State,28,",
+    ]
+    cols = ["season", "gameday", "home_team", "away_team", "game_type", "location"]
+    forward = dedupe_games(parse_schedule(_schedule_csv(tmp_path, rows)))
+    backward = dedupe_games(parse_schedule(_schedule_csv(tmp_path, rows[::-1])))
+    pd.testing.assert_frame_equal(
+        forward[cols].sort_values(cols).reset_index(drop=True),
+        backward[cols].sort_values(cols).reset_index(drop=True),
+    )

@@ -140,19 +140,34 @@ def parse_schedule(path: Path) -> pd.DataFrame:
 
 
 def dedupe_games(games: pd.DataFrame) -> pd.DataFrame:
-    """Drop CFR's double-listed bowl games.
+    """Drop CFR's double-listed games, deterministically.
 
-    The schedule exports list some bowls twice — once with the bowl name in
+    The schedule exports list some games twice — once with the event name in
     Notes, once with a bare venue string. Same date, teams, and scores; only
-    the note differs. Keep the postseason-classified row so ``game_type``
-    survives the dedupe.
+    the note differs, and with it the two fields the note feeds:
+
+    - ``game_type``: keep the postseason row, so a bowl stays a BOWL.
+    - ``location``: keep the ``Neutral`` row. The ``N`` marker is positive
+      evidence the game was at a neutral site; its absence on the twin row is
+      just the export omitting it. This case is *not* rare enough to leave to
+      chance — 12 regular-season pairs (Colorado-Colorado State at Mile High,
+      Ohio State-Toledo at Cleveland, …) differ only in ``location``, and
+      picking the wrong twin hands a team home-field advantage it never had.
+
+    Both keys sort before the fallback, so the ranking is total and the sort
+    is stable: the same input always yields the same output. It previously
+    did not — an unstable quicksort over a single postseason key left
+    REG-vs-REG pairs to be broken arbitrarily, so the committed
+    ``cfb_games.csv`` could not be regenerated from the committed code.
     """
-    pri = games["game_type"].map({"CCG": 0, "BOWL": 0}).fillna(1)
+    pri_type = games["game_type"].map({"CCG": 0, "BOWL": 0}).fillna(1)
+    pri_loc = np.where(games["location"] == "Neutral", 0, 1)
     return (
-        games.assign(_pri=pri)
-        .sort_values("_pri")
+        games.assign(_pri_type=pri_type, _pri_loc=pri_loc)
+        .sort_values(["_pri_type", "_pri_loc"], kind="stable")
         .drop_duplicates(subset=["season", "gameday", "home_team", "away_team"], keep="first")
-        .drop(columns="_pri")
+        .drop(columns=["_pri_type", "_pri_loc"])
+        .sort_index()
     )
 
 

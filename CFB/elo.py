@@ -9,7 +9,7 @@ How the fitted values landed vs the plan's §8 guesses:
 
 - **K = 35** — top of the guessed 20-40 range; CFB ratings really do move.
 - **HFA = 50 Elo** — *lower* than the NFL's 55 in Elo, but at the fitted
-  18.6 Elo/point it is **~2.7 points**, more than the NFL's ~2.2, matching
+  18.5 Elo/point it is **~2.7 points**, more than the NFL's ~2.2, matching
   the plan's expectation in the units that matter.
 - **Season regression = 0.35 toward the conference-cluster mean** (see
   ``CFB.conferences`` — clusters recovered from schedule structure, no
@@ -51,7 +51,10 @@ K_FACTOR = 35.0
 POSTSEASON_K_MULT = 1.2
 HFA_ELO = 50.0
 SEASON_REGRESSION = 0.35  # toward cluster mean; flat-1500 mode optimises at 0.20
-ELO_PER_POINT = 16.5  # margin regression through the origin, 2005+
+# Margin regression through the origin, 2005+, refit under the *default*
+# (cluster) regression — see CFB.fit.fit_elo_per_point. Flat mode fits 16.5;
+# using that value here inflated every published spread by ~12%.
+ELO_PER_POINT = 18.5
 MARGIN_CAP = 999.0  # grid preferred uncapped; log MOV damping suffices
 
 POSTSEASON_TYPES = {"BOWL", "CCG"}
