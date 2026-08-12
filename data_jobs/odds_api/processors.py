@@ -56,20 +56,28 @@ def _process_single_game(
     home_team = game["home_team"]
     away_team = game["away_team"]
 
-    # Skip unknown teams
-    if home_team not in team_info or away_team not in team_info:
-        return None
-
-    # Divisional matchup check
-    div_match = (
-        team_info[home_team]["conf"] == team_info[away_team]["conf"]
-        and team_info[home_team]["div"] == team_info[away_team]["div"]
-    )
-
-    # Travel distance in miles
-    travel_distance = geodesic(
-        team_info[home_team]["loc"], team_info[away_team]["loc"]
-    ).miles
+    # Sports with a metadata table (NFL/NBA): skip unknown teams and derive
+    # matchup/travel columns. Metadata-less sports (NCAAF): keep every game
+    # and leave those columns blank.
+    if team_info:
+        if home_team not in team_info or away_team not in team_info:
+            return None
+        div_match = (
+            team_info[home_team]["conf"] == team_info[away_team]["conf"]
+            and team_info[home_team]["div"] == team_info[away_team]["div"]
+        )
+        travel_distance = round(
+            geodesic(team_info[home_team]["loc"], team_info[away_team]["loc"]).miles,
+            1,
+        )
+        home_conf = team_info[home_team]["conf"]
+        home_div = team_info[home_team]["div"]
+        away_conf = team_info[away_team]["conf"]
+        away_div = team_info[away_team]["div"]
+    else:
+        div_match = None
+        travel_distance = None
+        home_conf = home_div = away_conf = away_div = None
 
     # Collect odds across all sportsbooks
     odds_data = _extract_odds(game, home_team, away_team)
@@ -82,13 +90,13 @@ def _process_single_game(
         "Game ID": game.get("id", ""),
         "Home Team": home_team,
         "Away Team": away_team,
-        "Divisional Matchup": "Yes" if div_match else "No",
-        "Travel Distance (mi)": round(travel_distance, 1),
+        "Divisional Matchup": None if div_match is None else ("Yes" if div_match else "No"),
+        "Travel Distance (mi)": travel_distance,
         "Prime Time (ET >= 7p)": "Yes" if prime_time else "No",
-        "Home Conf": team_info[home_team]["conf"],
-        "Home Div": team_info[home_team]["div"],
-        "Away Conf": team_info[away_team]["conf"],
-        "Away Div": team_info[away_team]["div"],
+        "Home Conf": home_conf,
+        "Home Div": home_div,
+        "Away Conf": away_conf,
+        "Away Div": away_div,
         **odds_data["averages"],
     }
 

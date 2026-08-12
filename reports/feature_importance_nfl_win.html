@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NFL win model — feature importance</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb;
+    --page: #f9f9f7;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11, 11, 11, 0.10);
+    --good-text: #006300;
+    --market: #2a78d6;   /* categorical slot 1 — blue  */
+    --elo: #eb6834;      /* categorical slot 2 — orange */
+    --form: #1baf7a;     /* categorical slot 3 — aqua   */
+    --deemph: #898781;   /* de-emphasis gray            */
+    --div-pos: #2a78d6;  /* diverging cool pole         */
+    --div-neg: #e34948;  /* diverging warm pole         */
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19;
+      --page: #0d0d0d;
+      --text-primary: #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted: #898781;
+      --grid: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255, 255, 255, 0.10);
+      --good-text: #0ca30c;
+      --market: #3987e5;
+      --elo: #d95926;
+      --form: #199e70;
+      --deemph: #898781;
+      --div-pos: #3987e5;
+      --div-neg: #e66767;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --page: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --good-text: #0ca30c;
+    --market: #3987e5;
+    --elo: #d95926;
+    --form: #199e70;
+    --deemph: #898781;
+    --div-pos: #3987e5;
+    --div-neg: #e66767;
+  }
+
+  .viz-root {
+    margin: 0;
+    background: var(--page);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 28px 20px 64px; }
+  header.page { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  h1 { font-size: 20px; font-weight: 650; margin: 0 0 4px; }
+  .sub { color: var(--text-secondary); margin: 0 0 20px; max-width: 62ch; }
+  .theme-btn {
+    flex: none; border: 1px solid var(--border); background: var(--surface-1);
+    color: var(--text-secondary); border-radius: 8px; padding: 5px 12px;
+    font: inherit; font-size: 12.5px; cursor: pointer;
+  }
+
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 20px; }
+  .tile {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .tile .label { color: var(--text-secondary); font-size: 12.5px; }
+  .tile .value { font-size: 26px; font-weight: 600; margin-top: 2px; }
+  .tile .delta { font-size: 12.5px; margin-top: 2px; }
+  .delta.good { color: var(--good-text); }
+  .tile .note { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 18px 10px; margin-bottom: 20px;
+  }
+  .card h2 { font-size: 15px; font-weight: 650; margin: 0 0 2px; }
+  .card .csub { color: var(--text-secondary); font-size: 12.5px; margin: 0 0 12px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 2px 0 10px; }
+  .legend .key { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 12.5px; }
+  .key .swatch { width: 10px; height: 10px; border-radius: 3px; }
+  .key .linekey { width: 14px; height: 0; border-top: 3px solid; border-radius: 2px; }
+  .key .dotkey { width: 9px; height: 9px; border-radius: 50%; }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .cat { fill: var(--text-secondary); font-size: 12px; }
+  .val { fill: var(--text-secondary); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .hit { fill: transparent; cursor: default; outline: none; }
+  .hit:focus-visible { stroke: var(--market); stroke-width: 1.5; }
+
+  details.tablev { margin: 6px 0 8px; }
+  details.tablev summary { color: var(--text-secondary); font-size: 12.5px; cursor: pointer; }
+  table { border-collapse: collapse; margin-top: 8px; width: 100%; font-size: 12.5px; }
+  th { text-align: left; color: var(--text-secondary); font-weight: 600; }
+  th, td { padding: 4px 10px 4px 0; border-bottom: 1px solid var(--grid); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  #tooltip {
+    position: fixed; pointer-events: none; z-index: 10; display: none;
+    background: var(--surface-1); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    padding: 8px 11px; font-size: 12.5px; max-width: 280px;
+  }
+  #tooltip .t-val { font-weight: 650; font-size: 14px; }
+  #tooltip .t-lab { color: var(--text-secondary); }
+  #tooltip .t-rows { margin-top: 4px; color: var(--text-secondary); }
+  footer { color: var(--text-muted); font-size: 12px; margin-top: 8px; }
+</style>
+</head>
+<body class="viz-root" data-palette="#2a78d6,#eb6834,#1baf7a,#898781">
+<div class="wrap">
+  <header class="page">
+    <div>
+      <h1>NFL win model — feature importance</h1>
+      <p class="sub">Out-of-sample permutation importance for the v2 win-probability model,
+        aggregated across five learners (logistic, RF, extra-trees, XGBoost, LightGBM).
+        The market features dominate — the model's honest headline is that the closing
+        line already knows.</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme: auto</button>
+  </header>
+
+  <div class="kpis">
+    <div class="tile">
+      <div class="label">Best variant log loss</div>
+      <div class="value">0.6319</div>
+      <div class="delta good">−0.0055 vs base Elo</div>
+      <div class="note">qb_talent variant · 3,028 games OOS</div>
+    </div>
+    <div class="tile">
+      <div class="label">Base Elo log loss</div>
+      <div class="value">0.6374</div>
+      <div class="note">accuracy 64.2%</div>
+    </div>
+    <div class="tile">
+      <div class="label">Top feature (consensus)</div>
+      <div class="value">spread_line</div>
+      <div class="note">avg rank 1.6 of 45 across 5 learners</div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>Consensus importance — top 15 of 45 features</h2>
+    <p class="csub">Normalized permutation-importance score, averaged across the five learners. Colored by feature family.</p>
+    <div class="legend" id="legend1"></div>
+    <div id="chart1"></div>
+    <details class="tablev"><summary>Table view</summary><div id="table1"></div></details>
+  </section>
+
+  <section class="card">
+    <h2>Do the five learners agree?</h2>
+    <p class="csub">Each feature's importance rank per learner (gray dots, 1 = most important) and the consensus average (blue). Tight clusters = robust signal; wide spreads = model-dependent.</p>
+    <div class="legend" id="legend2"></div>
+    <div id="chart2"></div>
+    <details class="tablev"><summary>Table view</summary><div id="table2"></div></details>
+  </section>
+
+  <section class="card">
+    <h2>Elo variant ablation — log-loss improvement vs base</h2>
+    <p class="csub">Walk-forward log-loss delta against the base Elo (positive = better). QB adjustment plus talent priors help; the raw market spread as a lone feature is far worse than Elo itself.</p>
+    <div class="legend" id="legend3"></div>
+    <div id="chart3"></div>
+    <details class="tablev"><summary>Table view</summary><div id="table3"></div></details>
+  </section>
+
+  <footer>Source: NFL/model/v2/artifacts — importance/uniform_ranking.csv, elo_variants/summary.csv.
+    Palette: documented reference palette (adjacent-pair CVD ΔE ≥ 8.4, validated).</footer>
+</div>
+<div id="tooltip" role="status"></div>
+
+<script>
+"use strict";
+/* ---------- data (from NFL/model/v2/artifacts) ---------- */
+const FAMS = {
+  market: { label: "Market", cssVar: "--market" },
+  elo: { label: "Elo", cssVar: "--elo" },
+  form: { label: "Team form", cssVar: "--form" },
+  situ: { label: "Situational", cssVar: "--deemph" },
+};
+const TOP15 = [
+  { f: "spread_line", fam: "market", score: 0.856, avgRank: 1.6 },
+  { f: "market_home_prob", fam: "market", score: 0.847, avgRank: 2.3 },
+  { f: "elo_diff", fam: "elo", score: 0.359, avgRank: 3.9 },
+  { f: "elo_spread", fam: "elo", score: 0.279, avgRank: 12.6 },
+  { f: "elo_home_prob", fam: "elo", score: 0.240, avgRank: 13.4 },
+  { f: "elo_vs_spread", fam: "elo", score: 0.227, avgRank: 10.3 },
+  { f: "roll_margin_diff", fam: "form", score: 0.212, avgRank: 6.0 },
+  { f: "home_roll_margin", fam: "form", score: 0.119, avgRank: 18.2 },
+  { f: "away_roll_pf", fam: "form", score: 0.110, avgRank: 13.8 },
+  { f: "away_ppg_diff_std", fam: "form", score: 0.103, avgRank: 15.9 },
+  { f: "home_roll_pa", fam: "form", score: 0.088, avgRank: 21.0 },
+  { f: "market_vig", fam: "market", score: 0.086, avgRank: 19.8 },
+  { f: "away_roll_total_vs_line", fam: "market", score: 0.084, avgRank: 20.5 },
+  { f: "home_std_margin", fam: "form", score: 0.069, avgRank: 27.6 },
+  { f: "travel_miles", fam: "situ", score: 0.069, avgRank: 18.0 },
+];
+const MODELS = ["logistic", "rf", "extratrees", "xgb", "lgbm"];
+const AGREE = [
+  { f: "spread_line", ranks: [1, 2, 2, 2, 1], avg: 1.6 },
+  { f: "market_home_prob", ranks: [6.5, 1, 1, 1, 2], avg: 2.3 },
+  { f: "elo_diff", ranks: [2.75, 4.5, 4.5, 3, 4.5], avg: 3.9 },
+  { f: "roll_margin_diff", ranks: [5, 6.5, 6, 6, 6.5], avg: 6.0 },
+  { f: "elo_vs_spread", ranks: [4, 8, 12, 7, 20.5], avg: 10.3 },
+  { f: "elo_spread", ranks: [2.25, 3, 4.5, 24.5, 28.5], avg: 12.6 },
+  { f: "elo_home_prob", ranks: [17.5, 4.5, 3, 27, 15], avg: 13.4 },
+  { f: "away_roll_pf", ranks: [8.5, 10, 12, 15.5, 23], avg: 13.8 },
+  { f: "away_ppg_diff_std", ranks: [7, 9.5, 17.5, 19.5, 26], avg: 15.9 },
+  { f: "total_line", ranks: [34.5, 13.5, 22, 8, 9], avg: 17.4 },
+];
+const VARIANTS = [
+  { v: "qb_talent", d: 0.0055, ll: 0.6319, acc: 0.6522 },
+  { v: "talent", d: 0.0039, ll: 0.6335, acc: 0.6516 },
+  { v: "qb", d: 0.0025, ll: 0.6349, acc: 0.6456 },
+  { v: "spread", d: -0.0370, ll: 0.6744, acc: 0.6539 },
+];
+
+/* ---------- helpers ---------- */
+const NS = "http://www.w3.org/2000/svg";
+const css = (v) => getComputedStyle(document.body).getPropertyValue(v).trim();
+function el(name, attrs, parent) {
+  const node = document.createElementNS(NS, name);
+  for (const k in attrs) node.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(node);
+  return node;
+}
+/* horizontal bar: square at the baseline, 4px rounded data-end */
+function barPath(x, y, w, h, dir) {
+  const r = Math.min(4, Math.abs(w));
+  if (dir >= 0) {
+    return `M${x},${y} L${x + w - r},${y} Q${x + w},${y} ${x + w},${y + r}` +
+      ` L${x + w},${y + h - r} Q${x + w},${y + h} ${x + w - r},${y + h} L${x},${y + h} Z`;
+  }
+  return `M${x},${y} L${x + w + r},${y} Q${x + w},${y} ${x + w},${y + r}` +
+    ` L${x + w},${y + h - r} Q${x + w},${y + h} ${x + w + r},${y + h} L${x},${y + h} Z`;
+}
+const tooltip = document.getElementById("tooltip");
+function showTip(evt, valueText, labelText, rows) {
+  tooltip.replaceChildren();
+  const v = document.createElement("div"); v.className = "t-val"; v.textContent = valueText;
+  const l = document.createElement("div"); l.className = "t-lab"; l.textContent = labelText;
+  tooltip.append(v, l);
+  if (rows && rows.length) {
+    const r = document.createElement("div"); r.className = "t-rows";
+    rows.forEach((line) => {
+      const d = document.createElement("div"); d.textContent = line; r.appendChild(d);
+    });
+    tooltip.appendChild(r);
+  }
+  tooltip.style.display = "block";
+  moveTip(evt);
+}
+function moveTip(evt) {
+  const pad = 14;
+  let x = (evt.clientX ?? 0) + pad, y = (evt.clientY ?? 0) + pad;
+  const r = tooltip.getBoundingClientRect();
+  if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad;
+  tooltip.style.left = x + "px";
+  tooltip.style.top = y + "px";
+}
+function hideTip() { tooltip.style.display = "none"; }
+function wireHit(hit, mark, onShow) {
+  hit.addEventListener("pointerenter", (e) => { mark && (mark.style.filter = "brightness(1.12)"); onShow(e); });
+  hit.addEventListener("pointermove", moveTip);
+  hit.addEventListener("pointerleave", () => { mark && (mark.style.filter = ""); hideTip(); });
+  hit.addEventListener("focus", () => {
+    const r = hit.getBoundingClientRect();
+    onShow({ clientX: r.right, clientY: r.top + r.height / 2 });
+  });
+  hit.addEventListener("blur", hideTip);
+}
+function legend(id, keys) {
+  const box = document.getElementById(id);
+  keys.forEach((k) => {
+    const item = document.createElement("span"); item.className = "key";
+    const mark = document.createElement("span");
+    mark.className = k.kind === "line" ? "linekey" : k.kind === "dot" ? "dotkey" : "swatch";
+    if (k.kind === "line") mark.style.borderTopColor = k.color;
+    else mark.style.background = k.color;
+    const t = document.createElement("span"); t.textContent = k.label;
+    item.append(mark, t);
+    box.appendChild(item);
+  });
+}
+function buildTable(id, headers, rows) {
+  const holder = document.getElementById(id);
+  const t = document.createElement("table");
+  const trh = document.createElement("tr");
+  headers.forEach((h, i) => {
+    const th = document.createElement("th");
+    if (i > 0) th.className = "num";
+    th.textContent = h; trh.appendChild(th);
+  });
+  t.appendChild(trh);
+  rows.forEach((row) => {
+    const tr = document.createElement("tr");
+    row.forEach((c, i) => {
+      const td = document.createElement("td");
+      if (i > 0) td.className = "num";
+      td.textContent = String(c); tr.appendChild(td);
+    });
+    t.appendChild(tr);
+  });
+  holder.replaceChildren(t);
+}
+
+/* ---------- chart 1: consensus importance bars ---------- */
+function chart1() {
+  const band = 26, barH = 16, mL = 172, mR = 56, mT = 8, mB = 26;
+  const W = 860, plotW = W - mL - mR, H = mT + TOP15.length * band + mB;
+  const holder = document.getElementById("chart1");
+  holder.replaceChildren();
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Consensus feature importance, top 15" }, null);
+  holder.appendChild(svg);
+  const xmax = 0.9, x = (v) => mL + (v / xmax) * plotW;
+  for (const gv of [0, 0.2, 0.4, 0.6, 0.8]) {
+    el("line", { x1: x(gv), x2: x(gv), y1: mT, y2: H - mB, stroke: css("--grid"), "stroke-width": 1 }, svg);
+    el("text", { x: x(gv), y: H - mB + 15, "text-anchor": "middle", class: "tick" }, svg).textContent = gv.toFixed(1);
+  }
+  el("line", { x1: mL, x2: mL, y1: mT, y2: H - mB, stroke: css("--baseline"), "stroke-width": 1 }, svg);
+  TOP15.forEach((d, i) => {
+    const y = mT + i * band + (band - barH) / 2;
+    const color = css(FAMS[d.fam].cssVar);
+    const w = (d.score / xmax) * plotW;
+    const mark = el("path", { d: barPath(mL, y, w, barH, 1), fill: color }, svg);
+    el("text", { x: mL - 8, y: y + barH - 4, "text-anchor": "end", class: "cat" }, svg).textContent = d.f;
+    el("text", { x: mL + w + 6, y: y + barH - 4, class: "val" }, svg).textContent = d.score.toFixed(3);
+    const hit = el("rect", { x: 0, y: mT + i * band, width: W, height: band, class: "hit", tabindex: 0, role: "img",
+      "aria-label": `${d.f}: score ${d.score.toFixed(3)}, average rank ${d.avgRank}` }, svg);
+    wireHit(hit, mark, (e) => showTip(e, d.score.toFixed(3), d.f,
+      [`family: ${FAMS[d.fam].label}`, `avg rank across learners: ${d.avgRank}`]));
+  });
+  legend("legend1", Object.values(FAMS).map((f) => ({ label: f.label, color: css(f.cssVar) })));
+  buildTable("table1", ["feature", "family", "score", "avg rank"],
+    TOP15.map((d) => [d.f, FAMS[d.fam].label, d.score.toFixed(3), d.avgRank]));
+}
+
+/* ---------- chart 2: rank agreement dot plot ---------- */
+function chart2() {
+  const band = 28, mL = 172, mR = 24, mT = 8, mB = 28;
+  const W = 860, plotW = W - mL - mR, H = mT + AGREE.length * band + mB;
+  const holder = document.getElementById("chart2");
+  holder.replaceChildren();
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Importance rank per learner" }, null);
+  holder.appendChild(svg);
+  const xmax = 36, x = (v) => mL + (v / xmax) * plotW;
+  for (const gv of [1, 5, 10, 15, 20, 25, 30, 35]) {
+    el("line", { x1: x(gv), x2: x(gv), y1: mT, y2: H - mB, stroke: css("--grid"), "stroke-width": 1 }, svg);
+    el("text", { x: x(gv), y: H - mB + 16, "text-anchor": "middle", class: "tick" }, svg).textContent = gv;
+  }
+  AGREE.forEach((d, i) => {
+    const cy = mT + i * band + band / 2;
+    el("text", { x: mL - 8, y: cy + 4, "text-anchor": "end", class: "cat" }, svg).textContent = d.f;
+    const lo = Math.min(...d.ranks), hi = Math.max(...d.ranks);
+    el("line", { x1: x(lo), x2: x(hi), y1: cy, y2: cy, stroke: css("--grid"), "stroke-width": 2 }, svg);
+    d.ranks.forEach((r) => {
+      el("circle", { cx: x(r), cy, r: 4.5, fill: css("--deemph"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+    });
+    const avg = el("circle", { cx: x(d.avg), cy, r: 5.5, fill: css("--market"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+    const hit = el("rect", { x: 0, y: mT + i * band, width: W, height: band, class: "hit", tabindex: 0, role: "img",
+      "aria-label": `${d.f}: consensus rank ${d.avg}` }, svg);
+    wireHit(hit, avg, (e) => showTip(e, `avg rank ${d.avg}`, d.f,
+      MODELS.map((m, j) => `${m}: ${d.ranks[j]}`)));
+  });
+  el("text", { x: mL + plotW / 2, y: H - 2, "text-anchor": "middle", class: "tick" }, svg).textContent = "importance rank (1 = most important)";
+  legend("legend2", [
+    { label: "per-learner rank", color: css("--deemph"), kind: "dot" },
+    { label: "consensus average", color: css("--market"), kind: "dot" },
+  ]);
+  buildTable("table2", ["feature", ...MODELS, "avg"],
+    AGREE.map((d) => [d.f, ...d.ranks, d.avg]));
+}
+
+/* ---------- chart 3: variant ablation diverging bars ---------- */
+function chart3() {
+  const band = 30, barH = 16, mL = 120, mR = 70, mT = 8, mB = 30;
+  const W = 860, plotW = W - mL - mR, H = mT + VARIANTS.length * band + mB;
+  const holder = document.getElementById("chart3");
+  holder.replaceChildren();
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Elo variant log-loss improvement vs base" }, null);
+  holder.appendChild(svg);
+  const lim = 0.04, x = (v) => mL + ((v + lim) / (2 * lim)) * plotW;
+  for (const gv of [-0.04, -0.02, 0, 0.02, 0.04]) {
+    el("line", { x1: x(gv), x2: x(gv), y1: mT, y2: H - mB,
+      stroke: gv === 0 ? css("--baseline") : css("--grid"), "stroke-width": 1 }, svg);
+    el("text", { x: x(gv), y: H - mB + 15, "text-anchor": "middle", class: "tick" }, svg).textContent =
+      (gv > 0 ? "+" : "") + gv.toFixed(2);
+  }
+  VARIANTS.forEach((d, i) => {
+    const y = mT + i * band + (band - barH) / 2;
+    const better = d.d >= 0;
+    const w = (d.d / (2 * lim)) * plotW;
+    const mark = el("path", { d: barPath(x(0), y, w, barH, better ? 1 : -1),
+      fill: css(better ? "--div-pos" : "--div-neg") }, svg);
+    el("text", { x: mL - 8, y: y + barH - 4, "text-anchor": "end", class: "cat" }, svg).textContent = d.v;
+    // A long negative bar reaches the category gutter — when the outside
+    // label won't fit, set it inside the bar's data end (white on the
+    // saturated fill clears contrast).
+    const labelW = 52;
+    const inside = !better && x(0) + w - labelW < mL;
+    const lbl = el("text", { x: x(0) + w + (better ? 6 : inside ? 6 : -6), y: y + barH - 4,
+      "text-anchor": better || inside ? "start" : "end", class: "val" }, svg);
+    if (inside) lbl.setAttribute("fill", "#ffffff");
+    lbl.textContent = (d.d > 0 ? "+" : "") + d.d.toFixed(4);
+    const hit = el("rect", { x: 0, y: mT + i * band, width: W, height: band, class: "hit", tabindex: 0, role: "img",
+      "aria-label": `${d.v}: ${d.d > 0 ? "+" : ""}${d.d.toFixed(4)} log-loss vs base` }, svg);
+    wireHit(hit, mark, (e) => showTip(e, (d.d > 0 ? "+" : "") + d.d.toFixed(4), d.v + " vs base Elo",
+      [`log loss: ${d.ll.toFixed(4)}`, `accuracy: ${(d.acc * 100).toFixed(1)}%`]));
+  });
+  el("text", { x: mL + plotW / 2, y: H - 2, "text-anchor": "middle", class: "tick" }, svg).textContent =
+    "log-loss improvement vs base Elo (positive = better)";
+  legend("legend3", [
+    { label: "better than base", color: css("--div-pos") },
+    { label: "worse than base", color: css("--div-neg") },
+  ]);
+  buildTable("table3", ["variant", "log loss", "Δ vs base", "accuracy"],
+    [["base", "0.6374", "0.0000", "64.2%"],
+     ...VARIANTS.map((d) => [d.v, d.ll.toFixed(4), (d.d > 0 ? "+" : "") + d.d.toFixed(4), (d.acc * 100).toFixed(1) + "%"])]);
+}
+
+/* ---------- theme toggle (auto → light → dark) ---------- */
+const themeBtn = document.getElementById("themeBtn");
+const MODES = ["auto", "light", "dark"];
+let mode = 0;
+themeBtn.addEventListener("click", () => {
+  mode = (mode + 1) % MODES.length;
+  const m = MODES[mode];
+  if (m === "auto") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = m;
+  themeBtn.textContent = "Theme: " + m;
+  render();
+});
+const mq = matchMedia("(prefers-color-scheme: dark)");
+mq.addEventListener?.("change", () => { if (MODES[mode] === "auto") render(); });
+
+function render() { chart1(); chart2(); chart3(); }
+["legend1", "legend2", "legend3"].forEach((id) => document.getElementById(id).replaceChildren());
+render();
+/* re-render clears + rebuilds legends too */
+const origRender = render;
+render = function () {
+  ["legend1", "legend2", "legend3"].forEach((id) => document.getElementById(id).replaceChildren());
+  origRender();
+};
+</script>
+</body>
+</html>

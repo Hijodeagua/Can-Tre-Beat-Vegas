@@ -122,7 +122,7 @@ def main():
     parser = argparse.ArgumentParser(description="Check odds data files for staleness")
     parser.add_argument(
         "--sport",
-        choices=["nfl", "nba", "all"],
+        choices=[*SUPPORTED_SPORTS, "all"],
         default="all",
         help="Sport to check (default: all)",
     )
