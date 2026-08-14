@@ -87,6 +87,21 @@ MIGRATIONS = """
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp TEXT;
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp TEXT;
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS pred_total DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp_id TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp_id TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS model_version TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp_adj DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp_adj DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp_mode TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp_mode TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_rt_adj DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_rt_adj DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS home_log_loss DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS home_correct INT;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS d_ll_sum DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS d_ll_sq_sum DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS cum_d_ll_mean DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS cum_d_ll_se DOUBLE PRECISION;
 """
 
 

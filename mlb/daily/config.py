@@ -15,6 +15,40 @@ SITE_HISTORY_DIR = SITE_DATA_DIR / "history"
 
 CURRENT_SEASON = 2026
 
+STARTS_CSV = REPO / "data" / "mlb" / "pitcher_starts.csv"
+
+# --- Model versions ---------------------------------------------------------
+# The active model is the graded record; the shadow model (if any) is
+# predicted, persisted, and graded in its own bucket so the live record is
+# never contaminated. Cutover = swap ACTIVE_MODEL/SHADOW_MODEL after the
+# shadow window (see docs/SP-AUDIT.md and research/SP-BACKTEST.md).
+MODEL_V1 = "v1-team-elo"
+MODEL_V2 = "v2-sp"
+ACTIVE_MODEL = MODEL_V1
+SHADOW_MODEL = MODEL_V2   # set to None to disable the parallel run
+
+# v2 starting-pitcher adjustment knobs (tuned on 2012-2021 only; see
+# research/SP-BACKTEST.md - 538's published C=4.7/half-life 10 was not
+# distinguishable from the current model out of sample, this pair was).
+SP_C = 3.0
+SP_HALF_LIFE = 20.0
+USE_PITCHER_ADJ = True
+USE_REST = True
+USE_TRAVEL = True
+
+# Always-pick-home reference forecast for the paired grading baseline: the
+# long-run MLB home win rate over 2012-2025 (0.5335 across 32,484 games),
+# frozen here so the baseline never peeks at the games it is scoring.
+ALWAYS_HOME_P = 0.534
+
+
+def predictions_dir(model_version: str) -> Path:
+    """Prediction/ledger bucket for a model version. v1 keeps the original
+    flat layout so the pre-change record stays where it always lived."""
+    if model_version == MODEL_V1:
+        return PREDICTIONS_DIR
+    return PREDICTIONS_DIR / model_version
+
 # Simulation defaults. Season sims are the expensive knob: 2000 sims over the
 # ~750-game August remainder runs in a few seconds vectorized, cheap enough
 # for a daily cadence.

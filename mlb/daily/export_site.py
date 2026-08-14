@@ -15,9 +15,38 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from mlb.daily.config import (
-    GRADES_CSV, SITE_DATA_DIR, SITE_HISTORY_DIR, TEAM_DIVISION, TEAM_NAMES,
+    ACTIVE_MODEL, GRADES_CSV, MODEL_V1, SHADOW_MODEL, SITE_DATA_DIR,
+    SITE_HISTORY_DIR, TEAM_DIVISION, TEAM_NAMES, predictions_dir,
 )
 from mlb.daily.emails import grade_html, slate_html
+
+
+def _bucket_summary(version: str) -> dict | None:
+    """Cumulative record for one model version's ledger - kept separate so
+    a model change never silently contaminates the live record."""
+    grades = predictions_dir(version) / "grades.csv"
+    if not grades.exists():
+        return None
+    ledger = pd.read_csv(grades).sort_values("date")
+    if ledger.empty:
+        return None
+    last = ledger.iloc[-1]
+    def _f(key):
+        v = last.get(key)
+        return None if v is None or pd.isna(v) else float(v)
+    return {
+        "version": version,
+        "role": "active" if version == ACTIVE_MODEL else "shadow",
+        "first_date": str(ledger.date.min()),
+        "last_date": str(ledger.date.max()),
+        "games": int(last.cum_games),
+        "correct": int(last.cum_correct),
+        "accuracy": _f("cum_accuracy"),
+        "log_loss": _f("cum_log_loss"),
+        "brier": _f("cum_brier"),
+        "d_ll_vs_home_mean": _f("cum_d_ll_mean"),
+        "d_ll_vs_home_se": _f("cum_d_ll_se"),
+    }
 
 
 def _records(df: pd.DataFrame | None) -> list[dict]:
@@ -52,7 +81,8 @@ def write_history_snapshot(date: str, graded: pd.DataFrame | None,
 def export_latest(run_date: str, slate: pd.DataFrame,
                   futures: pd.DataFrame, standings: pd.DataFrame,
                   graded: pd.DataFrame | None,
-                  graded_date: str | None) -> None:
+                  graded_date: str | None,
+                  shadow_slate: pd.DataFrame | None = None) -> None:
     SITE_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     st = standings.set_index("team")
@@ -90,10 +120,17 @@ def export_latest(run_date: str, slate: pd.DataFrame,
             g[col] = g[col].astype("Int64")
         graded_out = _records(g)
 
+    models = [s for s in (_bucket_summary(MODEL_V1),
+                          _bucket_summary(SHADOW_MODEL) if SHADOW_MODEL
+                          else None) if s]
+
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "date": run_date,
+        "model_version": ACTIVE_MODEL,
+        "models": models,
         "slate": _records(slate),
+        "shadow_slate": _records(shadow_slate),
         "futures": _records(futures_out),
         "graded_date": graded_date,
         "graded": graded_out,
