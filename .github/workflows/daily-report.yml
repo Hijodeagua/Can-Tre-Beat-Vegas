@@ -71,8 +71,11 @@ jobs:
 
       # Per-start pitching lines for the shadow SP model: checkpointed and
       # resumable, so the first run backfills the 2026 season and each later
-      # run only fetches yesterday's games. Non-fatal: if statsapi hiccups,
-      # the SP books just lag a day and the emails still go out.
+      # run re-scans a rolling 7-day tail (see mlb/build_starts_statsapi.py)
+      # so a game still suspended/delayed on its date is picked up once it
+      # finalizes - already-checkpointed games aren't re-fetched, so this
+      # stays cheap. Non-fatal: if statsapi hiccups, the SP books just lag
+      # a day and the emails still go out.
       - name: Update pitcher starts (statsapi)
         continue-on-error: true
         env:
@@ -126,11 +129,7 @@ jobs:
 
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "MLB daily: ${{ steps.pipeline.outputs.date }}"
-            for i in 1 2 3 4; do
-              git pull --rebase origin main && git push && break
-              echo "push attempt $i failed; retrying"
-              sleep $((2 ** i))
-            done
+            bash .github/scripts/git-push-retry.sh main
           else
             echo "No changes to commit."
           fi
@@ -252,11 +251,7 @@ jobs:
           git add reports/mlb_daily/sent.json
           if [ -n "$(git status --porcelain reports/mlb_daily/sent.json)" ]; then
             git commit -m "MLB daily: record deliveries ${{ steps.pipeline.outputs.date }}"
-            for i in 1 2 3 4; do
-              git pull --rebase origin main && git push && break
-              echo "push attempt $i failed; retrying"
-              sleep $((2 ** i))
-            done
+            bash .github/scripts/git-push-retry.sh main
           fi
 
       - name: Upload report artifacts

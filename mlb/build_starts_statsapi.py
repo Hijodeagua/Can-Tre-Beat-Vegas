@@ -23,8 +23,30 @@ on any mismatch. This is the independent accuracy audit for the historical
 ingest, run where statsapi is reachable (GitHub runner; the dev sandbox
 blocks statsapi.mlb.com).
 
-Default window: from the day after the last statsapi row on file (or
-2026-03-01 when there is none) through yesterday US/Eastern.
+Default window: a game is "final" the moment statsapi's schedule endpoint
+marks it so, but a start-of-day pull can catch a game mid-suspension or
+mid-delay - it simply isn't in that day's `final_games()` result yet, so it
+is never checkpointed and its date is never covered again by a strictly
+increasing "day after the last statsapi row" cursor. Concretely: date D has
+two games, one final and one suspended; the final game advances
+last_statsapi to D; tomorrow's run starts at D+1 and D's suspended game -
+final by then - is never revisited.
+
+So the default window instead REPLAYS a rolling OVERLAP_DAYS-day (7) tail
+ending yesterday US/Eastern every run, re-querying the schedule for dates
+already covered so a game that turned final since the last pull is picked
+up under its correct date. This is safe to repeat: already-checkpointed
+gamePks are skipped (no re-fetch), and the CSV merge replaces exactly the
+statsapi rows for games re-enumerated in the window, so overlapping runs
+never duplicate a row.
+
+If there is a longer gap since the last statsapi row than OVERLAP_DAYS
+(the job was down for a while), the window instead starts the day after
+that last row, so a resumed job still catches up fully rather than skipping
+straight to the trailing week. Either way the start never precedes the
+initial 2026-03-01 boundary, and with no prior statsapi data at all
+(first run) the window starts at that boundary - a full-season backfill,
+not just the trailing week.
 """
 
 from __future__ import annotations
@@ -53,6 +75,9 @@ SCHEDULE_URL = ("https://statsapi.mlb.com/api/v1/schedule?sportId=1"
                 "&gameType=R&startDate={start}&endDate={end}")
 BOX_URL = "https://statsapi.mlb.com/api/v1/game/{pk}/boxscore"
 REQUEST_GAP_S = 0.6  # stay well under statsapi's informal rate tolerance
+
+INITIAL_START = "2026-03-01"
+OVERLAP_DAYS = 7  # default trailing window re-scanned on every run
 
 
 def _get(url: str) -> dict:
@@ -131,6 +156,34 @@ def parse_boxscore(box: dict, meta: dict, retro_map: dict) -> list[dict]:
     return rows
 
 
+def yesterday_et() -> str:
+    return (datetime.now(ZoneInfo("America/New_York")).date()
+            - timedelta(days=1)).isoformat()
+
+
+def default_window(last_statsapi: str | None, end: str) -> str:
+    """Default start date for an automatic (no --start) run, given `end`
+    (the last date to cover) and the latest statsapi-sourced date already on
+    file (None if there is none).
+
+    A rolling OVERLAP_DAYS-day tail ending at `end`, re-scanned every run so
+    a game that finalizes after its date was first pulled - suspended or
+    delayed at the time - is picked up under its correct date instead of
+    being permanently skipped by a cursor that only ever moves forward. If
+    the gap since `last_statsapi` is longer than that window (a stale job
+    resuming), start the day after `last_statsapi` instead, so the run
+    catches up fully rather than skipping the gap. Never earlier than
+    INITIAL_START; with no prior statsapi data, INITIAL_START is the whole
+    answer (full-season backfill, not just the trailing window)."""
+    if last_statsapi is None:
+        return INITIAL_START
+    day_after_last = (date.fromisoformat(last_statsapi)
+                      + timedelta(days=1)).isoformat()
+    overlap_start = (date.fromisoformat(end)
+                     - timedelta(days=OVERLAP_DAYS - 1)).isoformat()
+    return max(min(day_after_last, overlap_start), INITIAL_START)
+
+
 def load_checkpoint() -> dict[str, list[dict]]:
     done: dict[str, list[dict]] = {}
     if CHECKPOINT.exists():
@@ -150,12 +203,10 @@ def ingest(start: str | None, end: str | None) -> int:
         statsapi_dates = [r["date"] for r in existing if r["source"] == "statsapi"]
         last_statsapi = max(statsapi_dates) if statsapi_dates else None
 
-    if start is None:
-        start = ((date.fromisoformat(last_statsapi) + timedelta(days=1)).isoformat()
-                 if last_statsapi else "2026-03-01")
     if end is None:
-        end = (datetime.now(ZoneInfo("America/New_York")).date()
-               - timedelta(days=1)).isoformat()
+        end = yesterday_et()
+    if start is None:
+        start = default_window(last_statsapi, end)
     if start > end:
         print(f"nothing to do: start {start} > end {end}")
         return 0
