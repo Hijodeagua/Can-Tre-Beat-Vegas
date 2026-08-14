@@ -69,6 +69,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Per-start pitching lines for the shadow SP model: checkpointed and
+      # resumable, so the first run backfills the 2026 season and each later
+      # run only fetches yesterday's games. Non-fatal: if statsapi hiccups,
+      # the SP books just lag a day and the emails still go out.
+      - name: Update pitcher starts (statsapi)
+        continue-on-error: true
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python -m mlb.build_starts_statsapi
+          python -m mlb.load_starts_db
+
       - name: Run daily pipeline
         id: pipeline
         shell: bash
@@ -90,12 +102,16 @@ jobs:
           MANIFEST=reports/mlb_daily/manifest_latest.json
           {
             echo "date=$(jq -r '.date' $MANIFEST)"
+            echo "graded_date=$(jq -r '.graded_date // ""' $MANIFEST)"
             echo "futures_path=$(jq -r '.emails.futures.path // ""' $MANIFEST)"
             echo "futures_subject=$(jq -r '.emails.futures.subject // ""' $MANIFEST)"
+            echo "futures_send=$(jq -r '.emails.futures.send // false' $MANIFEST)"
             echo "slate_path=$(jq -r '.emails.slate.path // ""' $MANIFEST)"
             echo "slate_subject=$(jq -r '.emails.slate.subject // ""' $MANIFEST)"
+            echo "slate_send=$(jq -r '.emails.slate.send // false' $MANIFEST)"
             echo "grade_path=$(jq -r '.emails.grade.path // ""' $MANIFEST)"
             echo "grade_subject=$(jq -r '.emails.grade.subject // ""' $MANIFEST)"
+            echo "grade_send=$(jq -r '.emails.grade.send // false' $MANIFEST)"
           } >> "$GITHUB_OUTPUT"
 
       - name: Commit and push outputs
@@ -147,7 +163,7 @@ jobs:
       # error) never blocks the others - each of the three is independent.
       - name: "Email 1: futures forecast"
         id: email-futures
-        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.futures_path != '' }}
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.futures_path != '' && steps.pipeline.outputs.futures_send == 'true' }}
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
@@ -163,7 +179,7 @@ jobs:
 
       - name: "Email 2: today's slate"
         id: email-slate
-        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.slate_path != '' }}
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.slate_path != '' && steps.pipeline.outputs.slate_send == 'true' }}
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
@@ -179,7 +195,7 @@ jobs:
 
       - name: "Email 3: yesterday's grade"
         id: email-grade
-        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.grade_path != '' }}
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.grade_path != '' && steps.pipeline.outputs.grade_send == 'true' }}
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:
@@ -208,6 +224,40 @@ jobs:
             exit 1
           fi
           echo "All attempted emails sent successfully."
+
+      # Idempotency ledger: remember what was actually delivered, keyed on
+      # (report_type, date) with a content hash, so a rerun of the same day
+      # re-sends nothing unless the report content changed. Recording happens
+      # only for steps that succeeded - a failed send is retried next run.
+      - name: Record deliveries
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TYPES=""
+          [ "${{ steps.email-futures.outcome }}" = "success" ] && TYPES="$TYPES futures"
+          [ "${{ steps.email-slate.outcome }}" = "success" ] && TYPES="$TYPES slate"
+          [ "${{ steps.email-grade.outcome }}" = "success" ] && TYPES="$TYPES grade"
+          TYPES="$(echo "$TYPES" | xargs || true)"
+          if [ -z "$TYPES" ]; then
+            echo "No deliveries to record."
+            exit 0
+          fi
+          python -m mlb.daily.send_ledger record \
+            --date "${{ steps.pipeline.outputs.date }}" \
+            --graded-date "${{ steps.pipeline.outputs.graded_date }}" \
+            --types "$TYPES"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/mlb_daily/sent.json
+          if [ -n "$(git status --porcelain reports/mlb_daily/sent.json)" ]; then
+            git commit -m "MLB daily: record deliveries ${{ steps.pipeline.outputs.date }}"
+            for i in 1 2 3 4; do
+              git pull --rebase origin main && git push && break
+              echo "push attempt $i failed; retrying"
+              sleep $((2 ** i))
+            done
+          fi
 
       - name: Upload report artifacts
         if: always()

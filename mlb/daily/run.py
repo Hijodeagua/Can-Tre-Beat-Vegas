@@ -174,6 +174,11 @@ def main(argv=None) -> int:
         write_postgres(run_date, slate, futures, ledger_row)
         print("7/7 db step done")
 
+    # Idempotency: consult the send ledger so a rerun re-sends nothing
+    # unless the content actually changed (then it goes out as "(updated)").
+    from mlb.daily.send_ledger import plan
+    emails = plan(emails, run_date, yesterday)
+
     manifest = {"date": run_date, "graded_date": yesterday, "emails": emails}
     (REPORTS_DIR / "manifest_latest.json").write_text(
         json.dumps(manifest, indent=1), encoding="utf-8"
