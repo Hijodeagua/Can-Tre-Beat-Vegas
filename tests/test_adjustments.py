@@ -47,8 +47,9 @@ def test_book_walk_forward_and_flags():
     assert away["travel_adj"] == -4.0
     book.update("LAD", "2024-04-02", 2024, "NYY")
 
-    # Three days later at the same park: full rest, no travel.
-    rested = book.pregame("LAD", "2024-04-05", 2024, "NYY")
+    # Four days after the last game (three full off days): max rest,
+    # no travel.
+    rested = book.pregame("LAD", "2024-04-06", 2024, "NYY")
     assert rested["rest_adj"] == pytest.approx(6.9)
     assert rested["travel_adj"] == 0.0
 
@@ -60,5 +61,5 @@ def test_book_walk_forward_and_flags():
 
     no_rest = RestTravelBook(use_rest=False)
     no_rest.update("LAD", "2024-04-01", 2024, "LAD")
-    res = no_rest.pregame("LAD", "2024-04-05", 2024, "NYY")
+    res = no_rest.pregame("LAD", "2024-04-06", 2024, "NYY")
     assert res["rest_adj"] == 0.0 and res["travel_adj"] == -4.0
