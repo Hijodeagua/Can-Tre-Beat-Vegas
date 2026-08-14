@@ -47,6 +47,26 @@ CREATE TABLE IF NOT EXISTS mlb_daily_grades (
     cum_log_loss DOUBLE PRECISION,
     cum_brier DOUBLE PRECISION
 );
+CREATE TABLE IF NOT EXISTS mlb_pitcher_starts (
+    game_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    date DATE NOT NULL,
+    season INT NOT NULL,
+    game_num INT NOT NULL,
+    team TEXT NOT NULL,
+    opponent TEXT NOT NULL,
+    home INT NOT NULL,
+    retro_id TEXT,
+    mlbam_id TEXT,
+    name TEXT,
+    outs INT,
+    h INT,
+    r INT,
+    er INT,
+    bb INT,
+    so INT,
+    PRIMARY KEY (game_id, team)
+);
 CREATE TABLE IF NOT EXISTS mlb_futures (
     date DATE NOT NULL,
     team TEXT NOT NULL,
