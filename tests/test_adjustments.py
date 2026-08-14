@@ -45,6 +45,7 @@ def test_book_walk_forward_and_flags():
     away = book.pregame("LAD", "2024-04-02", 2024, "NYY")
     assert away["rest_adj"] == 0.0
     assert away["travel_adj"] == -4.0
+    book.update("LAD", "2024-04-02", 2024, "NYY")
 
     # Three days later at the same park: full rest, no travel.
     rested = book.pregame("LAD", "2024-04-05", 2024, "NYY")
