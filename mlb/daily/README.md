@@ -1,8 +1,10 @@
 # mlb/daily — the daily prediction pipeline
 
 Runs once per day (GitHub Actions, `.github/workflows/daily-report.yml`) and
-produces three emails plus the site data for the Can Tre Beat Vegas model
-card at `whosyurgoat.app/vegas/mlb`.
+produces four emails plus the site data for the Can Tre Beat Vegas model
+card at `whosyurgoat.app/vegas/mlb`: futures forecast, today's slate,
+yesterday's grade, and the score-calibration report (predicted-score
+accuracy tracking plus the self-tuning total-runs correction).
 
 ## Module map
 
@@ -14,7 +16,9 @@ card at `whosyurgoat.app/vegas/mlb`.
 | `ratings.py` | Replay the tuned Elo (`mlb/elo.py`) over the full game file → current ratings + season-to-date standings/run diff |
 | `simulate.py` | Score-model calibration, per-game score sim, rest-of-season Monte Carlo with live in-sim Elo updates |
 | `grade.py` | Grade the prior day's persisted slate vs actuals; maintain the running ledger `data/mlb/predictions/grades.csv` |
-| `emails.py` | HTML renderers for the futures / slate / grade emails |
+| `scoring.py` | Recent-form attack/defense rates (EWMA, 20-game half-life) → matchup-specific expected totals |
+| `calibration.py` | Self-tuning total-runs calibration: walk-forward season refit each run, applied to the next slate |
+| `emails.py` | HTML renderers for the futures / slate / grade / calibration emails |
 | `export_site.py` | `web/public/data/mlb/latest.json` (all four tabs) + static per-day history snapshots |
 | `db.py` | Optional Postgres (Neon) upserts, gated on `DATABASE_URL` |
 

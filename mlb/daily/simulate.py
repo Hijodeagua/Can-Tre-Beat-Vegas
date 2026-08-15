@@ -146,11 +146,12 @@ def simulate_game(p_home: float, params: ScoreParams,
 def slate_predictions(ratings: dict[str, float], slate: list[dict],
                       params: ScoreParams, n: int = 10000,
                       seed: int | None = 7,
-                      rates=None) -> pd.DataFrame:
+                      rates=None, calibration=None) -> pd.DataFrame:
     """Predictions for one day's games. `slate` rows need date, away, home,
     away_fr, home_fr, game_num. `rates` (scoring.TeamRates) makes the
     expected total matchup-specific; without it every game shares the
-    league-average total."""
+    league-average total. `calibration` (calibration.Calibration) applies
+    the fitted actual-vs-predicted correction to each total."""
     rows = []
     for g in slate:
         p_home = expected_score(
@@ -158,6 +159,8 @@ def slate_predictions(ratings: dict[str, float], slate: list[dict],
         )
         total = (rates.matchup_total(g["home_fr"], g["away_fr"])
                  if rates is not None else None)
+        if total is not None and calibration is not None:
+            total = calibration.apply(total)
         sim = simulate_game(p_home, params, n=n, seed=seed, total=total)
         pick = g["home_fr"] if sim["pick_home"] else g["away_fr"]
         rows.append({

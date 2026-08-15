@@ -62,6 +62,17 @@ type HistoryRow = {
   link: string | null;
 };
 
+type CalibrationInfo = {
+  a: number;
+  b: number;
+  n: number;
+  mae_raw: number | null;
+  mae_calibrated: number | null;
+  mae_constant: number | null;
+  bias_raw: number | null;
+  applied: boolean;
+};
+
 const data = latest as unknown as {
   generated_at: string | null;
   date: string | null;
@@ -70,6 +81,7 @@ const data = latest as unknown as {
   graded_date: string | null;
   graded: GradedRow[] | null;
   history: HistoryRow[];
+  calibration?: CalibrationInfo | null;
   team_names: Record<string, string>;
 };
 
@@ -304,6 +316,16 @@ function GradeTab() {
           </tbody>
         </table>
       </div>
+      {data.calibration?.applied && (
+        <p className="mt-3 text-xs text-slate-400">
+          Score calibration (self-tuning, refit daily on {data.calibration.n}{' '}
+          walk-forward season games): actual ≈ {data.calibration.a.toFixed(2)}{' '}
+          + {data.calibration.b.toFixed(3)} × predicted total
+          {data.calibration.bias_raw != null &&
+            ` · raw bias ${data.calibration.bias_raw > 0 ? '+' : ''}${data.calibration.bias_raw.toFixed(2)} runs`}
+          . Applied to the next slate&apos;s expected totals.
+        </p>
+      )}
     </div>
   );
 }
