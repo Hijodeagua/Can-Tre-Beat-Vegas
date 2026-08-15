@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-08-15T17:32:28Z",
+  "overall": {
+    "record": "57-51",
+    "games": 108,
+    "accuracy": 0.5278,
+    "log_loss": 0.6936,
+    "brier": 0.2501,
+    "roi": null,
+    "sports_reporting": 1
+  },
+  "models": [
+    {
+      "sport": "MLB",
+      "emoji": "\u26be",
+      "status": "in_season",
+      "record": "57-51",
+      "games": 108,
+      "accuracy": 0.5278,
+      "log_loss": 0.6936,
+      "brier": 0.2501,
+      "roi": null,
+      "last_graded": "2026-08-14",
+      "slate_games": 15
+    },
+    {
+      "sport": "NFL",
+      "emoji": "\ud83c\udfc8",
+      "status": "off_season",
+      "record": null,
+      "games": 0,
+      "accuracy": null,
+      "log_loss": null,
+      "brier": null,
+      "roi": null,
+      "last_graded": null,
+      "slate_games": 0,
+      "season_starts": "2026-09"
+    },
+    {
+      "sport": "NBA",
+      "emoji": "\ud83c\udfc0",
+      "status": "off_season",
+      "record": null,
+      "games": 0,
+      "accuracy": null,
+      "log_loss": null,
+      "brier": null,
+      "roi": null,
+      "last_graded": null,
+      "slate_games": 0,
+      "season_starts": "2026-10"
+    }
+  ]
+}

@@ -12,6 +12,7 @@
  */
 import metaJson from '@/public/data/meta.json';
 import slateJson from '@/public/data/slate.json';
+import summaryJson from '@/public/data/summary.json';
 
 export interface BookOdds {
   book: string;
@@ -85,12 +86,57 @@ export interface Meta {
   label: string;
 }
 
+/**
+ * Cross-sport track record, written by `data_jobs/build_summary.py`.
+ *
+ * Every metric is nullable and stays null until a model has graded games —
+ * the site renders those as em dashes. `roi` is null for every model by
+ * design: nothing here stakes money.
+ */
+export interface SummaryMetrics {
+  /** "57-51" with a plain hyphen; `fmtRecord` sets it as an en dash. */
+  record: string | null;
+  games: number;
+  accuracy: number | null;
+  log_loss: number | null;
+  brier: number | null;
+  roi: number | null;
+  sports_reporting?: number;
+}
+
+export interface SummaryModel extends SummaryMetrics {
+  /** Display name, matching a `name` in `app/lib/sports.ts`. */
+  sport: string;
+  emoji: string;
+  status: 'in_season' | 'off_season';
+  last_graded: string | null;
+  /** Games on this sport's current slate. */
+  slate_games: number;
+  /** Month-precision season start, present only while off-season. */
+  season_starts?: string | null;
+}
+
+export interface Summary {
+  generated_at: string;
+  overall: SummaryMetrics & { sports_reporting: number };
+  models: SummaryModel[];
+}
+
 export function getSlate(): Slate {
   return slateJson as unknown as Slate;
 }
 
 export function getMeta(): Meta {
   return metaJson as unknown as Meta;
+}
+
+export function getSummary(): Summary {
+  return summaryJson as unknown as Summary;
+}
+
+/** The odds-feed sport entry for a key, when the slate carries one. */
+export function getSlateSport(key: string): Sport | undefined {
+  return getSlate().sports.find((s) => s.key === key);
 }
 
 const DASH = '—';
@@ -113,8 +159,8 @@ export function fmtSpread(spread: number | null | undefined): string {
   return line > 0 ? `+${line.toFixed(1)}` : line.toFixed(1);
 }
 
-/** 0.6421 -> "64%". */
-export function fmtPct(prob: number | null | undefined): string {
-  if (prob === null || prob === undefined || Number.isNaN(prob)) return DASH;
-  return `${Math.round(prob * 100)}%`;
-}
+/**
+ * 0.6421 -> "64%". Re-exported from `format.ts` so the whole-number-with-`<1%`
+ * rule has exactly one implementation across the site.
+ */
+export { fmtPct } from '@/app/lib/format';

@@ -2,10 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Theme tokens.
+ *
+ * Every surface colour the product layer paints is read from a `--th-*`
+ * variable, so swapping the whole site to the "Techno Bowl" arcade palette is
+ * the `[data-theme='techno']` block below and nothing else — no component
+ * knows which theme is active.
+ *
+ * `--sport-accent` is the one variable sections override. A section sets it
+ * once (see app/lib/sports.ts) and the banner, table header, zebra rows and
+ * chips inside it all re-tint, which is why an NFL table is yellow without a
+ * line of NFL-specific styling.
+ */
 :root {
   color-scheme: light;
+
+  /* Base palette — the fixed brand colours the themes draw from. */
+  --accent-vegas: #3ddc84;
+  --neon-c: #ffd23f;
+  --neon-a: #ff2e88;
+  --fav: #16a34a;
+
+  /* Per-sport accent. Sections override this; MLB green is the default. */
+  --sport-accent: var(--accent-vegas);
+  --sport-accent-ink: #06120b;
+
+  /* Backyard theme (the default). */
+  --th-page: #f8fafc;
+  --th-bar: #ffffff;
+  --th-card: #ffffff;
+  --th-inset: #f8fafc;
+  --th-chip: #f1f5f9;
+  --th-border: #e2e8f0;
+  --th-row: #f1f5f9;
+  --th-ink: #0f172a;
+  --th-muted: #64748b;
+  --th-faint: #94a3b8;
+  --th-accent: var(--sport-accent);
+  --th-accent-ink: var(--sport-accent-ink);
+  --th-accent-text: var(--accent-vegas);
+  --th-highlight: var(--neon-c);
+  --th-highlight-ink: #0f172a;
+  --th-score: var(--fav);
+
+  /*
+   * Table header and zebra tints are mixed against the card colour rather
+   * than hardcoded white, so they follow the theme as well as the sport.
+   * In Backyard `--th-card` is white, which resolves these to exactly the
+   * spec values: 18% and 6% of the accent over white.
+   */
+  --th-head-bg: color-mix(in srgb, var(--sport-accent) 18%, var(--th-card));
+  --th-head-ink: var(--sport-accent-ink);
+  --th-zebra: color-mix(in srgb, var(--sport-accent) 6%, var(--th-card));
+}
+
+/*
+ * Techno Bowl — the live alternative from the handoff's open decisions. Set
+ * `data-theme="techno"` on <html> to switch; every value here is a straight
+ * substitution, which is the point of keeping the palette in variables.
+ */
+[data-theme='techno'] {
+  color-scheme: dark;
+
+  --th-page: #0b0a1a;
+  --th-bar: rgba(0, 0, 0, 0.42);
+  --th-card: rgba(0, 0, 0, 0.32);
+  --th-inset: rgba(0, 0, 0, 0.3);
+  --th-chip: rgba(255, 255, 255, 0.06);
+  --th-border: rgba(155, 147, 196, 0.28);
+  --th-row: rgba(155, 147, 196, 0.2);
+  --th-ink: #efeaff;
+  --th-muted: #9b93c4;
+  --th-faint: #9b93c4;
+  --th-accent-text: var(--neon-c);
+  --th-highlight: var(--neon-a);
+  --th-highlight-ink: #efeaff;
+  --th-score: var(--neon-c);
+
+  /* Mixed against a dark card, so the same 18%/6% ratios stay legible. */
+  --th-head-bg: color-mix(in srgb, var(--sport-accent) 22%, #0b0a1a);
+  --th-head-ink: var(--th-ink);
+  --th-zebra: color-mix(in srgb, var(--sport-accent) 8%, transparent);
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  background: var(--th-page);
+  color: var(--th-ink);
+  font-family: var(--font-app), ui-sans-serif, system-ui, sans-serif;
+  @apply antialiased;
+}
+
+@layer components {
+  /*
+   * Press Start 2P. Never below 8px and never on body copy — it is unreadable
+   * in sentences, so this is only ever paired with an explicit small size on
+   * headings, labels, table headers and big numbers.
+   */
+  .pixel {
+    font-family: var(--font-pixel), ui-monospace, monospace;
+    font-weight: 400;
+  }
 }

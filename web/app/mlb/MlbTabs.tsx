@@ -5,114 +5,39 @@
  * public/data/mlb/latest.json, which the daily GitHub Actions job rewrites
  * and commits; the site redeploys with each commit, so this is imported at
  * build time like the rest of the static data.
+ *
+ * Every table here is a `ThemedTable` tinted by the section's sport accent, so
+ * the four tabs and the home slate are one component with different rows.
  */
-import { useState } from 'react';
-import latest from '@/public/data/mlb/latest.json';
+import { useEffect, useState } from 'react';
+import MlbSlateTable from '@/app/components/MlbSlateTable';
+import ThemedTable from '@/app/components/ThemedTable';
+import { DASH, fmtNum, fmtPct, fmtPctPrecise, fmtSigned, fmtSimScore } from '@/app/lib/format';
+import {
+  DIVISION_ORDER, getMlbLatest, gradedLedgerRow, playedGraded, teamName,
+} from '@/app/lib/mlb';
 
-type SlateRow = {
-  date: string;
-  away: string;
-  home: string;
-  game_num: number;
-  /** Probable starters — display only, not a model input. */
-  away_sp?: string;
-  home_sp?: string;
-  /** Matchup-specific expected total runs (recent-form attack/defense). */
-  pred_total?: number;
-  p_home: number;
-  pick: string;
-  pick_prob: number;
-  pred_home_score: number;
-  pred_away_score: number;
-};
+const TABS = [
+  { slug: 'futures', label: 'Futures' },
+  { slug: 'slate', label: "Today's Slate" },
+  { slug: 'grade', label: "Yesterday's Grade" },
+  { slug: 'history', label: 'History' },
+] as const;
 
-type FuturesRow = {
-  team: string;
-  name?: string;
-  division?: string;
-  wins?: number;
-  losses?: number;
-  run_diff?: number;
-  elo: number;
-  mean_wins: number;
-  mean_losses: number;
-  division_pct: number;
-  playoff_pct: number;
-  top_seed_pct: number;
-};
+type TabSlug = (typeof TABS)[number]['slug'];
 
-type GradedRow = SlateRow & {
-  played?: boolean;
-  home_score?: number | null;
-  away_score?: number | null;
-  pick_correct?: boolean | null;
-};
-
-type HistoryRow = {
-  date: string;
-  games: number;
-  correct: number;
-  accuracy: number | null;
-  log_loss: number | null;
-  brier: number | null;
-  avg_margin_err: number | null;
-  avg_total_err: number | null;
-  cum_accuracy: number | null;
-  cum_log_loss: number | null;
-  link: string | null;
-};
-
-type ModelSummary = {
-  version: string;
-  role: string;
-  first_date: string;
-  last_date: string;
-  games: number;
-  correct: number;
-  accuracy: number | null;
-  log_loss: number | null;
-  brier: number | null;
-  d_ll_vs_home_mean: number | null;
-  d_ll_vs_home_se: number | null;
-};
-
-const data = latest as unknown as {
-  generated_at: string | null;
-  date: string | null;
-  model_version?: string | null;
-  models?: ModelSummary[];
-  slate: SlateRow[];
-  futures: FuturesRow[];
-  graded_date: string | null;
-  graded: GradedRow[] | null;
-  history: HistoryRow[];
-  team_names: Record<string, string>;
-};
-
-const TABS = ['Futures', "Today's Slate", "Yesterday's Grade", 'History'] as const;
-type Tab = (typeof TABS)[number];
-
-const DIVISION_ORDER = [
-  'AL East', 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West',
-];
-
-function teamName(code: string): string {
-  return data.team_names?.[code] ?? code;
-}
-
-function pct(x: number | null | undefined): string {
-  if (x == null) return '—';
-  if (x > 0 && x < 0.005) return '<1%';
-  return `${Math.round(100 * x)}%`;
-}
-
-function num(x: number | null | undefined, digits = 3): string {
-  return x == null ? '—' : x.toFixed(digits);
-}
+const data = getMlbLatest();
 
 function Empty({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-6 rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+    <div
+      className="mt-6 rounded-lg border border-dashed p-8 text-center text-[14px]"
+      style={{
+        borderColor: 'var(--th-border)',
+        background: 'var(--th-card)',
+        color: 'var(--th-muted)',
+      }}
+    >
       {children}
     </div>
   );
@@ -120,10 +45,21 @@ function Empty({ children }: { children: React.ReactNode }) {
 
 const AWAITING = (
   <Empty>
-    Awaiting the first daily run — the pipeline publishes here every morning
-    once the cron job fires.
+    Awaiting the first daily run — the pipeline publishes here every morning once the
+    cron job fires.
   </Empty>
 );
+
+const FUTURES_COLUMNS = [
+  { header: 'Team', strong: true },
+  { header: 'W–L' },
+  { header: 'Run diff' },
+  { header: 'Elo' },
+  { header: 'Proj W' },
+  { header: 'Div', strong: true },
+  { header: 'Playoffs' },
+  { header: '#1 seed' },
+];
 
 function FuturesTab() {
   if (data.futures.length === 0) return AWAITING;
@@ -132,59 +68,45 @@ function FuturesTab() {
       {DIVISION_ORDER.map((div) => {
         const teams = data.futures
           .filter((f) => f.division === div)
-          .sort((a, b) => b.division_pct - a.division_pct);
+          .sort((a, b) => b.division_pct - a.division_pct)
+          .slice(0, 5);
         if (teams.length === 0) return null;
         const leader = teams[0];
         return (
           <section key={div} className="mt-6">
-            <h3 className="text-lg font-bold">
-              {div}
-              <span className="ml-2 text-sm font-normal text-slate-400">
-                {teamName(leader.team)} {pct(leader.division_pct)}
+            <div className="flex items-baseline gap-2">
+              <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+                {div}
+              </h3>
+              <span className="text-[14px]" style={{ color: 'var(--th-faint)' }}>
+                {teamName(leader.team)} {fmtPct(leader.division_pct)}
               </span>
-            </h3>
-            <div className="mt-2 overflow-x-auto rounded-lg border border-slate-200 bg-white">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
-                    <th className="px-3 py-2">Team</th>
-                    <th className="px-3 py-2">W–L</th>
-                    <th className="px-3 py-2">Run diff</th>
-                    <th className="px-3 py-2">Elo</th>
-                    <th className="px-3 py-2">Proj W</th>
-                    <th className="px-3 py-2">Div</th>
-                    <th className="px-3 py-2">Playoffs</th>
-                    <th className="px-3 py-2">#1 seed</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {teams.map((t) => (
-                    <tr key={t.team} className="border-b border-slate-100 last:border-0">
-                      <td className="px-3 py-2 font-semibold">{teamName(t.team)}</td>
-                      <td className="px-3 py-2">
-                        {t.wins}–{t.losses}
-                      </td>
-                      <td className="px-3 py-2">
-                        {t.run_diff != null && t.run_diff > 0 ? '+' : ''}
-                        {t.run_diff}
-                      </td>
-                      <td className="px-3 py-2">{Math.round(t.elo)}</td>
-                      <td className="px-3 py-2">{t.mean_wins.toFixed(1)}</td>
-                      <td className="px-3 py-2 font-semibold">{pct(t.division_pct)}</td>
-                      <td className="px-3 py-2">{pct(t.playoff_pct)}</td>
-                      <td className="px-3 py-2">{pct(t.top_seed_pct)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            </div>
+            <div className="mt-2">
+              <ThemedTable
+                columns={FUTURES_COLUMNS}
+                rows={teams.map((t) => ({
+                  key: t.team,
+                  cells: [
+                    teamName(t.team),
+                    t.wins == null || t.losses == null ? DASH : `${t.wins}–${t.losses}`,
+                    fmtSigned(t.run_diff),
+                    Math.round(t.elo),
+                    t.mean_wins.toFixed(1),
+                    fmtPct(t.division_pct),
+                    fmtPct(t.playoff_pct),
+                    fmtPct(t.top_seed_pct),
+                  ],
+                }))}
+              />
             </div>
           </section>
         );
       })}
-      <p className="mt-4 text-xs text-slate-400">
-        Rest-of-season Monte Carlo from current Elo, live rating updates
-        within each sim. 12-team playoff format; ties broken at random. Run
-        differential is season-to-date as of the last pull.
+      <p className="mt-4 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        Rest-of-season Monte Carlo from current Elo, live rating updates within each sim.
+        12-team playoff format; ties broken at random. Run differential is season-to-date
+        as of the last pull. Five teams shown per division.
       </p>
     </div>
   );
@@ -192,278 +114,226 @@ function FuturesTab() {
 
 function SlateTab() {
   if (data.slate.length === 0) {
-    return data.date ? (
-      <Empty>No MLB games on the {data.date} slate.</Empty>
-    ) : (
-      AWAITING
-    );
+    return data.date ? <Empty>No MLB games on the {data.date} slate.</Empty> : AWAITING;
   }
   return (
-    <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-white">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
-            <th className="px-3 py-2">Matchup (home in bold)</th>
-            <th className="px-3 py-2">SP (away vs. home)</th>
-            <th className="px-3 py-2">Pick</th>
-            <th className="px-3 py-2">Win prob</th>
-            <th className="px-3 py-2">Exp. runs</th>
-            <th className="px-3 py-2">Exp. total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.slate.map((g) => {
-            const pickHome = g.pick === g.home;
-            const score = pickHome
-              ? `${g.pred_home_score}–${g.pred_away_score}`
-              : `${g.pred_away_score}–${g.pred_home_score}`;
-            return (
-              <tr
-                key={`${g.away}-${g.home}-${g.game_num}`}
-                className="border-b border-slate-100 last:border-0"
-              >
-                <td className="px-3 py-2">
-                  {teamName(g.away)} @ <b>{teamName(g.home)}</b>
-                  {g.game_num > 1 ? ` (G${g.game_num})` : ''}
-                </td>
-                <td className="px-3 py-2 text-xs text-slate-500">
-                  {(g.away_sp || 'TBD') + ' vs. ' + (g.home_sp || 'TBD')}
-                </td>
-                <td className="px-3 py-2 font-semibold">{teamName(g.pick)}</td>
-                <td className="px-3 py-2">{pct(g.pick_prob)}</td>
-                <td className="px-3 py-2">{score}</td>
-                <td className="px-3 py-2">
-                  {g.pred_total != null ? g.pred_total.toFixed(1) : '—'}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <p className="px-3 py-2 text-xs text-slate-400">
-        Probable starters shown for context only — the model is team-level
-        Elo and does not use starter identity. Expected total is
-        matchup-specific (each club&apos;s recent runs scored/allowed,
-        ~20-game half-life, shrunk to league average); the Elo margin is
-        carved out of it, so the pick and win probability stay pure Elo.
-        Expected runs are shown at one decimal — averages over 10,000 sims
-        (winner&apos;s first), not a literal final score; integer rounding
-        collapses nearly every game onto 6–3.
-      </p>
+    <div className="mt-4">
+      <MlbSlateTable slate={data.slate} />
     </div>
   );
 }
 
+const GRADE_COLUMNS = [
+  { header: '' },
+  { header: 'Game' },
+  { header: 'Pick' },
+  { header: 'Predicted' },
+  { header: 'Actual (home first)' },
+];
+
 function GradeTab() {
-  const graded = (data.graded ?? []).filter((g) => g.played);
+  const graded = playedGraded();
   if (graded.length === 0) {
     return (
       <Empty>
-        Nothing graded yet — grading starts the morning after the first slate
-        is published.
+        Nothing graded yet — grading starts the morning after the first slate is
+        published.
       </Empty>
     );
   }
   const correct = graded.filter((g) => g.pick_correct).length;
-  const todayRow = data.history.find((h) => h.date === data.graded_date);
+  const ledger = gradedLedgerRow();
+
   return (
     <div>
-      <p className="mt-4 text-sm">
+      <p className="mt-4 text-[14px]" style={{ color: 'var(--th-ink)' }}>
         <b>
-          {data.graded_date}: {correct}/{graded.length} correct (
-          {pct(correct / graded.length)})
+          {data.graded_date}: {correct}/{graded.length} correct ({fmtPct(correct / graded.length)})
         </b>
-        {todayRow && (
-          <span className="text-slate-500">
+        {ledger && (
+          <span style={{ color: 'var(--th-muted)' }}>
             {' '}
-            · log-loss {num(todayRow.log_loss)} · Brier {num(todayRow.brier)} ·
-            running accuracy {pct(todayRow.cum_accuracy)}
+            · log-loss {fmtNum(ledger.log_loss)} · Brier {fmtNum(ledger.brier)} · running
+            accuracy {fmtPctPrecise(ledger.cum_accuracy)}
           </span>
         )}
       </p>
-      <div className="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-white">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
-              <th className="px-3 py-2"></th>
-              <th className="px-3 py-2">Game</th>
-              <th className="px-3 py-2">Pick</th>
-              <th className="px-3 py-2">Predicted</th>
-              <th className="px-3 py-2">Actual (home first)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {graded.map((g) => {
-              const pickHome = g.pick === g.home;
-              const predicted = pickHome
-                ? `${g.pred_home_score}–${g.pred_away_score}`
-                : `${g.pred_away_score}–${g.pred_home_score}`;
-              return (
-                <tr
-                  key={`${g.away}-${g.home}-${g.game_num}`}
-                  className="border-b border-slate-100 last:border-0"
-                >
-                  <td className="px-3 py-2">{g.pick_correct ? '✅' : '❌'}</td>
-                  <td className="px-3 py-2">
-                    {teamName(g.away)} @ <b>{teamName(g.home)}</b>
-                  </td>
-                  <td className="px-3 py-2">
-                    {teamName(g.pick)} ({pct(g.pick_prob)})
-                  </td>
-                  <td className="px-3 py-2">{predicted}</td>
-                  <td className="px-3 py-2">
-                    {g.home_score}–{g.away_score}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <div className="mt-3">
+        <ThemedTable
+          columns={GRADE_COLUMNS}
+          rows={graded.map((g) => {
+            const pickedHome = g.pick === g.home;
+            return {
+              key: `${g.away}-${g.home}-${g.game_num}`,
+              cells: [
+                g.pick_correct ? '✅' : '❌',
+                `${teamName(g.away)} @ ${teamName(g.home)}`,
+                `${teamName(g.pick)} (${fmtPct(g.pick_prob)})`,
+                fmtSimScore(
+                  Number(g.pred_home_score?.toFixed(1)),
+                  Number(g.pred_away_score?.toFixed(1)),
+                  pickedHome,
+                ),
+                g.home_score == null || g.away_score == null
+                  ? DASH
+                  : `${g.home_score}–${g.away_score}`,
+              ],
+            };
+          })}
+        />
       </div>
     </div>
   );
 }
+
+const MODEL_COLUMNS = [
+  { header: 'Model' },
+  { header: 'Role' },
+  { header: 'Window' },
+  { header: 'Record' },
+  { header: 'Log-loss' },
+  { header: 'Δ LL vs always-home (± SE)' },
+];
 
 function ModelVersions() {
   const models = data.models ?? [];
   if (models.length === 0) return null;
   return (
-    <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-white">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
-            <th className="px-3 py-2">Model</th>
-            <th className="px-3 py-2">Role</th>
-            <th className="px-3 py-2">Window</th>
-            <th className="px-3 py-2">Record</th>
-            <th className="px-3 py-2">Log-loss</th>
-            <th className="px-3 py-2">Δ LL vs always-home (± SE)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {models.map((m) => (
-            <tr key={m.version} className="border-b border-slate-100 last:border-0">
-              <td className="px-3 py-2 font-mono text-xs">{m.version}</td>
-              <td className="px-3 py-2">{m.role}</td>
-              <td className="px-3 py-2 text-xs">
-                {m.first_date} → {m.last_date}
-              </td>
-              <td className="px-3 py-2">
-                {m.correct}/{m.games} ({pct(m.accuracy)})
-              </td>
-              <td className="px-3 py-2">{num(m.log_loss)}</td>
-              <td className="px-3 py-2">
-                {m.d_ll_vs_home_mean == null || m.d_ll_vs_home_se == null
-                  ? '—'
-                  : `${m.d_ll_vs_home_mean >= 0 ? '+' : ''}${m.d_ll_vs_home_mean.toFixed(4)} ± ${m.d_ll_vs_home_se.toFixed(4)}`}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="px-3 py-2 text-xs text-slate-400">
-        Each model version is graded in its own bucket — a model change never
-        rewrites or contaminates an earlier record. The history table below is
-        the active model&apos;s ledger.
-      </p>
+    <div className="mt-4">
+      <ThemedTable
+        columns={MODEL_COLUMNS}
+        rows={models.map((m) => ({
+          key: m.version,
+          cells: [
+            m.version,
+            m.role,
+            `${m.first_date} → ${m.last_date}`,
+            `${m.correct}/${m.games} (${fmtPct(m.accuracy)})`,
+            fmtNum(m.log_loss),
+            m.d_ll_vs_home_mean == null || m.d_ll_vs_home_se == null
+              ? DASH
+              : `${m.d_ll_vs_home_mean >= 0 ? '+' : ''}${m.d_ll_vs_home_mean.toFixed(4)} ± ${m.d_ll_vs_home_se.toFixed(4)}`,
+          ],
+        }))}
+        note="Each model version is graded in its own bucket — a model change never rewrites or contaminates an earlier record. The history table below is the active model’s ledger."
+      />
     </div>
   );
 }
 
+const HISTORY_COLUMNS = [
+  { header: 'Date' },
+  { header: 'Games' },
+  { header: 'Accuracy', strong: true },
+  { header: 'Log-loss' },
+  { header: 'Brier' },
+  { header: 'Cum. acc.' },
+  { header: 'Cum. LL' },
+];
+
 function HistoryTab() {
   if (data.history.length === 0) {
-    return (
-      <Empty>No graded days yet — one row lands here every morning.</Empty>
-    );
+    return <Empty>No graded days yet — one row lands here every morning.</Empty>;
   }
   return (
     <>
-    <ModelVersions />
-    <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-white">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
-            <th className="px-3 py-2">Date</th>
-            <th className="px-3 py-2">Games</th>
-            <th className="px-3 py-2">Accuracy</th>
-            <th className="px-3 py-2">Log-loss</th>
-            <th className="px-3 py-2">Brier</th>
-            <th className="px-3 py-2">Cum. acc.</th>
-            <th className="px-3 py-2">Cum. LL</th>
-            <th className="px-3 py-2">Detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.history.map((h) => (
-            <tr key={h.date} className="border-b border-slate-100 last:border-0">
-              <td className="px-3 py-2">{h.date}</td>
-              <td className="px-3 py-2">
-                {h.correct}/{h.games}
-              </td>
-              <td className="px-3 py-2 font-semibold">{pct(h.accuracy)}</td>
-              <td className="px-3 py-2">{num(h.log_loss)}</td>
-              <td className="px-3 py-2">{num(h.brier)}</td>
-              <td className="px-3 py-2">{pct(h.cum_accuracy)}</td>
-              <td className="px-3 py-2">{num(h.cum_log_loss)}</td>
-              <td className="px-3 py-2">
-                {h.link ? (
-                  // Plain <a>: the snapshot is a static file in /public, not
-                  // a Next route, so Link prefetching would 404 in dev.
-                  <a
-                    href={h.link}
-                    className="text-blue-600 hover:underline"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    view
-                  </a>
-                ) : (
-                  '—'
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="px-3 py-2 text-xs text-slate-400">
-        Cumulative metrics are game-weighted across all graded days. Log-loss
-        baseline: 0.693 = coin flip, ~0.691 = always pick home.
-      </p>
-    </div>
+      <ModelVersions />
+      <div className="mt-4">
+        <ThemedTable
+          columns={HISTORY_COLUMNS}
+          rows={data.history.map((h) => ({
+            key: h.date,
+            cells: [
+              // The per-day snapshot hangs off the date rather than its own
+              // column, which keeps the committed history pages reachable
+              // without widening the table.
+              h.link ? (
+                // Plain <a>: the snapshot is a static file in /public, not a
+                // Next route, so Link prefetching would 404 in dev.
+                <a
+                  href={h.link}
+                  className="underline underline-offset-2"
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`Snapshot for ${h.date}`}
+                >
+                  {h.date}
+                </a>
+              ) : (
+                h.date
+              ),
+              `${h.correct}/${h.games}`,
+              fmtPct(h.accuracy),
+              fmtNum(h.log_loss),
+              fmtNum(h.brier),
+              fmtPct(h.cum_accuracy),
+              fmtNum(h.cum_log_loss),
+            ],
+          }))}
+          note="Cumulative metrics are game-weighted across all graded days. Log-loss baseline: 0.693 = coin flip, ~0.691 = always pick home."
+        />
+      </div>
     </>
   );
 }
 
 export default function MlbTabs() {
-  const [tab, setTab] = useState<Tab>(TABS[0]);
+  const [tab, setTab] = useState<TabSlug>(TABS[0].slug);
+
+  /*
+   * `?tab=slate` lets the home page's "Futures, grades and history →" land on
+   * the slate the reader was already looking at.
+   *
+   * Read from `window` after mount rather than through `useSearchParams`: that
+   * hook opts the whole subtree out of static prerendering, which would ship
+   * this page as an empty shell for crawlers and no-JS readers. This way the
+   * default tab is fully server-rendered and the query only redirects it.
+   */
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('tab');
+    const match = TABS.find((t) => t.slug === requested);
+    if (match) setTab(match.slug);
+  }, []);
+
+  const select = (slug: TabSlug) => {
+    setTab(slug);
+    // Keep the URL in step so a shared link reopens the same tab.
+    const url = slug === TABS[0].slug ? window.location.pathname : `?tab=${slug}`;
+    window.history.replaceState(null, '', url);
+  };
+
   return (
     <div className="mt-6">
-      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-2">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={
-              'rounded px-3 py-1.5 text-sm ' +
-              (tab === t
-                ? 'bg-slate-900 font-semibold text-white'
-                : 'text-slate-600 hover:bg-slate-100')
-            }
-          >
-            {t}
-          </button>
-        ))}
+      <div
+        className="flex flex-wrap gap-2 border-b pb-2"
+        style={{ borderColor: 'var(--th-border)' }}
+      >
+        {TABS.map((t) => {
+          const active = tab === t.slug;
+          return (
+            <button
+              key={t.slug}
+              onClick={() => select(t.slug)}
+              aria-pressed={active}
+              className={`rounded-md px-3 py-1.5 text-[14px] ${
+                active ? 'font-semibold' : 'hover:bg-slate-100'
+              }`}
+              style={
+                active
+                  ? { background: 'var(--sport-accent)', color: 'var(--sport-accent-ink)' }
+                  : { color: 'var(--th-muted)' }
+              }
+            >
+              {t.label}
+            </button>
+          );
+        })}
       </div>
-      {tab === 'Futures' && <FuturesTab />}
-      {tab === "Today's Slate" && <SlateTab />}
-      {tab === "Yesterday's Grade" && <GradeTab />}
-      {tab === 'History' && <HistoryTab />}
-      {data.generated_at && (
-        <p className="mt-8 text-xs text-slate-400">
-          Data generated {data.generated_at.replace('T', ' ')}
-          {data.date ? ` · run date ${data.date}` : ''}
-        </p>
-      )}
+
+      {tab === 'futures' && <FuturesTab />}
+      {tab === 'slate' && <SlateTab />}
+      {tab === 'grade' && <GradeTab />}
+      {tab === 'history' && <HistoryTab />}
     </div>
   );
 }

@@ -117,6 +117,11 @@ jobs:
             echo "grade_send=$(jq -r '.emails.grade.send // false' $MANIFEST)"
           } >> "$GITHUB_OUTPUT"
 
+      # The home page's cross-sport strip reads this. Rebuilt here so the day's
+      # fresh grades reach it in the same commit as the MLB JSON.
+      - name: Build cross-sport summary JSON
+        run: python -m data_jobs.build_summary
+
       - name: Commit and push outputs
         shell: bash
         run: |
@@ -125,7 +130,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add data/mlb/ reports/mlb_daily/ web/public/data/mlb/
+          git add data/mlb/ reports/mlb_daily/ web/public/data/mlb/ web/public/data/summary.json
 
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "MLB daily: ${{ steps.pipeline.outputs.date }}"
