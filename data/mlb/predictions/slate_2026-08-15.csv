@@ -1,16 +1,16 @@
-date,away,home,game_num,away_sp,home_sp,pred_total,p_home,pick,pick_prob,pred_home_score,pred_away_score,elo_home,elo_away
-2026-08-15,TEX,ATH,1,MacKenzie Gore,J.T. Ginn,9.4,0.4636,TEX,0.5364,4.4,5.1,1435.5,1484.9
-2026-08-15,ARI,ATL,1,Eduardo Rodriguez,Grant Holmes,8.7,0.5681,ATL,0.5681,4.6,4.1,1535.8,1512.2
-2026-08-15,STL,CHC,1,Michael McGreevy,Matthew Boyd,8.8,0.6186,CHC,0.6186,4.9,3.9,1550.9,1490.9
-2026-08-15,MIA,CIN,1,Ryan Gusto,Brady Singer,8.6,0.5123,CIN,0.5123,4.5,4.4,1480.4,1495.8
-2026-08-15,SDP,CLE,1,,Joey Cantillo,8.9,0.4896,SDP,0.5104,4.2,4.6,1491.2,1522.4
-2026-08-15,CHW,DET,1,Anthony Kay,Troy Melton,9.0,0.5686,DET,0.5686,4.8,4.3,1522.4,1498.4
-2026-08-15,SEA,HOU,1,Emerson Hancock,Hayden Wesneski,8.7,0.5551,HOU,0.5551,4.5,4.2,1504.0,1489.6
-2026-08-15,KCR,LAA,1,Randy Dobnak,Reid Detmers,8.8,0.5104,LAA,0.5104,4.6,4.5,1446.5,1463.3
-2026-08-15,MIL,LAD,1,Jacob Misiorowski,Justin Wrobleski,8.7,0.5288,LAD,0.5288,4.4,4.3,1552.8,1556.8
-2026-08-15,PHI,MIN,1,Jesús Luzardo,Connor Prielipp,9.0,0.4782,PHI,0.5218,4.2,4.8,1480.6,1519.8
-2026-08-15,WSN,NYM,1,Brad Lord,Sean Manaea,9.3,0.5481,NYM,0.5481,4.8,4.5,1490.8,1481.3
-2026-08-15,BOS,PIT,1,Sonny Gray,Jared Jones,9.1,0.4703,BOS,0.5297,4.2,4.8,1495.8,1540.4
-2026-08-15,COL,SFG,1,Michael Lorenzen,Logan Webb,9.2,0.6066,SFG,0.6066,5.1,4.2,1475.7,1424.4
-2026-08-15,BAL,TBR,1,Kyle Bradish,Ian Seymour,8.9,0.5895,TBR,0.5895,4.8,4.1,1531.2,1492.3
-2026-08-15,NYY,TOR,1,Cam Schlittler,Braydon Fisher,8.1,0.4766,NYY,0.5234,3.8,4.3,1497.0,1537.2
+date,away,home,game_num,away_sp,home_sp,away_sp_id,home_sp_id,pred_total,p_home,pick,pick_prob,pred_home_score,pred_away_score,elo_home,elo_away,model_version
+2026-08-15,TEX,ATH,1,MacKenzie Gore,J.T. Ginn,669022,669372,9.4,0.4636,TEX,0.5364,4.4,5.1,1435.5,1484.9,v1-team-elo
+2026-08-15,ARI,ATL,1,Eduardo Rodriguez,Grant Holmes,593958,656550,8.7,0.5681,ATL,0.5681,4.6,4.1,1535.8,1512.2,v1-team-elo
+2026-08-15,STL,CHC,1,Michael McGreevy,Matthew Boyd,700241,571510,8.8,0.6186,CHC,0.6186,4.9,3.9,1550.9,1490.9,v1-team-elo
+2026-08-15,MIA,CIN,1,Ryan Gusto,Brady Singer,687473,663903,8.6,0.5123,CIN,0.5123,4.5,4.4,1480.4,1495.8,v1-team-elo
+2026-08-15,SDP,CLE,1,,Joey Cantillo,,676282,8.9,0.4896,SDP,0.5104,4.2,4.6,1491.2,1522.4,v1-team-elo
+2026-08-15,CHW,DET,1,Anthony Kay,Troy Melton,641743,675512,9.0,0.5686,DET,0.5686,4.8,4.3,1522.4,1498.4,v1-team-elo
+2026-08-15,SEA,HOU,1,Emerson Hancock,Hayden Wesneski,676106,669713,8.7,0.5551,HOU,0.5551,4.5,4.2,1504.0,1489.6,v1-team-elo
+2026-08-15,KCR,LAA,1,Randy Dobnak,Reid Detmers,677976,672282,8.8,0.5104,LAA,0.5104,4.6,4.5,1446.5,1463.3,v1-team-elo
+2026-08-15,MIL,LAD,1,Jacob Misiorowski,Justin Wrobleski,694819,680736,8.7,0.5288,LAD,0.5288,4.4,4.3,1552.8,1556.8,v1-team-elo
+2026-08-15,PHI,MIN,1,Jesús Luzardo,Connor Prielipp,666200,687570,9.0,0.4782,PHI,0.5218,4.2,4.8,1480.6,1519.8,v1-team-elo
+2026-08-15,WSN,NYM,1,Brad Lord,Sean Manaea,695418,640455,9.3,0.5481,NYM,0.5481,4.8,4.5,1490.8,1481.3,v1-team-elo
+2026-08-15,BOS,PIT,1,Sonny Gray,Jared Jones,543243,683003,9.1,0.4703,BOS,0.5297,4.2,4.8,1495.8,1540.4,v1-team-elo
+2026-08-15,COL,SFG,1,Michael Lorenzen,Logan Webb,547179,657277,9.2,0.6066,SFG,0.6066,5.1,4.2,1475.7,1424.4,v1-team-elo
+2026-08-15,BAL,TBR,1,Kyle Bradish,Ian Seymour,680694,693855,8.9,0.5895,TBR,0.5895,4.8,4.1,1531.2,1492.3,v1-team-elo
+2026-08-15,NYY,TOR,1,Cam Schlittler,Braydon Fisher,693645,680755,8.1,0.4766,NYY,0.5234,3.8,4.3,1497.0,1537.2,v1-team-elo
