@@ -47,6 +47,26 @@ CREATE TABLE IF NOT EXISTS mlb_daily_grades (
     cum_log_loss DOUBLE PRECISION,
     cum_brier DOUBLE PRECISION
 );
+CREATE TABLE IF NOT EXISTS mlb_pitcher_starts (
+    game_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    date DATE NOT NULL,
+    season INT NOT NULL,
+    game_num INT NOT NULL,
+    team TEXT NOT NULL,
+    opponent TEXT NOT NULL,
+    home INT NOT NULL,
+    retro_id TEXT,
+    mlbam_id TEXT,
+    name TEXT,
+    outs INT,
+    h INT,
+    r INT,
+    er INT,
+    bb INT,
+    so INT,
+    PRIMARY KEY (game_id, team)
+);
 CREATE TABLE IF NOT EXISTS mlb_futures (
     date DATE NOT NULL,
     team TEXT NOT NULL,
@@ -67,6 +87,21 @@ MIGRATIONS = """
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp TEXT;
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp TEXT;
 ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS pred_total DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp_id TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp_id TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS model_version TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp_adj DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp_adj DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_sp_mode TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_sp_mode TEXT;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS home_rt_adj DOUBLE PRECISION;
+ALTER TABLE mlb_slate_predictions ADD COLUMN IF NOT EXISTS away_rt_adj DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS home_log_loss DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS home_correct INT;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS d_ll_sum DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS d_ll_sq_sum DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS cum_d_ll_mean DOUBLE PRECISION;
+ALTER TABLE mlb_daily_grades ADD COLUMN IF NOT EXISTS cum_d_ll_se DOUBLE PRECISION;
 """
 
 

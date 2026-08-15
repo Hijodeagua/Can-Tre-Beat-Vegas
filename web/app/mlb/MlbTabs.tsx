@@ -62,9 +62,25 @@ type HistoryRow = {
   link: string | null;
 };
 
+type ModelSummary = {
+  version: string;
+  role: string;
+  first_date: string;
+  last_date: string;
+  games: number;
+  correct: number;
+  accuracy: number | null;
+  log_loss: number | null;
+  brier: number | null;
+  d_ll_vs_home_mean: number | null;
+  d_ll_vs_home_se: number | null;
+};
+
 const data = latest as unknown as {
   generated_at: string | null;
   date: string | null;
+  model_version?: string | null;
+  models?: ModelSummary[];
   slate: SlateRow[];
   futures: FuturesRow[];
   graded_date: string | null;
@@ -308,6 +324,52 @@ function GradeTab() {
   );
 }
 
+function ModelVersions() {
+  const models = data.models ?? [];
+  if (models.length === 0) return null;
+  return (
+    <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-400">
+            <th className="px-3 py-2">Model</th>
+            <th className="px-3 py-2">Role</th>
+            <th className="px-3 py-2">Window</th>
+            <th className="px-3 py-2">Record</th>
+            <th className="px-3 py-2">Log-loss</th>
+            <th className="px-3 py-2">Δ LL vs always-home (± SE)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {models.map((m) => (
+            <tr key={m.version} className="border-b border-slate-100 last:border-0">
+              <td className="px-3 py-2 font-mono text-xs">{m.version}</td>
+              <td className="px-3 py-2">{m.role}</td>
+              <td className="px-3 py-2 text-xs">
+                {m.first_date} → {m.last_date}
+              </td>
+              <td className="px-3 py-2">
+                {m.correct}/{m.games} ({pct(m.accuracy)})
+              </td>
+              <td className="px-3 py-2">{num(m.log_loss)}</td>
+              <td className="px-3 py-2">
+                {m.d_ll_vs_home_mean == null || m.d_ll_vs_home_se == null
+                  ? '—'
+                  : `${m.d_ll_vs_home_mean >= 0 ? '+' : ''}${m.d_ll_vs_home_mean.toFixed(4)} ± ${m.d_ll_vs_home_se.toFixed(4)}`}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="px-3 py-2 text-xs text-slate-400">
+        Each model version is graded in its own bucket — a model change never
+        rewrites or contaminates an earlier record. The history table below is
+        the active model&apos;s ledger.
+      </p>
+    </div>
+  );
+}
+
 function HistoryTab() {
   if (data.history.length === 0) {
     return (
@@ -315,6 +377,8 @@ function HistoryTab() {
     );
   }
   return (
+    <>
+    <ModelVersions />
     <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-white">
       <table className="w-full text-sm">
         <thead>
@@ -366,6 +430,7 @@ function HistoryTab() {
         baseline: 0.693 = coin flip, ~0.691 = always pick home.
       </p>
     </div>
+    </>
   );
 }
 

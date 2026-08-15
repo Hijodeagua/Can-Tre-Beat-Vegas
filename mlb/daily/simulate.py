@@ -146,28 +146,41 @@ def simulate_game(p_home: float, params: ScoreParams,
 def slate_predictions(ratings: dict[str, float], slate: list[dict],
                       params: ScoreParams, n: int = 10000,
                       seed: int | None = 7,
-                      rates=None) -> pd.DataFrame:
+                      rates=None, adjustments: dict | None = None,
+                      model_version: str | None = None) -> pd.DataFrame:
     """Predictions for one day's games. `slate` rows need date, away, home,
     away_fr, home_fr, game_num. `rates` (scoring.TeamRates) makes the
     expected total matchup-specific; without it every game shares the
-    league-average total."""
+    league-average total.
+
+    `adjustments` (mlb.daily.sp_state.slate_adjustments) maps
+    (date, game_num, home_fr) -> per-side Elo adjustments; when present they
+    enter the win probability and are carried as audit columns."""
     rows = []
     for g in slate:
+        adj = (adjustments or {}).get(
+            (g["date"], int(g["game_num"]), g["home_fr"]))
+        home_extra = adj["home_adj"] if adj else 0.0
+        away_extra = adj["away_adj"] if adj else 0.0
         p_home = expected_score(
-            ratings[g["home_fr"]] + HOME_ADVANTAGE, ratings[g["away_fr"]]
+            ratings[g["home_fr"]] + HOME_ADVANTAGE + home_extra,
+            ratings[g["away_fr"]] + away_extra,
         )
         total = (rates.matchup_total(g["home_fr"], g["away_fr"])
                  if rates is not None else None)
         sim = simulate_game(p_home, params, n=n, seed=seed, total=total)
         pick = g["home_fr"] if sim["pick_home"] else g["away_fr"]
-        rows.append({
+        row = {
             "date": g["date"],
             "away": g["away_fr"],
             "home": g["home_fr"],
             "game_num": int(g["game_num"]),
-            # Probable starters, display only - not a model input.
+            # Probable starters. Display-only for v1; a model input (via
+            # `adjustments`) for the SP-adjusted model.
             "away_sp": g.get("away_sp", ""),
             "home_sp": g.get("home_sp", ""),
+            "away_sp_id": g.get("away_sp_id", ""),
+            "home_sp_id": g.get("home_sp_id", ""),
             "pred_total": round(total if total is not None
                                 else params.total_mean, 1),
             "p_home": round(p_home, 4),
@@ -177,7 +190,14 @@ def slate_predictions(ratings: dict[str, float], slate: list[dict],
             "pred_away_score": sim["away_score"],
             "elo_home": round(ratings[g["home_fr"]], 1),
             "elo_away": round(ratings[g["away_fr"]], 1),
-        })
+        }
+        if model_version:
+            row["model_version"] = model_version
+        if adj:
+            row.update({k: adj[k] for k in
+                        ("home_sp_adj", "away_sp_adj", "home_sp_mode",
+                         "away_sp_mode", "home_rt_adj", "away_rt_adj")})
+        rows.append(row)
     return pd.DataFrame(rows)
 
 

@@ -27,9 +27,10 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
-from mlb.daily import export_site, grade, scoring, simulate, update_games
+from mlb.daily import export_site, grade, scoring, simulate, sp_state, update_games
 from mlb.daily.config import (
-    GAME_SIMS, PREDICTIONS_DIR, REPORTS_DIR, SEASON_SIMS,
+    ACTIVE_MODEL, GAME_SIMS, PREDICTIONS_DIR, REPORTS_DIR, SEASON_SIMS,
+    SHADOW_MODEL, predictions_dir,
 )
 from mlb.daily.emails import futures_html, grade_html, slate_html
 from mlb.daily.ratings import build_state
@@ -71,17 +72,42 @@ def main(argv=None) -> int:
     else:
         print(f"3/7 no slate on file for {yesterday} - nothing to grade")
 
+    # Shadow model: grade its own bucket; the two ledgers never mix.
+    shadow_ledger_row = None
+    if SHADOW_MODEL:
+        shadow_dir = predictions_dir(SHADOW_MODEL)
+        shadow_graded = grade.grade_day(yesterday, state.games, shadow_dir)
+        if shadow_graded is not None:
+            shadow_ledger_row = grade.update_ledger(
+                yesterday, shadow_graded, shadow_dir)
+
     schedule = update_games.read_schedule()
     todays = [g for g in schedule if g["date"] == run_date]
     params = simulate.calibrate(state.history, state.games)
     rates = scoring.rates_from_games(state.games)
     slate = simulate.slate_predictions(
-        state.ratings, todays, params, n=args.game_sims, rates=rates
+        state.ratings, todays, params, n=args.game_sims, rates=rates,
+        model_version=ACTIVE_MODEL,
     )
     if not slate.empty:
         PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
         slate.to_csv(grade.slate_path(run_date), index=False)
+
+    shadow_slate = pd.DataFrame()
+    if SHADOW_MODEL and todays:
+        pbook, rtbook = sp_state.build_books(state.games, run_date)
+        adjustments = sp_state.slate_adjustments(pbook, rtbook, todays)
+        shadow_slate = simulate.slate_predictions(
+            state.ratings, todays, params, n=args.game_sims, rates=rates,
+            adjustments=adjustments, model_version=SHADOW_MODEL,
+        )
+        if not shadow_slate.empty:
+            shadow_dir = predictions_dir(SHADOW_MODEL)
+            shadow_dir.mkdir(parents=True, exist_ok=True)
+            shadow_slate.to_csv(
+                grade.slate_path(run_date, shadow_dir), index=False)
     print(f"4/7 slate for {run_date}: {len(slate)} games "
+          f"(+{len(shadow_slate)} shadow: {SHADOW_MODEL}) "
           f"(margin fit: {params.margin_slope:.2f}x + "
           f"{params.margin_intercept:.2f}, total {params.total_mean:.2f}, "
           f"NB r={params.dispersion:.1f})")
@@ -106,7 +132,7 @@ def main(argv=None) -> int:
     }
     if not slate.empty:
         (out / "slate.html").write_text(
-            slate_html(run_date, slate), encoding="utf-8"
+            slate_html(run_date, slate, shadow=shadow_slate), encoding="utf-8"
         )
         emails["slate"] = {
             "path": str((out / "slate.html").relative_to(REPORTS_DIR.parent.parent)),
@@ -114,15 +140,19 @@ def main(argv=None) -> int:
         }
     if graded is not None and ledger_row is not None and ledger_row["games"]:
         (out / "grade.html").write_text(
-            grade_html(yesterday, graded, ledger_row), encoding="utf-8"
+            grade_html(yesterday, graded, ledger_row,
+                       shadow_ledger_row=shadow_ledger_row),
+            encoding="utf-8"
+        )
+        d_mean = ledger_row.get("cum_d_ll_mean")
+        subject_tail = (
+            f"Δll {d_mean:+.4f}±{ledger_row.get('cum_d_ll_se'):.4f} vs home"
+            if pd.notna(d_mean) else
+            f"{int(ledger_row['correct'])}/{int(ledger_row['games'])}"
         )
         emails["grade"] = {
             "path": str((out / "grade.html").relative_to(REPORTS_DIR.parent.parent)),
-            "subject": (
-                f"⚾ MLB Grade — {yesterday}: "
-                f"{int(ledger_row['correct'])}/{int(ledger_row['games'])} "
-                f"({100 * ledger_row['accuracy']:.0f}%)"
-            ),
+            "subject": f"⚾ MLB Grade — {yesterday}: {subject_tail}",
         }
 
     # Rebuild yesterday's slate frame for the snapshot page footer.
@@ -133,6 +163,7 @@ def main(argv=None) -> int:
     export_site.export_latest(
         run_date, slate, futures, state.standings, graded,
         yesterday if graded is not None else None,
+        shadow_slate=shadow_slate,
     )
     print("6/7 emails + site JSON written")
 
@@ -142,6 +173,11 @@ def main(argv=None) -> int:
         from mlb.daily.db import write_postgres
         write_postgres(run_date, slate, futures, ledger_row)
         print("7/7 db step done")
+
+    # Idempotency: consult the send ledger so a rerun re-sends nothing
+    # unless the content actually changed (then it goes out as "(updated)").
+    from mlb.daily.send_ledger import plan
+    emails = plan(emails, run_date, yesterday)
 
     manifest = {"date": run_date, "graded_date": yesterday, "emails": emails}
     (REPORTS_DIR / "manifest_latest.json").write_text(

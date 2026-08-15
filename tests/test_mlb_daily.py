@@ -114,7 +114,6 @@ def test_season_sim_probabilities_sum():
 
 def test_grading_math(tmp_path, monkeypatch):
     monkeypatch.setattr(grade, "PREDICTIONS_DIR", tmp_path)
-    monkeypatch.setattr(grade, "GRADES_CSV", tmp_path / "grades.csv")
 
     slate = pd.DataFrame([
         # correct pick, exact score hit
@@ -173,6 +172,31 @@ def test_slate_predictions_carry_probable_starters(params):
     df = simulate.slate_predictions(ratings, slate, params, n=500)
     assert df.iloc[0].away_sp == "Framber Valdez"
     assert df.iloc[0].home_sp == ""
+
+
+def test_slate_predictions_apply_adjustments(params):
+    ratings = {"HOU": 1550.0, "STL": 1490.0}
+    slate = [{
+        "date": "2026-08-08", "away": "HOU", "home": "STL",
+        "away_fr": "HOU", "home_fr": "STL", "game_num": 1,
+        "away_sp": "Framber Valdez", "home_sp": "", "away_sp_id": "664285",
+    }]
+    base = simulate.slate_predictions(ratings, slate, params, n=500)
+    adj = {("2026-08-08", 1, "STL"): {
+        "home_adj": 0.0, "away_adj": 30.0,
+        "home_sp_adj": 0.0, "away_sp_adj": 30.0,
+        "home_sp_mode": "staff", "away_sp_mode": "pitcher",
+        "home_rt_adj": 0.0, "away_rt_adj": 0.0,
+    }}
+    adjusted = simulate.slate_predictions(
+        ratings, slate, params, n=500, adjustments=adj,
+        model_version="v2-sp")
+    # +30 Elo to the away starter must lower the home win probability.
+    assert adjusted.iloc[0].p_home < base.iloc[0].p_home
+    assert adjusted.iloc[0].away_sp_adj == 30.0
+    assert adjusted.iloc[0].model_version == "v2-sp"
+    # And the audit columns only appear when adjustments are supplied.
+    assert "away_sp_adj" not in base.columns
 
 
 def test_team_rates_matchup_totals():
