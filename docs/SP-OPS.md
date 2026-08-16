@@ -3,46 +3,74 @@
 Companion to docs/SP-AUDIT.md (what was found) and research/SP-BACKTEST.md
 (why v2's parameters are what they are).
 
-## Shadow run (state on merge)
+## Cutover: done (2026-08-15)
 
-`mlb/daily/config.py` ships with:
+`mlb/daily/config.py` now has:
 
-    ACTIVE_MODEL = MODEL_V1   # team Elo - the graded, emailed record
-    SHADOW_MODEL = MODEL_V2   # + SP/rest/travel - runs in parallel
+    ACTIVE_MODEL = MODEL_V2   # + SP/rest/travel - the graded, emailed record
+    SHADOW_MODEL = None
 
-Every daily run predicts BOTH models. v1 stays exactly as it was: same
-probabilities, same ledger (`data/mlb/predictions/grades.csv`), same record.
-v2 writes `data/mlb/predictions/v2-sp/slate_{date}.csv` and accrues its own
-`grades.csv` there. The slate email shows both tables (v2 with the per-starter
-Elo adjustment column); the grade email appends v2's running paired delta once
-it has graded days. Neither ledger ever mixes with the other - that is the
-model-card versioning contract.
+The shadow window below ran for one day (2026-08-14 merge to 2026-08-15
+cutover) before being cut short on explicit instruction: v1's live record was
+exploratory and noise-dominated at n=94 anyway, so the plumbing soak test
+mattered more than the extra days of statistical comparison. v1's ledger
+(`data/mlb/predictions/grades.csv`) freezes wherever it last graded and stays
+on the model card as the pre-change record; nothing about the flip touches it
+retroactively (`predictions_dir()` keys purely off model-version name, so v1
+keeps the original flat bucket forever). To resume an ongoing v1/v2
+comparison, set `SHADOW_MODEL = MODEL_V1`.
 
-Note on the first shadow days: v2's pitcher book is built from
-`data/mlb/pitcher_starts.csv`, which contains 2010-2025 at merge time. The
-first workflow run backfills the 2026 season from statsapi (checkpointed,
-resumable, ~25 minutes once) and the file then advances daily. Until that
-backfill lands, v2 falls back toward staff/league ratings - safe, just less
-sharp - so start counting the 7 shadow days AFTER the first successful
-"Update pitcher starts" step.
+Applying `ACTIVE_MODEL = MODEL_V2` is not just the two-constant flip that
+originally shipped with the shadow-run design - the pipeline was structured
+so only the *shadow* slot ever computed pitcher/rest/travel adjustments
+(`mlb/daily/run.py` hardcoded `adjustments=` onto the shadow branch only, and
+every "primary" grade/slate path defaulted to the flat v1 bucket regardless
+of which version was active). Flipping just the config constants would have
+silently relabeled the plain team-Elo slate as "v2-sp" without ever computing
+the adjustment. `run.py` and `export_site.py` were fixed alongside the config
+flip so `adjustments=` follows whichever role (active/shadow) actually holds
+`MODEL_V2`, the primary grade/slate paths follow `predictions_dir(ACTIVE_MODEL)`,
+and the model-card bucket list and History tab track the active version
+instead of hardcoding v1. The website's `MlbSlateTable` also picked up the
+starter/adjustment columns and a note that switches on whether the slate
+actually carries `*_sp_adj` values, matching `mlb/daily/emails.py`'s slate
+table - it previously hardcoded "does not use starter identity" unconditionally,
+which the cutover would otherwise have made false.
 
-## Cutover checklist (after >= 7 shadow days)
+## Original shadow-run design (for a future cutover)
 
-1. Compare buckets: v2's `cum_d_ll_mean ± cum_d_ll_se` (its grades.csv, also
-   on the model card's History tab) against v1's over the same days.
-   Holdout expectation from the backtest: ~ -0.001 log-loss per game vs v1;
-   over 7 days (~100 games) noise WILL dominate - the shadow window is a
-   plumbing soak test, not a statistical referendum. Cut over unless v2 is
+Every daily run predicts BOTH the active and shadow model, each in its own
+bucket (`predictions_dir(version)`) with its own `grades.csv`, so neither
+ledger ever mixes with the other - that is the model-card versioning
+contract. The slate email shows both tables when a shadow is set (the v2-style
+table with the per-starter Elo adjustment column); the grade email appends the
+shadow's running paired delta once it has graded days.
+
+Note on the first shadow days of any future cutover: v2's pitcher book is
+built from `data/mlb/pitcher_starts.csv`. If that file is missing recent
+games, the daily statsapi backfill (checkpointed, resumable, ~25 minutes
+once) needs to complete first, or v2 falls back toward staff/league ratings -
+safe, just less sharp.
+
+## Cutover checklist (for switching again later)
+
+1. Compare buckets: the candidate's `cum_d_ll_mean ± cum_d_ll_se` (its
+   grades.csv, also on the model card's History tab) against the current
+   active model's over the same days. Holdout expectation from the backtest:
+   ~ -0.001 log-loss per game for v2 vs v1; small samples WILL be
+   noise-dominated - treat a short shadow window as a plumbing soak test,
+   not a statistical referendum, unless the candidate is actually
    malfunctioning (missing adjustments, TBD-heavy slates mis-handled,
    pathological adj values).
 2. In `mlb/daily/config.py` swap the roles:
 
-       ACTIVE_MODEL = MODEL_V2
-       SHADOW_MODEL = None      # or keep MODEL_V1 shadowed for symmetry
+       ACTIVE_MODEL = <candidate>
+       SHADOW_MODEL = None      # or keep the old active model shadowed
 
-3. Nothing else changes: v2's bucket keeps accruing (its shadow-period record
-   continues seamlessly), v1's ledger freezes as the pre-change record, and
-   the model card lists both with their date windows.
+3. Nothing else changes: the promoted model's bucket keeps accruing (its
+   shadow-period record continues seamlessly), the demoted model's ledger
+   freezes as a historical record, and the model card lists every version
+   that's ever been active or shadow with its own date window.
 
 ## Send idempotency (duplicate-email fix)
 

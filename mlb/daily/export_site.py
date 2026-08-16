@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from mlb.daily.config import (
-    ACTIVE_MODEL, GRADES_CSV, MODEL_V1, SHADOW_MODEL, SITE_DATA_DIR,
+    ACTIVE_MODEL, MODEL_V1, SHADOW_MODEL, SITE_DATA_DIR,
     SITE_HISTORY_DIR, TEAM_DIVISION, TEAM_NAMES, predictions_dir,
 )
 from mlb.daily.emails import grade_html, slate_html
@@ -34,9 +34,17 @@ def _bucket_summary(version: str) -> dict | None:
     def _f(key):
         v = last.get(key)
         return None if v is None or pd.isna(v) else float(v)
+    if version == ACTIVE_MODEL:
+        role = "active"
+    elif version == SHADOW_MODEL:
+        role = "shadow"
+    else:
+        # Neither role today - a prior active or shadow model, frozen in
+        # place after a cutover moved on without it.
+        role = "historical"
     return {
         "version": version,
-        "role": "active" if version == ACTIVE_MODEL else "shadow",
+        "role": role,
         "first_date": str(ledger.date.min()),
         "last_date": str(ledger.date.max()),
         "games": int(last.cum_games),
@@ -93,9 +101,14 @@ def export_latest(run_date: str, slate: pd.DataFrame,
     futures_out["losses"] = futures_out.team.map(st.losses)
     futures_out["run_diff"] = futures_out.team.map(st.run_diff)
 
+    # The day-by-day History tab tracks whichever model is active now - on
+    # a model change it starts a fresh run from that model's own bucket
+    # rather than continuing to show the frozen pre-change ledger (that
+    # ledger is still visible, unabridged, in the model-version table below).
     history = []
-    if GRADES_CSV.exists():
-        ledger = pd.read_csv(GRADES_CSV).sort_values("date", ascending=False)
+    active_grades = predictions_dir(ACTIVE_MODEL) / "grades.csv"
+    if active_grades.exists():
+        ledger = pd.read_csv(active_grades).sort_values("date", ascending=False)
         for r in ledger.itertuples():
             snapshot = SITE_HISTORY_DIR / f"{r.date}.html"
             history.append({
@@ -120,9 +133,12 @@ def export_latest(run_date: str, slate: pd.DataFrame,
             g[col] = g[col].astype("Int64")
         graded_out = _records(g)
 
-    models = [s for s in (_bucket_summary(MODEL_V1),
-                          _bucket_summary(SHADOW_MODEL) if SHADOW_MODEL
-                          else None) if s]
+    # Always show MODEL_V1 (the historical anchor, even once frozen post-
+    # cutover) plus whichever versions are actually active/shadow now.
+    versions = list(dict.fromkeys(
+        v for v in (MODEL_V1, ACTIVE_MODEL, SHADOW_MODEL) if v
+    ))
+    models = [s for s in (_bucket_summary(v) for v in versions) if s]
 
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),

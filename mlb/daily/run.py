@@ -29,7 +29,7 @@ import pandas as pd
 
 from mlb.daily import export_site, grade, scoring, simulate, sp_state, update_games
 from mlb.daily.config import (
-    ACTIVE_MODEL, GAME_SIMS, PREDICTIONS_DIR, REPORTS_DIR, SEASON_SIMS,
+    ACTIVE_MODEL, GAME_SIMS, MODEL_V1, MODEL_V2, REPORTS_DIR, SEASON_SIMS,
     SHADOW_MODEL, predictions_dir,
 )
 from mlb.daily.emails import futures_html, grade_html, slate_html
@@ -38,6 +38,24 @@ from mlb.daily.ratings import build_state
 
 def eastern_today() -> str:
     return datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+
+
+def build_slate_for_version(model_version: str, ratings: dict,
+                            todays: list, params, rates,
+                            adjustments: dict | None, n: int) -> pd.DataFrame:
+    """One model version's slate. Whether `adjustments` actually reaches the
+    win-probability calculation depends only on `model_version` (MODEL_V2
+    uses them, MODEL_V1 doesn't) - never on whether that version happens to
+    be playing the active or shadow role this run. That indifference is
+    deliberate: on a cutover day the same version can be either, and a
+    version-keyed check (not a role-keyed one) is what makes the adjustment
+    follow the model rather than silently staying pinned to whichever role
+    originally computed it."""
+    adj = adjustments if model_version == MODEL_V2 else None
+    return simulate.slate_predictions(
+        ratings, todays, params, n=n, rates=rates,
+        adjustments=adj, model_version=model_version,
+    )
 
 
 def main(argv=None) -> int:
@@ -63,50 +81,64 @@ def main(argv=None) -> int:
     state = build_state()
     print(f"2/7 Elo replayed over {len(state.history)} games")
 
-    graded = grade.grade_day(yesterday, state.games)
-    ledger_row = None
-    if graded is not None:
-        ledger_row = grade.update_ledger(yesterday, graded)
-        played = int(ledger_row["games"])
-        print(f"3/7 graded {yesterday}: {int(ledger_row['correct'])}/{played}")
-    else:
-        print(f"3/7 no slate on file for {yesterday} - nothing to grade")
-
-    # Shadow model: grade its own bucket; the two ledgers never mix.
-    shadow_ledger_row = None
-    if SHADOW_MODEL:
-        shadow_dir = predictions_dir(SHADOW_MODEL)
-        shadow_graded = grade.grade_day(yesterday, state.games, shadow_dir)
-        if shadow_graded is not None:
-            shadow_ledger_row = grade.update_ledger(
-                yesterday, shadow_graded, shadow_dir)
+    # Grade every version's bucket that has a slate for yesterday, not just
+    # whichever is active today - on a cutover day (ACTIVE_MODEL just
+    # changed), yesterday's slate was produced by the OLD active model and
+    # lives in ITS bucket, not the new one. Grading by version rather than
+    # by role means that boundary day still gets graded instead of silently
+    # dropped, and behaves identically to before on any non-cutover day
+    # (only the actually-active/shadow versions ever have a file to find).
+    graded_frames: dict[str, pd.DataFrame] = {}
+    ledger_rows: dict[str, pd.Series] = {}
+    for v in (MODEL_V1, MODEL_V2):
+        d = predictions_dir(v)
+        g = grade.grade_day(yesterday, state.games, d)
+        if g is not None:
+            graded_frames[v] = g
+            ledger_rows[v] = grade.update_ledger(yesterday, g, d)
+            played = int(ledger_rows[v]["games"])
+            print(f"3/7 graded {yesterday} ({v}): "
+                  f"{int(ledger_rows[v]['correct'])}/{played}")
+    graded = graded_frames.get(ACTIVE_MODEL)
+    ledger_row = ledger_rows.get(ACTIVE_MODEL)
+    shadow_ledger_row = ledger_rows.get(SHADOW_MODEL) if SHADOW_MODEL else None
+    if graded is None:
+        print(f"3/7 no slate on file for {yesterday} under "
+              f"{ACTIVE_MODEL} - nothing to grade")
 
     schedule = update_games.read_schedule()
     todays = [g for g in schedule if g["date"] == run_date]
     params = simulate.calibrate(state.history, state.games)
     rates = scoring.rates_from_games(state.games)
-    slate = simulate.slate_predictions(
-        state.ratings, todays, params, n=args.game_sims, rates=rates,
-        model_version=ACTIVE_MODEL,
-    )
+
+    # Pitcher/rest-travel adjustments are shared by whichever role (active
+    # or shadow) currently holds MODEL_V2 - computed once regardless, so
+    # cutover (flipping which role that is) doesn't need its own branch.
+    adjustments = None
+    if todays and MODEL_V2 in (ACTIVE_MODEL, SHADOW_MODEL):
+        pbook, rtbook = sp_state.build_books(state.games, run_date)
+        adjustments = sp_state.slate_adjustments(pbook, rtbook, todays)
+
+    def predict(model_version: str) -> pd.DataFrame:
+        return build_slate_for_version(
+            model_version, state.ratings, todays, params, rates,
+            adjustments, args.game_sims)
+
+    active_dir = predictions_dir(ACTIVE_MODEL)
+    slate = predict(ACTIVE_MODEL)
     if not slate.empty:
-        PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
-        slate.to_csv(grade.slate_path(run_date), index=False)
+        active_dir.mkdir(parents=True, exist_ok=True)
+        slate.to_csv(grade.slate_path(run_date, active_dir), index=False)
 
     shadow_slate = pd.DataFrame()
     if SHADOW_MODEL and todays:
-        pbook, rtbook = sp_state.build_books(state.games, run_date)
-        adjustments = sp_state.slate_adjustments(pbook, rtbook, todays)
-        shadow_slate = simulate.slate_predictions(
-            state.ratings, todays, params, n=args.game_sims, rates=rates,
-            adjustments=adjustments, model_version=SHADOW_MODEL,
-        )
+        shadow_slate = predict(SHADOW_MODEL)
         if not shadow_slate.empty:
             shadow_dir = predictions_dir(SHADOW_MODEL)
             shadow_dir.mkdir(parents=True, exist_ok=True)
             shadow_slate.to_csv(
                 grade.slate_path(run_date, shadow_dir), index=False)
-    print(f"4/7 slate for {run_date}: {len(slate)} games "
+    print(f"4/7 slate for {run_date}: {len(slate)} games ({ACTIVE_MODEL}) "
           f"(+{len(shadow_slate)} shadow: {SHADOW_MODEL}) "
           f"(margin fit: {params.margin_slope:.2f}x + "
           f"{params.margin_intercept:.2f}, total {params.total_mean:.2f}, "
@@ -155,10 +187,13 @@ def main(argv=None) -> int:
             "subject": f"⚾ MLB Grade — {yesterday}: {subject_tail}",
         }
 
-    # Rebuild yesterday's slate frame for the snapshot page footer.
+    # Rebuild yesterday's slate frame for the snapshot page footer - from
+    # the active model's own bucket, same reasoning as the grading loop
+    # above (yesterday's slate may predate a same-day cutover).
     y_slate = None
-    if grade.slate_path(yesterday).exists():
-        y_slate = pd.read_csv(grade.slate_path(yesterday))
+    y_slate_path = grade.slate_path(yesterday, active_dir)
+    if y_slate_path.exists():
+        y_slate = pd.read_csv(y_slate_path)
     export_site.write_history_snapshot(yesterday, graded, ledger_row, y_slate)
     export_site.export_latest(
         run_date, slate, futures, state.standings, graded,
