@@ -14,7 +14,8 @@ export interface MlbSlateRow {
   away: string;
   home: string;
   game_num: number;
-  /** Probable starters — display only, not a model input. */
+  /** Probable starters. Present regardless of model version; only a model
+   * input (via the *_sp_adj fields below) when the active model uses it. */
   away_sp?: string | null;
   home_sp?: string | null;
   /** Matchup-specific expected total runs (recent-form attack/defense). */
@@ -24,6 +25,17 @@ export interface MlbSlateRow {
   pick_prob: number;
   pred_home_score: number;
   pred_away_score: number;
+  /** Which model version produced this row (v1-team-elo or v2-sp). */
+  model_version?: string | null;
+  /** Each starter's rating adjustment in Elo points, and how it was
+   * derived — present only for a model version that uses starter identity
+   * (mlb/pitcher_rating.py's fallback ladder: pitcher/thin/staff). */
+  home_sp_adj?: number | null;
+  away_sp_adj?: number | null;
+  home_sp_mode?: string | null;
+  away_sp_mode?: string | null;
+  home_rt_adj?: number | null;
+  away_rt_adj?: number | null;
 }
 
 export interface MlbFuturesRow {
