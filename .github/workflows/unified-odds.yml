@@ -67,6 +67,12 @@ jobs:
       - name: Export web slate JSON
         run: python -m data_jobs.export_web_json
 
+      # Cross-sport track record for the /vegas home page. Runs here as well as
+      # in the MLB pipeline because a sport flipping in/out of season is visible
+      # in the slate this job just wrote, not only in the MLB ledger.
+      - name: Build cross-sport summary JSON
+        run: python -m data_jobs.build_summary
+
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"

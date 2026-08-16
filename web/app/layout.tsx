@@ -1,18 +1,32 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Inter, Press_Start_2P } from 'next/font/google';
+import Nav from '@/app/components/Nav';
+import { THEME } from '@/app/lib/theme';
 import './globals.css';
+
+/*
+ * Press Start 2P for the wordmark, short headings, table headers and big
+ * numbers; Inter for everything else. Self-hosted by next/font at build time,
+ * so there is no render-blocking request to Google and no swap flash.
+ */
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-app',
+});
+
+const pressStart = Press_Start_2P({
+  subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
+  variable: '--font-pixel',
+});
 
 export const metadata: Metadata = {
   title: 'Can Tre Beat Vegas — whosyurgoat',
   description:
-    'Every NFL and NBA game in the next 48 hours: bookmaker odds, line movement, and model picks vs. the market.',
+    'Every forecasting model I run on one board: whichever sport is in season sits on top, with its slate, its track record, and the rest waiting their turn.',
 };
-
-const NAV = [
-  { href: '/', label: 'Next 48 Hours' },
-  { href: '/mlb', label: 'MLB Daily' },
-  { href: '/methodology', label: 'Methodology' },
-];
 
 export default function RootLayout({
   children,
@@ -20,30 +34,43 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${inter.variable} ${pressStart.variable}`}
+      data-theme={THEME === 'techno' ? 'techno' : undefined}
+    >
       <body>
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <header
+          className="border-b"
+          style={{
+            // The green rule is the site's own accent, not a sport's — it does
+            // not re-tint with the section below it.
+            borderTop: '5px solid var(--accent-vegas)',
+            borderBottomColor: 'var(--th-border)',
+            background: 'var(--th-bar)',
+          }}
+        >
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-4">
             <div>
-              <h1 className="text-lg font-bold">Can Tre Beat Vegas? 🎰</h1>
-              <p className="text-xs uppercase tracking-wide text-slate-400">
+              <h1
+                className="pixel m-0 text-[12px] leading-[1.5]"
+                style={{ color: 'var(--th-ink)' }}
+              >
+                CAN TRE BEAT{' '}
+                <span style={{ color: 'var(--th-accent-text)' }}>VEGAS?</span> 🎰
+              </h1>
+              {/* The disclaimer kicker stays in the header on every route. */}
+              <p
+                className="mt-2 text-[12px] uppercase tracking-wide"
+                style={{ color: 'var(--th-faint)' }}
+              >
                 Odds tracker · not betting advice
               </p>
             </div>
-            <nav className="flex flex-wrap gap-3 text-sm">
-              {NAV.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded px-2 py-1 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            <Nav />
           </div>
         </header>
-        <main className="mx-auto max-w-4xl px-4 py-8">{children}</main>
+        <main className="mx-auto max-w-6xl px-6 pb-16 pt-8">{children}</main>
       </body>
     </html>
   );

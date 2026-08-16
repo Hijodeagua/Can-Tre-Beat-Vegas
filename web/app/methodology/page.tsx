@@ -1,67 +1,92 @@
-export default function MethodologyPage() {
-  return (
-    <div className="prose-sm max-w-none">
-      <h2 className="text-2xl font-bold">Methodology</h2>
+import type { Metadata } from 'next';
 
-      <Section title="Where the odds come from">
-        Odds are pulled from{' '}
-        <a
-          className="text-blue-600 underline"
-          href="https://the-odds-api.com/"
-          target="_blank"
-          rel="noreferrer"
+export const metadata: Metadata = {
+  title: 'Data sources — Can Tre Beat Vegas',
+  description:
+    'Where the odds, the schedules and the results behind every model on the board come from.',
+};
+
+/**
+ * Deliberately minimal — three rows and a disclaimer, in place of the old
+ * methodology writeup. The models explain themselves on their own pages; this
+ * page only answers where the numbers came from.
+ *
+ * The route keeps its `/methodology` path so existing links do not break.
+ */
+
+const SOURCES = [
+  {
+    name: 'THE ODDS API',
+    what:
+      'Moneyline, spread and totals from DraftKings, FanDuel, BetMGM, BetRivers, Bovada ' +
+      'and others — pulled twice daily, in American odds.',
+  },
+  {
+    name: 'PRO FOOTBALL REF',
+    what:
+      'Shout out Pro Football Reference — the schedule, results and team stats behind ' +
+      'the NFL model.',
+  },
+  {
+    name: 'MLB RESULTS',
+    what:
+      'Daily scores and season-to-date records feed the Elo ratings and the ' +
+      'rest-of-season Monte Carlo.',
+  },
+];
+
+export default function DataSourcesPage() {
+  return (
+    <div>
+      <h2 className="pixel m-0 text-[18px] leading-[1.4]" style={{ color: 'var(--th-ink)' }}>
+        DATA{' '}
+        <span
+          className="px-[6px] py-[2px]"
+          style={{ background: 'var(--th-highlight)', color: 'var(--th-highlight-ink)' }}
         >
-          The Odds API
-        </a>{' '}
-        twice daily (a morning snapshot and an evening snapshot before games)
-        across major US sportsbooks — DraftKings, FanDuel, BetMGM, BetRivers,
-        Bovada, and others. Moneyline (h2h), spread, and totals markets, in
-        American odds.
-      </Section>
+          SOURCES
+        </span>
+      </h2>
 
-      <Section title="Consensus and no-vig probability">
-        The consensus line is the simple average across all books in the
-        snapshot. The &ldquo;market&rdquo; win probability is computed by
-        converting each side&apos;s average moneyline to an implied
-        probability, then normalizing the two sides to sum to 1 — removing the
-        bookmaker&apos;s vig.
-      </Section>
+      <p
+        className="mt-4 max-w-[620px] text-[14px] leading-normal"
+        style={{ color: 'var(--th-muted)' }}
+      >
+        A personal project by Tre. Every model here is experimental and none of it is
+        betting advice.
+      </p>
 
-      <Section title="Line movement">
-        Every snapshot is committed to the repo, so each game&apos;s
-        &ldquo;opener&rdquo; is the first snapshot in which it appeared. The
-        movement chips show how the consensus spread and total have shifted
-        since then.
-      </Section>
+      <div className="mt-6 grid gap-3">
+        {SOURCES.map((source) => (
+          <div
+            key={source.name}
+            className="flex flex-wrap items-baseline gap-4 rounded-lg border p-4"
+            style={{
+              borderColor: 'var(--th-border)',
+              borderLeft: '4px solid var(--accent-vegas)',
+              background: 'var(--th-card)',
+            }}
+          >
+            <span
+              className="pixel min-w-[150px] text-[10px]"
+              style={{ color: 'var(--th-ink)' }}
+            >
+              {source.name}
+            </span>
+            <span
+              className="flex-1 text-[14px] leading-normal"
+              style={{ color: 'var(--th-muted)' }}
+            >
+              {source.what}
+            </span>
+          </div>
+        ))}
+      </div>
 
-      <Section title="Model picks">
-        NBA picks come from a logistic-regression winner model plus a ridge
-        score model trained on rolling team stats. The NFL LightGBM models
-        (straight-up and against-the-spread) are trained but not yet wired
-        into this slate. &ldquo;Edge vs market&rdquo; is the model&apos;s home
-        win probability minus the market&apos;s no-vig probability — green or
-        red when the disagreement exceeds 5 points.
-      </Section>
-
-      <Section title="What this is not">
-        A tracker and a public scorecard for my own models — not betting
-        advice. Lines move, books differ, and the models are experimental.
-      </Section>
+      <p className="mt-6 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        Odds snapshots are committed to the repo twice daily, so each game&apos;s opener is
+        the first snapshot it appeared in.
+      </p>
     </div>
-  );
-}
-
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="mt-6">
-      <h3 className="text-base font-bold">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-slate-600">{children}</p>
-    </section>
   );
 }
