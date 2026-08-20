@@ -1,0 +1,654 @@
+{
+  "generatedAt": "2026-08-20T21:44:04+00:00",
+  "source": "Can-Tre-Beat-Vegas club Elo (soccer/clubs/model/elo.py)",
+  "baseRating": 1500.0,
+  "matchesProcessed": 25452,
+  "leagues": {
+    "epl": {
+      "name": "Premier League",
+      "firstSeason": "2010-11",
+      "latestSeason": "2025-26",
+      "params": {
+        "k": 14.0,
+        "home_advantage": 60.0,
+        "season_regression": 0.1,
+        "entry_rating": 1420.0
+      },
+      "matchesProcessed": 6080,
+      "ratings": [
+        {
+          "team": "Arsenal FC",
+          "elo": 1732.3,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Manchester City FC",
+          "elo": 1717.5,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Liverpool FC",
+          "elo": 1634.8,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Manchester United FC",
+          "elo": 1600.4,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Aston Villa FC",
+          "elo": 1584.4,
+          "matches": 494,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "AFC Bournemouth",
+          "elo": 1567.2,
+          "matches": 342,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Chelsea FC",
+          "elo": 1550.0,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Brighton & Hove Albion FC",
+          "elo": 1547.0,
+          "matches": 342,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Newcastle United FC",
+          "elo": 1540.7,
+          "matches": 570,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Brentford FC",
+          "elo": 1535.5,
+          "matches": 190,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Nottingham Forest FC",
+          "elo": 1520.2,
+          "matches": 152,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Fulham FC",
+          "elo": 1512.9,
+          "matches": 380,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Crystal Palace FC",
+          "elo": 1503.5,
+          "matches": 494,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Everton FC",
+          "elo": 1502.2,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Sunderland AFC",
+          "elo": 1484.1,
+          "matches": 304,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Leeds United FC",
+          "elo": 1477.7,
+          "matches": 152,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Tottenham Hotspur FC",
+          "elo": 1464.0,
+          "matches": 608,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "West Ham United FC",
+          "elo": 1461.5,
+          "matches": 570,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Wolverhampton Wanderers FC",
+          "elo": 1377.0,
+          "matches": 380,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Burnley FC",
+          "elo": 1340.2,
+          "matches": 342,
+          "lastSeason": "2025-26"
+        }
+      ]
+    },
+    "bundesliga": {
+      "name": "Bundesliga",
+      "firstSeason": "2010-11",
+      "latestSeason": "2025-26",
+      "params": {
+        "k": 12.0,
+        "home_advantage": 60.0,
+        "season_regression": 0.1,
+        "entry_rating": 1460.0
+      },
+      "matchesProcessed": 4896,
+      "ratings": [
+        {
+          "team": "FC Bayern München",
+          "elo": 1803.9,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Borussia Dortmund",
+          "elo": 1680.2,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Bayer 04 Leverkusen",
+          "elo": 1658.0,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "RB Leipzig",
+          "elo": 1617.4,
+          "matches": 340,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "VfB Stuttgart",
+          "elo": 1617.2,
+          "matches": 476,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "TSG 1899 Hoffenheim",
+          "elo": 1545.0,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Eintracht Frankfurt",
+          "elo": 1542.6,
+          "matches": 510,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "SC Freiburg",
+          "elo": 1526.2,
+          "matches": 510,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "1. FSV Mainz 05",
+          "elo": 1523.0,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Borussia Mönchengladbach",
+          "elo": 1482.7,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "FC Augsburg",
+          "elo": 1478.5,
+          "matches": 510,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Hamburger SV",
+          "elo": 1464.1,
+          "matches": 306,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "1. FC Union Berlin",
+          "elo": 1463.1,
+          "matches": 238,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "SV Werder Bremen",
+          "elo": 1456.1,
+          "matches": 510,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "VfL Wolfsburg",
+          "elo": 1452.6,
+          "matches": 544,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "1. FC Köln",
+          "elo": 1431.6,
+          "matches": 408,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "1. FC Heidenheim 1846",
+          "elo": 1401.7,
+          "matches": 102,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "FC St. Pauli 1910",
+          "elo": 1396.0,
+          "matches": 102,
+          "lastSeason": "2025-26"
+        }
+      ]
+    },
+    "la_liga": {
+      "name": "La Liga",
+      "firstSeason": "2012-13",
+      "latestSeason": "2025-26",
+      "params": {
+        "k": 10.0,
+        "home_advantage": 60.0,
+        "season_regression": 0.1,
+        "entry_rating": 1340.0
+      },
+      "matchesProcessed": 5310,
+      "ratings": [
+        {
+          "team": "FC Barcelona",
+          "elo": 1711.7,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Real Madrid CF",
+          "elo": 1685.5,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Club Atlético de Madrid",
+          "elo": 1591.2,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Villarreal CF",
+          "elo": 1568.4,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Real Betis Balompié",
+          "elo": 1532.1,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Athletic Club",
+          "elo": 1491.3,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "RC Celta de Vigo",
+          "elo": 1475.7,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Real Sociedad de Fútbol",
+          "elo": 1472.3,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Valencia CF",
+          "elo": 1466.7,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Rayo Vallecano de Madrid",
+          "elo": 1462.9,
+          "matches": 379,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Getafe CF",
+          "elo": 1445.2,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Girona FC",
+          "elo": 1444.1,
+          "matches": 227,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "CA Osasuna",
+          "elo": 1442.4,
+          "matches": 379,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "RCD Mallorca",
+          "elo": 1426.1,
+          "matches": 265,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Levante UD",
+          "elo": 1424.8,
+          "matches": 380,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Sevilla FC",
+          "elo": 1422.8,
+          "matches": 531,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Deportivo Alavés",
+          "elo": 1414.8,
+          "matches": 341,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "RCD Espanyol de Barcelona",
+          "elo": 1414.2,
+          "matches": 455,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Elche CF",
+          "elo": 1403.7,
+          "matches": 228,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Real Oviedo",
+          "elo": 1326.1,
+          "matches": 38,
+          "lastSeason": "2025-26"
+        }
+      ]
+    },
+    "serie_a": {
+      "name": "Serie A",
+      "firstSeason": "2013-14",
+      "latestSeason": "2025-26",
+      "params": {
+        "k": 14.0,
+        "home_advantage": 45.0,
+        "season_regression": 0.15,
+        "entry_rating": 1340.0
+      },
+      "matchesProcessed": 4930,
+      "ratings": [
+        {
+          "team": "FC Internazionale Milano",
+          "elo": 1720.2,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "SSC Napoli",
+          "elo": 1625.2,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "AS Roma",
+          "elo": 1617.0,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Juventus FC",
+          "elo": 1607.5,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Atalanta BC",
+          "elo": 1589.7,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "AC Milan",
+          "elo": 1581.4,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Como 1907",
+          "elo": 1573.9,
+          "matches": 75,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "SS Lazio",
+          "elo": 1532.3,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Bologna FC 1909",
+          "elo": 1523.9,
+          "matches": 455,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "ACF Fiorentina",
+          "elo": 1501.6,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Udinese Calcio",
+          "elo": 1469.6,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Torino FC",
+          "elo": 1450.9,
+          "matches": 493,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "US Sassuolo Calcio",
+          "elo": 1444.5,
+          "matches": 456,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Genoa CFC",
+          "elo": 1433.2,
+          "matches": 455,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Parma Calcio 1913",
+          "elo": 1417.8,
+          "matches": 265,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Cagliari Calcio",
+          "elo": 1413.2,
+          "matches": 417,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "US Lecce",
+          "elo": 1384.5,
+          "matches": 189,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "US Cremonese",
+          "elo": 1371.9,
+          "matches": 76,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Hellas Verona FC",
+          "elo": 1325.0,
+          "matches": 417,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "AC Pisa 1909",
+          "elo": 1281.0,
+          "matches": 38,
+          "lastSeason": "2025-26"
+        }
+      ]
+    },
+    "ligue_1": {
+      "name": "Ligue 1",
+      "firstSeason": "2014-15",
+      "latestSeason": "2025-26",
+      "params": {
+        "k": 12.0,
+        "home_advantage": 45.0,
+        "season_regression": 0.15,
+        "entry_rating": 1380.0
+      },
+      "matchesProcessed": 4236,
+      "ratings": [
+        {
+          "team": "Paris Saint-Germain FC",
+          "elo": 1710.9,
+          "matches": 433,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Racing Club de Lens",
+          "elo": 1594.5,
+          "matches": 254,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Lille OSC",
+          "elo": 1578.5,
+          "matches": 434,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Olympique de Marseille",
+          "elo": 1567.2,
+          "matches": 434,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Olympique Lyonnais",
+          "elo": 1566.1,
+          "matches": 434,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "AS Monaco FC",
+          "elo": 1559.8,
+          "matches": 434,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Stade Rennais FC 1901",
+          "elo": 1546.9,
+          "matches": 434,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "RC Strasbourg Alsace",
+          "elo": 1537.6,
+          "matches": 319,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Toulouse FC",
+          "elo": 1486.9,
+          "matches": 357,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "OGC Nice",
+          "elo": 1473.4,
+          "matches": 434,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Stade Brestois 29",
+          "elo": 1467.5,
+          "matches": 244,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "FC Lorient",
+          "elo": 1467.2,
+          "matches": 296,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "AJ Auxerre",
+          "elo": 1448.2,
+          "matches": 106,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Paris FC",
+          "elo": 1442.1,
+          "matches": 34,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Le Havre AC",
+          "elo": 1416.1,
+          "matches": 102,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "Angers SCO",
+          "elo": 1393.2,
+          "matches": 362,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "FC Nantes",
+          "elo": 1387.4,
+          "matches": 433,
+          "lastSeason": "2025-26"
+        },
+        {
+          "team": "FC Metz",
+          "elo": 1336.7,
+          "matches": 286,
+          "lastSeason": "2025-26"
+        }
+      ]
+    }
+  }
+}

@@ -5,6 +5,10 @@ Silver Bulletin's Pelé model, with squad-quality adjustments from FIFA
 ratings data and host/venue effects. Feeds match probabilities for the
 next-48-hours slate and (later) a full tournament Monte Carlo simulation.
 
+*Club football lives next door: the top-5 European league Elo models
+(Premier League, Bundesliga, La Liga, Serie A, Ligue 1) are specified in
+[`clubs/SPEC.md`](clubs/SPEC.md).*
+
 ## Core idea
 
 Elo is the backbone. Squad quality enters as an *adjustment to the Elo gap*,

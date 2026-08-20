@@ -46,6 +46,11 @@ Details and the two places an edge might actually live are in
   tiered K-factors, friendlies barely weighted) plus a multinomial outcome
   model with host effects and FIFA-rating squad-strength hooks; predicts the
   2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
+- **Top-5 European league club Elo** — per-league Elo for the Premier League,
+  Bundesliga, La Liga, Serie A and Ligue 1 (per-league tuned K / home
+  advantage / season rollover, promoted-club entry ratings) with a pooled
+  W/D/L outcome model, temporally validated on a two-season holdout
+  (`soccer/clubs/`, spec in `soccer/clubs/SPEC.md`)
 - **MLB daily model** — betting-blind Elo (K=3, +24 home, MOV-weighted)
   tested live against the 2026 season: three emails every morning (futures
   Monte Carlo, today's slate with simulated scores, yesterday's graded
@@ -200,7 +205,9 @@ Can-Tre-Beat-Vegas/
 ├── soccer/                  # World Cup / international soccer model
 │   ├── SPEC.md              # Model spec (Elo + squad-strength adjustments)
 │   ├── data/                # International results 1872–present + fixtures
-│   └── model/               # Elo engine, training, fixture predictions
+│   ├── model/               # Elo engine, training, fixture predictions
+│   └── clubs/               # Top-5 European league club Elo (EPL, Bundesliga,
+│                            #   La Liga, Serie A, Ligue 1) — see clubs/SPEC.md
 ├── data/                    # Odds snapshots + stats
 │   ├── odds_api_data_*.csv  # NFL odds snapshots (timestamped)
 │   ├── nba/                 # NBA odds snapshots + actual game results
@@ -234,6 +241,10 @@ Steps to get there:
 - [ ] Deploy `web/` to Vercel and point the hub's `/vegas` rewrite at it
 - [x] Soccer Elo + outcome model predicting 2026 World Cup fixtures
   (`soccer/`, see `soccer/SPEC.md` for the full roadmap)
+- [x] Club Elo for the top-5 European leagues, tuned per league and validated
+  against a two-season holdout (`soccer/clubs/`)
+- [ ] Odds API soccer keys (`soccer_epl`, …) and club model picks on the
+  slate (quota permitting)
 - [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API
   config) and soccer model picks on the slate
 - [ ] Wire NBA model predictions into the slate for current games

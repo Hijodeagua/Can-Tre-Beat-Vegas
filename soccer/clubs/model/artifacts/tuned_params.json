@@ -1,0 +1,81 @@
+{
+  "tunedAt": "2026-08-20T21:43:05+00:00",
+  "objective": "one-step-ahead Brier on the home score (draw = 0.5)",
+  "burnInSeasons": 2,
+  "holdoutFrom": "2024-25",
+  "grid": {
+    "k": [
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      14.0,
+      18.0,
+      22.0,
+      26.0
+    ],
+    "home_advantage": [
+      30.0,
+      45.0,
+      60.0,
+      75.0,
+      90.0
+    ],
+    "season_regression": [
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "entry_rating": [
+      1340.0,
+      1380.0,
+      1420.0,
+      1460.0
+    ]
+  },
+  "params": {
+    "epl": {
+      "k": 14.0,
+      "home_advantage": 60.0,
+      "season_regression": 0.1,
+      "entry_rating": 1420.0,
+      "brier": 0.15382,
+      "matches_scored": 4560
+    },
+    "bundesliga": {
+      "k": 12.0,
+      "home_advantage": 60.0,
+      "season_regression": 0.1,
+      "entry_rating": 1460.0,
+      "brier": 0.15884,
+      "matches_scored": 3672
+    },
+    "la_liga": {
+      "k": 10.0,
+      "home_advantage": 60.0,
+      "season_regression": 0.1,
+      "entry_rating": 1340.0,
+      "brier": 0.14783,
+      "matches_scored": 3800
+    },
+    "serie_a": {
+      "k": 14.0,
+      "home_advantage": 45.0,
+      "season_regression": 0.15,
+      "entry_rating": 1340.0,
+      "brier": 0.14744,
+      "matches_scored": 3420
+    },
+    "ligue_1": {
+      "k": 12.0,
+      "home_advantage": 45.0,
+      "season_regression": 0.15,
+      "entry_rating": 1380.0,
+      "brier": 0.1576,
+      "matches_scored": 2865
+    }
+  }
+}
