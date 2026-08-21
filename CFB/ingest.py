@@ -55,13 +55,27 @@ def _season_of(date: pd.Timestamp) -> int:
     return date.year if date.month >= 6 else date.year - 1
 
 
-def _game_type(note: str | float) -> str:
+def _game_type(note: str | float, date: pd.Timestamp) -> str:
+    """REG / BOWL / CCG from the Notes text plus the calendar month.
+
+    Notes come in two shapes: an event name — ``Liberty Bowl (Memphis TN)``,
+    ``SEC Championship (Atlanta GA)`` — or, in the 2016-2019 exports, a bare
+    venue string on *every* game (``Lane Stadium - Blacksburg Virginia``).
+    Venue strings still contain ``" - "`` once the parenthesised part is
+    stripped; event names never do. Requiring a December/January date keeps
+    August kickoff events ("Kickoff Classic") and the October Red River game
+    (played at the Cotton Bowl *stadium*) out of the postseason.
+    """
     if pd.isna(note) or not str(note).strip():
         return "REG"
-    note = str(note)
-    if "Championship" in note:
+    core = re.sub(r"\s*\([^)]*\)", "", str(note)).strip()
+    if " - " in core or date.month not in (12, 1):
+        return "REG"
+    if "Championship" in core:
         return "CCG"
-    return "BOWL"
+    if re.search(r"\b(Bowl|Playoff|Classic)\b", core):
+        return "BOWL"
+    return "REG"
 
 
 def parse_schedule(path: Path) -> pd.DataFrame:
@@ -100,7 +114,7 @@ def parse_schedule(path: Path) -> pd.DataFrame:
                 "season": _season_of(date),
                 "week": int(r.Wk),
                 "gameday": date.date().isoformat(),
-                "game_type": _game_type(r.Notes),
+                "game_type": _game_type(r.Notes, date),
                 "home_team": home,
                 "away_team": away,
                 "home_score": home_score,
@@ -125,6 +139,23 @@ def parse_schedule(path: Path) -> pd.DataFrame:
     return out
 
 
+def dedupe_games(games: pd.DataFrame) -> pd.DataFrame:
+    """Drop CFR's double-listed bowl games.
+
+    The schedule exports list some bowls twice — once with the bowl name in
+    Notes, once with a bare venue string. Same date, teams, and scores; only
+    the note differs. Keep the postseason-classified row so ``game_type``
+    survives the dedupe.
+    """
+    pri = games["game_type"].map({"CCG": 0, "BOWL": 0}).fillna(1)
+    return (
+        games.assign(_pri=pri)
+        .sort_values("_pri")
+        .drop_duplicates(subset=["season", "gameday", "home_team", "away_team"], keep="first")
+        .drop(columns="_pri")
+    )
+
+
 def _read_positional(path: Path) -> pd.DataFrame:
     """Read a CFR scoring/defense export by position, not by name.
 
@@ -140,6 +171,10 @@ def _read_positional(path: Path) -> pd.DataFrame:
 def parse_scoring(path: Path, side: str) -> pd.DataFrame:
     """side='off' for the points page, 'def' for the defense page."""
     df = _read_positional(path)
+    # Drop zero-game placeholder rows: upcoming-season stubs (2026) and the
+    # 2020 COVID opt-outs (Connecticut, Old Dominion) appear with G=0 and
+    # every stat blank.
+    df = df[df["G"].astype(int) > 0]
     suffix = "" if side == "off" else "_allowed"
     out = pd.DataFrame(
         {
@@ -183,6 +218,8 @@ def build_all(validate: bool = False) -> dict[str, pd.DataFrame]:
         p for p in RAW_DIR.glob("*.csv") if "games" in p.name or "schedule" in p.name
     )
     games = pd.concat([parse_schedule(p) for p in sched_files], ignore_index=True)
+    n_parsed = len(games)
+    games = dedupe_games(games)
     games = games.sort_values(["gameday", "home_team"]).reset_index(drop=True)
     games.to_csv(AGG_DIR / "cfb_games.csv", index=False)
 
@@ -198,8 +235,10 @@ def build_all(validate: bool = False) -> dict[str, pd.DataFrame]:
         non_neutral = games[games["location"] == "Home"]
         hw = (non_neutral["home_score"] > non_neutral["away_score"]).mean()
         print(f"games: {len(games)}  ({games['season'].min()}-{games['season'].max()})")
+        print(f"double-listed bowls dropped: {n_parsed - len(games)}")
+        print(f"postseason games: {(games['game_type'] != 'REG').sum()}")
         print(f"neutral-site games: {(games['location'] == 'Neutral').sum()}")
-        print(f"home win rate (non-neutral): {hw:.3f}  <- expect 0.57-0.60")
+        print(f"home win rate (non-neutral): {hw:.3f}  <- expect 0.57-0.63")
         print(f"offense rows: {len(off)}, defense rows: {len(dfn)}")
 
     return {"games": games, "offense": off, "defense": dfn}

@@ -136,7 +136,7 @@ def main():
     )
     parser.add_argument(
         "--sport",
-        choices=["nfl", "nba", "all"],
+        choices=[*SUPPORTED_SPORTS, "all"],
         default="all",
         help="Sport to fetch (default: all)",
     )
