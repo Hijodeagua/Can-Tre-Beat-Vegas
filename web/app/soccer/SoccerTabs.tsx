@@ -66,47 +66,156 @@ const RANKINGS_COLUMNS = [
   { header: 'Avg value/player' },
 ];
 
+const ELO_RANK_COLUMNS = [
+  { header: '#' },
+  { header: 'League', strong: true },
+  { header: 'Div' },
+  { header: 'Avg Elo', strong: true },
+];
+
+/** Every league sorted by avg Elo, highest first — the flat "who's the
+ * strongest league" ranking, as opposed to the table below it which stays
+ * grouped by country pool. Leagues with no rated clubs yet sort last. */
+function LeagueEloRank() {
+  const ranked = [...orderedLeagueRankings()].sort(
+    (a, b) => (b[1].avgElo ?? -Infinity) - (a[1].avgElo ?? -Infinity),
+  );
+  return (
+    <ThemedTable
+      columns={ELO_RANK_COLUMNS}
+      rows={ranked.map(([key, r], i) => ({
+        key,
+        cells: [i + 1, r.name, r.tier === 1 ? '1st' : '2nd', r.avgElo == null ? DASH : Math.round(r.avgElo)],
+      }))}
+    />
+  );
+}
+
+interface RankedClub {
+  team: string;
+  league: string;
+  elo: number;
+  matches: number;
+}
+
+/** Every club in every league's current-season table, flattened into one
+ * list — this is what "top/bottom Elo" means across the whole site, since
+ * the UEFA glue keeps all ten leagues on one shared scale. */
+function allClubsRanked(): RankedClub[] {
+  const out: RankedClub[] = [];
+  for (const key of LEAGUE_ORDER) {
+    const table = data.ratings[key];
+    if (!table) continue;
+    for (const c of table.clubs) {
+      out.push({ team: c.team, league: table.name, elo: c.elo, matches: c.matches });
+    }
+  }
+  return out.sort((a, b) => b.elo - a.elo);
+}
+
+const CLUB_ELO_COLUMNS = [
+  { header: '#' },
+  { header: 'Club', strong: true },
+  { header: 'League' },
+  { header: 'Elo', strong: true },
+];
+
+/** Top-10 or bottom-10 club Elo, with the top/bottom 5 marked by a ★ —
+ * one table covers both "top 10" and "top 5" (and the bottom pair) without
+ * splitting into four near-duplicate tables. */
+function ClubEloExtremes({
+  title, clubs, markFirst,
+}: {
+  title: string;
+  clubs: RankedClub[];
+  markFirst: number;
+}) {
+  return (
+    <div>
+      <h4 className="pixel m-0 text-[10px]" style={{ color: 'var(--th-ink)' }}>
+        {title}
+      </h4>
+      <div className="mt-2">
+        <ThemedTable
+          columns={CLUB_ELO_COLUMNS}
+          rows={clubs.map((c, i) => ({
+            key: `${c.team}-${c.league}`,
+            cells: [
+              i + 1,
+              i < markFirst ? `★ ${c.team}` : c.team,
+              c.league,
+              Math.round(c.elo),
+            ],
+          }))}
+        />
+      </div>
+    </div>
+  );
+}
+
 function RankingsTab() {
   const rows = orderedLeagueRankings();
   if (rows.length === 0) return <Empty>Awaiting the first daily run.</Empty>;
 
   const anySquadStats = rows.some(([, r]) => r.squadStatsSeason);
+  const allClubs = allClubsRanked();
+  const top10 = allClubs.slice(0, 10);
+  const bottom10 = allClubs.slice(-10).reverse();
 
   return (
     <div>
-      <div className="mt-4">
-        <ThemedTable
-          columns={RANKINGS_COLUMNS}
-          rows={rows.map(([key, r]) => ({
-            key,
-            cells: [
-              r.name,
-              r.tier === 1 ? '1st' : '2nd',
-              r.avgElo == null ? DASH : Math.round(r.avgElo),
-              fmtEurM(r.avgSquadValueEurM),
-              fmtEurM(r.avgWageBillEurM),
-              fmtNum1(r.avgSquadSize),
-              fmtNum1(r.avgAge),
-              fmtNum1(r.avgForeigners),
-              fmtEurM(r.avgValuePerPlayerEurM, 2),
-            ],
-          }))}
-          note={
-            <>
-              Avg Elo is each league&apos;s current club ratings, averaged — the same scale
-              across all ten leagues via the Champions/Europa/Conference League cross-play, so
-              a Bundesliga 1550 and a Segunda 1550 mean the same thing. Squad-value and
-              wage-bill figures are that league&apos;s most recent{' '}
-              <code>market_values</code> upload; squad size, age, foreigners and
-              value-per-player come from a newer, still-growing set of uploads and read{' '}
-              {DASH} until a league has one.
-              {anySquadStats
-                ? ' "As of" season varies by league and by column — coverage is being backfilled incrementally, not all at once.'
-                : ''}
-            </>
-          }
-        />
+      <h3 className="pixel m-3 mt-6 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        Leagues by Avg Elo
+      </h3>
+      <LeagueEloRank />
+
+      <h3 className="pixel m-3 mt-8 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        League Economics
+      </h3>
+      <ThemedTable
+        columns={RANKINGS_COLUMNS}
+        rows={rows.map(([key, r]) => ({
+          key,
+          cells: [
+            r.name,
+            r.tier === 1 ? '1st' : '2nd',
+            r.avgElo == null ? DASH : Math.round(r.avgElo),
+            fmtEurM(r.avgSquadValueEurM),
+            fmtEurM(r.avgWageBillEurM),
+            fmtNum1(r.avgSquadSize),
+            fmtNum1(r.avgAge),
+            fmtNum1(r.avgForeigners),
+            fmtEurM(r.avgValuePerPlayerEurM, 2),
+          ],
+        }))}
+        note={
+          <>
+            Avg Elo is each league&apos;s current club ratings, averaged — the same scale
+            across all ten leagues via the Champions/Europa/Conference League cross-play, so
+            a Bundesliga 1550 and a Segunda 1550 mean the same thing. Squad-value and
+            wage-bill figures are that league&apos;s most recent{' '}
+            <code>market_values</code> upload; squad size, age, foreigners and
+            value-per-player come from a newer, still-growing set of uploads and read{' '}
+            {DASH} until a league has one.
+            {anySquadStats
+              ? ' "As of" season varies by league and by column — coverage is being backfilled incrementally, not all at once.'
+              : ''}
+          </>
+        }
+      />
+
+      <h3 className="pixel m-3 mt-8 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        Highest &amp; Lowest Rated Clubs
+      </h3>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <ClubEloExtremes title="Top 10 (★ = top 5)" clubs={top10} markFirst={5} />
+        <ClubEloExtremes title="Bottom 10 (★ = bottom 5)" clubs={bottom10} markFirst={5} />
       </div>
+      <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        Every club currently rated across all ten leagues, one shared Elo scale via the UEFA
+        glue — not per-league, the whole pool at once. A club&apos;s current-season table only;
+        a newly promoted or relegated side with few matches at its new level can still be noisy.
+      </p>
     </div>
   );
 }
