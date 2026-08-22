@@ -97,6 +97,16 @@ def main() -> None:
         {"league": "all", "model": "elo_only", "log_loss": elo_ll, "accuracy": np.nan},
         {"league": "all", "model": "frequency", "log_loss": base_ll, "accuracy": np.nan},
     ]
+    for tier in (1, 2):
+        keys = [k for k, lg in LEAGUES.items() if lg.tier == tier]
+        sub = test[test["league"].isin(keys)]
+        if sub.empty:
+            continue
+        t_ll = log_loss(sub["outcome"], model.predict_proba(sub[FEATURES]),
+                        labels=list(model.classes_))
+        rows.append({"league": f"tier{tier}", "model": "full",
+                     "log_loss": t_ll, "accuracy": np.nan})
+        print(f"Tier {tier} holdout:     log loss {t_ll:.4f}  ({len(sub)} matches)")
     print("\nPer league (holdout):")
     for league in LEAGUES:
         sub = test[test["league"] == league]

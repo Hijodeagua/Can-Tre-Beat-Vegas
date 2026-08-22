@@ -123,11 +123,21 @@ def fetch_season_txt(league_key: str, season: str, timeout: int = 30) -> list[di
 
 
 def fetch_season(league_key: str, season: str) -> tuple[list[dict] | None, str]:
-    rows = fetch_season_json(league_key, season)
-    if rows is not None:
-        return rows, "json"
-    rows = fetch_season_txt(league_key, season)
-    return rows, "txt"
+    """Fetch both layers and keep whichever has more played matches — the
+    json layer occasionally stalls mid-season (2. Bundesliga 2025-26) while
+    the country txt repo is complete, and vice versa for old seasons the
+    json layer never got (Championship 2016-18)."""
+    json_rows = fetch_season_json(league_key, season)
+    txt_rows = fetch_season_txt(league_key, season)
+
+    def played(rows):
+        return sum(1 for r in rows if r["home_score"] != "") if rows else -1
+
+    if json_rows is None and txt_rows is None:
+        return None, "none"
+    if played(txt_rows) > played(json_rows):
+        return txt_rows, "txt"
+    return json_rows, "json"
 
 
 def fetch(today: date | None = None) -> list[dict]:

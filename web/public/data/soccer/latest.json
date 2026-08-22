@@ -1,514 +1,1064 @@
 {
-  "generated_at": "2026-08-22T04:33:48+00:00",
+  "generated_at": "2026-08-22T18:22:45+00:00",
   "run_date": "2026-08-22",
   "ratings": {
     "epl": {
       "name": "Premier League",
+      "tier": 1,
       "asOfSeason": "2025-26",
       "clubs": [
         {
           "team": "Arsenal FC",
-          "elo": 1758.6,
+          "elo": 1751.6,
           "matches": 645
         },
         {
           "team": "Manchester City FC",
-          "elo": 1713.4,
+          "elo": 1706.5,
           "matches": 691
         },
         {
           "team": "Liverpool FC",
-          "elo": 1650.3,
+          "elo": 1642.8,
           "matches": 669
         },
         {
           "team": "Manchester United FC",
-          "elo": 1613.1,
+          "elo": 1602.6,
           "matches": 656
         },
         {
           "team": "Aston Villa FC",
-          "elo": 1594.4,
-          "matches": 502
+          "elo": 1583.4,
+          "matches": 640
         },
         {
           "team": "AFC Bournemouth",
-          "elo": 1571.8,
-          "matches": 342
+          "elo": 1559.6,
+          "matches": 526
         },
         {
           "team": "Chelsea FC",
-          "elo": 1552.9,
+          "elo": 1544.0,
           "matches": 655
         },
         {
           "team": "Brighton & Hove Albion FC",
-          "elo": 1552.6,
-          "matches": 346
+          "elo": 1541.1,
+          "matches": 622
         },
         {
           "team": "Newcastle United FC",
-          "elo": 1544.5,
-          "matches": 583
+          "elo": 1535.2,
+          "matches": 629
         },
         {
           "team": "Brentford FC",
-          "elo": 1540.2,
-          "matches": 190
+          "elo": 1527.8,
+          "matches": 512
         },
         {
           "team": "Nottingham Forest FC",
-          "elo": 1525.2,
-          "matches": 152
+          "elo": 1512.4,
+          "matches": 707
         },
         {
           "team": "Fulham FC",
-          "elo": 1517.9,
-          "matches": 380
+          "elo": 1506.1,
+          "matches": 656
         },
         {
           "team": "Crystal Palace FC",
-          "elo": 1508.4,
-          "matches": 494
+          "elo": 1496.8,
+          "matches": 632
         },
         {
           "team": "Everton FC",
-          "elo": 1506.6,
+          "elo": 1494.6,
           "matches": 608
         },
         {
           "team": "Tottenham Hotspur FC",
-          "elo": 1488.3,
+          "elo": 1478.7,
           "matches": 650
         },
         {
-          "team": "Sunderland AFC",
-          "elo": 1487.9,
-          "matches": 304
-        },
-        {
           "team": "Leeds United FC",
-          "elo": 1481.9,
-          "matches": 152
+          "elo": 1469.9,
+          "matches": 707
         },
         {
           "team": "West Ham United FC",
-          "elo": 1468.1,
-          "matches": 583
+          "elo": 1455.5,
+          "matches": 629
+        },
+        {
+          "team": "Sunderland AFC",
+          "elo": 1452.6,
+          "matches": 493
         },
         {
           "team": "Wolverhampton Wanderers FC",
-          "elo": 1381.7,
-          "matches": 380
+          "elo": 1369.1,
+          "matches": 610
         },
         {
           "team": "Burnley FC",
-          "elo": 1343.6,
-          "matches": 342
+          "elo": 1336.0,
+          "matches": 664
+        }
+      ]
+    },
+    "championship": {
+      "name": "Championship",
+      "tier": 2,
+      "asOfSeason": "2025-26",
+      "clubs": [
+        {
+          "team": "Coventry City FC",
+          "elo": 1437.9,
+          "matches": 373
+        },
+        {
+          "team": "Millwall FC",
+          "elo": 1358.3,
+          "matches": 646
+        },
+        {
+          "team": "Middlesbrough FC",
+          "elo": 1356.9,
+          "matches": 733
+        },
+        {
+          "team": "Ipswich Town FC",
+          "elo": 1356.8,
+          "matches": 544
+        },
+        {
+          "team": "Southampton FC",
+          "elo": 1348.2,
+          "matches": 599
+        },
+        {
+          "team": "Hull City AFC",
+          "elo": 1324.3,
+          "matches": 669
+        },
+        {
+          "team": "Norwich City FC",
+          "elo": 1322.3,
+          "matches": 690
+        },
+        {
+          "team": "Derby County FC",
+          "elo": 1310.5,
+          "matches": 644
+        },
+        {
+          "team": "Sheffield United FC",
+          "elo": 1308.5,
+          "matches": 441
+        },
+        {
+          "team": "Swansea City AFC",
+          "elo": 1299.7,
+          "matches": 680
+        },
+        {
+          "team": "Portsmouth FC",
+          "elo": 1285.1,
+          "matches": 184
+        },
+        {
+          "team": "Birmingham City FC",
+          "elo": 1283.9,
+          "matches": 682
+        },
+        {
+          "team": "Bristol City FC",
+          "elo": 1279.5,
+          "matches": 646
+        },
+        {
+          "team": "West Bromwich Albion FC",
+          "elo": 1278.3,
+          "matches": 666
+        },
+        {
+          "team": "Wrexham AFC",
+          "elo": 1264.9,
+          "matches": 46
+        },
+        {
+          "team": "Blackburn Rovers FC",
+          "elo": 1260.8,
+          "matches": 674
+        },
+        {
+          "team": "Charlton Athletic FC",
+          "elo": 1260.4,
+          "matches": 276
+        },
+        {
+          "team": "Preston North End FC",
+          "elo": 1250.4,
+          "matches": 552
+        },
+        {
+          "team": "Queens Park Rangers FC",
+          "elo": 1248.6,
+          "matches": 712
+        },
+        {
+          "team": "Watford FC",
+          "elo": 1232.7,
+          "matches": 688
+        },
+        {
+          "team": "Stoke City FC",
+          "elo": 1227.3,
+          "matches": 672
+        },
+        {
+          "team": "Oxford United FC",
+          "elo": 1217.9,
+          "matches": 92
+        },
+        {
+          "team": "Leicester City FC",
+          "elo": 1209.3,
+          "matches": 666
+        },
+        {
+          "team": "Sheffield Wednesday FC",
+          "elo": 1111.8,
+          "matches": 552
         }
       ]
     },
     "bundesliga": {
       "name": "Bundesliga",
+      "tier": 1,
       "asOfSeason": "2025-26",
       "clubs": [
         {
           "team": "FC Bayern München",
-          "elo": 1809.5,
+          "elo": 1794.6,
           "matches": 619
         },
         {
           "team": "Borussia Dortmund",
-          "elo": 1661.4,
+          "elo": 1652.9,
           "matches": 606
         },
         {
           "team": "Bayer 04 Leverkusen",
-          "elo": 1642.6,
+          "elo": 1629.4,
           "matches": 592
         },
         {
           "team": "VfB Stuttgart",
-          "elo": 1607.7,
-          "matches": 480
+          "elo": 1598.1,
+          "matches": 548
         },
         {
           "team": "RB Leipzig",
-          "elo": 1603.1,
-          "matches": 375
+          "elo": 1591.6,
+          "matches": 443
         },
         {
           "team": "TSG 1899 Hoffenheim",
-          "elo": 1538.0,
+          "elo": 1531.5,
           "matches": 550
         },
         {
           "team": "SC Freiburg",
-          "elo": 1518.3,
-          "matches": 520
+          "elo": 1509.9,
+          "matches": 554
         },
         {
           "team": "1. FSV Mainz 05",
-          "elo": 1517.5,
+          "elo": 1509.1,
           "matches": 544
         },
         {
           "team": "Eintracht Frankfurt",
-          "elo": 1510.5,
+          "elo": 1502.7,
           "matches": 532
         },
         {
           "team": "Borussia Mönchengladbach",
-          "elo": 1476.8,
+          "elo": 1469.8,
           "matches": 560
         },
         {
           "team": "FC Augsburg",
-          "elo": 1472.6,
+          "elo": 1467.3,
           "matches": 510
         },
         {
           "team": "Hamburger SV",
-          "elo": 1459.6,
-          "matches": 306
+          "elo": 1452.5,
+          "matches": 544
         },
         {
           "team": "1. FC Union Berlin",
-          "elo": 1456.9,
-          "matches": 242
+          "elo": 1450.4,
+          "matches": 480
         },
         {
           "team": "SV Werder Bremen",
-          "elo": 1450.4,
-          "matches": 510
+          "elo": 1443.2,
+          "matches": 544
         },
         {
           "team": "VfL Wolfsburg",
-          "elo": 1446.4,
+          "elo": 1439.2,
           "matches": 552
         },
         {
           "team": "1. FC Köln",
-          "elo": 1426.7,
-          "matches": 410
+          "elo": 1410.6,
+          "matches": 546
         },
         {
           "team": "1. FC Heidenheim 1846",
-          "elo": 1394.8,
-          "matches": 103
+          "elo": 1389.2,
+          "matches": 409
         },
         {
           "team": "FC St. Pauli 1910",
-          "elo": 1391.1,
-          "matches": 102
+          "elo": 1384.4,
+          "matches": 510
+        }
+      ]
+    },
+    "bundesliga_2": {
+      "name": "2. Bundesliga",
+      "tier": 2,
+      "asOfSeason": "2025-26",
+      "clubs": [
+        {
+          "team": "SC Paderborn 07",
+          "elo": 1512.6,
+          "matches": 385
+        },
+        {
+          "team": "SV 07 Elversberg",
+          "elo": 1495.9,
+          "matches": 79
+        },
+        {
+          "team": "Karlsruher SC",
+          "elo": 1482.8,
+          "matches": 351
+        },
+        {
+          "team": "Hannover 96",
+          "elo": 1478.4,
+          "matches": 521
+        },
+        {
+          "team": "1. FC Kaiserslautern",
+          "elo": 1466.0,
+          "matches": 385
+        },
+        {
+          "team": "Fortuna Düsseldorf",
+          "elo": 1451.2,
+          "matches": 453
+        },
+        {
+          "team": "Hertha BSC",
+          "elo": 1441.1,
+          "matches": 487
+        },
+        {
+          "team": "FC Schalke 04",
+          "elo": 1436.3,
+          "matches": 527
+        },
+        {
+          "team": "SV Darmstadt 98",
+          "elo": 1428.8,
+          "matches": 385
+        },
+        {
+          "team": "Arminia Bielefeld",
+          "elo": 1421.6,
+          "matches": 317
+        },
+        {
+          "team": "1. FC Nürnberg",
+          "elo": 1406.5,
+          "matches": 521
+        },
+        {
+          "team": "1. FC Magdeburg",
+          "elo": 1402.5,
+          "matches": 147
+        },
+        {
+          "team": "Dynamo Dresden",
+          "elo": 1392.4,
+          "matches": 249
+        },
+        {
+          "team": "Preußen Münster",
+          "elo": 1385.4,
+          "matches": 45
+        },
+        {
+          "team": "Holstein Kiel",
+          "elo": 1383.9,
+          "matches": 283
+        },
+        {
+          "team": "SpVgg Greuther Fürth 1903",
+          "elo": 1376.9,
+          "matches": 453
+        },
+        {
+          "team": "VfL Bochum 1848",
+          "elo": 1367.9,
+          "matches": 453
+        },
+        {
+          "team": "Eintracht Braunschweig",
+          "elo": 1358.8,
+          "matches": 351
         }
       ]
     },
     "la_liga": {
       "name": "La Liga",
+      "tier": 1,
       "asOfSeason": "2025-26",
       "clubs": [
         {
           "team": "FC Barcelona",
-          "elo": 1708.6,
-          "matches": 615
+          "elo": 1747.8,
+          "matches": 616
         },
         {
           "team": "Real Madrid CF",
-          "elo": 1699.0,
-          "matches": 633
+          "elo": 1735.4,
+          "matches": 634
         },
         {
           "team": "Club Atlético de Madrid",
-          "elo": 1601.3,
-          "matches": 603
+          "elo": 1636.8,
+          "matches": 604
         },
         {
           "team": "Villarreal CF",
-          "elo": 1561.4,
-          "matches": 515
+          "elo": 1592.5,
+          "matches": 558
         },
         {
           "team": "Real Betis Balompié",
-          "elo": 1533.5,
-          "matches": 504
+          "elo": 1561.5,
+          "matches": 547
         },
         {
           "team": "Athletic Club",
-          "elo": 1484.6,
-          "matches": 541
+          "elo": 1509.7,
+          "matches": 542
         },
         {
           "team": "RC Celta de Vigo",
-          "elo": 1478.4,
-          "matches": 531
+          "elo": 1506.7,
+          "matches": 532
         },
         {
           "team": "Valencia CF",
-          "elo": 1469.5,
-          "matches": 543
+          "elo": 1496.7,
+          "matches": 544
         },
         {
           "team": "Real Sociedad de Fútbol",
-          "elo": 1469.1,
-          "matches": 551
+          "elo": 1496.0,
+          "matches": 552
         },
         {
           "team": "Rayo Vallecano de Madrid",
-          "elo": 1465.5,
-          "matches": 379
-        },
-        {
-          "team": "Getafe CF",
-          "elo": 1447.5,
-          "matches": 493
+          "elo": 1489.4,
+          "matches": 548
         },
         {
           "team": "CA Osasuna",
-          "elo": 1445.2,
-          "matches": 379
+          "elo": 1471.5,
+          "matches": 548
+        },
+        {
+          "team": "Getafe CF",
+          "elo": 1469.2,
+          "matches": 536
         },
         {
           "team": "Girona FC",
-          "elo": 1443.2,
-          "matches": 231
+          "elo": 1465.6,
+          "matches": 568
         },
         {
           "team": "RCD Mallorca",
-          "elo": 1428.6,
-          "matches": 265
-        },
-        {
-          "team": "Levante UD",
-          "elo": 1426.9,
-          "matches": 380
+          "elo": 1453.7,
+          "matches": 518
         },
         {
           "team": "Sevilla FC",
-          "elo": 1425.4,
-          "matches": 574
+          "elo": 1450.3,
+          "matches": 575
+        },
+        {
+          "team": "Levante UD",
+          "elo": 1448.2,
+          "matches": 547
         },
         {
           "team": "Deportivo Alavés",
-          "elo": 1417.3,
-          "matches": 341
+          "elo": 1442.4,
+          "matches": 510
         },
         {
           "team": "RCD Espanyol de Barcelona",
-          "elo": 1416.7,
-          "matches": 455
+          "elo": 1441.9,
+          "matches": 540
         },
         {
           "team": "Elche CF",
-          "elo": 1405.7,
-          "matches": 228
+          "elo": 1435.7,
+          "matches": 521
         },
         {
           "team": "Real Oviedo",
-          "elo": 1327.0,
-          "matches": 38
+          "elo": 1390.5,
+          "matches": 457
+        }
+      ]
+    },
+    "la_liga_2": {
+      "name": "Segunda División",
+      "tier": 2,
+      "asOfSeason": "2025-26",
+      "clubs": [
+        {
+          "team": "Racing Santander",
+          "elo": 1384.3,
+          "matches": 263
+        },
+        {
+          "team": "UD Almería",
+          "elo": 1373.8,
+          "matches": 541
+        },
+        {
+          "team": "RC Deportivo La Coruña",
+          "elo": 1371.8,
+          "matches": 369
+        },
+        {
+          "team": "SD Eibar",
+          "elo": 1364.4,
+          "matches": 487
+        },
+        {
+          "team": "Cádiz CF",
+          "elo": 1347.9,
+          "matches": 373
+        },
+        {
+          "team": "UD Las Palmas",
+          "elo": 1345.1,
+          "matches": 538
+        },
+        {
+          "team": "CD Leganés",
+          "elo": 1341.6,
+          "matches": 454
+        },
+        {
+          "team": "Burgos CF",
+          "elo": 1337.2,
+          "matches": 179
+        },
+        {
+          "team": "Sporting Gijón",
+          "elo": 1335.8,
+          "matches": 550
+        },
+        {
+          "team": "SD Huesca",
+          "elo": 1334.1,
+          "matches": 464
+        },
+        {
+          "team": "Granada CF",
+          "elo": 1331.4,
+          "matches": 525
+        },
+        {
+          "team": "CD Mirandés",
+          "elo": 1330.2,
+          "matches": 473
+        },
+        {
+          "team": "Albacete",
+          "elo": 1329.6,
+          "matches": 389
+        },
+        {
+          "team": "Córdoba CF",
+          "elo": 1325.1,
+          "matches": 343
+        },
+        {
+          "team": "Cultural Leonesa",
+          "elo": 1323.7,
+          "matches": 54
+        },
+        {
+          "team": "CD Castellón",
+          "elo": 1307.3,
+          "matches": 96
+        },
+        {
+          "team": "Real Valladolid CF",
+          "elo": 1305.6,
+          "matches": 530
+        },
+        {
+          "team": "Málaga CF",
+          "elo": 1305.5,
+          "matches": 491
+        },
+        {
+          "team": "FC Andorra",
+          "elo": 1289.8,
+          "matches": 96
+        },
+        {
+          "team": "AD Ceuta FC",
+          "elo": 1267.5,
+          "matches": 12
+        },
+        {
+          "team": "Real Sociedad B",
+          "elo": 1266.0,
+          "matches": 53
+        },
+        {
+          "team": "Real Zaragoza",
+          "elo": 1262.1,
+          "matches": 554
         }
       ]
     },
     "serie_a": {
       "name": "Serie A",
+      "tier": 1,
       "asOfSeason": "2025-26",
       "clubs": [
         {
           "team": "FC Internazionale Milano",
-          "elo": 1715.0,
-          "matches": 533
-        },
-        {
-          "team": "AS Roma",
-          "elo": 1620.0,
-          "matches": 535
+          "elo": 1733.0,
+          "matches": 534
         },
         {
           "team": "SSC Napoli",
-          "elo": 1615.8,
-          "matches": 528
+          "elo": 1630.9,
+          "matches": 529
+        },
+        {
+          "team": "AS Roma",
+          "elo": 1628.4,
+          "matches": 536
         },
         {
           "team": "Juventus FC",
-          "elo": 1608.0,
-          "matches": 559
+          "elo": 1624.0,
+          "matches": 560
         },
         {
           "team": "Atalanta BC",
-          "elo": 1592.8,
-          "matches": 528
+          "elo": 1603.6,
+          "matches": 529
         },
         {
           "team": "AC Milan",
-          "elo": 1579.9,
-          "matches": 523
+          "elo": 1595.9,
+          "matches": 524
         },
         {
           "team": "Como 1907",
-          "elo": 1573.8,
-          "matches": 75
+          "elo": 1561.7,
+          "matches": 232
         },
         {
           "team": "SS Lazio",
-          "elo": 1534.2,
-          "matches": 505
+          "elo": 1544.3,
+          "matches": 506
         },
         {
           "team": "Bologna FC 1909",
-          "elo": 1522.5,
-          "matches": 459
+          "elo": 1526.4,
+          "matches": 506
         },
         {
           "team": "ACF Fiorentina",
-          "elo": 1499.5,
-          "matches": 496
+          "elo": 1510.8,
+          "matches": 497
         },
         {
           "team": "Udinese Calcio",
-          "elo": 1469.2,
-          "matches": 493
+          "elo": 1463.2,
+          "matches": 494
         },
         {
           "team": "Torino FC",
-          "elo": 1450.9,
-          "matches": 493
+          "elo": 1453.8,
+          "matches": 494
         },
         {
           "team": "US Sassuolo Calcio",
-          "elo": 1444.0,
-          "matches": 456
+          "elo": 1446.6,
+          "matches": 494
         },
         {
           "team": "Genoa CFC",
-          "elo": 1433.1,
-          "matches": 455
+          "elo": 1439.7,
+          "matches": 494
         },
         {
           "team": "Parma Calcio 1913",
-          "elo": 1417.8,
-          "matches": 265
+          "elo": 1418.6,
+          "matches": 424
         },
         {
           "team": "Cagliari Calcio",
-          "elo": 1413.0,
-          "matches": 417
+          "elo": 1406.3,
+          "matches": 503
         },
         {
           "team": "US Lecce",
-          "elo": 1384.2,
-          "matches": 189
+          "elo": 1383.3,
+          "matches": 304
         },
         {
           "team": "US Cremonese",
-          "elo": 1371.4,
-          "matches": 76
+          "elo": 1371.5,
+          "matches": 351
         },
         {
           "team": "Hellas Verona FC",
-          "elo": 1324.9,
-          "matches": 417
+          "elo": 1331.8,
+          "matches": 501
         },
         {
           "team": "AC Pisa 1909",
-          "elo": 1280.8,
-          "matches": 38
+          "elo": 1312.7,
+          "matches": 311
+        }
+      ]
+    },
+    "serie_b": {
+      "name": "Serie B",
+      "tier": 2,
+      "asOfSeason": "2025-26",
+      "clubs": [
+        {
+          "team": "Venezia FC",
+          "elo": 1396.9,
+          "matches": 352
+        },
+        {
+          "team": "AC Monza",
+          "elo": 1362.6,
+          "matches": 226
+        },
+        {
+          "team": "Frosinone Calcio",
+          "elo": 1361.0,
+          "matches": 472
+        },
+        {
+          "team": "Palermo FC",
+          "elo": 1350.1,
+          "matches": 387
+        },
+        {
+          "team": "US Catanzaro",
+          "elo": 1323.0,
+          "matches": 111
+        },
+        {
+          "team": "Modena FC",
+          "elo": 1297.2,
+          "matches": 275
+        },
+        {
+          "team": "Juve Stabia",
+          "elo": 1269.4,
+          "matches": 152
+        },
+        {
+          "team": "Empoli FC",
+          "elo": 1266.4,
+          "matches": 496
+        },
+        {
+          "team": "FC Südtirol",
+          "elo": 1265.4,
+          "matches": 148
+        },
+        {
+          "team": "Spezia Calcio",
+          "elo": 1264.8,
+          "matches": 519
+        },
+        {
+          "team": "US Avellino",
+          "elo": 1251.6,
+          "matches": 244
+        },
+        {
+          "team": "Cesena FC",
+          "elo": 1250.0,
+          "matches": 281
+        },
+        {
+          "team": "Calcio Padova",
+          "elo": 1233.4,
+          "matches": 109
+        },
+        {
+          "team": "SSC Bari",
+          "elo": 1230.4,
+          "matches": 366
+        },
+        {
+          "team": "UC Sampdoria",
+          "elo": 1222.6,
+          "matches": 488
+        },
+        {
+          "team": "Carrarese Calcio",
+          "elo": 1220.9,
+          "matches": 69
+        },
+        {
+          "team": "Delfino Pescara",
+          "elo": 1208.4,
+          "matches": 362
+        },
+        {
+          "team": "Mantova 1911 SSD",
+          "elo": 1204.6,
+          "matches": 69
+        },
+        {
+          "team": "AC Reggiana 1919",
+          "elo": 1194.6,
+          "matches": 145
+        },
+        {
+          "team": "Virtus Entella",
+          "elo": 1189.0,
+          "matches": 279
         }
       ]
     },
     "ligue_1": {
       "name": "Ligue 1",
+      "tier": 1,
       "asOfSeason": "2025-26",
       "clubs": [
         {
           "team": "Paris Saint-Germain FC",
-          "elo": 1754.8,
+          "elo": 1774.1,
           "matches": 527
         },
         {
           "team": "Racing Club de Lens",
-          "elo": 1592.9,
-          "matches": 260
+          "elo": 1611.9,
+          "matches": 440
         },
         {
           "team": "Lille OSC",
-          "elo": 1579.5,
+          "elo": 1599.8,
           "matches": 455
         },
         {
           "team": "Olympique Lyonnais",
-          "elo": 1563.3,
+          "elo": 1581.7,
           "matches": 458
         },
         {
           "team": "AS Monaco FC",
-          "elo": 1558.1,
+          "elo": 1578.9,
           "matches": 460
         },
         {
           "team": "Olympique de Marseille",
-          "elo": 1556.5,
+          "elo": 1575.8,
           "matches": 452
         },
         {
           "team": "Stade Rennais FC 1901",
-          "elo": 1544.6,
+          "elo": 1561.8,
           "matches": 446
         },
         {
           "team": "RC Strasbourg Alsace",
-          "elo": 1536.0,
-          "matches": 319
-        },
-        {
-          "team": "Toulouse FC",
-          "elo": 1486.0,
-          "matches": 359
-        },
-        {
-          "team": "OGC Nice",
-          "elo": 1470.3,
-          "matches": 440
+          "elo": 1551.5,
+          "matches": 357
         },
         {
           "team": "FC Lorient",
-          "elo": 1465.9,
-          "matches": 296
-        },
-        {
-          "team": "Stade Brestois 29",
-          "elo": 1462.4,
-          "matches": 249
-        },
-        {
-          "team": "AJ Auxerre",
-          "elo": 1446.8,
-          "matches": 106
+          "elo": 1507.9,
+          "matches": 434
         },
         {
           "team": "Paris FC",
-          "elo": 1441.5,
-          "matches": 34
+          "elo": 1504.5,
+          "matches": 248
+        },
+        {
+          "team": "Toulouse FC",
+          "elo": 1502.6,
+          "matches": 397
+        },
+        {
+          "team": "OGC Nice",
+          "elo": 1488.6,
+          "matches": 440
+        },
+        {
+          "team": "Stade Brestois 29",
+          "elo": 1479.2,
+          "matches": 439
+        },
+        {
+          "team": "AJ Auxerre",
+          "elo": 1459.4,
+          "matches": 362
         },
         {
           "team": "Le Havre AC",
-          "elo": 1414.5,
+          "elo": 1429.0,
           "matches": 102
         },
         {
           "team": "Angers SCO",
-          "elo": 1392.0,
-          "matches": 362
+          "elo": 1400.1,
+          "matches": 400
         },
         {
           "team": "FC Nantes",
-          "elo": 1385.1,
+          "elo": 1396.6,
           "matches": 437
         },
         {
           "team": "FC Metz",
-          "elo": 1335.4,
-          "matches": 286
+          "elo": 1375.5,
+          "matches": 396
+        }
+      ]
+    },
+    "ligue_2": {
+      "name": "Ligue 2",
+      "tier": 2,
+      "asOfSeason": "2025-26",
+      "clubs": [
+        {
+          "team": "ESTAC Troyes",
+          "elo": 1442.8,
+          "matches": 379
+        },
+        {
+          "team": "Stade de Reims",
+          "elo": 1437.8,
+          "matches": 413
+        },
+        {
+          "team": "EA Guingamp",
+          "elo": 1419.6,
+          "matches": 303
+        },
+        {
+          "team": "AS Saint-Étienne",
+          "elo": 1418.4,
+          "matches": 341
+        },
+        {
+          "team": "USL Dunkerque",
+          "elo": 1412.4,
+          "matches": 85
+        },
+        {
+          "team": "Grenoble Foot 38",
+          "elo": 1389.1,
+          "matches": 151
+        },
+        {
+          "team": "Red Star FC",
+          "elo": 1384.1,
+          "matches": 161
+        },
+        {
+          "team": "AS Nancy Lorraine",
+          "elo": 1384.0,
+          "matches": 269
+        },
+        {
+          "team": "SC Bastia",
+          "elo": 1383.2,
+          "matches": 160
+        },
+        {
+          "team": "Montpellier HSC",
+          "elo": 1380.2,
+          "matches": 413
+        },
+        {
+          "team": "Le Mans FC",
+          "elo": 1376.9,
+          "matches": 41
+        },
+        {
+          "team": "Pau FC",
+          "elo": 1367.9,
+          "matches": 85
+        },
+        {
+          "team": "Stade Lavallois",
+          "elo": 1366.5,
+          "matches": 160
+        },
+        {
+          "team": "Rodez AF",
+          "elo": 1362.1,
+          "matches": 113
+        },
+        {
+          "team": "Amiens SC",
+          "elo": 1356.8,
+          "matches": 227
+        },
+        {
+          "team": "Clermont Foot 63",
+          "elo": 1348.2,
+          "matches": 413
+        },
+        {
+          "team": "FC Annecy",
+          "elo": 1346.7,
+          "matches": 47
+        },
+        {
+          "team": "US Boulogne",
+          "elo": 1247.0,
+          "matches": 13
         }
       ]
     }
@@ -516,18 +1066,222 @@
   "slate": [
     {
       "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Birmingham City FC",
+      "away_team": "Bristol City FC",
+      "elo_home_pre": 1283.9,
+      "elo_away_pre": 1279.5,
+      "p_H": 0.4455,
+      "p_D": 0.2838,
+      "p_A": 0.2708,
+      "pick": "H",
+      "lambda_home": 1.45,
+      "lambda_away": 1.07,
+      "score_home": 1,
+      "score_away": 1
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Blackburn Rovers FC",
+      "away_team": "Middlesbrough FC",
+      "elo_home_pre": 1260.8,
+      "elo_away_pre": 1356.9,
+      "p_H": 0.3152,
+      "p_D": 0.2903,
+      "p_A": 0.3945,
+      "pick": "A",
+      "lambda_home": 1.13,
+      "lambda_away": 1.39,
+      "score_home": 1,
+      "score_away": 1
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Derby County FC",
+      "away_team": "Cardiff City FC",
+      "elo_home_pre": 1310.5,
+      "elo_away_pre": 1233.2,
+      "p_H": 0.5412,
+      "p_D": 0.2639,
+      "p_A": 0.1949,
+      "pick": "H",
+      "lambda_home": 1.66,
+      "lambda_away": 0.86,
+      "score_home": 1,
+      "score_away": 0
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Lincoln City FC",
+      "away_team": "Portsmouth FC",
+      "elo_home_pre": 1150.0,
+      "elo_away_pre": 1285.1,
+      "p_H": 0.2689,
+      "p_D": 0.2857,
+      "p_A": 0.4454,
+      "pick": "A",
+      "lambda_home": 1.01,
+      "lambda_away": 1.51,
+      "score_home": 1,
+      "score_away": 1
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Millwall FC",
+      "away_team": "Norwich City FC",
+      "elo_home_pre": 1358.3,
+      "elo_away_pre": 1322.3,
+      "p_H": 0.4873,
+      "p_D": 0.2765,
+      "p_A": 0.2362,
+      "pick": "H",
+      "lambda_home": 1.54,
+      "lambda_away": 0.98,
+      "score_home": 1,
+      "score_away": 0
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Preston North End FC",
+      "away_team": "Wolverhampton Wanderers FC",
+      "elo_home_pre": 1250.4,
+      "elo_away_pre": 1204.8,
+      "p_H": 0.5,
+      "p_D": 0.2739,
+      "p_A": 0.2261,
+      "pick": "H",
+      "lambda_home": 1.57,
+      "lambda_away": 0.95,
+      "score_home": 1,
+      "score_away": 0
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Queens Park Rangers FC",
+      "away_team": "Bolton Wanderers FC",
+      "elo_home_pre": 1248.6,
+      "elo_away_pre": 1301.5,
+      "p_H": 0.3698,
+      "p_D": 0.2907,
+      "p_A": 0.3395,
+      "pick": "H",
+      "lambda_home": 1.27,
+      "lambda_away": 1.25,
+      "score_home": 1,
+      "score_away": 1
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Southampton FC",
+      "away_team": "Stoke City FC",
+      "elo_home_pre": 1348.2,
+      "elo_away_pre": 1227.3,
+      "p_H": 0.5956,
+      "p_D": 0.2476,
+      "p_A": 0.1568,
+      "pick": "H",
+      "lambda_home": 1.77,
+      "lambda_away": 0.75,
+      "score_home": 1,
+      "score_away": 0
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Swansea City AFC",
+      "away_team": "Sheffield United FC",
+      "elo_home_pre": 1299.7,
+      "elo_away_pre": 1308.5,
+      "p_H": 0.4278,
+      "p_D": 0.2861,
+      "p_A": 0.2861,
+      "pick": "H",
+      "lambda_home": 1.41,
+      "lambda_away": 1.11,
+      "score_home": 1,
+      "score_away": 1
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "West Bromwich Albion FC",
+      "away_team": "Burnley FC",
+      "elo_home_pre": 1278.3,
+      "elo_away_pre": 1196.5,
+      "p_H": 0.5469,
+      "p_D": 0.2624,
+      "p_A": 0.1908,
+      "pick": "H",
+      "lambda_home": 1.67,
+      "lambda_away": 0.85,
+      "score_home": 1,
+      "score_away": 0
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "West Ham United FC",
+      "away_team": "Charlton Athletic FC",
+      "elo_home_pre": 1226.4,
+      "elo_away_pre": 1260.4,
+      "p_H": 0.3946,
+      "p_D": 0.2893,
+      "p_A": 0.3161,
+      "pick": "H",
+      "lambda_home": 1.33,
+      "lambda_away": 1.19,
+      "score_home": 1,
+      "score_away": 1
+    },
+    {
+      "date": "2026-08-22",
+      "league": "championship",
+      "season": "2026-27",
+      "home_team": "Wrexham AFC",
+      "away_team": "Watford FC",
+      "elo_home_pre": 1264.9,
+      "elo_away_pre": 1232.7,
+      "p_H": 0.4823,
+      "p_D": 0.2775,
+      "p_A": 0.2402,
+      "pick": "H",
+      "lambda_home": 1.53,
+      "lambda_away": 0.99,
+      "score_home": 1,
+      "score_away": 0
+    },
+    {
+      "date": "2026-08-22",
       "league": "epl",
       "season": "2026-27",
       "home_team": "Brentford FC",
       "away_team": "Tottenham Hotspur FC",
-      "elo_home_pre": 1540.2,
-      "elo_away_pre": 1488.3,
-      "p_H": 0.5258,
-      "p_D": 0.2575,
-      "p_A": 0.2167,
+      "elo_home_pre": 1527.8,
+      "elo_away_pre": 1478.7,
+      "p_H": 0.5046,
+      "p_D": 0.2729,
+      "p_A": 0.2225,
       "pick": "H",
-      "lambda_home": 1.79,
-      "lambda_away": 1.05,
+      "lambda_home": 1.74,
+      "lambda_away": 1.1,
       "score_home": 1,
       "score_away": 1
     },
@@ -537,14 +1291,14 @@
       "season": "2026-27",
       "home_team": "Everton FC",
       "away_team": "Crystal Palace FC",
-      "elo_home_pre": 1506.6,
-      "elo_away_pre": 1508.4,
-      "p_H": 0.4489,
-      "p_D": 0.272,
-      "p_A": 0.2792,
+      "elo_home_pre": 1494.6,
+      "elo_away_pre": 1496.8,
+      "p_H": 0.4367,
+      "p_D": 0.285,
+      "p_A": 0.2784,
       "pick": "H",
-      "lambda_home": 1.62,
-      "lambda_away": 1.23,
+      "lambda_home": 1.59,
+      "lambda_away": 1.25,
       "score_home": 1,
       "score_away": 1
     },
@@ -554,14 +1308,14 @@
       "season": "2026-27",
       "home_team": "Hull City AFC",
       "away_team": "Manchester United FC",
-      "elo_home_pre": 1420.0,
-      "elo_away_pre": 1613.1,
-      "p_H": 0.2009,
-      "p_D": 0.2595,
-      "p_A": 0.5396,
+      "elo_home_pre": 1366.1,
+      "elo_away_pre": 1602.6,
+      "p_H": 0.1675,
+      "p_D": 0.258,
+      "p_A": 0.5745,
       "pick": "A",
-      "lambda_home": 0.97,
-      "lambda_away": 1.87,
+      "lambda_home": 0.89,
+      "lambda_away": 1.95,
       "score_home": 0,
       "score_away": 1
     },
@@ -571,14 +1325,14 @@
       "season": "2026-27",
       "home_team": "Ipswich Town FC",
       "away_team": "Sunderland AFC",
-      "elo_home_pre": 1358.8,
-      "elo_away_pre": 1487.9,
-      "p_H": 0.2741,
-      "p_D": 0.2748,
-      "p_A": 0.4511,
+      "elo_home_pre": 1374.2,
+      "elo_away_pre": 1452.6,
+      "p_H": 0.3373,
+      "p_D": 0.291,
+      "p_A": 0.3716,
       "pick": "A",
-      "lambda_home": 1.17,
-      "lambda_away": 1.67,
+      "lambda_home": 1.35,
+      "lambda_away": 1.49,
       "score_home": 1,
       "score_away": 1
     },
@@ -588,14 +1342,14 @@
       "season": "2026-27",
       "home_team": "Nottingham Forest FC",
       "away_team": "Leeds United FC",
-      "elo_home_pre": 1525.2,
-      "elo_away_pre": 1481.9,
-      "p_H": 0.5136,
-      "p_D": 0.2602,
-      "p_A": 0.2261,
+      "elo_home_pre": 1512.4,
+      "elo_away_pre": 1469.9,
+      "p_H": 0.496,
+      "p_D": 0.2747,
+      "p_A": 0.2293,
       "pick": "H",
-      "lambda_home": 1.77,
-      "lambda_away": 1.08,
+      "lambda_home": 1.72,
+      "lambda_away": 1.12,
       "score_home": 1,
       "score_away": 1
     },
@@ -605,14 +1359,14 @@
       "season": "2026-27",
       "home_team": "Brighton & Hove Albion FC",
       "away_team": "Aston Villa FC",
-      "elo_home_pre": 1552.6,
-      "elo_away_pre": 1594.4,
-      "p_H": 0.3914,
-      "p_D": 0.2779,
-      "p_A": 0.3307,
+      "elo_home_pre": 1541.1,
+      "elo_away_pre": 1583.4,
+      "p_H": 0.3836,
+      "p_D": 0.2901,
+      "p_A": 0.3263,
       "pick": "H",
-      "lambda_home": 1.48,
-      "lambda_away": 1.37,
+      "lambda_home": 1.47,
+      "lambda_away": 1.38,
       "score_home": 1,
       "score_away": 1
     },
@@ -622,15 +1376,15 @@
       "season": "2026-27",
       "home_team": "Manchester City FC",
       "away_team": "AFC Bournemouth",
-      "elo_home_pre": 1713.4,
-      "elo_away_pre": 1571.8,
-      "p_H": 0.6448,
-      "p_D": 0.2214,
-      "p_A": 0.1338,
+      "elo_home_pre": 1706.5,
+      "elo_away_pre": 1559.6,
+      "p_H": 0.6265,
+      "p_D": 0.2367,
+      "p_A": 0.1368,
       "pick": "H",
-      "lambda_home": 2.05,
-      "lambda_away": 0.79,
-      "score_home": 2,
+      "lambda_home": 2.0,
+      "lambda_away": 0.85,
+      "score_home": 1,
       "score_away": 0
     },
     {
@@ -639,14 +1393,14 @@
       "season": "2026-27",
       "home_team": "Newcastle United FC",
       "away_team": "Liverpool FC",
-      "elo_home_pre": 1544.5,
-      "elo_away_pre": 1650.3,
-      "p_H": 0.3038,
-      "p_D": 0.2778,
-      "p_A": 0.4185,
+      "elo_home_pre": 1535.2,
+      "elo_away_pre": 1642.8,
+      "p_H": 0.3013,
+      "p_D": 0.2893,
+      "p_A": 0.4094,
       "pick": "A",
-      "lambda_home": 1.25,
-      "lambda_away": 1.59,
+      "lambda_home": 1.26,
+      "lambda_away": 1.58,
       "score_home": 1,
       "score_away": 1
     },
@@ -656,11 +1410,11 @@
       "season": "2026-27",
       "home_team": "Athletic Club",
       "away_team": "Sevilla FC",
-      "elo_home_pre": 1484.6,
-      "elo_away_pre": 1425.4,
-      "p_H": 0.5359,
-      "p_D": 0.2551,
-      "p_A": 0.2091,
+      "elo_home_pre": 1509.7,
+      "elo_away_pre": 1450.3,
+      "p_H": 0.5374,
+      "p_D": 0.2649,
+      "p_A": 0.1977,
       "pick": "H",
       "lambda_home": 1.72,
       "lambda_away": 0.93,
@@ -673,14 +1427,14 @@
       "season": "2026-27",
       "home_team": "CA Osasuna",
       "away_team": "Levante UD",
-      "elo_home_pre": 1445.2,
-      "elo_away_pre": 1426.9,
-      "p_H": 0.4779,
-      "p_D": 0.2673,
-      "p_A": 0.2548,
+      "elo_home_pre": 1471.5,
+      "elo_away_pre": 1448.2,
+      "p_H": 0.4904,
+      "p_D": 0.2759,
+      "p_A": 0.2337,
       "pick": "H",
-      "lambda_home": 1.59,
-      "lambda_away": 1.07,
+      "lambda_home": 1.62,
+      "lambda_away": 1.04,
       "score_home": 1,
       "score_away": 1
     },
@@ -690,14 +1444,14 @@
       "season": "2026-27",
       "home_team": "Club Atlético de Madrid",
       "away_team": "Villarreal CF",
-      "elo_home_pre": 1601.3,
-      "elo_away_pre": 1561.4,
-      "p_H": 0.5088,
-      "p_D": 0.2613,
-      "p_A": 0.2299,
+      "elo_home_pre": 1636.8,
+      "elo_away_pre": 1592.5,
+      "p_H": 0.5179,
+      "p_D": 0.2698,
+      "p_A": 0.2123,
       "pick": "H",
-      "lambda_home": 1.66,
-      "lambda_away": 0.99,
+      "lambda_home": 1.68,
+      "lambda_away": 0.98,
       "score_home": 1,
       "score_away": 0
     },
@@ -707,16 +1461,16 @@
       "season": "2026-27",
       "home_team": "Elche CF",
       "away_team": "FC Barcelona",
-      "elo_home_pre": 1405.7,
-      "elo_away_pre": 1708.6,
-      "p_H": 0.1085,
-      "p_D": 0.2165,
-      "p_A": 0.6749,
+      "elo_home_pre": 1435.7,
+      "elo_away_pre": 1747.8,
+      "p_H": 0.1216,
+      "p_D": 0.2338,
+      "p_A": 0.6446,
       "pick": "A",
-      "lambda_home": 0.58,
-      "lambda_away": 2.07,
+      "lambda_home": 0.66,
+      "lambda_away": 1.99,
       "score_home": 0,
-      "score_away": 2
+      "score_away": 1
     },
     {
       "date": "2026-08-23",
@@ -724,16 +1478,16 @@
       "season": "2026-27",
       "home_team": "Getafe CF",
       "away_team": "Real Racing Club de Santander",
-      "elo_home_pre": 1447.5,
-      "elo_away_pre": 1340.0,
-      "p_H": 0.6015,
-      "p_D": 0.2364,
-      "p_A": 0.1621,
+      "elo_home_pre": 1469.2,
+      "elo_away_pre": 1460.0,
+      "p_H": 0.4717,
+      "p_D": 0.2795,
+      "p_A": 0.2488,
       "pick": "H",
-      "lambda_home": 1.87,
-      "lambda_away": 0.79,
+      "lambda_home": 1.58,
+      "lambda_away": 1.08,
       "score_home": 1,
-      "score_away": 0
+      "score_away": 1
     },
     {
       "date": "2026-08-23",
@@ -741,14 +1495,14 @@
       "season": "2026-27",
       "home_team": "Málaga CF",
       "away_team": "RC Deportivo La Coruña",
-      "elo_home_pre": 1416.2,
-      "elo_away_pre": 1417.1,
-      "p_H": 0.4503,
-      "p_D": 0.2718,
-      "p_A": 0.2779,
+      "elo_home_pre": 1382.7,
+      "elo_away_pre": 1415.9,
+      "p_H": 0.4155,
+      "p_D": 0.2875,
+      "p_A": 0.297,
       "pick": "H",
-      "lambda_home": 1.53,
-      "lambda_away": 1.13,
+      "lambda_home": 1.45,
+      "lambda_away": 1.21,
       "score_home": 1,
       "score_away": 1
     },
@@ -758,16 +1512,16 @@
       "season": "2026-27",
       "home_team": "RCD Espanyol de Barcelona",
       "away_team": "Real Madrid CF",
-      "elo_home_pre": 1416.7,
-      "elo_away_pre": 1699.0,
-      "p_H": 0.1226,
-      "p_D": 0.2256,
-      "p_A": 0.6518,
+      "elo_home_pre": 1441.9,
+      "elo_away_pre": 1735.4,
+      "p_H": 0.1345,
+      "p_D": 0.2417,
+      "p_A": 0.6238,
       "pick": "A",
-      "lambda_home": 0.63,
-      "lambda_away": 2.02,
+      "lambda_home": 0.7,
+      "lambda_away": 1.95,
       "score_home": 0,
-      "score_away": 2
+      "score_away": 1
     },
     {
       "date": "2026-08-23",
@@ -775,11 +1529,11 @@
       "season": "2026-27",
       "home_team": "Rayo Vallecano de Madrid",
       "away_team": "Deportivo Alavés",
-      "elo_home_pre": 1465.5,
-      "elo_away_pre": 1417.3,
-      "p_H": 0.5205,
-      "p_D": 0.2587,
-      "p_A": 0.2208,
+      "elo_home_pre": 1489.4,
+      "elo_away_pre": 1442.4,
+      "p_H": 0.5214,
+      "p_D": 0.269,
+      "p_A": 0.2097,
       "pick": "H",
       "lambda_home": 1.69,
       "lambda_away": 0.97,
@@ -792,11 +1546,11 @@
       "season": "2026-27",
       "home_team": "Real Betis Balompié",
       "away_team": "Real Sociedad de Fútbol",
-      "elo_home_pre": 1533.5,
-      "elo_away_pre": 1469.1,
-      "p_H": 0.5433,
-      "p_D": 0.2532,
-      "p_A": 0.2035,
+      "elo_home_pre": 1561.5,
+      "elo_away_pre": 1496.0,
+      "p_H": 0.5452,
+      "p_D": 0.2628,
+      "p_A": 0.192,
       "pick": "H",
       "lambda_home": 1.74,
       "lambda_away": 0.92,
@@ -809,14 +1563,14 @@
       "season": "2026-27",
       "home_team": "Valencia CF",
       "away_team": "RC Celta de Vigo",
-      "elo_home_pre": 1469.5,
-      "elo_away_pre": 1478.4,
-      "p_H": 0.4387,
-      "p_D": 0.2733,
-      "p_A": 0.288,
+      "elo_home_pre": 1496.7,
+      "elo_away_pre": 1506.7,
+      "p_H": 0.4463,
+      "p_D": 0.2836,
+      "p_A": 0.27,
       "pick": "H",
-      "lambda_home": 1.5,
-      "lambda_away": 1.16,
+      "lambda_home": 1.52,
+      "lambda_away": 1.14,
       "score_home": 1,
       "score_away": 1
     },
@@ -826,14 +1580,14 @@
       "season": "2026-27",
       "home_team": "AS Roma",
       "away_team": "ACF Fiorentina",
-      "elo_home_pre": 1620.0,
-      "elo_away_pre": 1499.5,
-      "p_H": 0.5988,
-      "p_D": 0.2373,
-      "p_A": 0.1639,
+      "elo_home_pre": 1628.4,
+      "elo_away_pre": 1510.8,
+      "p_H": 0.5731,
+      "p_D": 0.2548,
+      "p_A": 0.1721,
       "pick": "H",
-      "lambda_home": 1.78,
-      "lambda_away": 0.71,
+      "lambda_home": 1.72,
+      "lambda_away": 0.78,
       "score_home": 1,
       "score_away": 0
     },
@@ -843,14 +1597,14 @@
       "season": "2026-27",
       "home_team": "Atalanta BC",
       "away_team": "US Sassuolo Calcio",
-      "elo_home_pre": 1592.8,
-      "elo_away_pre": 1444.0,
-      "p_H": 0.6351,
-      "p_D": 0.2249,
-      "p_A": 0.14,
+      "elo_home_pre": 1603.6,
+      "elo_away_pre": 1446.6,
+      "p_H": 0.6208,
+      "p_D": 0.2388,
+      "p_A": 0.1404,
       "pick": "H",
-      "lambda_home": 1.85,
-      "lambda_away": 0.63,
+      "lambda_home": 1.81,
+      "lambda_away": 0.68,
       "score_home": 1,
       "score_away": 0
     },
@@ -860,14 +1614,14 @@
       "season": "2026-27",
       "home_team": "Bologna FC 1909",
       "away_team": "SS Lazio",
-      "elo_home_pre": 1522.5,
-      "elo_away_pre": 1534.2,
-      "p_H": 0.4131,
-      "p_D": 0.2762,
-      "p_A": 0.3107,
+      "elo_home_pre": 1526.4,
+      "elo_away_pre": 1544.3,
+      "p_H": 0.396,
+      "p_D": 0.2892,
+      "p_A": 0.3148,
       "pick": "H",
-      "lambda_home": 1.35,
-      "lambda_away": 1.13,
+      "lambda_home": 1.32,
+      "lambda_away": 1.17,
       "score_home": 1,
       "score_away": 1
     },
@@ -877,14 +1631,14 @@
       "season": "2026-27",
       "home_team": "FC Internazionale Milano",
       "away_team": "AC Monza",
-      "elo_home_pre": 1715.0,
-      "elo_away_pre": 1349.8,
-      "p_H": 0.8386,
-      "p_D": 0.1261,
-      "p_A": 0.0353,
+      "elo_home_pre": 1733.0,
+      "elo_away_pre": 1386.9,
+      "p_H": 0.7996,
+      "p_D": 0.1539,
+      "p_A": 0.0466,
       "pick": "H",
-      "lambda_home": 2.24,
-      "lambda_away": 0.24,
+      "lambda_home": 2.13,
+      "lambda_away": 0.37,
       "score_home": 2,
       "score_away": 0
     },
@@ -894,14 +1648,14 @@
       "season": "2026-27",
       "home_team": "Frosinone Calcio",
       "away_team": "Juventus FC",
-      "elo_home_pre": 1417.4,
-      "elo_away_pre": 1608.0,
-      "p_H": 0.1882,
-      "p_D": 0.2555,
-      "p_A": 0.5563,
+      "elo_home_pre": 1385.7,
+      "elo_away_pre": 1624.0,
+      "p_H": 0.1537,
+      "p_D": 0.2517,
+      "p_A": 0.5946,
       "pick": "A",
-      "lambda_home": 0.75,
-      "lambda_away": 1.73,
+      "lambda_home": 0.68,
+      "lambda_away": 1.81,
       "score_home": 0,
       "score_away": 1
     },
@@ -911,14 +1665,14 @@
       "season": "2026-27",
       "home_team": "Genoa CFC",
       "away_team": "SSC Napoli",
-      "elo_home_pre": 1433.1,
-      "elo_away_pre": 1615.8,
-      "p_H": 0.1962,
-      "p_D": 0.2581,
-      "p_A": 0.5457,
+      "elo_home_pre": 1439.7,
+      "elo_away_pre": 1630.9,
+      "p_H": 0.1946,
+      "p_D": 0.2683,
+      "p_A": 0.5371,
       "pick": "A",
-      "lambda_home": 0.78,
-      "lambda_away": 1.71,
+      "lambda_home": 0.8,
+      "lambda_away": 1.7,
       "score_home": 0,
       "score_away": 1
     },
@@ -928,11 +1682,11 @@
       "season": "2026-27",
       "home_team": "Parma Calcio 1913",
       "away_team": "Cagliari Calcio",
-      "elo_home_pre": 1417.8,
-      "elo_away_pre": 1413.0,
-      "p_H": 0.4369,
-      "p_D": 0.2736,
-      "p_A": 0.2896,
+      "elo_home_pre": 1418.6,
+      "elo_away_pre": 1406.3,
+      "p_H": 0.4359,
+      "p_D": 0.2851,
+      "p_A": 0.279,
       "pick": "H",
       "lambda_home": 1.41,
       "lambda_away": 1.08,
@@ -945,14 +1699,14 @@
       "season": "2026-27",
       "home_team": "Torino FC",
       "away_team": "AC Milan",
-      "elo_home_pre": 1450.9,
-      "elo_away_pre": 1579.9,
-      "p_H": 0.2559,
-      "p_D": 0.2721,
-      "p_A": 0.472,
+      "elo_home_pre": 1453.8,
+      "elo_away_pre": 1595.9,
+      "p_H": 0.2445,
+      "p_D": 0.2815,
+      "p_A": 0.474,
       "pick": "A",
-      "lambda_home": 0.95,
-      "lambda_away": 1.54,
+      "lambda_home": 0.94,
+      "lambda_away": 1.56,
       "score_home": 0,
       "score_away": 1
     },
@@ -962,14 +1716,14 @@
       "season": "2026-27",
       "home_team": "Udinese Calcio",
       "away_team": "Como 1907",
-      "elo_home_pre": 1469.2,
-      "elo_away_pre": 1573.8,
-      "p_H": 0.286,
-      "p_D": 0.2762,
-      "p_A": 0.4378,
+      "elo_home_pre": 1463.2,
+      "elo_away_pre": 1561.7,
+      "p_H": 0.2942,
+      "p_D": 0.2887,
+      "p_A": 0.4171,
       "pick": "A",
-      "lambda_home": 1.03,
-      "lambda_away": 1.46,
+      "lambda_home": 1.07,
+      "lambda_away": 1.43,
       "score_home": 1,
       "score_away": 1
     },
@@ -979,14 +1733,14 @@
       "season": "2026-27",
       "home_team": "Venezia FC",
       "away_team": "US Lecce",
-      "elo_home_pre": 1381.6,
-      "elo_away_pre": 1384.2,
-      "p_H": 0.4262,
-      "p_D": 0.2748,
-      "p_A": 0.299,
+      "elo_home_pre": 1412.7,
+      "elo_away_pre": 1383.3,
+      "p_H": 0.4586,
+      "p_D": 0.2817,
+      "p_A": 0.2596,
       "pick": "H",
-      "lambda_home": 1.38,
-      "lambda_away": 1.1,
+      "lambda_home": 1.47,
+      "lambda_away": 1.03,
       "score_home": 1,
       "score_away": 1
     }
@@ -1003,183 +1757,183 @@
       "clubs": [
         {
           "team": "Arsenal FC",
-          "elo": 1732.7,
+          "elo": 1726.5,
           "points": 0,
-          "exp_points": 82.7,
-          "p_title": 0.509,
-          "p_top4": 0.933,
+          "exp_points": 81.0,
+          "p_title": 0.511,
+          "p_top4": 0.935,
           "p_relegation": 0.0
         },
         {
           "team": "Manchester City FC",
-          "elo": 1692.1,
+          "elo": 1685.9,
           "points": 0,
-          "exp_points": 78.1,
-          "p_title": 0.291,
-          "p_top4": 0.863,
+          "exp_points": 75.6,
+          "p_title": 0.254,
+          "p_top4": 0.819,
           "p_relegation": 0.0
         },
         {
           "team": "Liverpool FC",
-          "elo": 1635.3,
+          "elo": 1628.5,
           "points": 0,
-          "exp_points": 69.9,
-          "p_title": 0.101,
-          "p_top4": 0.567,
+          "exp_points": 68.2,
+          "p_title": 0.096,
+          "p_top4": 0.558,
           "p_relegation": 0.001
         },
         {
           "team": "Manchester United FC",
-          "elo": 1601.8,
+          "elo": 1592.3,
           "points": 0,
-          "exp_points": 64.2,
-          "p_title": 0.039,
-          "p_top4": 0.386,
-          "p_relegation": 0.003
+          "exp_points": 62.5,
+          "p_title": 0.048,
+          "p_top4": 0.34,
+          "p_relegation": 0.006
         },
         {
           "team": "Aston Villa FC",
-          "elo": 1585.0,
+          "elo": 1575.1,
           "points": 0,
-          "exp_points": 61.4,
-          "p_title": 0.021,
-          "p_top4": 0.301,
-          "p_relegation": 0.01
+          "exp_points": 60.3,
+          "p_title": 0.025,
+          "p_top4": 0.277,
+          "p_relegation": 0.012
         },
         {
           "team": "AFC Bournemouth",
-          "elo": 1564.6,
+          "elo": 1553.6,
           "points": 0,
-          "exp_points": 58.0,
-          "p_title": 0.008,
-          "p_top4": 0.194,
-          "p_relegation": 0.014
+          "exp_points": 57.4,
+          "p_title": 0.015,
+          "p_top4": 0.213,
+          "p_relegation": 0.023
         },
         {
           "team": "Chelsea FC",
-          "elo": 1547.6,
+          "elo": 1539.6,
           "points": 0,
-          "exp_points": 54.7,
-          "p_title": 0.007,
-          "p_top4": 0.14,
-          "p_relegation": 0.029
+          "exp_points": 55.0,
+          "p_title": 0.011,
+          "p_top4": 0.146,
+          "p_relegation": 0.043
         },
         {
           "team": "Brighton & Hove Albion FC",
-          "elo": 1547.3,
+          "elo": 1537.0,
           "points": 0,
-          "exp_points": 54.6,
-          "p_title": 0.004,
-          "p_top4": 0.137,
-          "p_relegation": 0.055
+          "exp_points": 54.4,
+          "p_title": 0.01,
+          "p_top4": 0.139,
+          "p_relegation": 0.051
         },
         {
           "team": "Newcastle United FC",
-          "elo": 1540.1,
+          "elo": 1531.7,
           "points": 0,
           "exp_points": 53.9,
-          "p_title": 0.005,
-          "p_top4": 0.114,
-          "p_relegation": 0.041
+          "p_title": 0.008,
+          "p_top4": 0.136,
+          "p_relegation": 0.054
         },
         {
           "team": "Brentford FC",
-          "elo": 1536.2,
+          "elo": 1525.0,
           "points": 0,
-          "exp_points": 52.5,
-          "p_title": 0.003,
-          "p_top4": 0.07,
-          "p_relegation": 0.047
+          "exp_points": 53.2,
+          "p_title": 0.006,
+          "p_top4": 0.103,
+          "p_relegation": 0.056
         },
         {
           "team": "Nottingham Forest FC",
-          "elo": 1522.7,
+          "elo": 1511.2,
           "points": 0,
-          "exp_points": 50.3,
-          "p_title": 0.002,
-          "p_top4": 0.064,
-          "p_relegation": 0.078
+          "exp_points": 50.8,
+          "p_title": 0.003,
+          "p_top4": 0.088,
+          "p_relegation": 0.082
         },
         {
           "team": "Fulham FC",
-          "elo": 1516.1,
+          "elo": 1505.5,
           "points": 0,
-          "exp_points": 49.9,
-          "p_title": 0.006,
-          "p_top4": 0.064,
-          "p_relegation": 0.079
+          "exp_points": 49.8,
+          "p_title": 0.005,
+          "p_top4": 0.062,
+          "p_relegation": 0.097
         },
         {
           "team": "Crystal Palace FC",
-          "elo": 1507.6,
+          "elo": 1497.1,
           "points": 0,
-          "exp_points": 47.8,
-          "p_title": 0.003,
-          "p_top4": 0.052,
-          "p_relegation": 0.109
+          "exp_points": 48.7,
+          "p_title": 0.004,
+          "p_top4": 0.061,
+          "p_relegation": 0.118
         },
         {
           "team": "Everton FC",
-          "elo": 1506.0,
+          "elo": 1495.1,
           "points": 0,
-          "exp_points": 47.3,
-          "p_title": 0.001,
-          "p_top4": 0.048,
-          "p_relegation": 0.132
-        },
-        {
-          "team": "Sunderland AFC",
-          "elo": 1489.1,
-          "points": 0,
-          "exp_points": 44.7,
-          "p_title": 0.0,
-          "p_top4": 0.023,
-          "p_relegation": 0.169
+          "exp_points": 47.9,
+          "p_title": 0.002,
+          "p_top4": 0.042,
+          "p_relegation": 0.119
         },
         {
           "team": "Tottenham Hotspur FC",
-          "elo": 1489.5,
+          "elo": 1480.8,
           "points": 0,
-          "exp_points": 44.2,
+          "exp_points": 45.8,
           "p_title": 0.0,
-          "p_top4": 0.018,
-          "p_relegation": 0.197
+          "p_top4": 0.034,
+          "p_relegation": 0.166
         },
         {
           "team": "Leeds United FC",
-          "elo": 1483.7,
+          "elo": 1472.9,
           "points": 0,
-          "exp_points": 43.3,
-          "p_title": 0.0,
-          "p_top4": 0.022,
-          "p_relegation": 0.226
+          "exp_points": 45.0,
+          "p_title": 0.001,
+          "p_top4": 0.027,
+          "p_relegation": 0.178
+        },
+        {
+          "team": "Sunderland AFC",
+          "elo": 1457.3,
+          "points": 0,
+          "exp_points": 43.0,
+          "p_title": 0.001,
+          "p_top4": 0.018,
+          "p_relegation": 0.231
         },
         {
           "team": "Coventry City FC",
-          "elo": 1428.0,
+          "elo": 1405.0,
           "points": 0,
           "exp_points": 35.1,
           "p_title": 0.0,
-          "p_top4": 0.003,
-          "p_relegation": 0.496
-        },
-        {
-          "team": "Hull City AFC",
-          "elo": 1428.0,
-          "points": 0,
-          "exp_points": 34.6,
-          "p_title": 0.0,
           "p_top4": 0.001,
-          "p_relegation": 0.515
+          "p_relegation": 0.524
         },
         {
           "team": "Ipswich Town FC",
-          "elo": 1372.9,
+          "elo": 1386.8,
           "points": 0,
-          "exp_points": 27.5,
+          "exp_points": 33.2,
+          "p_title": 0.0,
+          "p_top4": 0.001,
+          "p_relegation": 0.596
+        },
+        {
+          "team": "Hull City AFC",
+          "elo": 1379.5,
+          "points": 0,
+          "exp_points": 32.3,
           "p_title": 0.0,
           "p_top4": 0.0,
-          "p_relegation": 0.799
+          "p_relegation": 0.643
         }
       ]
     },
@@ -1190,165 +1944,165 @@
       "clubs": [
         {
           "team": "FC Bayern München",
-          "elo": 1778.5,
+          "elo": 1750.4,
           "points": 0,
-          "exp_points": 78.0,
-          "p_title": 0.718,
-          "p_top4": 0.99,
+          "exp_points": 74.2,
+          "p_title": 0.679,
+          "p_top4": 0.971,
           "p_relegation": 0.0
         },
         {
           "team": "Borussia Dortmund",
-          "elo": 1645.3,
+          "elo": 1629.9,
           "points": 0,
-          "exp_points": 64.6,
+          "exp_points": 62.2,
           "p_title": 0.109,
-          "p_top4": 0.738,
+          "p_top4": 0.677,
           "p_relegation": 0.003
         },
         {
           "team": "Bayer 04 Leverkusen",
-          "elo": 1628.4,
+          "elo": 1610.0,
           "points": 0,
-          "exp_points": 62.3,
-          "p_title": 0.076,
-          "p_top4": 0.618,
-          "p_relegation": 0.002
+          "exp_points": 59.8,
+          "p_title": 0.093,
+          "p_top4": 0.593,
+          "p_relegation": 0.003
         },
         {
           "team": "VfB Stuttgart",
-          "elo": 1596.9,
+          "elo": 1583.4,
           "points": 0,
-          "exp_points": 58.5,
-          "p_title": 0.039,
-          "p_top4": 0.499,
-          "p_relegation": 0.004
+          "exp_points": 56.0,
+          "p_title": 0.041,
+          "p_top4": 0.423,
+          "p_relegation": 0.014
         },
         {
           "team": "RB Leipzig",
-          "elo": 1592.8,
+          "elo": 1577.8,
           "points": 0,
-          "exp_points": 58.1,
-          "p_title": 0.044,
-          "p_top4": 0.466,
-          "p_relegation": 0.008
+          "exp_points": 56.0,
+          "p_title": 0.04,
+          "p_top4": 0.432,
+          "p_relegation": 0.015
         },
         {
           "team": "TSG 1899 Hoffenheim",
-          "elo": 1534.2,
+          "elo": 1526.8,
           "points": 0,
-          "exp_points": 49.7,
-          "p_title": 0.005,
-          "p_top4": 0.171,
-          "p_relegation": 0.033
-        },
-        {
-          "team": "SC Freiburg",
-          "elo": 1516.5,
-          "points": 0,
-          "exp_points": 47.1,
-          "p_title": 0.001,
-          "p_top4": 0.122,
-          "p_relegation": 0.064
+          "exp_points": 49.1,
+          "p_title": 0.013,
+          "p_top4": 0.187,
+          "p_relegation": 0.056
         },
         {
           "team": "1. FSV Mainz 05",
-          "elo": 1515.8,
+          "elo": 1507.7,
           "points": 0,
-          "exp_points": 46.5,
-          "p_title": 0.004,
-          "p_top4": 0.111,
-          "p_relegation": 0.078
+          "exp_points": 46.8,
+          "p_title": 0.001,
+          "p_top4": 0.145,
+          "p_relegation": 0.101
+        },
+        {
+          "team": "SC Freiburg",
+          "elo": 1508.4,
+          "points": 0,
+          "exp_points": 46.6,
+          "p_title": 0.009,
+          "p_top4": 0.124,
+          "p_relegation": 0.101
         },
         {
           "team": "Eintracht Frankfurt",
-          "elo": 1509.5,
+          "elo": 1502.3,
           "points": 0,
-          "exp_points": 45.9,
-          "p_title": 0.001,
-          "p_top4": 0.088,
-          "p_relegation": 0.108
+          "exp_points": 45.7,
+          "p_title": 0.006,
+          "p_top4": 0.113,
+          "p_relegation": 0.11
         },
         {
           "team": "Borussia Mönchengladbach",
-          "elo": 1479.1,
+          "elo": 1474.3,
           "points": 0,
-          "exp_points": 41.7,
+          "exp_points": 42.2,
           "p_title": 0.001,
-          "p_top4": 0.038,
-          "p_relegation": 0.181
+          "p_top4": 0.055,
+          "p_relegation": 0.187
         },
         {
           "team": "FC Augsburg",
-          "elo": 1475.4,
+          "elo": 1472.2,
           "points": 0,
-          "exp_points": 41.1,
-          "p_title": 0.0,
-          "p_top4": 0.031,
-          "p_relegation": 0.213
-        },
-        {
-          "team": "Hamburger SV",
-          "elo": 1463.7,
-          "points": 0,
-          "exp_points": 39.4,
-          "p_title": 0.0,
-          "p_top4": 0.023,
-          "p_relegation": 0.242
+          "exp_points": 42.1,
+          "p_title": 0.003,
+          "p_top4": 0.071,
+          "p_relegation": 0.221
         },
         {
           "team": "1. FC Union Berlin",
-          "elo": 1461.2,
+          "elo": 1457.8,
           "points": 0,
-          "exp_points": 39.3,
+          "exp_points": 40.6,
+          "p_title": 0.002,
+          "p_top4": 0.042,
+          "p_relegation": 0.242
+        },
+        {
+          "team": "Hamburger SV",
+          "elo": 1459.6,
+          "points": 0,
+          "exp_points": 40.5,
           "p_title": 0.001,
-          "p_top4": 0.028,
-          "p_relegation": 0.239
-        },
-        {
-          "team": "SV 07 Elversberg",
-          "elo": 1464.0,
-          "points": 0,
-          "exp_points": 38.9,
-          "p_title": 0.0,
-          "p_top4": 0.032,
-          "p_relegation": 0.262
-        },
-        {
-          "team": "SV Werder Bremen",
-          "elo": 1455.3,
-          "points": 0,
-          "exp_points": 38.4,
-          "p_title": 0.0,
-          "p_top4": 0.022,
-          "p_relegation": 0.283
+          "p_top4": 0.046,
+          "p_relegation": 0.246
         },
         {
           "team": "SC Paderborn 07",
-          "elo": 1435.1,
+          "elo": 1454.4,
           "points": 0,
-          "exp_points": 35.2,
+          "exp_points": 39.7,
           "p_title": 0.0,
-          "p_top4": 0.01,
-          "p_relegation": 0.394
+          "p_top4": 0.031,
+          "p_relegation": 0.279
+        },
+        {
+          "team": "SV Werder Bremen",
+          "elo": 1451.7,
+          "points": 0,
+          "exp_points": 39.6,
+          "p_title": 0.001,
+          "p_top4": 0.032,
+          "p_relegation": 0.289
+        },
+        {
+          "team": "SV 07 Elversberg",
+          "elo": 1447.3,
+          "points": 0,
+          "exp_points": 39.1,
+          "p_title": 0.001,
+          "p_top4": 0.03,
+          "p_relegation": 0.306
         },
         {
           "team": "1. FC Köln",
-          "elo": 1434.0,
+          "elo": 1424.0,
           "points": 0,
-          "exp_points": 34.8,
+          "exp_points": 36.0,
           "p_title": 0.0,
-          "p_top4": 0.007,
-          "p_relegation": 0.416
+          "p_top4": 0.018,
+          "p_relegation": 0.406
         },
         {
           "team": "FC Schalke 04",
-          "elo": 1425.2,
+          "elo": 1421.9,
           "points": 0,
-          "exp_points": 33.7,
-          "p_title": 0.001,
-          "p_top4": 0.006,
-          "p_relegation": 0.47
+          "exp_points": 35.4,
+          "p_title": 0.0,
+          "p_top4": 0.01,
+          "p_relegation": 0.421
         }
       ]
     },
@@ -1359,183 +2113,183 @@
       "clubs": [
         {
           "team": "FC Barcelona",
-          "elo": 1687.7,
+          "elo": 1735.4,
           "points": 0,
-          "exp_points": 84.8,
-          "p_title": 0.463,
-          "p_top4": 0.983,
+          "exp_points": 83.3,
+          "p_title": 0.469,
+          "p_top4": 0.975,
           "p_relegation": 0.0
         },
         {
           "team": "Real Madrid CF",
-          "elo": 1679.1,
+          "elo": 1723.6,
           "points": 0,
-          "exp_points": 84.2,
-          "p_title": 0.436,
-          "p_top4": 0.976,
+          "exp_points": 81.8,
+          "p_title": 0.408,
+          "p_top4": 0.966,
           "p_relegation": 0.0
         },
         {
           "team": "Club Atlético de Madrid",
-          "elo": 1591.2,
+          "elo": 1629.9,
           "points": 0,
-          "exp_points": 71.8,
-          "p_title": 0.062,
-          "p_top4": 0.717,
+          "exp_points": 70.7,
+          "p_title": 0.076,
+          "p_top4": 0.695,
           "p_relegation": 0.0
         },
         {
           "team": "Villarreal CF",
-          "elo": 1555.2,
+          "elo": 1587.9,
           "points": 0,
-          "exp_points": 65.4,
-          "p_title": 0.021,
-          "p_top4": 0.455,
-          "p_relegation": 0.003
+          "exp_points": 65.2,
+          "p_title": 0.027,
+          "p_top4": 0.501,
+          "p_relegation": 0.002
         },
         {
           "team": "Real Betis Balompié",
-          "elo": 1530.2,
+          "elo": 1558.4,
           "points": 0,
-          "exp_points": 61.6,
-          "p_title": 0.012,
-          "p_top4": 0.311,
-          "p_relegation": 0.005
+          "exp_points": 60.5,
+          "p_title": 0.013,
+          "p_top4": 0.286,
+          "p_relegation": 0.012
         },
         {
           "team": "Athletic Club",
-          "elo": 1486.1,
+          "elo": 1509.2,
           "points": 0,
-          "exp_points": 53.7,
-          "p_title": 0.001,
-          "p_top4": 0.101,
-          "p_relegation": 0.048
+          "exp_points": 53.2,
+          "p_title": 0.0,
+          "p_top4": 0.098,
+          "p_relegation": 0.047
         },
         {
           "team": "RC Celta de Vigo",
-          "elo": 1480.6,
+          "elo": 1506.3,
           "points": 0,
-          "exp_points": 52.8,
-          "p_title": 0.001,
-          "p_top4": 0.099,
-          "p_relegation": 0.05
-        },
-        {
-          "team": "Real Sociedad de Fútbol",
-          "elo": 1472.2,
-          "points": 0,
-          "exp_points": 51.0,
-          "p_title": 0.001,
-          "p_top4": 0.054,
-          "p_relegation": 0.07
+          "exp_points": 52.4,
+          "p_title": 0.003,
+          "p_top4": 0.092,
+          "p_relegation": 0.065
         },
         {
           "team": "Valencia CF",
-          "elo": 1472.6,
+          "elo": 1496.9,
+          "points": 0,
+          "exp_points": 50.9,
+          "p_title": 0.001,
+          "p_top4": 0.065,
+          "p_relegation": 0.072
+        },
+        {
+          "team": "Real Sociedad de Fútbol",
+          "elo": 1496.2,
           "points": 0,
           "exp_points": 50.6,
-          "p_title": 0.002,
-          "p_top4": 0.084,
-          "p_relegation": 0.083
+          "p_title": 0.001,
+          "p_top4": 0.066,
+          "p_relegation": 0.082
         },
         {
           "team": "Rayo Vallecano de Madrid",
-          "elo": 1469.0,
+          "elo": 1489.9,
           "points": 0,
-          "exp_points": 50.5,
-          "p_title": 0.001,
-          "p_top4": 0.057,
-          "p_relegation": 0.074
-        },
-        {
-          "team": "Getafe CF",
-          "elo": 1452.8,
-          "points": 0,
-          "exp_points": 47.9,
+          "exp_points": 50.4,
           "p_title": 0.0,
-          "p_top4": 0.035,
-          "p_relegation": 0.119
+          "p_top4": 0.062,
+          "p_relegation": 0.079
         },
         {
           "team": "CA Osasuna",
-          "elo": 1450.6,
+          "elo": 1472.9,
           "points": 0,
-          "exp_points": 47.1,
-          "p_title": 0.0,
-          "p_top4": 0.028,
-          "p_relegation": 0.124
+          "exp_points": 47.7,
+          "p_title": 0.002,
+          "p_top4": 0.038,
+          "p_relegation": 0.127
         },
         {
-          "team": "Sevilla FC",
-          "elo": 1432.9,
+          "team": "Getafe CF",
+          "elo": 1470.7,
           "points": 0,
-          "exp_points": 44.0,
+          "exp_points": 47.5,
           "p_title": 0.0,
-          "p_top4": 0.024,
-          "p_relegation": 0.205
-        },
-        {
-          "team": "Levante UD",
-          "elo": 1434.2,
-          "points": 0,
-          "exp_points": 44.0,
-          "p_title": 0.0,
-          "p_top4": 0.012,
-          "p_relegation": 0.208
-        },
-        {
-          "team": "Deportivo Alavés",
-          "elo": 1425.6,
-          "points": 0,
-          "exp_points": 42.9,
-          "p_title": 0.0,
-          "p_top4": 0.014,
-          "p_relegation": 0.245
-        },
-        {
-          "team": "Málaga CF",
-          "elo": 1424.6,
-          "points": 0,
-          "exp_points": 42.7,
-          "p_title": 0.0,
-          "p_top4": 0.013,
-          "p_relegation": 0.25
-        },
-        {
-          "team": "RC Deportivo La Coruña",
-          "elo": 1425.3,
-          "points": 0,
-          "exp_points": 42.4,
-          "p_title": 0.0,
-          "p_top4": 0.015,
-          "p_relegation": 0.274
-        },
-        {
-          "team": "RCD Espanyol de Barcelona",
-          "elo": 1425.0,
-          "points": 0,
-          "exp_points": 42.2,
-          "p_title": 0.0,
-          "p_top4": 0.012,
-          "p_relegation": 0.241
-        },
-        {
-          "team": "Elche CF",
-          "elo": 1415.2,
-          "points": 0,
-          "exp_points": 40.9,
-          "p_title": 0.0,
-          "p_top4": 0.009,
-          "p_relegation": 0.299
+          "p_top4": 0.036,
+          "p_relegation": 0.133
         },
         {
           "team": "Real Racing Club de Santander",
-          "elo": 1356.0,
+          "elo": 1462.0,
           "points": 0,
-          "exp_points": 31.1,
+          "exp_points": 45.8,
           "p_title": 0.0,
-          "p_top4": 0.001,
-          "p_relegation": 0.702
+          "p_top4": 0.027,
+          "p_relegation": 0.171
+        },
+        {
+          "team": "Sevilla FC",
+          "elo": 1452.8,
+          "points": 0,
+          "exp_points": 43.8,
+          "p_title": 0.0,
+          "p_top4": 0.014,
+          "p_relegation": 0.234
+        },
+        {
+          "team": "Levante UD",
+          "elo": 1450.8,
+          "points": 0,
+          "exp_points": 43.4,
+          "p_title": 0.0,
+          "p_top4": 0.016,
+          "p_relegation": 0.251
+        },
+        {
+          "team": "Deportivo Alavés",
+          "elo": 1445.3,
+          "points": 0,
+          "exp_points": 43.3,
+          "p_title": 0.0,
+          "p_top4": 0.026,
+          "p_relegation": 0.244
+        },
+        {
+          "team": "RCD Espanyol de Barcelona",
+          "elo": 1444.8,
+          "points": 0,
+          "exp_points": 43.2,
+          "p_title": 0.0,
+          "p_top4": 0.015,
+          "p_relegation": 0.256
+        },
+        {
+          "team": "Elche CF",
+          "elo": 1438.9,
+          "points": 0,
+          "exp_points": 42.2,
+          "p_title": 0.0,
+          "p_top4": 0.013,
+          "p_relegation": 0.287
+        },
+        {
+          "team": "RC Deportivo La Coruña",
+          "elo": 1420.1,
+          "points": 0,
+          "exp_points": 39.4,
+          "p_title": 0.0,
+          "p_top4": 0.006,
+          "p_relegation": 0.383
+        },
+        {
+          "team": "Málaga CF",
+          "elo": 1388.6,
+          "points": 0,
+          "exp_points": 35.2,
+          "p_title": 0.0,
+          "p_top4": 0.003,
+          "p_relegation": 0.555
         }
       ]
     },
@@ -1546,183 +2300,183 @@
       "clubs": [
         {
           "team": "FC Internazionale Milano",
-          "elo": 1682.8,
+          "elo": 1721.3,
           "points": 0,
-          "exp_points": 83.5,
-          "p_title": 0.521,
-          "p_top4": 0.932,
+          "exp_points": 82.6,
+          "p_title": 0.539,
+          "p_top4": 0.926,
+          "p_relegation": 0.0
+        },
+        {
+          "team": "SSC Napoli",
+          "elo": 1624.3,
+          "points": 0,
+          "exp_points": 71.3,
+          "p_title": 0.115,
+          "p_top4": 0.585,
           "p_relegation": 0.0
         },
         {
           "team": "AS Roma",
-          "elo": 1602.0,
+          "elo": 1621.9,
           "points": 0,
-          "exp_points": 71.3,
-          "p_title": 0.101,
-          "p_top4": 0.548,
-          "p_relegation": 0.001
-        },
-        {
-          "team": "SSC Napoli",
-          "elo": 1598.4,
-          "points": 0,
-          "exp_points": 71.0,
-          "p_title": 0.11,
-          "p_top4": 0.552,
-          "p_relegation": 0.002
+          "exp_points": 70.9,
+          "p_title": 0.106,
+          "p_top4": 0.567,
+          "p_relegation": 0.0
         },
         {
           "team": "Juventus FC",
-          "elo": 1591.8,
+          "elo": 1617.8,
           "points": 0,
-          "exp_points": 69.6,
-          "p_title": 0.085,
-          "p_top4": 0.485,
-          "p_relegation": 0.002
+          "exp_points": 70.2,
+          "p_title": 0.091,
+          "p_top4": 0.58,
+          "p_relegation": 0.001
         },
         {
           "team": "Atalanta BC",
-          "elo": 1578.9,
+          "elo": 1598.5,
           "points": 0,
-          "exp_points": 68.1,
-          "p_title": 0.066,
-          "p_top4": 0.447,
-          "p_relegation": 0.001
+          "exp_points": 67.0,
+          "p_title": 0.07,
+          "p_top4": 0.42,
+          "p_relegation": 0.004
         },
         {
           "team": "AC Milan",
-          "elo": 1567.9,
+          "elo": 1591.1,
           "points": 0,
-          "exp_points": 64.5,
-          "p_title": 0.041,
-          "p_top4": 0.324,
-          "p_relegation": 0.005
-        },
-        {
-          "team": "Como 1907",
-          "elo": 1562.7,
-          "points": 0,
-          "exp_points": 63.4,
-          "p_title": 0.041,
-          "p_top4": 0.287,
+          "exp_points": 65.6,
+          "p_title": 0.046,
+          "p_top4": 0.365,
           "p_relegation": 0.001
         },
         {
-          "team": "SS Lazio",
-          "elo": 1529.1,
+          "team": "Como 1907",
+          "elo": 1558.6,
           "points": 0,
-          "exp_points": 58.2,
-          "p_title": 0.011,
-          "p_top4": 0.14,
-          "p_relegation": 0.014
+          "exp_points": 60.5,
+          "p_title": 0.016,
+          "p_top4": 0.201,
+          "p_relegation": 0.005
+        },
+        {
+          "team": "SS Lazio",
+          "elo": 1542.1,
+          "points": 0,
+          "exp_points": 57.9,
+          "p_title": 0.009,
+          "p_top4": 0.137,
+          "p_relegation": 0.012
         },
         {
           "team": "Bologna FC 1909",
-          "elo": 1519.1,
+          "elo": 1525.0,
           "points": 0,
-          "exp_points": 55.6,
-          "p_title": 0.014,
-          "p_top4": 0.133,
-          "p_relegation": 0.031
+          "exp_points": 55.4,
+          "p_title": 0.004,
+          "p_top4": 0.097,
+          "p_relegation": 0.014
         },
         {
           "team": "ACF Fiorentina",
-          "elo": 1499.6,
+          "elo": 1510.2,
           "points": 0,
-          "exp_points": 52.7,
-          "p_title": 0.006,
-          "p_top4": 0.079,
-          "p_relegation": 0.034
+          "exp_points": 53.0,
+          "p_title": 0.003,
+          "p_top4": 0.069,
+          "p_relegation": 0.037
         },
         {
           "team": "Udinese Calcio",
-          "elo": 1473.8,
+          "elo": 1465.0,
           "points": 0,
-          "exp_points": 47.6,
-          "p_title": 0.001,
-          "p_top4": 0.022,
-          "p_relegation": 0.075
+          "exp_points": 45.9,
+          "p_title": 0.0,
+          "p_top4": 0.023,
+          "p_relegation": 0.106
         },
         {
           "team": "Torino FC",
-          "elo": 1458.2,
+          "elo": 1456.1,
           "points": 0,
-          "exp_points": 43.7,
+          "exp_points": 44.6,
           "p_title": 0.001,
-          "p_top4": 0.016,
-          "p_relegation": 0.154
+          "p_top4": 0.009,
+          "p_relegation": 0.133
         },
         {
           "team": "US Sassuolo Calcio",
-          "elo": 1452.4,
+          "elo": 1449.3,
           "points": 0,
-          "exp_points": 43.3,
-          "p_title": 0.001,
-          "p_top4": 0.016,
-          "p_relegation": 0.168
+          "exp_points": 42.7,
+          "p_title": 0.0,
+          "p_top4": 0.004,
+          "p_relegation": 0.161
         },
         {
           "team": "Genoa CFC",
-          "elo": 1443.2,
+          "elo": 1442.7,
           "points": 0,
-          "exp_points": 42.0,
+          "exp_points": 41.7,
           "p_title": 0.0,
           "p_top4": 0.004,
-          "p_relegation": 0.199
-        },
-        {
-          "team": "Frosinone Calcio",
-          "elo": 1429.8,
-          "points": 0,
-          "exp_points": 39.6,
-          "p_title": 0.0,
-          "p_top4": 0.006,
-          "p_relegation": 0.237
+          "p_relegation": 0.201
         },
         {
           "team": "Parma Calcio 1913",
-          "elo": 1430.1,
+          "elo": 1422.7,
           "points": 0,
-          "exp_points": 39.4,
-          "p_title": 0.001,
-          "p_top4": 0.005,
-          "p_relegation": 0.252
+          "exp_points": 39.3,
+          "p_title": 0.0,
+          "p_top4": 0.003,
+          "p_relegation": 0.301
         },
         {
           "team": "Cagliari Calcio",
-          "elo": 1426.0,
+          "elo": 1411.0,
           "points": 0,
-          "exp_points": 38.7,
+          "exp_points": 37.9,
           "p_title": 0.0,
-          "p_top4": 0.002,
-          "p_relegation": 0.276
-        },
-        {
-          "team": "US Lecce",
-          "elo": 1401.6,
-          "points": 0,
-          "exp_points": 33.9,
-          "p_title": 0.0,
-          "p_top4": 0.001,
-          "p_relegation": 0.447
+          "p_top4": 0.005,
+          "p_relegation": 0.324
         },
         {
           "team": "Venezia FC",
-          "elo": 1399.4,
+          "elo": 1417.0,
           "points": 0,
-          "exp_points": 33.8,
+          "exp_points": 37.7,
           "p_title": 0.0,
           "p_top4": 0.001,
-          "p_relegation": 0.464
+          "p_relegation": 0.322
+        },
+        {
+          "team": "Frosinone Calcio",
+          "elo": 1391.4,
+          "points": 0,
+          "exp_points": 34.5,
+          "p_title": 0.0,
+          "p_top4": 0.001,
+          "p_relegation": 0.444
+        },
+        {
+          "team": "US Lecce",
+          "elo": 1389.2,
+          "points": 0,
+          "exp_points": 34.5,
+          "p_title": 0.0,
+          "p_top4": 0.001,
+          "p_relegation": 0.465
         },
         {
           "team": "AC Monza",
-          "elo": 1372.3,
+          "elo": 1392.6,
           "points": 0,
-          "exp_points": 29.3,
+          "exp_points": 34.4,
           "p_title": 0.0,
-          "p_top4": 0.0,
-          "p_relegation": 0.637
+          "p_top4": 0.002,
+          "p_relegation": 0.469
         }
       ]
     },

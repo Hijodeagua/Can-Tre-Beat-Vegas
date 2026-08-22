@@ -14,7 +14,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
 from soccer.clubs.daily import scoring
-from soccer.clubs.data.leagues import LEAGUES
+from soccer.clubs.data.leagues import LEAGUES, pool_of
 from soccer.clubs.model.elo import ClubEloEngine
 from soccer.clubs.model.europe import run_all_european
 from soccer.clubs.model.features import ALL_FEATURES, attach_features
@@ -25,7 +25,7 @@ CLASSES = ["A", "D", "H"]
 
 @dataclass
 class DailyState:
-    engines: dict[str, ClubEloEngine]
+    engines: dict[str, ClubEloEngine]  # keyed by pool (tier-1 league key)
     history: pd.DataFrame          # league rows only, features attached
     results: pd.DataFrame          # raw results.csv incl. unplayed fixtures
     outcome_model: LogisticRegression
@@ -36,8 +36,9 @@ class DailyState:
         """Pre-match features for one fixture, from current ratings."""
         from soccer.clubs.model.elo import expected_score
 
-        e = self.engines[league]
-        r_home, r_away = e.get(home), e.get(away)
+        e = self.engines[pool_of(league)]
+        r_home = e.rating_for(home, league)
+        r_away = e.rating_for(away, league)
         adv = 0.0 if neutral else e.home_advantage
         row = {
             "league": league,

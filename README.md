@@ -46,13 +46,15 @@ Details and the two places an edge might actually live are in
   tiered K-factors, friendlies barely weighted) plus a multinomial outcome
   model with host effects and FIFA-rating squad-strength hooks; predicts the
   2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
-- **Top-5 European league club Elo** — per-league Elo for the Premier League,
-  Bundesliga, La Liga, Serie A and Ligue 1 (per-league tuned K / home
-  advantage / season rollover, promoted-club entry ratings), glued
-  cross-league by Champions/Europa/Conference League results, with
-  Transfermarkt spend features and a pooled W/D/L outcome model validated
-  on a two-season holdout; a daily runner predicts each day's slate, grades
-  a running ledger, and Monte Carlos every league table
+- **European club Elo (top-5 leagues + their second divisions)** — one Elo
+  pool per country spanning EPL/Championship, Bundesliga/2. Bundesliga,
+  La Liga/Segunda, Serie A/Serie B and Ligue 1/Ligue 2, so promoted clubs
+  carry real second-division form (through a tuned winner's-curse blend)
+  instead of a flat prior; glued cross-country by Champions/Europa/
+  Conference League results, with Transfermarkt spend features and a
+  pooled W/D/L outcome model validated on a two-season holdout; a daily
+  runner predicts each day's slate across both tiers, grades a running
+  ledger, and Monte Carlos every top-flight table
   (`soccer/clubs/`, spec in `soccer/clubs/SPEC.md`)
 - **MLB daily model** — betting-blind Elo (K=3, +24 home, MOV-weighted)
   tested live against the 2026 season: three emails every morning (futures

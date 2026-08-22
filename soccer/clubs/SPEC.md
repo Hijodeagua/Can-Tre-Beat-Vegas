@@ -1,44 +1,66 @@
 # Top-5 European Leagues — Club Elo Models
 
-Per-league Elo models for the Premier League, Bundesliga, La Liga, Serie A
-and Ligue 1 — the club-football sibling of the international model in
-`soccer/model/`. Same DNA (logistic expectation, margin-of-victory
-multiplier, draws as 0.5, a multinomial outcome layer on the Elo gap), with
-the structure club league play actually has: closed per-league pools,
-promotion/relegation, and summer squad churn.
+Per-country Elo models covering each of the top-5 leagues **and its second
+division** (EPL + Championship, Bundesliga + 2. Bundesliga, La Liga +
+Segunda, Serie A + Serie B, Ligue 1 + Ligue 2) — the club-football sibling
+of the international model in `soccer/model/`. Same DNA (logistic
+expectation, margin-of-victory multiplier, draws as 0.5, a multinomial
+outcome layer on the Elo gap), with the structure club league play actually
+has: promotion/relegation inside one country pool, and summer squad churn.
 
 ## Elo rules
 
-- **Separate pool per league.** Domestic results never compare clubs across
-  leagues, so each league is its own closed Elo economy. An EPL 1600 and a
-  Ligue 1 1600 are not claims about each other — don't rank across leagues.
-- **Fresh start at each league's first upstream season** (see data table
-  below), every club at 1500.
+- **One pool per country.** The top flight and its second division share an
+  Elo pool, so promotion and relegation are just clubs changing which
+  fixtures they play: a relegated club keeps playing rated matches, a
+  promoted club arrives carrying its actual second-division form. Pools
+  stay closed across countries (an EPL 1600 and a Ligue 1 1600 are not
+  claims about each other) except through the UEFA glue below.
+- **Fresh start at each pool's first upstream season** (see data table
+  below).
 - **Season rollover regression** — at every season boundary all known
   ratings regress toward 1500 by a tuned fraction ρ: squads churn over a
   summer, and last May's rating overstates what returns in August.
-- **Promotion / relegation** — a club never seen before enters at a tuned
-  entry rating below base (promoted sides are usually worse than the average
-  incumbent). A relegated club's rating keeps regressing while it is out of
-  the league and is picked back up on return, so a bounce-back keeps some of
-  its old level without returning at full strength.
+- **Division-switch carry** — promotion selects overperformers, so a
+  promoted club's carried D2 rating overstates it (winner's curse; full
+  carry measurably *hurt* the top-flight holdout). On a club's first match
+  after switching tiers its rating is blended toward the new tier's entry
+  level: `r ← entry + carry × (r − entry)`, with carry tuned per pool.
+  carry = 0 recovers a flat entry rating, carry = 1 is full carry; the
+  tuned values run from 0.25 (EPL — Championship form transfers least) to
+  1.0 (Ligue 1).
+- **Entry ratings** — a club never seen before enters at a tuned rating:
+  `entry_rating` for a first top-flight appearance, the lower
+  `entry_rating_t2` for a club coming up into the second division from the
+  third tier (also the blend anchor for its division).
 - **Margin-of-victory multiplier** — eloratings.net convention: ×1 for
   1-goal wins, ×1.5 for 2, ×(11+N)/8 for N ≥ 3.
-- **Home advantage** — tuned per league, added to the home side inside the
-  expectation. League CSVs carry no neutral-site flag; the rare neutral
-  match is absorbed as noise.
+- **Home advantage** — tuned per pool, shared by both divisions, added to
+  the home side inside the expectation. League files carry no neutral-site
+  flag; the rare neutral match (a Championship playoff final) is absorbed
+  as noise.
 - **Draws** count as 0.5.
 
 ## Tuned parameters
 
-`model/tune.py` grid-searches (K, home advantage, ρ, entry rating) per
-league, minimizing the **one-step-ahead Brier score** of the Elo expectation
-(each match predicted using only earlier matches). The first two seasons of
-each league are burn-in and 2024-25 onward is excluded — that stays the
-untouched holdout for `train.py`. Current values live in
-`model/artifacts/tuned_params.json`; expect K ≈ 10–14 (far below the
-international K's — 38 games a season against familiar opponents means each
-result carries less news), home advantage ≈ 45–60 Elo, ρ ≈ 0.10–0.15.
+`model/tune.py` grid-searches (K, home advantage, ρ, both entry ratings,
+division carry) per pool over a two-division replay, minimizing the
+**one-step-ahead Brier score on top-flight matches** — the second division
+is replayed (that's where promoted clubs' ratings come from) but not
+scored. The first two seasons of each pool are burn-in and 2024-25 onward
+is excluded — that stays the untouched holdout for `train.py`. Current
+values live in `model/artifacts/tuned_params.json`; expect K ≈ 10–14, home
+advantage ≈ 45–75 Elo, ρ ≈ 0.05–0.15 (lower than the single-division
+version needed — promotion/relegation is now real matches, not blanket
+shrinkage).
+
+Adding the second divisions was validated head-to-head on the untouched
+holdout (identical Elo-gap-only outcome layers): pooled log loss
+**0.98986 vs 0.99040** single-division, improving both promoted-club
+matches (0.96289 vs 0.96337, n=876) and everything else (0.99885 vs
+0.99941). Without the tuned carry — i.e. carrying D2 ratings up unshrunk —
+the pooled model was *worse* (0.99203); the winner's-curse correction is
+what makes the D2 data pay.
 
 ## UEFA cross-league glue
 
@@ -81,20 +103,23 @@ sane (spend → home wins). Not a rating replacement; carried as features.
 
 Multinomial logistic regression over {home win, draw, away win} on the
 venue-adjusted Elo gap plus the squad-economics differentials, pooled
-across the five leagues — the gap→probability curve is shared, while each
-league's gaps already come from its own tuned (and UEFA-glued) pool.
-Temporal validation on the two held-out seasons (2024-25 + 2025-26, never
-seen by tuning or training):
+across all ten divisions — the gap→probability curve is shared (training
+on both tiers beats tier-1-only *for* tier-1), while each match's gap
+already comes from its own tuned, UEFA-glued country pool. Temporal
+validation on the two held-out seasons (2024-25 + 2025-26, never seen by
+tuning or training):
 
-| | log loss | accuracy |
-|---|---|---|
-| Full model (glued Elo + economics) | **0.9902** | 52.2% |
-| Elo-only | 0.9906 | — |
-| class-frequency baseline | 1.0750 | — |
+| | log loss |
+|---|---|
+| Top-flight holdout (3,503 matches) | **0.9901** |
+| Second-division holdout (3,221 matches) | 1.0600 |
+| All divisions | 1.0236 |
+| class-frequency baseline (all) | 1.0766 |
 
-Per-league holdout log loss runs 0.977 (La Liga) to 1.011 (EPL), beating
-the frequency baseline everywhere. Artifacts:
-`model/artifacts/outcome_model.pkl`, `metrics.csv`.
+Second divisions are genuinely harder to predict — flatter, draw-heavier —
+which the numbers say plainly. Per-league top-flight holdout log loss runs
+0.975 (La Liga) to 1.010 (EPL), beating the frequency baseline everywhere.
+Artifacts: `model/artifacts/outcome_model.pkl`, `metrics.csv`.
 
 Features tested and *rejected* (they made holdout log loss worse): last-5
 form differential, rest-day differential — Elo already carries that
@@ -122,10 +147,15 @@ has published).
 | League | key | upstream code | seasons |
 |---|---|---|---|
 | Premier League | `epl` | `en.1` | 2010-11 → |
+| Championship | `championship` | `en.2` | 2010-11 → |
 | Bundesliga | `bundesliga` | `de.1` | 2010-11 → |
+| 2. Bundesliga | `bundesliga_2` | `de.2` | 2012-13 → |
 | La Liga | `la_liga` | `es.1` | 2012-13 → |
+| Segunda División | `la_liga_2` | `es.2` | 2012-13 → |
 | Serie A | `serie_a` | `it.1` | 2013-14 → |
+| Serie B | `serie_b` | `it.2` | 2013-14 → |
 | Ligue 1 | `ligue_1` | `fr.1` | 2014-15 → |
+| Ligue 2 | `ligue_2` | `fr.2` | 2014-15 → (hole 2021-24) |
 
 Wrinkles handled in the fetch, so nothing downstream sees them:
 
@@ -137,13 +167,21 @@ Wrinkles handled in the fetch, so nothing downstream sees them:
 - **Score shapes.** Finals normally arrive as `score.ft = [h, a]`; the
   newest season files serialize 0-0 finals as a bare `score = [0, 0]`. Both
   are accepted.
+- **Dual-source seasons.** Both layers are fetched per season and the one
+  with more played matches wins — the json layer never got Championship
+  2016-18 and stalled mid-season on some recent D2 files, while the
+  country txt repos fill the Segunda/Serie B 2021-24 json gaps.
 - **Known holes.** Ligue 1 2019-20 stops at the COVID abandonment (279
-  matches); the upstream never filled the last matchday of La Liga and
-  Serie A 2024-25 (370/380 each) and one cancelled Ligue 1 2025-26 match.
-  Scoreless past-season rows are dropped rather than guessed.
+  matches); one cancelled Ligue 1 2025-26 match. Second divisions carry a
+  few upstream warts: Ligue 2 is missing 2021-22 → 2023-24 entirely (no
+  reachable source), and 2. Bundesliga / Segunda / Serie B 2025-26 stall
+  partway (99/131/309 matches) — the season rollover regression absorbs
+  the staleness. Scoreless past-season rows are dropped rather than
+  guessed.
 - **New seasons.** Every fetch probes one season past the current one, so
-  the 2026-27 files start flowing in as soon as openfootball publishes them
-  — no code change.
+  new season files start flowing in as soon as openfootball publishes them
+  — no code change. (2026-27 fixtures are live for all four top flights
+  except Ligue 1, plus the Championship.)
 
 ## Pipeline
 
@@ -197,12 +235,15 @@ site consumes.
 - [x] Transfermarkt transfer-spend features + market-value/wage upload slot
 - [x] Daily runner: slate predictions, graded ledger, league-table Monte
   Carlo, site JSON (`daily/`, workflow `soccer-daily.yml`)
+- [x] Second divisions in-pool: promotion carry-in from real D2 form with a
+  tuned winner's-curse blend, validated to beat the flat entry rating on
+  the top-flight holdout; D2 slates predicted and graded daily
+- [ ] Second-division futures (promotion odds) — one config flip in
+  `daily/run.py` once wanted
 - [ ] Squad market values + wages populated (locally) and validated
 - [ ] Odds API soccer keys (`soccer_epl`, …) on the `/vegas` slate, model
   picks with edge-vs-market (quota permitting)
 - [ ] A soccer page in `web/` reading `web/public/data/soccer/latest.json`
-- [ ] Promotion carry-in: seed promoted clubs from second-division form
-  instead of a flat entry rating
 - [ ] A rating pool for non-top-5 European clubs so every UEFA match
   (not just top-5 pairings) feeds the glue
 - [ ] Dixon–Coles low-score correction if the Poisson calibration drifts

@@ -43,6 +43,12 @@ MATCH_RE = re.compile(
     r"(?P<team1>\S.*?)\s+v\s+(?P<team2>\S.*?)"
     r"(?:\s\s+(?P<tail>.*?))?\s*$"            # 2+ spaces before score/annotations
 )
+# Older country files put the score between the teams instead of "v":
+#   Fulham FC                1-0 (1-0)  Newcastle United
+MIDDLE_SCORE_RE = re.compile(
+    r"^\s*(?:\d{1,2}[.:]\d{2}\s+)?"
+    r"(?P<team1>\S.*?)\s\s+(?P<score>\d+-\d+(?:\s*\([^)]*\))?)\s\s+(?P<team2>\S.*?)\s*$"
+)
 SCORE_RE = re.compile(r"(?<![\d(])(\d+)-(\d+)(?![\d)])")
 COUNTRY_RE = re.compile(r"\s*\((?P<code>[A-Z]{3})\)\s*$")
 
@@ -111,6 +117,18 @@ def parse(text: str, season: str) -> list[TxtMatch]:
                 year = start_year if month >= 7 else start_year + 1
             cur_date = f"{year:04d}-{month:02d}-{int(m.group('day')):02d}"
             continue
+
+        if cur_date and " v " not in f" {stripped} ":
+            m = MIDDLE_SCORE_RE.match(line)
+            if m:
+                team1, c1 = _split_team(m.group("team1"))
+                team2, c2 = _split_team(m.group("team2"))
+                s1, s2 = _parse_score(m.group("score"))
+                if team1 and team2:
+                    out.append(
+                        TxtMatch(cur_date, cur_round, team1, team2, c1, c2, s1, s2)
+                    )
+                continue
 
         m = MATCH_RE.match(line)
         if m and cur_date and " v " in f" {stripped} ":

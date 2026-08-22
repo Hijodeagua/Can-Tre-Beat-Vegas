@@ -29,8 +29,25 @@ def match(season, home, away, hs, as_, league="epl", date="2020-09-12"):
 
 
 class TestLeagues:
-    def test_all_five_leagues_registered(self):
-        assert set(LEAGUES) == {"epl", "bundesliga", "la_liga", "serie_a", "ligue_1"}
+    def test_all_ten_leagues_registered(self):
+        assert set(LEAGUES) == {
+            "epl", "championship", "bundesliga", "bundesliga_2",
+            "la_liga", "la_liga_2", "serie_a", "serie_b",
+            "ligue_1", "ligue_2",
+        }
+
+    def test_second_divisions_share_their_country_pool(self):
+        from soccer.clubs.data.leagues import POOLS, pool_of
+        assert pool_of("championship") == "epl"
+        assert pool_of("serie_b") == "serie_a"
+        assert set(POOLS) == {"epl", "bundesliga", "la_liga", "serie_a", "ligue_1"}
+        assert POOLS["epl"] == ["epl", "championship"]
+
+    def test_d2_aliases_map_into_the_pool_canon(self):
+        assert canonical("championship", "Leeds United") == "Leeds United FC"
+        assert canonical("serie_b", "US Palermo") == "Palermo FC"
+        assert canonical("serie_a", "US Palermo") == "Palermo FC"
+        assert canonical("la_liga_2", "Espanyol Barcelona") == "RCD Espanyol de Barcelona"
 
     def test_canonical_maps_renamed_clubs(self):
         assert canonical("epl", "Manchester City") == "Manchester City FC"
@@ -99,6 +116,37 @@ class TestClubEloEngine:
     def test_expected_score_is_logistic(self):
         assert expected_score(1500, 1500) == 0.5
         assert expected_score(1900, 1500) == pytest.approx(10 / 11)
+
+    def test_tier2_entry_rating(self):
+        e = ClubEloEngine(k=20, home_advantage=0,
+                          entry_rating=1420, entry_rating_t2=1250)
+        rec = e.update(match("2020-21", "NewD2A", "NewD2B", 1, 1,
+                             league="championship"))
+        assert rec["elo_home_pre"] == 1250
+        assert rec["elo_away_pre"] == 1250
+
+    def test_division_switch_blends_toward_entry(self):
+        e = ClubEloEngine(k=0, home_advantage=0, entry_rating=1400,
+                          entry_rating_t2=1250, division_carry=0.5)
+        # K=0: ratings only move via the switch blend, so the math is exact.
+        e.ratings["Promoted"] = 1500
+        e.last_league["Promoted"] = "championship"
+        e.ratings["Incumbent"] = 1600
+        e.last_league["Incumbent"] = "epl"
+        rec = e.update(match("2021-22", "Promoted", "Incumbent", 0, 0, league="epl"))
+        assert rec["elo_home_pre"] == pytest.approx(1400 + 0.5 * (1500 - 1400))
+        assert rec["elo_away_pre"] == 1600  # no switch, no blend
+        assert e.last_league["Promoted"] == "epl"
+
+    def test_rating_for_previews_the_blend_without_mutating(self):
+        e = ClubEloEngine(entry_rating=1400, entry_rating_t2=1250,
+                          division_carry=0.25)
+        e.ratings["Up"] = 1500
+        e.last_league["Up"] = "la_liga_2"
+        assert e.rating_for("Up", "la_liga") == pytest.approx(1400 + 0.25 * 100)
+        assert e.rating_for("Up", "la_liga_2") == 1500  # same tier: unchanged
+        assert e.ratings["Up"] == 1500                  # non-mutating
+        assert e.rating_for("Unknown", "la_liga_2") == 1250
 
 
 class TestFetchNormalization:

@@ -24,7 +24,7 @@ from typing import Dict, Optional
 
 import pandas as pd
 
-from soccer.clubs.data.leagues import LEAGUES
+from soccer.clubs.data.leagues import POOLS, pool_of
 from soccer.clubs.model.elo import (
     ClubEloEngine,
     expected_score,
@@ -106,7 +106,7 @@ def run_all_european(
     if uefa is None:
         uefa = load_uefa()
 
-    engines = {league: ClubEloEngine.for_league(league) for league in LEAGUES}
+    engines = {pool: ClubEloEngine.for_league(pool) for pool in POOLS}
 
     frames = [df.assign(_kind="league")]
     if len(uefa):
@@ -120,7 +120,7 @@ def run_all_european(
     records = []
     for _, row in stream.iterrows():
         if row["_kind"] == "league":
-            records.append(engines[row["league"]].update(row))
+            records.append(engines[pool_of(row["league"])].update(row))
         else:
             records.append(cross_update(engines, row, weight))
     return engines, pd.DataFrame(records)
@@ -130,12 +130,12 @@ if __name__ == "__main__":
     engines, history = run_all_european()
     n_uefa = int(history["league"].str.startswith("uefa:").sum())
     print(f"Processed {len(history)} matches ({n_uefa} UEFA cross-league)\n")
-    print("Top 10 clubs across all leagues (glued ratings):")
+    print("Top 10 clubs across all pools (glued ratings):")
     tables = []
-    for league, engine in engines.items():
-        latest = history[history["league"] == league]["season"].max()
-        t = engine.table(season=latest)
-        t["league"] = league
+    for pool, engine in engines.items():
+        latest = history[history["league"] == pool]["season"].max()
+        t = engine.table(season=latest, league=pool)
+        t["pool"] = pool
         tables.append(t)
     top = pd.concat(tables).sort_values("elo", ascending=False).head(10)
-    print(top[["team", "league", "elo"]].round(1).to_string(index=False))
+    print(top[["team", "pool", "elo"]].round(1).to_string(index=False))

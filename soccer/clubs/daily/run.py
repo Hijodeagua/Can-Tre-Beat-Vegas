@@ -28,7 +28,7 @@ from datetime import date
 from soccer.clubs.daily import export_site, grade, predict, simulate
 from soccer.clubs.daily.config import SEASON_SIMS
 from soccer.clubs.daily.state import build_state
-from soccer.clubs.data.leagues import LEAGUES, season_for_date
+from soccer.clubs.data.leagues import TIER1, season_for_date
 
 
 def refresh_data() -> None:
@@ -73,10 +73,12 @@ def main() -> None:
               f"  H {m['p_H']:.2f} D {m['p_D']:.2f} A {m['p_A']:.2f}"
               f"  pick {m['pick']}  ({m['score_home']}-{m['score_away']})")
 
+    # Futures cover the top flights; second divisions are ratings + slate
+    # only for now (Championship promotion odds are one config flip away).
     print("== Futures Monte Carlo")
     season = season_for_date(run_date)
     futures = {}
-    for league in LEAGUES:
+    for league in TIER1:
         sim = simulate.simulate_league(state, league, season, n_sims=args.season_sims)
         if sim is None:
             print(f"   {league}: no {season} fixtures upstream yet — skipped")

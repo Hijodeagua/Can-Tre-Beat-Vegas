@@ -24,6 +24,7 @@ from soccer.clubs.daily.config import (
     UCL_SPOTS,
 )
 from soccer.clubs.daily.state import DailyState
+from soccer.clubs.data.leagues import pool_of
 from soccer.clubs.model.elo import expected_score, mov_multiplier
 
 
@@ -50,17 +51,18 @@ def simulate_league(state: DailyState, league: str, season: str,
     if remaining.empty:
         return None
 
-    engine = state.engines[league]
+    engine = state.engines[pool_of(league)]
     base_pts = _current_table(results, league, season)
     clubs = sorted(
         set(remaining["home_team"]) | set(remaining["away_team"]) | set(base_pts)
     )
     fixtures = [(r.home_team, r.away_team) for r in remaining.itertuples()]
 
-    # Ratings enter the season through the engine's own accessor, so a
-    # promoted club gets the entry rating and the season rollover has
-    # already been applied by the replay if any 2026-27 match was played.
-    start_ratings = {c: engine.get(c) for c in clubs}
+    # rating_for applies the division-switch blend for clubs promoted or
+    # relegated into this league who haven't played in it yet; the season
+    # rollover has already been applied by the replay if any current-season
+    # match was played.
+    start_ratings = {c: engine.rating_for(c, league) for c in clubs}
     if engine.current_season != season:
         start_ratings = {
             c: r + engine.season_regression * (engine.base - r)

@@ -1,20 +1,24 @@
 """
-Club Elo engine for the top-5 European leagues.
+Club Elo engine for the top-5 European leagues and their second divisions.
 
 Same skeleton as the international engine (`soccer/model/elo.py`) — logistic
-expectation, margin-of-victory multiplier, draws as 0.5 — with the two things
+expectation, margin-of-victory multiplier, draws as 0.5 — with the things
 club league play adds:
 
-- **Separate pools per league.** Domestic results never compare clubs across
-  leagues, so each league is its own closed Elo economy; an EPL 1600 and a
-  Ligue 1 1600 are not claims about each other.
+- **One pool per country.** The top flight and its second division share an
+  Elo pool (EPL + Championship = the "epl" pool), so promotion and
+  relegation are just clubs changing which fixtures they play: a relegated
+  club keeps playing rated matches, and a promoted club arrives carrying
+  its actual second-division form. Pools are still closed across countries
+  — an EPL 1600 and a Ligue 1 1600 are not claims about each other, except
+  through the UEFA glue in `europe.py`.
 - **Season structure.** At every season boundary all known ratings regress
-  toward the base (squads churn over a summer), and clubs promoted into the
-  league start below base at an entry rating — the newly promoted side is
-  almost always worse than the average incumbent. A relegated club's rating
-  keeps regressing while it's away and is picked back up on return.
+  toward the base (squads churn over a summer). A club never seen before
+  enters at a tier-dependent entry rating: `entry_rating` for a first
+  top-flight appearance, the lower `entry_rating_t2` for a club coming up
+  into the second division from the third tier.
 
-Per-league parameters (K, home advantage, regression, entry rating) live in
+Per-pool parameters (K, home advantage, regression, entry ratings) live in
 `artifacts/tuned_params.json`, written by `tune.py`; DEFAULTS applies before
 tuning has run.
 """
@@ -26,6 +30,8 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 
+from soccer.clubs.data.leagues import LEAGUES, POOLS, pool_of
+
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 PARAMS_FILE = ARTIFACTS / "tuned_params.json"
@@ -36,7 +42,14 @@ DEFAULTS = {
     "k": 20.0,
     "home_advantage": 60.0,
     "season_regression": 0.20,  # rating -> base pull at each season boundary
-    "entry_rating": 1420.0,     # first-ever appearance (promoted club)
+    "entry_rating": 1420.0,     # first-ever appearance in the top flight
+    "entry_rating_t2": 1250.0,  # first-ever appearance, second division
+    # How much of a club's rating survives a division switch: on its first
+    # match in the other tier, r <- entry(tier) + carry * (r - entry(tier)).
+    # 0 reproduces the flat entry rating (division form ignored), 1 carries
+    # the rating unchanged. Tuned — promotion selects overperformers, so
+    # full carry overrates promoted clubs (winner's curse).
+    "division_carry": 0.5,
 }
 
 
@@ -54,27 +67,33 @@ def expected_score(rating_a: float, rating_b: float) -> float:
 
 
 def league_params(league: str) -> dict:
-    """Tuned parameters for a league, or DEFAULTS before tune.py has run."""
+    """Tuned parameters for a league's pool, or DEFAULTS before tuning.
+    Both divisions of a country resolve to the same pool entry."""
+    pool = pool_of(league) if league in LEAGUES else league
     if PARAMS_FILE.exists():
         tuned = json.loads(PARAMS_FILE.read_text()).get("params", {})
-        if league in tuned:
+        if pool in tuned:
             # tuned entries also carry diagnostics (brier, matches_scored)
-            return {k: tuned[league].get(k, v) for k, v in DEFAULTS.items()}
+            return {k: tuned[pool].get(k, v) for k, v in DEFAULTS.items()}
     return dict(DEFAULTS)
 
 
 @dataclass
 class ClubEloEngine:
-    """One league's Elo pool. Feed it that league's matches in date order."""
+    """One country's Elo pool (top flight + second division). Feed it that
+    pool's matches in date order."""
 
     k: float = DEFAULTS["k"]
     home_advantage: float = DEFAULTS["home_advantage"]
     season_regression: float = DEFAULTS["season_regression"]
     entry_rating: float = DEFAULTS["entry_rating"]
+    entry_rating_t2: float = DEFAULTS["entry_rating_t2"]
+    division_carry: float = DEFAULTS["division_carry"]
     base: float = BASE_RATING
     ratings: Dict[str, float] = field(default_factory=dict)
     matches_played: Dict[str, int] = field(default_factory=dict)
     last_season: Dict[str, str] = field(default_factory=dict)
+    last_league: Dict[str, str] = field(default_factory=dict)
     current_season: Optional[str] = None
 
     @classmethod
@@ -83,6 +102,29 @@ class ClubEloEngine:
 
     def get(self, team: str) -> float:
         return self.ratings.get(team, self.entry_rating)
+
+    def _entry(self, league: str) -> float:
+        tier = LEAGUES[league].tier if league in LEAGUES else 1
+        return self.entry_rating if tier == 1 else self.entry_rating_t2
+
+    def rating_for(self, team: str, league: str) -> float:
+        """The rating a club would carry into a match in `league` — applies
+        the division-switch blend virtually for a club whose last match was
+        in the other tier (a just-promoted club before its first top-flight
+        result). Non-mutating; `update()` applies the real blend."""
+        r = self.ratings.get(team)
+        if r is None:
+            return self._entry(league)
+        last = self.last_league.get(team)
+        if (
+            last is not None
+            and last in LEAGUES
+            and league in LEAGUES
+            and LEAGUES[last].tier != LEAGUES[league].tier
+        ):
+            entry = self._entry(league)
+            return entry + self.division_carry * (r - entry)
+        return r
 
     def _roll_season(self, season: str) -> None:
         """Regress every known club toward base once per season boundary —
@@ -99,7 +141,22 @@ class ClubEloEngine:
             self._roll_season(row["season"])
 
         home, away = row["home_team"], row["away_team"]
-        r_home, r_away = self.get(home), self.get(away)
+        entry = self._entry(row["league"])
+        for t in (home, away):
+            last = self.last_league.get(t)
+            if (
+                t in self.ratings
+                and last is not None
+                and last in LEAGUES
+                and row["league"] in LEAGUES
+                and LEAGUES[last].tier != LEAGUES[row["league"]].tier
+            ):
+                # First match after a promotion/relegation: blend the carried
+                # rating toward the new tier's entry level.
+                self.ratings[t] = entry + self.division_carry * (self.ratings[t] - entry)
+                self.last_league[t] = row["league"]
+        r_home = self.ratings.get(home, entry)
+        r_away = self.ratings.get(away, entry)
 
         exp_home = expected_score(r_home + self.home_advantage, r_away)
         goal_diff = int(row["home_score"]) - int(row["away_score"])
@@ -111,6 +168,7 @@ class ClubEloEngine:
         for t in (home, away):
             self.matches_played[t] = self.matches_played.get(t, 0) + 1
             self.last_season[t] = row["season"]
+            self.last_league[t] = row["league"]
 
         return {
             "date": row["date"],
@@ -128,17 +186,21 @@ class ClubEloEngine:
             "away_score": int(row["away_score"]),
         }
 
-    def table(self, season: Optional[str] = None) -> pd.DataFrame:
-        """Current ratings; pass `season` to keep only clubs who played in it."""
+    def table(self, season: Optional[str] = None,
+              league: Optional[str] = None) -> pd.DataFrame:
+        """Current ratings; `season` keeps clubs whose last match was in it,
+        `league` keeps clubs whose last match was in that division."""
         rows = [
             {
                 "team": t,
                 "elo": r,
                 "matches": self.matches_played.get(t, 0),
                 "last_season": self.last_season.get(t, ""),
+                "last_league": self.last_league.get(t, ""),
             }
             for t, r in self.ratings.items()
-            if season is None or self.last_season.get(t) == season
+            if (season is None or self.last_season.get(t) == season)
+            and (league is None or self.last_league.get(t) == league)
         ]
         return (
             pd.DataFrame(rows)
@@ -152,20 +214,21 @@ def load_results() -> pd.DataFrame:
     return df.dropna(subset=["home_score", "away_score"]).reset_index(drop=True)
 
 
-def run_league(
-    league: str,
+def run_pool(
+    pool: str,
     df: Optional[pd.DataFrame] = None,
     engine: Optional[ClubEloEngine] = None,
     end: Optional[str] = None,
 ) -> tuple[ClubEloEngine, pd.DataFrame]:
-    """Replay one league's played matches chronologically; return the engine +
-    per-match pre-rating feature records (the training table)."""
+    """Replay one country pool's played matches (both divisions,
+    chronological); return the engine + per-match pre-rating feature
+    records. Rows keep their own division in the `league` column."""
     if df is None:
         df = load_results()
-    matches = df[df["league"] == league]
+    matches = df[df["league"].isin(POOLS[pool])].sort_values("date", kind="stable")
     if end:
         matches = matches[matches["date"] < end]
-    engine = engine or ClubEloEngine.for_league(league)
+    engine = engine or ClubEloEngine.for_league(pool)
     records: List[dict] = [engine.update(row) for _, row in matches.iterrows()]
     return engine, pd.DataFrame(records)
 
@@ -173,15 +236,14 @@ def run_league(
 def run_all(
     df: Optional[pd.DataFrame] = None, end: Optional[str] = None
 ) -> tuple[Dict[str, ClubEloEngine], pd.DataFrame]:
-    """All five leagues; returns {league: engine} + the stacked history."""
-    from soccer.clubs.data.leagues import LEAGUES
-
+    """All five country pools; returns {pool: engine} + the stacked history
+    (pool keys are the tier-1 league keys: "epl", "bundesliga", …)."""
     if df is None:
         df = load_results()
     engines: Dict[str, ClubEloEngine] = {}
     histories = []
-    for league in LEAGUES:
-        engines[league], history = run_league(league, df=df, end=end)
+    for pool in POOLS:
+        engines[pool], history = run_pool(pool, df=df, end=end)
         histories.append(history)
     return engines, pd.concat(histories, ignore_index=True)
 
@@ -189,8 +251,13 @@ def run_all(
 if __name__ == "__main__":
     engines, history = run_all()
     print(f"Processed {len(history)} club matches\n")
-    for league, engine in engines.items():
-        latest = history[history["league"] == league]["season"].max()
-        print(f"=== {league} — top 5 (through {latest}) ===")
-        print(engine.table(season=latest).head(5).to_string(index=False))
-        print()
+    for pool, engine in engines.items():
+        for league in POOLS[pool]:
+            latest = history[history["league"] == league]["season"].max()
+            print(f"=== {league} — top 5 (through {latest}) ===")
+            print(
+                engine.table(season=latest, league=league)
+                .head(5)[["team", "elo", "matches"]]
+                .to_string(index=False)
+            )
+            print()

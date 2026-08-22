@@ -17,7 +17,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from soccer.clubs.data.leagues import LEAGUES
+from soccer.clubs.data.leagues import LEAGUES, pool_of
 from soccer.clubs.model.elo import BASE_RATING, league_params
 from soccer.clubs.model.europe import UEFA_WEIGHT, run_all_european
 
@@ -32,9 +32,13 @@ def export(all_teams: bool = False, out: Path = DEFAULT_OUT) -> Path:
     leagues = {}
     for key, lg in LEAGUES.items():
         latest = str(history[history["league"] == key]["season"].max())
-        table = engines[key].table(season=None if all_teams else latest)
+        table = engines[pool_of(key)].table(
+            season=None if all_teams else latest, league=key
+        )
         leagues[key] = {
             "name": lg.name,
+            "tier": lg.tier,
+            "pool": lg.pool,
             "firstSeason": lg.first_season,
             "latestSeason": latest,
             "params": league_params(key),

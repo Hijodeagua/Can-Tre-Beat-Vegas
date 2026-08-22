@@ -13,16 +13,18 @@ import pandas as pd
 
 from soccer.clubs.daily.config import SITE_DIR, SITE_HISTORY, SITE_LATEST
 from soccer.clubs.daily.state import DailyState
-from soccer.clubs.data.leagues import LEAGUES
+from soccer.clubs.data.leagues import LEAGUES, pool_of
 
 
 def ratings_payload(state: DailyState) -> dict:
     out = {}
-    for league, engine in state.engines.items():
+    for league, lg in LEAGUES.items():
+        engine = state.engines[pool_of(league)]
         latest = state.history[state.history["league"] == league]["season"].max()
-        table = engine.table(season=latest)
+        table = engine.table(season=latest, league=league)
         out[league] = {
-            "name": LEAGUES[league].name,
+            "name": lg.name,
+            "tier": lg.tier,
             "asOfSeason": latest,
             "clubs": [
                 {"team": r["team"], "elo": round(float(r["elo"]), 1),
