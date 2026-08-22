@@ -1,0 +1,83 @@
+# Daily club-soccer pipeline: refreshes results (top-5 leagues + UEFA),
+# rebuilds the glued Elo, grades persisted slates, predicts the next two
+# days, Monte Carlos the league tables, and commits the data + site JSON.
+# The club-football sibling of daily-report.yml (MLB), minus the emails.
+
+name: Daily Soccer Report
+
+on:
+  schedule:
+    # 10:00 UTC - the prior evening's European matches are final and the
+    # openfootball repos have usually caught up; the day's earliest
+    # kickoffs are hours away.
+    - cron: "0 10 * * *"
+
+  push:
+    branches: [main]
+    paths:
+      - "soccer/clubs/daily/**"
+      - ".github/workflows/soccer-daily.yml"
+
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: "Override run date (YYYY-MM-DD UTC, default today)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: soccer-daily-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  soccer-daily:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run daily pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_DATE="${{ github.event.inputs.run_date }}"
+          if [ -n "${RUN_DATE:-}" ]; then
+            python -m soccer.clubs.daily.run --date "$RUN_DATE"
+          else
+            python -m soccer.clubs.daily.run
+          fi
+
+      - name: Commit and push outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add soccer/clubs/data/*.csv soccer/clubs/model/artifacts/ \
+                  data/soccer_clubs/ web/public/data/soccer/
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Soccer daily: $(date -u +%F)"
+            bash .github/scripts/git-push-retry.sh main
+          else
+            echo "No changes to commit."
+          fi

@@ -46,6 +46,16 @@ Details and the two places an edge might actually live are in
   tiered K-factors, friendlies barely weighted) plus a multinomial outcome
   model with host effects and FIFA-rating squad-strength hooks; predicts the
   2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
+- **European club Elo (top-5 leagues + their second divisions)** — one Elo
+  pool per country spanning EPL/Championship, Bundesliga/2. Bundesliga,
+  La Liga/Segunda, Serie A/Serie B and Ligue 1/Ligue 2, so promoted clubs
+  carry real second-division form (through a tuned winner's-curse blend)
+  instead of a flat prior; glued cross-country by Champions/Europa/
+  Conference League results, with Transfermarkt spend features and a
+  pooled W/D/L outcome model validated on a two-season holdout; a daily
+  runner predicts each day's slate across both tiers, grades a running
+  ledger, and Monte Carlos every top-flight table
+  (`soccer/clubs/`, spec in `soccer/clubs/SPEC.md`)
 - **MLB daily model** — betting-blind Elo (K=3, +24 home, MOV-weighted)
   tested live against the 2026 season: three emails every morning (futures
   Monte Carlo, today's slate with simulated scores, yesterday's graded
@@ -163,6 +173,7 @@ GitHub Actions keep the data flowing without manual pulls:
 |---|---|---|
 | `unified-odds.yml` | 2x daily (10:00 / 22:00 UTC) | Fetches NFL + NBA odds snapshots, re-exports web JSON, commits |
 | `daily-report.yml` | daily (10:00 UTC) | MLB daily pipeline: pulls new box scores, updates Elo, sends the futures / slate / grade emails, commits site data (see `mlb/daily/README.md`) |
+| `soccer-daily.yml` | daily (10:00 UTC) | Club-soccer daily pipeline: refreshes top-5 league + UEFA results, regrades the ledger, predicts the slate, Monte Carlos the tables, commits site data (see `soccer/clubs/daily/README.md`) |
 
 The 2x-daily cadence is deliberate — it captures a morning line and an
 evening line before games while conserving the free-tier API quota.
@@ -200,7 +211,12 @@ Can-Tre-Beat-Vegas/
 ├── soccer/                  # World Cup / international soccer model
 │   ├── SPEC.md              # Model spec (Elo + squad-strength adjustments)
 │   ├── data/                # International results 1872–present + fixtures
-│   └── model/               # Elo engine, training, fixture predictions
+│   ├── model/               # Elo engine, training, fixture predictions
+│   └── clubs/               # Top-5 European league club Elo (EPL, Bundesliga,
+│       │                    #   La Liga, Serie A, Ligue 1) — see clubs/SPEC.md
+│       ├── data/            # League + UEFA results, transfers, fixtures
+│       ├── model/           # Per-league Elo, UEFA glue, outcome model
+│       └── daily/           # Daily slate/grade/futures runner
 ├── data/                    # Odds snapshots + stats
 │   ├── odds_api_data_*.csv  # NFL odds snapshots (timestamped)
 │   ├── nba/                 # NBA odds snapshots + actual game results
@@ -234,6 +250,10 @@ Steps to get there:
 - [ ] Deploy `web/` to Vercel and point the hub's `/vegas` rewrite at it
 - [x] Soccer Elo + outcome model predicting 2026 World Cup fixtures
   (`soccer/`, see `soccer/SPEC.md` for the full roadmap)
+- [x] Club Elo for the top-5 European leagues, tuned per league and validated
+  against a two-season holdout (`soccer/clubs/`)
+- [ ] Odds API soccer keys (`soccer_epl`, …) and club model picks on the
+  slate (quota permitting)
 - [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API
   config) and soccer model picks on the slate
 - [ ] Wire NBA model predictions into the slate for current games
