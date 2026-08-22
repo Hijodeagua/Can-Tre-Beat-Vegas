@@ -233,6 +233,8 @@ ALIASES: dict[str, dict[str, str]] = {
         "SS Juve Stabia": "Juve Stabia",
         "Sampdoria": "UC Sampdoria",
         "Sassuolo Calcio": "US Sassuolo Calcio",
+        "SPAL": "SPAL 2013 Ferrara",
+        "US Alessandria Calcio 1912": "US Alessandria 1912",
         "US Avellino 1912": "US Avellino",
         "US Palermo": "Palermo FC",
         "US Sassuolo": "US Sassuolo Calcio",
