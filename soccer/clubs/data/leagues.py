@@ -132,9 +132,13 @@ ALIASES: dict[str, dict[str, str]] = {
         "Wycombe Wanderers": "Wycombe Wanderers FC",
     },
     "bundesliga": {
+        "1.FC Köln": "1. FC Köln",
+        "1.FC Union Berlin": "1. FC Union Berlin",
+        "1.FSV Mainz 05": "1. FSV Mainz 05",
         "1899 Hoffenheim": "TSG 1899 Hoffenheim",
         "Bayer Leverkusen": "Bayer 04 Leverkusen",
         "Bayern München": "FC Bayern München",
+        "Bayern Munich": "FC Bayern München",
         "Bor. Mönchengladbach": "Borussia Mönchengladbach",
         "FC St. Pauli": "FC St. Pauli 1910",
         "SpVgg Greuther Fürth": "SpVgg Greuther Fürth 1903",
@@ -210,9 +214,13 @@ ALIASES: dict[str, dict[str, str]] = {
     },
     "ligue_2": {
         "AS Monaco": "AS Monaco FC",
+        "AS Nancy-Lorraine": "AS Nancy Lorraine",
+        "FC Sochaux-Montbéliard": "FC Sochaux",
         "Paris Saint-Germain": "Paris Saint-Germain FC",
+        "Quevilly - Rouen Métropole": "US Quevilly-Rouen",
         "RC Lens": "Racing Club de Lens",
         "RC Strasbourg": "RC Strasbourg Alsace",
+        "Stade Reims": "Stade de Reims",
         "Stade Rennais": "Stade Rennais FC 1901",
     },
 }
