@@ -28,13 +28,20 @@ from datetime import date
 from soccer.clubs.daily import export_site, grade, predict, simulate
 from soccer.clubs.daily.config import SEASON_SIMS
 from soccer.clubs.daily.state import build_state
-from soccer.clubs.data.leagues import TIER1, season_for_date
+from soccer.clubs.data.leagues import TIER1, current_season_for
 
 
 def refresh_data() -> None:
-    """Run the two fetchers as subprocesses so their exit codes can't kill
-    the run — the committed CSVs are the fallback."""
-    for mod in ("soccer.clubs.data.fetch_results", "soccer.clubs.data.fetch_uefa"):
+    """Run the fetchers as subprocesses so their exit codes can't kill the
+    run — the committed CSVs are the fallback. fetch_mls MUST run after
+    fetch_results: the latter owns results.csv outright and rewrites it
+    whole from the openfootball leagues alone, which would drop MLS's rows
+    if it ran second."""
+    for mod in (
+        "soccer.clubs.data.fetch_results",
+        "soccer.clubs.data.fetch_uefa",
+        "soccer.clubs.data.fetch_mls",
+    ):
         proc = subprocess.run([sys.executable, "-m", mod], check=False)
         if proc.returncode != 0:
             print(f"! {mod} failed (exit {proc.returncode}); using committed data")
@@ -75,10 +82,14 @@ def main() -> None:
 
     # Futures cover the top flights; second divisions are ratings + slate
     # only for now (Championship promotion odds are one config flip away).
+    # MLS naturally opts itself out here rather than needing a special case:
+    # its source is a completed-match log with no upcoming-fixture rows, so
+    # simulate_league() always finds nothing to simulate and reports the
+    # same "no fixtures" skip a season that hasn't published yet would.
     print("== Futures Monte Carlo")
-    season = season_for_date(run_date)
     futures = {}
     for league in TIER1:
+        season = current_season_for(league, run_date)
         sim = simulate.simulate_league(state, league, season, n_sims=args.season_sims)
         if sim is None:
             print(f"   {league}: no {season} fixtures upstream yet — skipped")

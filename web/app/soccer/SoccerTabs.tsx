@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtPct, missing } from '@/app/lib/format';
 import {
-  getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER,
+  getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER, GLUED_LEAGUES,
   type SoccerSlateRow,
 } from '@/app/lib/soccer';
 
@@ -73,13 +73,14 @@ const ELO_RANK_COLUMNS = [
   { header: 'Avg Elo', strong: true },
 ];
 
-/** Every league sorted by avg Elo, highest first — the flat "who's the
- * strongest league" ranking, as opposed to the table below it which stays
- * grouped by country pool. Leagues with no rated clubs yet sort last. */
+/** Every UEFA-glued league sorted by avg Elo, highest first — the flat
+ * "who's the strongest league" ranking, as opposed to the table below it
+ * which stays grouped by country pool. Leagues with no rated clubs yet sort
+ * last. MLS is excluded here — see GLUED_LEAGUES. */
 function LeagueEloRank() {
-  const ranked = [...orderedLeagueRankings()].sort(
-    (a, b) => (b[1].avgElo ?? -Infinity) - (a[1].avgElo ?? -Infinity),
-  );
+  const ranked = [...orderedLeagueRankings()]
+    .filter(([key]) => GLUED_LEAGUES.includes(key))
+    .sort((a, b) => (b[1].avgElo ?? -Infinity) - (a[1].avgElo ?? -Infinity));
   return (
     <ThemedTable
       columns={ELO_RANK_COLUMNS}
@@ -98,12 +99,13 @@ interface RankedClub {
   matches: number;
 }
 
-/** Every club in every league's current-season table, flattened into one
- * list — this is what "top/bottom Elo" means across the whole site, since
- * the UEFA glue keeps all ten leagues on one shared scale. */
+/** Every club in every UEFA-glued league's current-season table, flattened
+ * into one list — this is what "top/bottom Elo" means across the site,
+ * since the UEFA glue keeps those ten leagues on one shared scale. MLS is
+ * excluded — its Elo pool never exchanges points with them. */
 function allClubsRanked(): RankedClub[] {
   const out: RankedClub[] = [];
-  for (const key of LEAGUE_ORDER) {
+  for (const key of GLUED_LEAGUES) {
     const table = data.ratings[key];
     if (!table) continue;
     for (const c of table.clubs) {
@@ -200,6 +202,9 @@ function RankingsTab() {
             {anySquadStats
               ? ' "As of" season varies by league and by column — coverage is being backfilled incrementally, not all at once.'
               : ''}
+            {' '}MLS&apos;s Elo is on its own scale — a separate confederation means it
+            never plays the ten leagues above and never exchanges rating points with them,
+            so its number isn&apos;t comparable to theirs even though it shares this column.
           </>
         }
       />

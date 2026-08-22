@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-22T23:16:51+00:00",
+  "generatedAt": "2026-08-22T23:33:05+00:00",
   "source": "Can-Tre-Beat-Vegas club Elo (soccer/clubs/model/elo.py + europe.py)",
   "baseRating": 1500.0,
   "uefaGlueWeight": 0.75,
-  "matchesProcessed": 52867,
+  "matchesProcessed": 58644,
   "leagues": {
     "epl": {
       "name": "Premier League",
@@ -1370,6 +1370,204 @@
           "elo": 1247.0,
           "matches": 13,
           "lastSeason": "2025-26"
+        }
+      ]
+    },
+    "mls": {
+      "name": "MLS",
+      "tier": 1,
+      "pool": "mls",
+      "firstSeason": "2013",
+      "latestSeason": "2026",
+      "params": {
+        "k": 10.0,
+        "home_advantage": 75.0,
+        "season_regression": 0.2,
+        "entry_rating": 1460.0,
+        "entry_rating_t2": 1350.0,
+        "division_carry": 1.0
+      },
+      "matchesProcessed": 5777,
+      "ratings": [
+        {
+          "team": "Inter Miami CF",
+          "elo": 1609.2,
+          "matches": 224,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Vancouver Whitecaps FC",
+          "elo": 1581.5,
+          "matches": 469,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Los Angeles FC",
+          "elo": 1571.7,
+          "matches": 302,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Nashville SC",
+          "elo": 1568.0,
+          "matches": 224,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "FC Cincinnati",
+          "elo": 1538.3,
+          "matches": 261,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "New York City FC",
+          "elo": 1519.4,
+          "matches": 410,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "FC Dallas",
+          "elo": 1518.1,
+          "matches": 470,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Philadelphia Union",
+          "elo": 1516.8,
+          "matches": 471,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Chicago Fire FC",
+          "elo": 1516.2,
+          "matches": 454,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Houston Dynamo FC",
+          "elo": 1514.3,
+          "matches": 468,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Columbus Crew",
+          "elo": 1512.1,
+          "matches": 482,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Charlotte FC",
+          "elo": 1511.2,
+          "matches": 163,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "San Diego FC",
+          "elo": 1510.7,
+          "matches": 59,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Seattle Sounders FC",
+          "elo": 1509.9,
+          "matches": 493,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Minnesota United FC",
+          "elo": 1505.2,
+          "matches": 329,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Orlando City SC",
+          "elo": 1494.6,
+          "matches": 400,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Real Salt Lake",
+          "elo": 1490.0,
+          "matches": 473,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Portland Timbers",
+          "elo": 1486.0,
+          "matches": 484,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "St. Louis City SC",
+          "elo": 1478.8,
+          "matches": 124,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "San Jose Earthquakes",
+          "elo": 1472.4,
+          "matches": 456,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "LA Galaxy",
+          "elo": 1471.3,
+          "matches": 471,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Colorado Rapids",
+          "elo": 1470.6,
+          "matches": 455,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "New England Revolution",
+          "elo": 1468.7,
+          "matches": 468,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "New York Red Bulls",
+          "elo": 1468.0,
+          "matches": 483,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Austin FC",
+          "elo": 1443.9,
+          "matches": 195,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Toronto FC",
+          "elo": 1429.9,
+          "matches": 469,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "CF Montréal",
+          "elo": 1427.8,
+          "matches": 465,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Atlanta United FC",
+          "elo": 1426.5,
+          "matches": 333,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "D.C. United",
+          "elo": 1416.1,
+          "matches": 459,
+          "lastSeason": "2026"
+        },
+        {
+          "team": "Sporting Kansas City",
+          "elo": 1384.7,
+          "matches": 472,
+          "lastSeason": "2026"
         }
       ]
     }

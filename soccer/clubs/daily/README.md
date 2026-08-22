@@ -20,9 +20,12 @@ publish the site JSON.
 
 ## Data flow for a run dated D (UTC)
 
-1. `fetch_results` + `fetch_uefa` refresh the committed CSVs (best-effort;
-   the 10:00 UTC schedule means the prior evening's European matches are
-   final and upstream has usually caught up).
+1. `fetch_results` + `fetch_uefa` + `fetch_mls` refresh the committed CSVs
+   (best-effort; the 10:00 UTC schedule means the prior evening's European
+   matches are final and upstream has usually caught up). Order matters:
+   `fetch_results` rewrites `results.csv` whole from the openfootball
+   leagues alone, so `fetch_mls` — which only ever touches its own rows —
+   always runs after it, or MLS would be silently dropped.
 2. The glued replay (`model/europe.py`) rebuilds every league pool from
    scratch — deterministic, no incremental state to corrupt — and the
    outcome + score models are refit from that history in-run (no pickle
@@ -50,5 +53,8 @@ publish the site JSON.
 - **Fixtures** — from the openfootball country repos, which publish new
   seasons before football.json. A league whose repo lags (Ligue 1 at
   2026-27 launch) simply reports `no_fixtures` until upstream catches up.
+  MLS reports the same status permanently — its source is a completed-match
+  log, not a fixture list, so it never has a slate or futures sim, only
+  ratings and squad economics.
 - **No emails yet** — the MLB pipeline's three-email machinery is the
   template if/when this earns an inbox slot.

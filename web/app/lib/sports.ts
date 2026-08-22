@@ -102,7 +102,8 @@ export const SPORTS: SportConfig[] = [
     blurb:
       'Country-pool club Elo across Europe’s top 5 leagues plus their second divisions, ' +
       'glued together by Champions/Europa/Conference League cross-play, with squad market ' +
-      'value and transfer spend as extra outcome-model features.',
+      'value and transfer spend as extra outcome-model features. MLS runs alongside on its ' +
+      'own unglued pool.',
     offseasonLead: () => 'Not on the cross-sport ladder yet — soccer runs daily but is not graded there.',
     offseasonNote:
       'Club Elo + squad economics across 10 leagues. Not wired into the graded track-record ' +

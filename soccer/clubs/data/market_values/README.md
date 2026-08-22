@@ -7,7 +7,11 @@ same contract as the international model's FIFA-ratings layer.
 
 ## Schema
 
-One file per season, named `values_<season>.csv` (e.g. `values_2026-27.csv`):
+One file per season, named `values_<season>.csv`. The season string is
+whatever the league itself uses — `values_2026-27.csv` for the
+July-boundary European leagues, `values_2026.csv` (bare calendar year) for
+MLS — the loader derives `season` straight from the filename, so the two
+formats coexist without collision:
 
 ```csv
 league,club,squad_value_eur_m,wage_bill_eur_m,squad_size,avg_age,foreigners,avg_value_eur_m
@@ -17,7 +21,8 @@ bundesliga,FC Bayern München,930.0,190.0,,,,
 ```
 
 - `league` — our league key (`epl`, `bundesliga`, `bundesliga_2`, `la_liga`,
-  `la_liga_2`, `serie_a`, `serie_b`, `ligue_1`, `ligue_2`, `championship`)
+  `la_liga_2`, `serie_a`, `serie_b`, `ligue_1`, `ligue_2`, `championship`,
+  `mls`)
 - `club` — whatever spelling Transfermarkt shows for that season (e.g.
   "Manchester United", not "Manchester United FC" pre-2020). The loader
   canonicalizes through `leagues.py`'s alias maps on load, same as every

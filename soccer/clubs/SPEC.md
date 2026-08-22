@@ -1,12 +1,13 @@
-# Top-5 European Leagues — Club Elo Models
+# Club Elo Models — Top-5 European Leagues + MLS
 
-Per-country Elo models covering each of the top-5 leagues **and its second
-division** (EPL + Championship, Bundesliga + 2. Bundesliga, La Liga +
-Segunda, Serie A + Serie B, Ligue 1 + Ligue 2) — the club-football sibling
-of the international model in `soccer/model/`. Same DNA (logistic
-expectation, margin-of-victory multiplier, draws as 0.5, a multinomial
-outcome layer on the Elo gap), with the structure club league play actually
-has: promotion/relegation inside one country pool, and summer squad churn.
+Per-country Elo models covering each of the top-5 European leagues **and
+its second division** (EPL + Championship, Bundesliga + 2. Bundesliga, La
+Liga + Segunda, Serie A + Serie B, Ligue 1 + Ligue 2), plus MLS on its own
+unglued pool — the club-football sibling of the international model in
+`soccer/model/`. Same DNA (logistic expectation, margin-of-victory
+multiplier, draws as 0.5, a multinomial outcome layer on the Elo gap), with
+the structure club league play actually has: promotion/relegation inside
+one country pool, and summer squad churn.
 
 ## Elo rules
 
@@ -73,7 +74,10 @@ pools zero-sum, with K = the mean of the two leagues' tuned Ks ×
 `UEFA_WEIGHT`, the home club's league home advantage (dropped for
 neutral-venue finals), and the usual MOV multiplier. Matches against clubs
 outside the five leagues (Porto, Ajax, …) are skipped — no rating exists
-for the opponent.
+for the opponent. MLS never enters this glue at all: it's a different
+confederation (CONCACAF, not UEFA) and never plays these competitions, so
+its pool stays fully independent — its Elo numbers are not comparable to
+the ten glued leagues', by construction, not by omission.
 
 That's ~65 cross-league matches a season against ~1,750 league matches, so
 the effect is modest by construction, but it is the only competitive signal
@@ -156,6 +160,20 @@ has published).
 | Serie B | `serie_b` | `it.2` | 2013-14 → |
 | Ligue 1 | `ligue_1` | `fr.1` | 2014-15 → |
 | Ligue 2 | `ligue_2` | `fr.2` | 2014-15 → (hole 2021-24) |
+| MLS | `mls` | — (own fetcher) | 2013 → |
+
+MLS is not from openfootball — `data/fetch_mls.py` pulls the whole match
+history from [philo92/mls-elo](https://github.com/philo92/mls-elo) (one
+CSV, 1996 → present, already unified to each club's current name; we start
+replay at 2013 as a deliberate quality cutoff). Calendar-year seasons
+("2020", not "2020-21") since an MLS season never crosses New Year's;
+`leagues.next_season`/`current_season_for` handle both formats. The source
+is a completed-match log with no upcoming fixtures, so MLS naturally has no
+daily slate or futures Monte Carlo — ratings, squad economics and the
+rankings page only. Because `fetch_results.py` owns `results.csv` outright
+and rewrites it from the openfootball leagues alone, `fetch_mls.py` always
+runs *after* it in `daily/run.py`'s refresh step, merging in rather than
+overwriting.
 
 Wrinkles handled in the fetch, so nothing downstream sees them:
 
@@ -193,6 +211,7 @@ soccer/clubs/
 │   ├── football_txt.py      # parser for the openfootball Football.TXT format
 │   ├── fetch_results.py     # football.json + country-repo txt → results.csv
 │   ├── fetch_uefa.py        # champions-league repo → uefa_results.csv
+│   ├── fetch_mls.py         # philo92/mls-elo → results.csv (merges "mls" rows only)
 │   ├── fetch_transfers.py   # ewenme/transfers → club_season_transfers.csv
 │   ├── market_values/       # optional squad value / wage uploads (see README)
 │   ├── results.csv          # committed league results + current-season fixtures
@@ -212,6 +231,7 @@ soccer/clubs/
 ```bash
 python -m soccer.clubs.data.fetch_results     # refresh league results + fixtures
 python -m soccer.clubs.data.fetch_uefa        # refresh UCL/UEL/UECL results
+python -m soccer.clubs.data.fetch_mls         # refresh MLS results (run after fetch_results)
 python -m soccer.clubs.data.fetch_transfers   # refresh transfer aggregates
 python -m soccer.clubs.model.tune             # re-tune per-league parameters
 python -m soccer.clubs.model.train            # outcome model + holdout metrics
@@ -238,12 +258,21 @@ site consumes.
 - [x] Second divisions in-pool: promotion carry-in from real D2 form with a
   tuned winner's-curse blend, validated to beat the flat entry rating on
   the top-flight holdout; D2 slates predicted and graded daily
+- [x] Squad market values populated from Transfermarkt screenshots
+  (`data/market_values/`) — every league-season with match data now has
+  value + full squad-composition stats; wages still unpopulated (no source
+  wired up yet)
+- [x] A soccer page in `web/` (`/soccer`) reading
+  `web/public/data/soccer/latest.json` — league rankings, daily slate,
+  club ratings
+- [x] MLS: its own unglued Elo pool (`data/fetch_mls.py`,
+  philo92/mls-elo), squad economics, ratings and the rankings page —
+  no daily slate/futures (the source has no upcoming-fixture data)
 - [ ] Second-division futures (promotion odds) — one config flip in
   `daily/run.py` once wanted
-- [ ] Squad market values + wages populated (locally) and validated
+- [ ] Wage bills populated (Capology/FBref, still manual)
 - [ ] Odds API soccer keys (`soccer_epl`, …) on the `/vegas` slate, model
   picks with edge-vs-market (quota permitting)
-- [ ] A soccer page in `web/` reading `web/public/data/soccer/latest.json`
 - [ ] A rating pool for non-top-5 European clubs so every UEFA match
   (not just top-5 pairings) feeds the glue
 - [ ] Dixon–Coles low-score correction if the Poisson calibration drifts

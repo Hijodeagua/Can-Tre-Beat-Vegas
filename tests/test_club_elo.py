@@ -33,15 +33,22 @@ class TestLeagues:
         assert set(LEAGUES) == {
             "epl", "championship", "bundesliga", "bundesliga_2",
             "la_liga", "la_liga_2", "serie_a", "serie_b",
-            "ligue_1", "ligue_2",
+            "ligue_1", "ligue_2", "mls",
         }
 
     def test_second_divisions_share_their_country_pool(self):
         from soccer.clubs.data.leagues import POOLS, pool_of
         assert pool_of("championship") == "epl"
         assert pool_of("serie_b") == "serie_a"
-        assert set(POOLS) == {"epl", "bundesliga", "la_liga", "serie_a", "ligue_1"}
+        assert set(POOLS) == {"epl", "bundesliga", "la_liga", "serie_a", "ligue_1", "mls"}
         assert POOLS["epl"] == ["epl", "championship"]
+        # MLS is single-tier — no second division to share the pool with.
+        assert POOLS["mls"] == ["mls"]
+
+    def test_mls_is_its_own_unglued_pool(self):
+        assert LEAGUES["mls"].source == "mls"
+        assert LEAGUES["mls"].tier == 1
+        assert LEAGUES["epl"].source == "openfootball"
 
     def test_d2_aliases_map_into_the_pool_canon(self):
         assert canonical("championship", "Leeds United") == "Leeds United FC"
@@ -68,6 +75,12 @@ class TestLeagues:
         assert next_season("1999-00") == "2000-01"
         assert season_for_date("2026-08-20") == "2026-27"
         assert season_for_date("2026-05-24") == "2025-26"
+
+    def test_season_helpers_handle_calendar_year_seasons(self):
+        from soccer.clubs.data.leagues import current_season_for
+        assert next_season("2020") == "2021"
+        assert current_season_for("mls", "2026-08-20") == "2026"
+        assert current_season_for("epl", "2026-08-20") == "2026-27"
 
 
 class TestClubEloEngine:
