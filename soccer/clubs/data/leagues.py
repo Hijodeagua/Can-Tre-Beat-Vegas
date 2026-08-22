@@ -196,6 +196,7 @@ ALIASES: dict[str, dict[str, str]] = {
     },
     "ligue_1": {
         "AS Monaco": "AS Monaco FC",
+        "FC Girondins Bordeaux": "Girondins Bordeaux",
         "FC Toulouse": "Toulouse FC",
         "LOSC Lille": "Lille OSC",
         "Olympique Lyon": "Olympique Lyonnais",
