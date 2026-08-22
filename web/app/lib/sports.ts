@@ -89,6 +89,26 @@ function oddsOffseasonLead(
 
 export const SPORTS: SportConfig[] = [
   {
+    key: 'soccer',
+    name: 'Soccer',
+    emoji: '⚽',
+    accent: '#3ddc84',
+    accentInk: '#06120b',
+    tint: 'color-mix(in srgb, #3ddc84 22%, white)',
+    dashBorder: 'color-mix(in srgb, #3ddc84 60%, white)',
+    href: '/soccer',
+    navLabel: '⚽ Soccer',
+    slateSource: 'mlb', // unused: soccer isn't in the odds feed or the cross-sport ladder yet.
+    blurb:
+      'Country-pool club Elo across Europe’s top 5 leagues plus their second divisions, ' +
+      'glued together by Champions/Europa/Conference League cross-play, with squad market ' +
+      'value and transfer spend as extra outcome-model features.',
+    offseasonLead: () => 'Not on the cross-sport ladder yet — soccer runs daily but is not graded there.',
+    offseasonNote:
+      'Club Elo + squad economics across 10 leagues. Not wired into the graded track-record ' +
+      'ladder above; see the Soccer page for its own rankings and daily slate.',
+  },
+  {
     key: 'mlb',
     name: 'MLB',
     emoji: '⚾',

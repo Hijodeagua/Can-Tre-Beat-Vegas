@@ -54,7 +54,11 @@ def _load_transfer_z() -> pd.DataFrame:
     return t[["league", "season", "club", "spend_z", "net_z"]]
 
 
-def _load_value_z() -> pd.DataFrame:
+def _load_values_raw() -> pd.DataFrame:
+    """Concatenate every `values_<season>.csv` upload, canonicalized, with
+    every column the files carry — squad value/wage plus whatever of the
+    squad-composition columns (squad_size, avg_age, foreigners,
+    avg_value_eur_m) a given season/league has been backfilled with."""
     frames = []
     for path in sorted(VALUES_DIR.glob("values_*.csv")):
         season = path.stem.replace("values_", "")
@@ -65,7 +69,18 @@ def _load_value_z() -> pd.DataFrame:
         # load rather than requiring pre-canonicalized names in the file.
         df["club"] = df.apply(lambda r: canonical(r["league"], r["club"]), axis=1)
         frames.append(df)
-    v = pd.concat(frames, ignore_index=True)
+    return pd.concat(frames, ignore_index=True)
+
+
+def load_market_values_raw() -> pd.DataFrame:
+    """Public entry point for exporters (not the model): the full raw
+    squad-economics table, canonicalized, un-z-scored. Used to build
+    display-only cross-league summaries (`daily/export_site.py`)."""
+    return _load_values_raw()
+
+
+def _load_value_z() -> pd.DataFrame:
+    v = _load_values_raw()
     v["value_z"] = _z_within(v, "squad_value_eur_m")
     if "wage_bill_eur_m" in v.columns and v["wage_bill_eur_m"].notna().any():
         v["wage_z"] = _z_within(v, "wage_bill_eur_m")
