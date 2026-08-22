@@ -75,6 +75,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Crystal Palace": "Crystal Palace FC",
         "Huddersfield Town": "Huddersfield Town AFC",
         "Hull City": "Hull City AFC",
+        "Ipswich Town": "Ipswich Town FC",
         "Leeds United": "Leeds United FC",
         "Luton Town": "Luton Town FC",
         "Nottingham Forest": "Nottingham Forest FC",
