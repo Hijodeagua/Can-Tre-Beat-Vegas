@@ -18,14 +18,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from soccer.clubs.data.leagues import LEAGUES
-from soccer.clubs.model.elo import BASE_RATING, league_params, run_all
+from soccer.clubs.model.elo import BASE_RATING, league_params
+from soccer.clubs.model.europe import UEFA_WEIGHT, run_all_european
 
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 DEFAULT_OUT = ARTIFACTS / "club_elo_ratings.json"
 
 
 def export(all_teams: bool = False, out: Path = DEFAULT_OUT) -> Path:
-    engines, history = run_all()
+    engines, history = run_all_european()
+    history = history[~history["league"].str.startswith("uefa:")]
 
     leagues = {}
     for key, lg in LEAGUES.items():
@@ -50,8 +52,9 @@ def export(all_teams: bool = False, out: Path = DEFAULT_OUT) -> Path:
 
     payload = {
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "source": "Can-Tre-Beat-Vegas club Elo (soccer/clubs/model/elo.py)",
+        "source": "Can-Tre-Beat-Vegas club Elo (soccer/clubs/model/elo.py + europe.py)",
         "baseRating": BASE_RATING,
+        "uefaGlueWeight": UEFA_WEIGHT,
         "matchesProcessed": int(len(history)),
         "leagues": leagues,
     }

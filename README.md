@@ -48,8 +48,11 @@ Details and the two places an edge might actually live are in
   2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
 - **Top-5 European league club Elo** — per-league Elo for the Premier League,
   Bundesliga, La Liga, Serie A and Ligue 1 (per-league tuned K / home
-  advantage / season rollover, promoted-club entry ratings) with a pooled
-  W/D/L outcome model, temporally validated on a two-season holdout
+  advantage / season rollover, promoted-club entry ratings), glued
+  cross-league by Champions/Europa/Conference League results, with
+  Transfermarkt spend features and a pooled W/D/L outcome model validated
+  on a two-season holdout; a daily runner predicts each day's slate, grades
+  a running ledger, and Monte Carlos every league table
   (`soccer/clubs/`, spec in `soccer/clubs/SPEC.md`)
 - **MLB daily model** — betting-blind Elo (K=3, +24 home, MOV-weighted)
   tested live against the 2026 season: three emails every morning (futures
@@ -168,6 +171,7 @@ GitHub Actions keep the data flowing without manual pulls:
 |---|---|---|
 | `unified-odds.yml` | 2x daily (10:00 / 22:00 UTC) | Fetches NFL + NBA odds snapshots, re-exports web JSON, commits |
 | `daily-report.yml` | daily (10:00 UTC) | MLB daily pipeline: pulls new box scores, updates Elo, sends the futures / slate / grade emails, commits site data (see `mlb/daily/README.md`) |
+| `soccer-daily.yml` | daily (10:00 UTC) | Club-soccer daily pipeline: refreshes top-5 league + UEFA results, regrades the ledger, predicts the slate, Monte Carlos the tables, commits site data (see `soccer/clubs/daily/README.md`) |
 
 The 2x-daily cadence is deliberate — it captures a morning line and an
 evening line before games while conserving the free-tier API quota.
@@ -207,7 +211,10 @@ Can-Tre-Beat-Vegas/
 │   ├── data/                # International results 1872–present + fixtures
 │   ├── model/               # Elo engine, training, fixture predictions
 │   └── clubs/               # Top-5 European league club Elo (EPL, Bundesliga,
-│                            #   La Liga, Serie A, Ligue 1) — see clubs/SPEC.md
+│       │                    #   La Liga, Serie A, Ligue 1) — see clubs/SPEC.md
+│       ├── data/            # League + UEFA results, transfers, fixtures
+│       ├── model/           # Per-league Elo, UEFA glue, outcome model
+│       └── daily/           # Daily slate/grade/futures runner
 ├── data/                    # Odds snapshots + stats
 │   ├── odds_api_data_*.csv  # NFL odds snapshots (timestamped)
 │   ├── nba/                 # NBA odds snapshots + actual game results

@@ -1,18 +1,23 @@
 """
 Refresh the committed top-5-league club results from openfootball.
 
-Source: openfootball/football.json (public domain), one JSON per league per
-season, `score.ft` filled in as matches are played. Same posture as
-`soccer/data/fetch_results.py`: network-gated and best-effort — a failed
-fetch keeps the committed copy of that season and moves on.
+Two upstream layers, both public domain, both best-effort (a failed fetch
+keeps the committed copy of that season and moves on):
+
+- openfootball/football.json — one JSON per league per season; the
+  historical backbone.
+- the openfootball country repos (england, deutschland, espana, italy,
+  france) in Football.TXT format — these publish each new season's fixtures
+  well before football.json does, so they are the fallback for any season
+  the JSON layer doesn't have yet. That's what makes the daily runner live
+  during 2026-27 while `2026-27/en.1.json` is still unpublished.
 
 Every run walks each league from its first upstream season through the
-current one *plus one probe season beyond*, so a newly published season file
-(e.g. 2026-27 once openfootball adds it) starts flowing in with no code
-change. Team names are canonicalized via `leagues.ALIASES` before writing.
+current one *plus one probe season beyond*. Team names are canonicalized
+via `leagues.ALIASES` before writing.
 
-Rows without a final score are kept only for the current season (upcoming
-fixtures, usable by a future predict step); past-season scoreless rows are
+Rows without a final score are kept only for the current season onward
+(upcoming fixtures — the daily slate); past-season scoreless rows are
 abandoned matches (COVID-cut Ligue 1 2019-20) and are dropped.
 
 Usage:
@@ -26,6 +31,7 @@ from pathlib import Path
 
 import requests
 
+from soccer.clubs.data import football_txt
 from soccer.clubs.data.leagues import (
     LEAGUES,
     canonical,
@@ -36,6 +42,7 @@ from soccer.clubs.data.leagues import (
 DATA_DIR = Path(__file__).resolve().parent
 OUT_CSV = DATA_DIR / "results.csv"
 RAW_BASE = "https://raw.githubusercontent.com/openfootball/football.json/master"
+TXT_BASE = "https://raw.githubusercontent.com/openfootball"
 
 COLUMNS = [
     "date", "season", "league", "home_team", "away_team",
@@ -52,8 +59,22 @@ def seasons_for(league_key: str, today: date) -> list[str]:
     return seasons
 
 
-def fetch_season(league_key: str, season: str, timeout: int = 30) -> list[dict] | None:
-    """One league-season -> normalized rows, or None if unavailable."""
+def _row(league_key: str, season: str, date: str, team1: str, team2: str,
+         s1, s2) -> dict:
+    played = s1 is not None and s2 is not None
+    return {
+        "date": date,
+        "season": season,
+        "league": league_key,
+        "home_team": canonical(league_key, team1),
+        "away_team": canonical(league_key, team2),
+        "home_score": s1 if played else "",
+        "away_score": s2 if played else "",
+    }
+
+
+def fetch_season_json(league_key: str, season: str, timeout: int = 30) -> list[dict] | None:
+    """One league-season from football.json, or None if unavailable."""
     lg = LEAGUES[league_key]
     url = f"{RAW_BASE}/{season}/{lg.code}.json"
     try:
@@ -63,7 +84,7 @@ def fetch_season(league_key: str, season: str, timeout: int = 30) -> list[dict] 
         resp.raise_for_status()
         matches = resp.json()["matches"]
     except (requests.RequestException, ValueError, KeyError) as exc:
-        print(f"  ! {league_key} {season}: fetch failed ({exc})")
+        print(f"  ! {league_key} {season}: json fetch failed ({exc})")
         return None
 
     rows = []
@@ -74,17 +95,39 @@ def fetch_season(league_key: str, season: str, timeout: int = 30) -> list[dict] 
         ft = score.get("ft") if isinstance(score, dict) else score
         played = isinstance(ft, (list, tuple)) and len(ft) == 2
         rows.append(
-            {
-                "date": m["date"],
-                "season": season,
-                "league": league_key,
-                "home_team": canonical(league_key, m["team1"]),
-                "away_team": canonical(league_key, m["team2"]),
-                "home_score": ft[0] if played else "",
-                "away_score": ft[1] if played else "",
-            }
+            _row(league_key, season, m["date"], m["team1"], m["team2"],
+                 ft[0] if played else None, ft[1] if played else None)
         )
     return rows
+
+
+def fetch_season_txt(league_key: str, season: str, timeout: int = 30) -> list[dict] | None:
+    """One league-season from the country Football.TXT repo, or None."""
+    lg = LEAGUES[league_key]
+    url = f"{TXT_BASE}/{lg.txt_repo}/master/{season}/{lg.txt_file}.txt"
+    try:
+        resp = requests.get(url, timeout=timeout)
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+        matches = football_txt.parse(resp.text, season)
+    except requests.RequestException as exc:
+        print(f"  ! {league_key} {season}: txt fetch failed ({exc})")
+        return None
+    if not matches:
+        return None
+    return [
+        _row(league_key, season, m.date, m.team1, m.team2, m.score1, m.score2)
+        for m in matches
+    ]
+
+
+def fetch_season(league_key: str, season: str) -> tuple[list[dict] | None, str]:
+    rows = fetch_season_json(league_key, season)
+    if rows is not None:
+        return rows, "json"
+    rows = fetch_season_txt(league_key, season)
+    return rows, "txt"
 
 
 def fetch(today: date | None = None) -> list[dict]:
@@ -94,7 +137,7 @@ def fetch(today: date | None = None) -> list[dict]:
     for key in LEAGUES:
         league_rows: list[dict] = []
         for season in seasons_for(key, today):
-            rows = fetch_season(key, season)
+            rows, src = fetch_season(key, season)
             if rows is None:
                 # Expected for seasons openfootball hasn't published yet;
                 # noisy only if a *past* season goes missing.
@@ -104,7 +147,7 @@ def fetch(today: date | None = None) -> list[dict]:
             if season < current:
                 rows = [r for r in rows if r["home_score"] != ""]
             played = sum(1 for r in rows if r["home_score"] != "")
-            print(f"  + {key} {season}: {len(rows)} matches ({played} played)")
+            print(f"  + {key} {season} [{src}]: {len(rows)} matches ({played} played)")
             league_rows.extend(rows)
         all_rows.extend(league_rows)
     all_rows.sort(key=lambda r: (r["date"], r["league"], r["home_team"]))

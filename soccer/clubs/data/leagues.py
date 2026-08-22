@@ -21,18 +21,23 @@ class League:
     name: str           # display name
     code: str           # openfootball file stem ("en.1", …)
     first_season: str   # earliest season available upstream ("2010-11", …)
+    txt_repo: str       # openfootball country repo with Football.TXT files
+    txt_file: str       # file stem inside <season>/ in that repo
+    country: str        # UEFA 3-letter code, used to map cl/el/conf entries
 
 
 LEAGUES: dict[str, League] = {
     lg.key: lg
     for lg in [
-        League("epl", "Premier League", "en.1", "2010-11"),
-        League("bundesliga", "Bundesliga", "de.1", "2010-11"),
-        League("la_liga", "La Liga", "es.1", "2012-13"),
-        League("serie_a", "Serie A", "it.1", "2013-14"),
-        League("ligue_1", "Ligue 1", "fr.1", "2014-15"),
+        League("epl", "Premier League", "en.1", "2010-11", "england", "1-premierleague", "ENG"),
+        League("bundesliga", "Bundesliga", "de.1", "2010-11", "deutschland", "1-bundesliga", "GER"),
+        League("la_liga", "La Liga", "es.1", "2012-13", "espana", "1-liga", "ESP"),
+        League("serie_a", "Serie A", "it.1", "2013-14", "italy", "1-seriea", "ITA"),
+        League("ligue_1", "Ligue 1", "fr.1", "2014-15", "france", "1-ligue1", "FRA"),
     ]
 }
+
+COUNTRY_TO_LEAGUE = {lg.country: lg.key for lg in LEAGUES.values()}
 
 # Historical name -> current canonical name, per league. Only clubs the
 # upstream actually renamed appear here; everything else passes through.
@@ -64,6 +69,7 @@ ALIASES: dict[str, dict[str, str]] = {
     "la_liga": {
         "Atlético Madrid": "Club Atlético de Madrid",
         "CD Alavés": "Deportivo Alavés",
+        "Deportivo La Coruña": "RC Deportivo La Coruña",
         "Espanyol Barcelona": "RCD Espanyol de Barcelona",
         "RC Celta": "RC Celta de Vigo",
         "Rayo Vallecano": "Rayo Vallecano de Madrid",
@@ -92,6 +98,13 @@ ALIASES: dict[str, dict[str, str]] = {
         "Stade Rennais": "Stade Rennais FC 1901",
     },
 }
+
+
+# UEFA-file spellings that differ from BOTH the current canonical name and
+# the historical league spellings covered by ALIASES. Applied (then ALIASES)
+# when mapping cl/el/conf entries to league pools; extended as the fetch
+# step reports unmatched top-5-country clubs.
+UEFA_ALIASES: dict[str, dict[str, str]] = {}
 
 
 def canonical(league_key: str, team: str) -> str:

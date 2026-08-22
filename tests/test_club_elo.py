@@ -113,7 +113,7 @@ class TestFetchNormalization:
                 return {"matches": matches}
 
         monkeypatch.setattr(fetch_results.requests, "get", lambda *a, **k: Resp())
-        return fetch_results.fetch_season("epl", "2025-26")
+        return fetch_results.fetch_season_json("epl", "2025-26")
 
     def test_accepts_both_score_shapes_and_flags_unplayed(self, monkeypatch):
         rows = self._rows(

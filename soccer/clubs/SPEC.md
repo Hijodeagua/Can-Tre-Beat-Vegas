@@ -40,22 +40,76 @@ untouched holdout for `train.py`. Current values live in
 international K's — 38 games a season against familiar opponents means each
 result carries less news), home advantage ≈ 45–60 Elo, ρ ≈ 0.10–0.15.
 
+## UEFA cross-league glue
+
+The five pools are closed economies — except in Europe. `model/europe.py`
+replays the leagues *and* the UEFA club competitions (Champions League from
+2014-15, Europa League from 2020-21, Conference League from 2021-22; data
+in `data/uefa_results.csv`) in one chronological stream. A UEFA match
+between two tracked clubs exchanges rating points between their league
+pools zero-sum, with K = the mean of the two leagues' tuned Ks ×
+`UEFA_WEIGHT`, the home club's league home advantage (dropped for
+neutral-venue finals), and the usual MOV multiplier. Matches against clubs
+outside the five leagues (Porto, Ajax, …) are skipped — no rating exists
+for the opponent.
+
+That's ~65 cross-league matches a season against ~1,750 league matches, so
+the effect is modest by construction, but it is the only competitive signal
+linking the pools: with it, cross-league Elo comparisons mean something.
+Validated on the league holdout: log loss 0.99058 glued (weight 0.75,
+interior optimum) vs 0.99094 unglued.
+
+## Squad economics (Transfermarkt layer)
+
+`data/fetch_transfers.py` pulls Transfermarkt transfer fees from
+[ewenme/transfers](https://github.com/ewenme/transfers) and aggregates them
+to club-season gross spend / sales / net (`data/club_season_transfers.csv`,
+~1,100 club-seasons; upstream fees currently run through 2022-23 and the
+aggregate extends whenever upstream resumes). `model/features.py` turns
+these into home-minus-away differentials z-scored within league-season,
+plus `value_diff_z` / `wage_diff_z` from the optional squad-value uploads
+(`data/market_values/`, schema in its README — transfermarkt.com itself is
+proxy-blocked in the hosted dev environment, so values are populated
+locally). Everything 0-imputes when missing: the model degrades to
+Elo-only.
+
+Honest holdout read (2021-22 + 2022-23, the last transfer-covered seasons):
+net spend improves log loss 0.99081 → 0.99064 — small but directionally
+sane (spend → home wins). Not a rating replacement; carried as features.
+
 ## Probability model
 
 Multinomial logistic regression over {home win, draw, away win} on the
-venue-adjusted Elo gap, pooled across the five leagues — the gap→probability
-curve is shared, while each league's gaps already come from its own tuned
-pool. Temporal validation on the two held-out seasons (2024-25 + 2025-26,
-never seen by tuning or training):
+venue-adjusted Elo gap plus the squad-economics differentials, pooled
+across the five leagues — the gap→probability curve is shared, while each
+league's gaps already come from its own tuned (and UEFA-glued) pool.
+Temporal validation on the two held-out seasons (2024-25 + 2025-26, never
+seen by tuning or training):
 
 | | log loss | accuracy |
 |---|---|---|
-| Elo model | **0.9909** | 51.9% |
+| Full model (glued Elo + economics) | **0.9902** | 52.2% |
+| Elo-only | 0.9906 | — |
 | class-frequency baseline | 1.0750 | — |
 
-Per-league holdout log loss runs 0.978 (La Liga) to 1.012 (EPL), beating the
-frequency baseline everywhere. Artifacts: `model/artifacts/outcome_model.pkl`,
-`metrics.csv`.
+Per-league holdout log loss runs 0.977 (La Liga) to 1.011 (EPL), beating
+the frequency baseline everywhere. Artifacts:
+`model/artifacts/outcome_model.pkl`, `metrics.csv`.
+
+Features tested and *rejected* (they made holdout log loss worse): last-5
+form differential, rest-day differential — Elo already carries that
+information.
+
+## Daily pipeline
+
+`daily/` runs the whole thing once a day (see `daily/README.md`): refresh
+results + UEFA, rebuild the glued Elo, grade persisted slates into a
+running ledger, predict the next two days' fixtures (W/D/L, pick, most
+likely Poisson scoreline), Monte Carlo each league's remaining season
+(title / top-4 / relegation with live in-sim Elo), and publish
+`web/public/data/soccer/latest.json`. Fixtures come from the openfootball
+country repos, which publish new seasons before football.json does —
+that's what makes the runner live in 2026-27 today.
 
 ## Data
 
@@ -97,22 +151,34 @@ Wrinkles handled in the fetch, so nothing downstream sees them:
 soccer/clubs/
 ├── SPEC.md                  # this file
 ├── data/
-│   ├── leagues.py           # league registry + canonical-name aliases
-│   ├── fetch_results.py     # openfootball → results.csv (best-effort, network-gated)
-│   └── results.csv          # committed normalized results, all five leagues
-└── model/
-    ├── elo.py               # ClubEloEngine (per-league pools, rollover, entry rating)
-    ├── tune.py              # per-league parameter grid search
-    ├── train.py             # pooled multinomial outcome model + temporal validation
-    ├── export_ratings.py    # → artifacts/club_elo_ratings.json (all leagues)
-    └── artifacts/           # tuned_params.json, outcome model, metrics, ratings JSON
+│   ├── leagues.py           # league registry + canonical-name aliases (+ UEFA aliases)
+│   ├── football_txt.py      # parser for the openfootball Football.TXT format
+│   ├── fetch_results.py     # football.json + country-repo txt → results.csv
+│   ├── fetch_uefa.py        # champions-league repo → uefa_results.csv
+│   ├── fetch_transfers.py   # ewenme/transfers → club_season_transfers.csv
+│   ├── market_values/       # optional squad value / wage uploads (see README)
+│   ├── results.csv          # committed league results + current-season fixtures
+│   ├── uefa_results.csv     # committed UCL/UEL/UECL results, league-mapped
+│   └── club_season_transfers.csv
+├── model/
+│   ├── elo.py               # ClubEloEngine (per-league pools, rollover, entry rating)
+│   ├── europe.py            # UEFA cross-league glue replay
+│   ├── features.py          # spend / value / wage differentials (z within league-season)
+│   ├── tune.py              # per-league parameter grid search
+│   ├── train.py             # pooled multinomial outcome model + temporal validation
+│   ├── export_ratings.py    # → artifacts/club_elo_ratings.json (glued, all leagues)
+│   └── artifacts/           # tuned_params.json, outcome model, metrics, ratings JSON
+└── daily/                   # the daily runner (see daily/README.md)
 ```
 
 ```bash
-python -m soccer.clubs.data.fetch_results     # refresh results (best effort)
+python -m soccer.clubs.data.fetch_results     # refresh league results + fixtures
+python -m soccer.clubs.data.fetch_uefa        # refresh UCL/UEL/UECL results
+python -m soccer.clubs.data.fetch_transfers   # refresh transfer aggregates
 python -m soccer.clubs.model.tune             # re-tune per-league parameters
 python -m soccer.clubs.model.train            # outcome model + holdout metrics
 python -m soccer.clubs.model.export_ratings   # -> artifacts/club_elo_ratings.json
+python -m soccer.clubs.daily.run              # the whole daily pipeline
 ```
 
 `club_elo_ratings.json` is the export bridge: per league, the current
@@ -126,9 +192,17 @@ site consumes.
 - [x] Per-league club Elo with tuned K / home advantage / rollover / entry
 - [x] Pooled W/D/L outcome model, temporally validated vs. baseline
 - [x] Ratings export bridge (`club_elo_ratings.json`)
-- [ ] Upcoming-fixture predictions once 2026-27 fixtures land upstream
+- [x] European competition results (UCL/UEL/UECL) as cross-league glue,
+  validated to help on the league holdout
+- [x] Transfermarkt transfer-spend features + market-value/wage upload slot
+- [x] Daily runner: slate predictions, graded ledger, league-table Monte
+  Carlo, site JSON (`daily/`, workflow `soccer-daily.yml`)
+- [ ] Squad market values + wages populated (locally) and validated
 - [ ] Odds API soccer keys (`soccer_epl`, …) on the `/vegas` slate, model
   picks with edge-vs-market (quota permitting)
+- [ ] A soccer page in `web/` reading `web/public/data/soccer/latest.json`
 - [ ] Promotion carry-in: seed promoted clubs from second-division form
   instead of a flat entry rating
-- [ ] European competition results (UCL/UEL) as cross-league glue
+- [ ] A rating pool for non-top-5 European clubs so every UEFA match
+  (not just top-5 pairings) feeds the glue
+- [ ] Dixon–Coles low-score correction if the Poisson calibration drifts
