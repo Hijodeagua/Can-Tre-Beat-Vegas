@@ -133,6 +133,7 @@ ALIASES: dict[str, dict[str, str]] = {
     },
     "bundesliga": {
         "1.FC Köln": "1. FC Köln",
+        "1.FC Nuremberg": "1. FC Nürnberg",
         "1.FC Union Berlin": "1. FC Union Berlin",
         "1.FSV Mainz 05": "1. FSV Mainz 05",
         "1899 Hoffenheim": "TSG 1899 Hoffenheim",
@@ -142,6 +143,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Bor. Mönchengladbach": "Borussia Mönchengladbach",
         "FC St. Pauli": "FC St. Pauli 1910",
         "SpVgg Greuther Fürth": "SpVgg Greuther Fürth 1903",
+        "VfL Bochum": "VfL Bochum 1848",
         "Werder Bremen": "SV Werder Bremen",
     },
     "bundesliga_2": {
