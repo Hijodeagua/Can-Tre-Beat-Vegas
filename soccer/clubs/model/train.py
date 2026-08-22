@@ -43,6 +43,13 @@ ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 
 FEATURES = ["elo_gap"] + ALL_FEATURES
 SPLIT_SEASON = "2024-25"
+# The economics features are sparse (a small, growing fraction of rows are
+# nonzero as market-value uploads backfill), so their gradient signal is
+# weak relative to elo_gap's. sklearn's lbfgs default (max_iter=100) and
+# even 2000 can stop short of convergence for those coefficients — silently
+# landing near zero without any warning. A tight tolerance + higher ceiling
+# make convergence explicit rather than assumed.
+MAX_ITER = 5000
 
 
 def build_table() -> pd.DataFrame:
@@ -74,13 +81,13 @@ def main() -> None:
     if not values_available():
         print("No market-value uploads — value/wage features are 0.")
 
-    model = LogisticRegression(max_iter=2000)
+    model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
     model.fit(train[FEATURES], train["outcome"])
     probs = model.predict_proba(test[FEATURES])
     ll = log_loss(test["outcome"], probs, labels=list(model.classes_))
     acc = accuracy_score(test["outcome"], model.predict(test[FEATURES]))
 
-    elo_only = LogisticRegression(max_iter=2000)
+    elo_only = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
     elo_only.fit(train[["elo_gap"]], train["outcome"])
     elo_ll = log_loss(
         test["outcome"], elo_only.predict_proba(test[["elo_gap"]]),

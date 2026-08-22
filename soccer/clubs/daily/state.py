@@ -21,6 +21,10 @@ from soccer.clubs.model.features import ALL_FEATURES, attach_features
 
 FEATURES = ["elo_gap"] + ALL_FEATURES
 CLASSES = ["A", "D", "H"]
+# Match train.py's convergence settings — the sparse economics features
+# need the extra iterations/tolerance or their coefficients silently land
+# near zero. See the comment in train.py.
+MAX_ITER = 5000
 
 
 @dataclass
@@ -69,7 +73,7 @@ def build_state() -> DailyState:
     league_hist = history[~history["league"].str.startswith("uefa:")].copy()
     featured = attach_features(league_hist)
 
-    model = LogisticRegression(max_iter=2000)
+    model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
     model.fit(featured[FEATURES], featured["outcome"])
 
     results = pd.read_csv(DATA_DIR / "results.csv")

@@ -17,7 +17,10 @@ bundesliga,FC Bayern München,930.0,190.0
 ```
 
 - `league` — our league key (`epl`, `bundesliga`, `la_liga`, `serie_a`, `ligue_1`)
-- `club` — the canonical club name as it appears in `../results.csv`
+- `club` — whatever spelling Transfermarkt shows for that season (e.g.
+  "Manchester United", not "Manchester United FC" pre-2020). The loader
+  canonicalizes through `leagues.py`'s alias maps on load, same as every
+  other data source in this pipeline — no need to pre-canonicalize.
 - `squad_value_eur_m` — total squad market value, EUR millions
 - `wage_bill_eur_m` — optional; annual gross wage bill, EUR millions.
   Leave the column out (or blank) if you only have values.

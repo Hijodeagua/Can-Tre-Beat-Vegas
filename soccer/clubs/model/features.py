@@ -22,6 +22,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from soccer.clubs.data.leagues import canonical
+
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 TRANSFERS_CSV = DATA_DIR / "club_season_transfers.csv"
 VALUES_DIR = DATA_DIR / "market_values"
@@ -58,6 +60,10 @@ def _load_value_z() -> pd.DataFrame:
         season = path.stem.replace("values_", "")
         df = pd.read_csv(path)
         df["season"] = season
+        # Uploads carry whatever spelling Transfermarkt shows for that
+        # season — same posture as fetch_transfers.py: canonicalize on
+        # load rather than requiring pre-canonicalized names in the file.
+        df["club"] = df.apply(lambda r: canonical(r["league"], r["club"]), axis=1)
         frames.append(df)
     v = pd.concat(frames, ignore_index=True)
     v["value_z"] = _z_within(v, "squad_value_eur_m")
