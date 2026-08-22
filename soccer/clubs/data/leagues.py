@@ -76,6 +76,8 @@ ALIASES: dict[str, dict[str, str]] = {
         "Huddersfield Town": "Huddersfield Town AFC",
         "Hull City": "Hull City AFC",
         "Leeds United": "Leeds United FC",
+        "Luton Town": "Luton Town FC",
+        "Nottingham Forest": "Nottingham Forest FC",
         "Queens Park Rangers": "Queens Park Rangers FC",
         "Stoke City": "Stoke City FC",
         "Swansea City": "Swansea City AFC",
@@ -126,6 +128,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "West Ham United": "West Ham United FC",
         "Wigan Athletic": "Wigan Athletic FC",
         "Wolverhampton Wanderers": "Wolverhampton Wanderers FC",
+        "Wycombe Wanderers": "Wycombe Wanderers FC",
     },
     "bundesliga": {
         "1899 Hoffenheim": "TSG 1899 Hoffenheim",
