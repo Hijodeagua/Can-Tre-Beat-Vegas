@@ -161,6 +161,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Celta de Vigo": "RC Celta de Vigo",
         "Deportivo A Coruña": "RC Deportivo La Coruña",
         "Deportivo La Coruña": "RC Deportivo La Coruña",
+        "Deportivo de La Coruña": "RC Deportivo La Coruña",
         "Espanyol Barcelona": "RCD Espanyol de Barcelona",
         "RC Celta": "RC Celta de Vigo",
         "RCD Espanyol Barcelona": "RCD Espanyol de Barcelona",
