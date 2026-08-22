@@ -201,6 +201,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Juventus": "Juventus FC",
         "Lazio Roma": "SS Lazio",
         "Parma FC": "Parma Calcio 1913",
+        "Pisa Sporting Club": "AC Pisa 1909",
         "SPAL": "SPAL 2013 Ferrara",
         "SPAL 2013": "SPAL 2013 Ferrara",
         "Sampdoria": "UC Sampdoria",
