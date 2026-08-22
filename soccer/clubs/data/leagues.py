@@ -184,7 +184,9 @@ ALIASES: dict[str, dict[str, str]] = {
     "la_liga_2": {
         "Albacete Balompié": "Albacete",
         "CD Alavés": "Deportivo Alavés",
+        "CE Sabadell FC": "CE Sabadell",
         "Deportivo La Coruña": "RC Deportivo La Coruña",
+        "Deportivo de La Coruña": "RC Deportivo La Coruña",
         "Espanyol Barcelona": "RCD Espanyol de Barcelona",
         "RCD Espanyol Barcelona": "RCD Espanyol de Barcelona",
         "Rayo Vallecano": "Rayo Vallecano de Madrid",
@@ -219,6 +221,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Bologna FC": "Bologna FC 1909",
         "Carrarese Calcio 1908": "Carrarese Calcio",
         "Como Calcio": "Como 1907",
+        "Delfino Pescara 1936": "Delfino Pescara",
         "FC Bari 1908": "SSC Bari",
         "FC Empoli": "Empoli FC",
         "Hellas Verona": "Hellas Verona FC",
@@ -230,7 +233,9 @@ ALIASES: dict[str, dict[str, str]] = {
         "SS Juve Stabia": "Juve Stabia",
         "Sampdoria": "UC Sampdoria",
         "Sassuolo Calcio": "US Sassuolo Calcio",
+        "US Avellino 1912": "US Avellino",
         "US Palermo": "Palermo FC",
+        "US Sassuolo": "US Sassuolo Calcio",
     },
     "ligue_1": {
         "AS Monaco": "AS Monaco FC",
