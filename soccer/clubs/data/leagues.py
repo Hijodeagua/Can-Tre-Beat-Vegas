@@ -259,6 +259,9 @@ ALIASES: dict[str, dict[str, str]] = {
         "AS Monaco": "AS Monaco FC",
         "AS Nancy-Lorraine": "AS Nancy Lorraine",
         "FC Girondins Bordeaux": "Girondins Bordeaux",
+        # ligue_2 canonicalizes this club to "Havre AC"; without the same
+        # mapping here its Elo identity split in two at every promotion.
+        "Le Havre AC": "Havre AC",
         "FC Toulouse": "Toulouse FC",
         "LOSC Lille": "Lille OSC",
         "Olympique Lyon": "Olympique Lyonnais",

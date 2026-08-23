@@ -41,6 +41,7 @@ def refresh_data() -> None:
         "soccer.clubs.data.fetch_results",
         "soccer.clubs.data.fetch_uefa",
         "soccer.clubs.data.fetch_mls",
+        "soccer.clubs.data.fetch_xg",
     ):
         proc = subprocess.run([sys.executable, "-m", mod], check=False)
         if proc.returncode != 0:

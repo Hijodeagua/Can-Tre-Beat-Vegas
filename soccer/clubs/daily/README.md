@@ -20,7 +20,7 @@ publish the site JSON.
 
 ## Data flow for a run dated D (UTC)
 
-1. `fetch_results` + `fetch_uefa` + `fetch_mls` refresh the committed CSVs
+1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` refresh the committed CSVs
    (best-effort; the 10:00 UTC schedule means the prior evening's European
    matches are final and upstream has usually caught up). Order matters:
    `fetch_results` rewrites `results.csv` whole from the openfootball

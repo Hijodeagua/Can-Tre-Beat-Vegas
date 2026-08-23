@@ -103,6 +103,26 @@ Honest holdout read (2021-22 + 2022-23, the last transfer-covered seasons):
 net spend improves log loss 0.99081 → 0.99064 — small but directionally
 sane (spend → home wins). Not a rating replacement; carried as features.
 
+## xG form (Understat layer)
+
+`data/xg_matches.csv` holds per-match xG for both sides — the five top
+flights back to 2014-15, backfilled from the archived worldfootballR_data
+Understat mirror and refreshed by `data/fetch_xg.py` (understat.com's
+embedded `datesData` JSON, one request per league-season; runs only from
+the daily Actions job — the dev sandbox proxy blocks the host).
+`model/xg.py` turns it into one feature, `xg_net_diff`: each side's
+rolling mean xG-net (for − against) over its last 10 league matches,
+differenced, strictly pre-match, with a 130-day staleness guard (stale
+form is worse than none) and 0 wherever Understat has no coverage
+(second divisions, MLS, pre-2014).
+
+Validated on the 2023-24 holdout (the last fully-backfilled season):
+logistic log loss 0.9662 → 0.9620, +2.1 SE paired — the first form-style
+feature to survive here (results-form and rest days were rejected long
+ago; xG form carries chance-creation signal that neither Elo nor the
+table has). In the shipped model it lands as the strongest non-Elo
+coefficient (±0.11 vs squad value's ±0.09).
+
 ## Probability model
 
 Multinomial logistic regression over {home win, draw, away win} on the
@@ -212,14 +232,17 @@ soccer/clubs/
 │   ├── fetch_results.py     # football.json + country-repo txt → results.csv
 │   ├── fetch_uefa.py        # champions-league repo → uefa_results.csv
 │   ├── fetch_mls.py         # philo92/mls-elo → results.csv (merges "mls" rows only)
+│   ├── fetch_xg.py          # understat.com → xg_matches.csv (Actions-only; merge posture)
 │   ├── fetch_transfers.py   # ewenme/transfers → club_season_transfers.csv
 │   ├── market_values/       # optional squad value / wage uploads (see README)
 │   ├── results.csv          # committed league results + current-season fixtures
+│   ├── xg_matches.csv       # committed per-match xG (top-5 flights, 2014-15 →)
 │   ├── uefa_results.csv     # committed UCL/UEL/UECL results, league-mapped
 │   └── club_season_transfers.csv
 ├── model/
 │   ├── elo.py               # ClubEloEngine (per-league pools, rollover, entry rating)
 │   ├── europe.py            # UEFA cross-league glue replay
+│   ├── xg.py                # rolling xG-form feature (xg_net_diff)
 │   ├── features.py          # spend / value / wage differentials (z within league-season)
 │   ├── tune.py              # per-league parameter grid search
 │   ├── train.py             # pooled multinomial outcome model + temporal validation
@@ -233,6 +256,7 @@ python -m soccer.clubs.data.fetch_results     # refresh league results + fixture
 python -m soccer.clubs.data.fetch_uefa        # refresh UCL/UEL/UECL results
 python -m soccer.clubs.data.fetch_mls         # refresh MLS results (run after fetch_results)
 python -m soccer.clubs.data.fetch_transfers   # refresh transfer aggregates
+python -m soccer.clubs.data.fetch_xg          # refresh per-match xG (Actions only)
 python -m soccer.clubs.model.tune             # re-tune per-league parameters
 python -m soccer.clubs.model.train            # outcome model + holdout metrics
 python -m soccer.clubs.model.export_ratings   # -> artifacts/club_elo_ratings.json
@@ -268,6 +292,9 @@ site consumes.
 - [x] MLS: its own unglued Elo pool (`data/fetch_mls.py`,
   philo92/mls-elo), squad economics, ratings and the rankings page —
   no daily slate/futures (the source has no upcoming-fixture data)
+- [x] xG layer: per-match xG committed + Actions-refreshed, rolling
+  xG-net form as the strongest non-Elo model feature (validated +2.1 SE
+  on the 2023-24 holdout)
 - [ ] Second-division futures (promotion odds) — one config flip in
   `daily/run.py` once wanted
 - [ ] Wage bills populated (Capology/FBref, still manual)

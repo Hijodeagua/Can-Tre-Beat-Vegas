@@ -45,7 +45,8 @@ def build_slate(state: DailyState, run_date: str,
     rows = []
     for _, f in fixtures.iterrows():
         season = f["season"] if isinstance(f["season"], str) else season_for_date(f["date"])
-        row = state.feature_row(f["league"], f["home_team"], f["away_team"], season)
+        row = state.feature_row(f["league"], f["home_team"], f["away_team"], season,
+                                date=f["date"])
         row["date"] = f["date"]
         rows.append(row)
     feats = pd.DataFrame(rows)
