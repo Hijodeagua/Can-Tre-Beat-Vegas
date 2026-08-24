@@ -18,8 +18,9 @@ from soccer.clubs.data.leagues import LEAGUES, pool_of
 from soccer.clubs.model.elo import ClubEloEngine
 from soccer.clubs.model.europe import run_all_european
 from soccer.clubs.model.features import ALL_FEATURES, attach_features
+from soccer.clubs.model import xg
 
-FEATURES = ["elo_gap"] + ALL_FEATURES
+FEATURES = ["elo_gap"] + ALL_FEATURES + xg.XG_FEATURES
 CLASSES = ["A", "D", "H"]
 # Match train.py's convergence settings — the sparse economics features
 # need the extra iterations/tolerance or their coefficients silently land
@@ -34,16 +35,23 @@ class DailyState:
     results: pd.DataFrame          # raw results.csv incl. unplayed fixtures
     outcome_model: LogisticRegression
     score_params: scoring.ScoreParams
+    xg_form: "xg._Form"            # rolling xG state after all committed matches
 
     def feature_row(self, league: str, home: str, away: str,
-                    season: str, neutral: bool = False) -> dict:
-        """Pre-match features for one fixture, from current ratings."""
+                    season: str, neutral: bool = False,
+                    date: str | None = None) -> dict:
+        """Pre-match features for one fixture, from current ratings.
+        `date` anchors the xG staleness guard; without one the form reads
+        as of today, which is what a live slate wants."""
+        from datetime import date as _date
+
         from soccer.clubs.model.elo import expected_score
 
         e = self.engines[pool_of(league)]
         r_home = e.rating_for(home, league)
         r_away = e.rating_for(away, league)
         adv = 0.0 if neutral else e.home_advantage
+        asof = date or _date.today().isoformat()
         row = {
             "league": league,
             "season": season,
@@ -53,6 +61,7 @@ class DailyState:
             "elo_away_pre": r_away,
             "elo_gap": (r_home + adv) - r_away,
             "exp_home": expected_score(r_home + adv, r_away),
+            "xg_net_diff": xg.slate_diff(self.xg_form, league, home, away, asof),
         }
         return row
 
@@ -71,7 +80,7 @@ def build_state() -> DailyState:
 
     engines, history = run_all_european()
     league_hist = history[~history["league"].str.startswith("uefa:")].copy()
-    featured = attach_features(league_hist)
+    featured = xg.attach_xg(attach_features(league_hist))
 
     model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
     model.fit(featured[FEATURES], featured["outcome"])
@@ -83,4 +92,5 @@ def build_state() -> DailyState:
         results=results,
         outcome_model=model,
         score_params=scoring.fit(league_hist),
+        xg_form=xg.current_form(),
     )

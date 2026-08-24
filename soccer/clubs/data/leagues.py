@@ -19,13 +19,20 @@ from dataclasses import dataclass
 class League:
     key: str            # our identifier ("epl", …) used in results.csv + artifacts
     name: str           # display name
-    code: str           # openfootball file stem ("en.1", …)
+    code: str           # openfootball file stem ("en.1", …); unused when source != "openfootball"
     first_season: str   # earliest season available upstream ("2010-11", …)
     txt_repo: str       # openfootball country repo with Football.TXT files
     txt_file: str       # file stem inside <season>/ in that repo
     country: str        # UEFA 3-letter code, used to map cl/el/conf entries
     tier: int = 1       # 1 = top flight, 2 = second division
     pool: str = ""      # Elo pool key — the country's tier-1 league key
+    # "openfootball" leagues are fetched/refetched by fetch_results.py through
+    # `code`/`txt_repo`/`txt_file`; any other value (e.g. "mls") tells
+    # fetch_results.py to skip it entirely — that league owns its own fetch
+    # script instead, and season strings in its own format ("2020", not
+    # "2020-21") flow through unchanged wherever they're compared as plain
+    # strings.
+    source: str = "openfootball"
 
 
 LEAGUES: dict[str, League] = {
@@ -41,6 +48,14 @@ LEAGUES: dict[str, League] = {
         League("serie_b", "Serie B", "it.2", "2013-14", "italy", "2-serieb", "ITA", 2, "serie_a"),
         League("ligue_1", "Ligue 1", "fr.1", "2014-15", "france", "1-ligue1", "FRA", 1, "ligue_1"),
         League("ligue_2", "Ligue 2", "fr.2", "2014-15", "france", "2-ligue2", "FRA", 2, "ligue_1"),
+        # MLS: single tier, no promotion/relegation, no UEFA competitions (a
+        # different confederation) — its own pool, never glued to the
+        # European ones. Fetched from philo92/mls-elo by fetch_mls.py, not
+        # openfootball, so code/txt_repo/txt_file are unused placeholders.
+        # first_season "2013" is a deliberate cutoff, not upstream's limit
+        # (the source goes back to 1996) — pre-2013 MLS was a smaller,
+        # differently-structured league not worth diluting the pool's burn-in.
+        League("mls", "MLS", "", "2013", "", "", "USA", 1, "mls", source="mls"),
     ]
 }
 
@@ -75,6 +90,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Crystal Palace": "Crystal Palace FC",
         "Huddersfield Town": "Huddersfield Town AFC",
         "Hull City": "Hull City AFC",
+        "Ipswich Town": "Ipswich Town FC",
         "Leeds United": "Leeds United FC",
         "Luton Town": "Luton Town FC",
         "Nottingham Forest": "Nottingham Forest FC",
@@ -243,6 +259,9 @@ ALIASES: dict[str, dict[str, str]] = {
         "AS Monaco": "AS Monaco FC",
         "AS Nancy-Lorraine": "AS Nancy Lorraine",
         "FC Girondins Bordeaux": "Girondins Bordeaux",
+        # ligue_2 canonicalizes this club to "Havre AC"; without the same
+        # mapping here its Elo identity split in two at every promotion.
+        "Le Havre AC": "Havre AC",
         "FC Toulouse": "Toulouse FC",
         "LOSC Lille": "Lille OSC",
         "Olympique Lyon": "Olympique Lyonnais",
@@ -258,6 +277,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "AS Monaco": "AS Monaco FC",
         "AS Nancy-Lorraine": "AS Nancy Lorraine",
         "Chamois Niortais FC": "Chamois Niortais",
+        "FC Toulouse": "Toulouse FC",
         "FC Chambly Oise": "FC Chambly",
         "FC Sochaux-Montbéliard": "FC Sochaux",
         "Football Bourg-en-Bresse Péronnas 01": "FC Bourg-Péronnas",
@@ -270,6 +290,19 @@ ALIASES: dict[str, dict[str, str]] = {
         "RC Strasbourg": "RC Strasbourg Alsace",
         "Stade Reims": "Stade de Reims",
         "Stade Rennais": "Stade Rennais FC 1901",
+    },
+    # philo92/mls-elo (the match-results source) already unifies every club
+    # to its current name across all history — these are only for the squad
+    # market-value uploads, which carry whatever spelling the source sheet
+    # used for a given year.
+    "mls": {
+        "Real Salt Lake City": "Real Salt Lake",
+        "Red Bull New York": "New York Red Bulls",
+        "Montreal Impact": "CF Montréal",
+        "Columbus Crew SC": "Columbus Crew",
+        "Houston Dynamo": "Houston Dynamo FC",
+        "Los Angeles Galaxy": "LA Galaxy",
+        "St. Louis CITY SC": "St. Louis City SC",
     },
 }
 
@@ -286,7 +319,10 @@ def canonical(league_key: str, team: str) -> str:
 
 
 def next_season(season: str) -> str:
-    """"2024-25" -> "2025-26"."""
+    """"2024-25" -> "2025-26"; a bare calendar-year season ("2020", MLS's
+    format) -> "2021"."""
+    if "-" not in season:
+        return str(int(season) + 1)
     y = int(season[:4])
     return f"{y + 1}-{str(y + 2)[-2:]}"
 
@@ -296,3 +332,12 @@ def season_for_date(iso_date: str) -> str:
     year, month = int(iso_date[:4]), int(iso_date[5:7])
     start = year if month >= 7 else year - 1
     return f"{start}-{str(start + 1)[-2:]}"
+
+
+def current_season_for(league_key: str, iso_date: str) -> str:
+    """Season containing a date, in that league's own season format —
+    calendar-year for MLS (a season never crosses New Year's), the
+    July-boundary "YYYY-YY" string for everything else."""
+    if LEAGUES[league_key].source == "mls":
+        return iso_date[:4]
+    return season_for_date(iso_date)

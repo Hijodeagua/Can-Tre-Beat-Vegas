@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Club Soccer Elo — Can Tre Beat Vegas',
   description:
     'Cross-league club Elo rankings, squad economics and daily picks for Europe’s top 5 ' +
-    'leagues plus their second divisions.',
+    'leagues plus their second divisions, and MLS.',
 };
 
 export default function SoccerPage() {
@@ -42,7 +42,9 @@ export default function SoccerPage() {
         {sport.blurb} Ten country-pool leagues, one Elo scale: Premier League ↔ Championship,
         Bundesliga ↔ 2. Bundesliga, La Liga ↔ Segunda, Serie A ↔ Serie B, Ligue 1 ↔ Ligue 2 —
         each pair shares a pool with a promotion/relegation carry, and every pool exchanges
-        rating points through Champions/Europa/Conference League matches.
+        rating points through Champions/Europa/Conference League matches. MLS runs alongside
+        them — its own single-tier pool, ratings and squad economics — but a different
+        confederation means it never plays the ten above, so its Elo stays on its own scale.
       </p>
 
       <SoccerTabs />

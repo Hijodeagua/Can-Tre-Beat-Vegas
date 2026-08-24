@@ -102,7 +102,9 @@ export function getSoccerLatest(): SoccerLatest {
 /**
  * League display order: top flights first (by rough Elo-average pedigree),
  * each immediately followed by its own second division — so the rankings
- * table reads country-pool by country-pool rather than alphabetically.
+ * table reads country-pool by country-pool rather than alphabetically. MLS
+ * goes last: it's on its own Elo scale (no UEFA glue, different
+ * confederation), not one more country pool in the same sequence.
  */
 export const LEAGUE_ORDER = [
   'epl', 'championship',
@@ -110,7 +112,14 @@ export const LEAGUE_ORDER = [
   'la_liga', 'la_liga_2',
   'serie_a', 'serie_b',
   'ligue_1', 'ligue_2',
+  'mls',
 ];
+
+/** The ten UEFA-glued leagues share one Elo scale; MLS does not (separate
+ * confederation, never plays them). Cross-league Elo comparisons — the
+ * league-avg-Elo ranking, the global top/bottom-club list — only mean
+ * something within this set. */
+export const GLUED_LEAGUES = LEAGUE_ORDER.filter((k) => k !== 'mls');
 
 export function orderedLeagueRankings(): [string, SoccerLeagueRanking][] {
   const rankings = data.league_rankings ?? {};

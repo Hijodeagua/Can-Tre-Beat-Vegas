@@ -145,6 +145,8 @@ def fetch(today: date | None = None) -> list[dict]:
     current = season_for_date(today.isoformat())
     all_rows: list[dict] = []
     for key in LEAGUES:
+        if LEAGUES[key].source != "openfootball":
+            continue  # e.g. "mls" — fetched separately by fetch_mls.py
         league_rows: list[dict] = []
         for season in seasons_for(key, today):
             rows, src = fetch_season(key, season)

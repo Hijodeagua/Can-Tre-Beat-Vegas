@@ -1,5 +1,5 @@
 {
-  "tunedAt": "2026-08-22T18:15:05+00:00",
+  "tunedAt": "2026-08-22T23:32:26+00:00",
   "objective": "one-step-ahead Brier on top-flight matches (draw = 0.5), two-division pool replay",
   "burnInSeasons": 2,
   "holdoutFrom": "2024-25",
@@ -89,6 +89,16 @@
       "division_carry": 1.0,
       "brier": 0.15731,
       "matches_scored": 2865
+    },
+    "mls": {
+      "k": 10.0,
+      "home_advantage": 75.0,
+      "season_regression": 0.2,
+      "entry_rating": 1460.0,
+      "entry_rating_t2": 1350.0,
+      "division_carry": 1.0,
+      "brier": 0.16856,
+      "matches_scored": 4262
     }
   }
 }
