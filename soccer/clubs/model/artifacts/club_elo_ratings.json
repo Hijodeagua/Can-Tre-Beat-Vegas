@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-25T10:40:22+00:00",
+  "generatedAt": "2026-08-26T10:41:44+00:00",
   "source": "Can-Tre-Beat-Vegas club Elo (soccer/clubs/model/elo.py + europe.py)",
   "baseRating": 1500.0,
   "uefaGlueWeight": 0.75,
-  "matchesProcessed": 58709,
+  "matchesProcessed": 58728,
   "leagues": {
     "epl": {
       "name": "Premier League",
@@ -19,12 +19,24 @@
         "entry_rating_t2": 1150.0,
         "division_carry": 0.25
       },
-      "matchesProcessed": 6086,
+      "matchesProcessed": 6090,
       "ratings": [
         {
           "team": "Arsenal FC",
           "elo": 1728.8,
           "matches": 646,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Manchester City FC",
+          "elo": 1689.3,
+          "matches": 692,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Liverpool FC",
+          "elo": 1627.7,
+          "matches": 670,
           "lastSeason": "2026-27"
         },
         {
@@ -34,9 +46,39 @@
           "lastSeason": "2026-27"
         },
         {
+          "team": "Aston Villa FC",
+          "elo": 1562.8,
+          "matches": 641,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "AFC Bournemouth",
+          "elo": 1550.1,
+          "matches": 527,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Brighton & Hove Albion FC",
+          "elo": 1549.2,
+          "matches": 623,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Chelsea FC",
+          "elo": 1547.1,
+          "matches": 656,
+          "lastSeason": "2026-27"
+        },
+        {
           "team": "Brentford FC",
           "elo": 1533.7,
           "matches": 513,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Newcastle United FC",
+          "elo": 1532.4,
+          "matches": 630,
           "lastSeason": "2026-27"
         },
         {
@@ -49,6 +91,12 @@
           "team": "Nottingham Forest FC",
           "elo": 1502.3,
           "matches": 708,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Fulham FC",
+          "elo": 1498.0,
+          "matches": 657,
           "lastSeason": "2026-27"
         },
         {
@@ -109,7 +157,7 @@
         "entry_rating_t2": 1150.0,
         "division_carry": 0.25
       },
-      "matchesProcessed": 8880,
+      "matchesProcessed": 8881,
       "ratings": [
         {
           "team": "Millwall FC",
@@ -161,8 +209,8 @@
         },
         {
           "team": "West Bromwich Albion FC",
-          "elo": 1309.4,
-          "matches": 667,
+          "elo": 1315.1,
+          "matches": 668,
           "lastSeason": "2026-27"
         },
         {
@@ -245,8 +293,8 @@
         },
         {
           "team": "Burnley FC",
-          "elo": 1199.9,
-          "matches": 665,
+          "elo": 1194.2,
+          "matches": 666,
           "lastSeason": "2026-27"
         },
         {
@@ -523,8 +571,14 @@
         "entry_rating_t2": 1250.0,
         "division_carry": 0.5
       },
-      "matchesProcessed": 5331,
+      "matchesProcessed": 5336,
       "ratings": [
+        {
+          "team": "FC Barcelona",
+          "elo": 1739.8,
+          "matches": 617,
+          "lastSeason": "2026-27"
+        },
         {
           "team": "Real Madrid CF",
           "elo": 1726.0,
@@ -533,14 +587,14 @@
         },
         {
           "team": "Club Atlético de Madrid",
-          "elo": 1632.0,
-          "matches": 605,
+          "elo": 1630.4,
+          "matches": 606,
           "lastSeason": "2026-27"
         },
         {
           "team": "Villarreal CF",
-          "elo": 1587.1,
-          "matches": 559,
+          "elo": 1588.8,
+          "matches": 560,
           "lastSeason": "2026-27"
         },
         {
@@ -580,6 +634,12 @@
           "lastSeason": "2026-27"
         },
         {
+          "team": "CA Osasuna",
+          "elo": 1471.5,
+          "matches": 549,
+          "lastSeason": "2026-27"
+        },
+        {
           "team": "Sevilla FC",
           "elo": 1467.3,
           "matches": 577,
@@ -587,14 +647,14 @@
         },
         {
           "team": "Getafe CF",
-          "elo": 1463.2,
-          "matches": 537,
+          "elo": 1467.1,
+          "matches": 538,
           "lastSeason": "2026-27"
         },
         {
           "team": "Real Racing Club de Santander",
-          "elo": 1460.8,
-          "matches": 1,
+          "elo": 1456.9,
+          "matches": 2,
           "lastSeason": "2026-27"
         },
         {
@@ -611,26 +671,26 @@
         },
         {
           "team": "Levante UD",
-          "elo": 1443.8,
-          "matches": 548,
+          "elo": 1445.2,
+          "matches": 549,
           "lastSeason": "2026-27"
         },
         {
           "team": "Elche CF",
-          "elo": 1439.7,
-          "matches": 522,
+          "elo": 1435.3,
+          "matches": 523,
           "lastSeason": "2026-27"
         },
         {
           "team": "RC Deportivo La Coruña",
-          "elo": 1418.3,
-          "matches": 370,
+          "elo": 1418.9,
+          "matches": 371,
           "lastSeason": "2026-27"
         },
         {
           "team": "Málaga CF",
-          "elo": 1385.5,
-          "matches": 492,
+          "elo": 1384.9,
+          "matches": 493,
           "lastSeason": "2026-27"
         }
       ]
@@ -787,7 +847,7 @@
         "entry_rating_t2": 1150.0,
         "division_carry": 0.75
       },
-      "matchesProcessed": 4944,
+      "matchesProcessed": 4950,
       "ratings": [
         {
           "team": "FC Internazionale Milano",
@@ -802,14 +862,68 @@
           "lastSeason": "2026-27"
         },
         {
+          "team": "AS Roma",
+          "elo": 1628.4,
+          "matches": 537,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Juventus FC",
+          "elo": 1620.9,
+          "matches": 561,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Atalanta BC",
+          "elo": 1601.4,
+          "matches": 530,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "AC Milan",
+          "elo": 1595.5,
+          "matches": 525,
+          "lastSeason": "2026-27"
+        },
+        {
           "team": "Como 1907",
           "elo": 1557.7,
           "matches": 233,
           "lastSeason": "2026-27"
         },
         {
+          "team": "SS Lazio",
+          "elo": 1548.6,
+          "matches": 507,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Bologna FC 1909",
+          "elo": 1518.6,
+          "matches": 507,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "ACF Fiorentina",
+          "elo": 1503.7,
+          "matches": 498,
+          "lastSeason": "2026-27"
+        },
+        {
           "team": "Udinese Calcio",
           "elo": 1465.9,
+          "matches": 495,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Torino FC",
+          "elo": 1451.6,
+          "matches": 495,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "US Sassuolo Calcio",
+          "elo": 1446.3,
           "matches": 495,
           "lastSeason": "2026-27"
         },
@@ -832,9 +946,27 @@
           "lastSeason": "2026-27"
         },
         {
+          "team": "Venezia FC",
+          "elo": 1405.7,
+          "matches": 353,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "US Lecce",
+          "elo": 1400.0,
+          "matches": 305,
+          "lastSeason": "2026-27"
+        },
+        {
           "team": "AC Monza",
           "elo": 1389.9,
           "matches": 227,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Frosinone Calcio",
+          "elo": 1387.8,
+          "matches": 473,
           "lastSeason": "2026-27"
         }
       ]
@@ -855,18 +987,6 @@
       },
       "matchesProcessed": 5351,
       "ratings": [
-        {
-          "team": "Venezia FC",
-          "elo": 1402.0,
-          "matches": 352,
-          "lastSeason": "2025-26"
-        },
-        {
-          "team": "Frosinone Calcio",
-          "elo": 1367.9,
-          "matches": 472,
-          "lastSeason": "2025-26"
-        },
         {
           "team": "Palermo FC",
           "elo": 1357.6,
@@ -985,12 +1105,24 @@
         "entry_rating_t2": 1250.0,
         "division_carry": 1.0
       },
-      "matchesProcessed": 4242,
+      "matchesProcessed": 4245,
       "ratings": [
+        {
+          "team": "Paris Saint-Germain FC",
+          "elo": 1743.7,
+          "matches": 528,
+          "lastSeason": "2026-27"
+        },
         {
           "team": "Racing Club de Lens",
           "elo": 1605.3,
           "matches": 441,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Lille OSC",
+          "elo": 1594.6,
+          "matches": 456,
           "lastSeason": "2026-27"
         },
         {
@@ -1003,6 +1135,18 @@
           "team": "Olympique de Marseille",
           "elo": 1576.5,
           "matches": 453,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "AS Monaco FC",
+          "elo": 1574.6,
+          "matches": 461,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Stade Rennais FC 1901",
+          "elo": 1557.1,
+          "matches": 447,
           "lastSeason": "2026-27"
         },
         {
@@ -1048,9 +1192,21 @@
           "lastSeason": "2026-27"
         },
         {
+          "team": "Havre AC",
+          "elo": 1427.8,
+          "matches": 359,
+          "lastSeason": "2026-27"
+        },
+        {
           "team": "ES Troyes AC",
           "elo": 1420.7,
           "matches": 1,
+          "lastSeason": "2026-27"
+        },
+        {
+          "team": "Angers SCO",
+          "elo": 1403.7,
+          "matches": 401,
           "lastSeason": "2026-27"
         },
         {
