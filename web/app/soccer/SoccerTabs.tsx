@@ -1,14 +1,19 @@
 'use client';
 
 /**
- * Three-tab view of the daily club-soccer pipeline output, mirroring
+ * Four-tab view of the daily club-soccer pipeline output, mirroring
  * `MlbTabs.tsx`. All data comes from `public/data/soccer/latest.json`.
  *
  * Rankings is the tab this page exists for — the cross-league table the
  * MLB page has no equivalent of, because MLB is one league and soccer is
- * ten sharing one Elo scale via the UEFA glue.
+ * ten sharing one Elo scale via the UEFA glue. Forecasts is the
+ * Opta-style rest-of-season view: projected final table per top flight
+ * with Title / UCL / UEL / Relegation odds, plus the daily-updating Elo
+ * trend chart.
  */
 import { useEffect, useState } from 'react';
+import EloTrendChart from '@/app/components/EloTrendChart';
+import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtPct, missing } from '@/app/lib/format';
 import {
@@ -18,6 +23,7 @@ import {
 
 const TABS = [
   { slug: 'rankings', label: 'League Rankings' },
+  { slug: 'forecast', label: 'Forecasts' },
   { slug: 'slate', label: "Today's Slate" },
   { slug: 'ratings', label: 'Club Ratings' },
 ] as const;
@@ -57,20 +63,20 @@ function fmtNum1(value: number | null | undefined): string {
 const RANKINGS_COLUMNS = [
   { header: 'League', strong: true },
   { header: 'Div' },
-  { header: 'Avg Elo', strong: true },
-  { header: 'Avg squad value' },
-  { header: 'Avg wage bill' },
-  { header: 'Avg squad size' },
-  { header: 'Avg age' },
-  { header: 'Avg foreigners' },
-  { header: 'Avg value/player' },
+  { header: 'Avg Elo', strong: true, numeric: true },
+  { header: 'Avg squad value', numeric: true },
+  { header: 'Avg wage bill', numeric: true },
+  { header: 'Avg squad size', numeric: true },
+  { header: 'Avg age', numeric: true },
+  { header: 'Avg foreigners', numeric: true },
+  { header: 'Avg value/player', numeric: true },
 ];
 
 const ELO_RANK_COLUMNS = [
-  { header: '#' },
+  { header: '#', numeric: true },
   { header: 'League', strong: true },
   { header: 'Div' },
-  { header: 'Avg Elo', strong: true },
+  { header: 'Avg Elo', strong: true, numeric: true },
 ];
 
 /** Every UEFA-glued league sorted by avg Elo, highest first — the flat
@@ -82,11 +88,12 @@ function LeagueEloRank() {
     .filter(([key]) => GLUED_LEAGUES.includes(key))
     .sort((a, b) => (b[1].avgElo ?? -Infinity) - (a[1].avgElo ?? -Infinity));
   return (
-    <ThemedTable
+    <SortableThemedTable
       columns={ELO_RANK_COLUMNS}
       rows={ranked.map(([key, r], i) => ({
         key,
         cells: [i + 1, r.name, r.tier === 1 ? '1st' : '2nd', r.avgElo == null ? DASH : Math.round(r.avgElo)],
+        values: [i + 1, r.name, r.tier, r.avgElo],
       }))}
     />
   );
@@ -174,7 +181,7 @@ function RankingsTab() {
       <h3 className="pixel m-3 mt-8 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
         League Economics
       </h3>
-      <ThemedTable
+      <SortableThemedTable
         columns={RANKINGS_COLUMNS}
         rows={rows.map(([key, r]) => ({
           key,
@@ -188,6 +195,17 @@ function RankingsTab() {
             fmtNum1(r.avgAge),
             fmtNum1(r.avgForeigners),
             fmtEurM(r.avgValuePerPlayerEurM, 2),
+          ],
+          values: [
+            r.name,
+            r.tier,
+            r.avgElo,
+            r.avgSquadValueEurM,
+            r.avgWageBillEurM,
+            r.avgSquadSize,
+            r.avgAge,
+            r.avgForeigners,
+            r.avgValuePerPlayerEurM,
           ],
         }))}
         note={
@@ -225,10 +243,137 @@ function RankingsTab() {
   );
 }
 
+/** Shared league-pill picker — Ratings and Forecasts both need one. */
+function LeaguePills({
+  keys, active, onSelect, labelFor,
+}: {
+  keys: string[];
+  active: string;
+  onSelect: (k: string) => void;
+  labelFor: (k: string) => string;
+}) {
+  return (
+    <div className="mt-4 flex flex-wrap gap-2">
+      {keys.map((k) => (
+        <button
+          key={k}
+          onClick={() => onSelect(k)}
+          aria-pressed={active === k}
+          className={`rounded-full px-3 py-1 text-[13px] ${
+            active === k ? 'font-semibold' : 'hover:bg-slate-100'
+          }`}
+          style={
+            active === k
+              ? { background: 'var(--sport-accent)', color: 'var(--sport-accent-ink)' }
+              : { color: 'var(--th-muted)', border: '1px solid var(--th-border)' }
+          }
+        >
+          {labelFor(k)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+const FORECAST_COLUMNS = [
+  { header: 'Proj', numeric: true },
+  { header: 'Team', strong: true },
+  { header: 'Pts', numeric: true },
+  { header: 'xPts', numeric: true },
+  { header: 'xPos', numeric: true },
+  { header: 'Title', strong: true, numeric: true },
+  { header: 'UCL', numeric: true },
+  { header: 'UEL', numeric: true },
+  { header: 'Rel', numeric: true },
+];
+
+function ForecastTab() {
+  const keys = LEAGUE_ORDER.filter((k) => data.futures[k]?.clubs?.length);
+  const [league, setLeague] = useState<string>(keys[0] ?? '');
+  if (keys.length === 0) {
+    return <Empty>No league has published fixtures to simulate yet.</Empty>;
+  }
+
+  const sim = data.futures[league];
+  const clubs = sim.clubs ?? [];
+  const history = data.elo_history?.[league];
+
+  return (
+    <div>
+      <LeaguePills keys={keys} active={league} onSelect={setLeague} labelFor={leagueLabel} />
+      <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        {sim.season} · {sim.remaining_matches} matches left ·{' '}
+        {sim.sims.toLocaleString()} season simulations, rerun every day.
+      </p>
+      <div className="mt-2">
+        <SortableThemedTable
+          columns={FORECAST_COLUMNS}
+          rows={clubs.map((c, i) => ({
+            key: c.team,
+            cells: [
+              i + 1,
+              c.team,
+              c.points,
+              c.exp_points.toFixed(1),
+              c.exp_position.toFixed(1),
+              fmtPct(c.p_title),
+              fmtPct(c.p_top4),
+              fmtPct(c.p_uel),
+              fmtPct(c.p_relegation),
+            ],
+            values: [
+              i + 1,
+              c.team,
+              c.points,
+              c.exp_points,
+              c.exp_position,
+              c.p_title,
+              c.p_top4,
+              c.p_uel,
+              c.p_relegation,
+            ],
+          }))}
+          note={
+            <>
+              Rest-of-season Monte Carlo: the remaining fixtures replayed{' '}
+              {sim.sims.toLocaleString()} times with live in-sim Elo. Proj orders clubs by
+              expected finishing position; Pts is points already banked; xPts / xPos are the
+              expected final points and position. Title = 1st, UCL = top 4, UEL = 5th–6th,
+              Rel = bottom 3. Click any header to re-sort.
+            </>
+          }
+        />
+      </div>
+
+      {history && (
+        <section className="mt-8">
+          <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+            Elo Trend — {history.season}
+          </h3>
+          <div className="mt-3">
+            <EloTrendChart
+              series={Object.entries(history.clubs).map(([team, points]) => ({
+                team,
+                points: points as [string, number][],
+              }))}
+            />
+          </div>
+          <p className="mt-2 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+            Each point is a club&apos;s pre-match Elo at that date; the final point is the
+            live rating as of the {data.run_date} run, so the chart adjusts daily. The top
+            six clubs by current Elo are highlighted and labeled; the grey pack is the rest
+            of the league. Hover any point for the exact value.
+          </p>
+        </section>
+      )}
+    </div>
+  );
+}
+
 const SLATE_COLUMNS = [
-  { header: 'League' },
+  { header: 'Date' },
   { header: 'Match', strong: true },
-  { header: 'P(H) / P(D) / P(A)' },
+  { header: 'P(H) / P(D) / P(A)', numeric: true },
   { header: 'Pick', strong: true },
   { header: 'Sim score' },
 ];
@@ -259,7 +404,7 @@ function SlateTab() {
               {leagueLabel(key)}
             </h3>
             <div className="mt-2">
-              <ThemedTable
+              <SortableThemedTable
                 columns={SLATE_COLUMNS}
                 rows={rows.map((r) => ({
                   key: `${r.home_team}-${r.away_team}-${r.date}`,
@@ -269,6 +414,13 @@ function SlateTab() {
                     `${fmtPct(r.p_H)} / ${fmtPct(r.p_D)} / ${fmtPct(r.p_A)}`,
                     r.pick,
                     `${r.score_home}–${r.score_away}`,
+                  ],
+                  values: [
+                    r.date,
+                    `${r.home_team} v ${r.away_team}`,
+                    r.p_H,
+                    r.pick,
+                    r.score_home + r.score_away,
                   ],
                 }))}
               />
@@ -285,10 +437,10 @@ function SlateTab() {
 }
 
 const RATINGS_COLUMNS = [
-  { header: '#' },
+  { header: '#', numeric: true },
   { header: 'Club', strong: true },
-  { header: 'Elo', strong: true },
-  { header: 'Matches' },
+  { header: 'Elo', strong: true, numeric: true },
+  { header: 'Matches', numeric: true },
 ];
 
 function RatingsTab() {
@@ -301,34 +453,22 @@ function RatingsTab() {
 
   return (
     <div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {keys.map((k) => (
-          <button
-            key={k}
-            onClick={() => setLeague(k)}
-            aria-pressed={league === k}
-            className={`rounded-full px-3 py-1 text-[13px] ${
-              league === k ? 'font-semibold' : 'hover:bg-slate-100'
-            }`}
-            style={
-              league === k
-                ? { background: 'var(--sport-accent)', color: 'var(--sport-accent-ink)' }
-                : { color: 'var(--th-muted)', border: '1px solid var(--th-border)' }
-            }
-          >
-            {data.ratings[k].name}
-          </button>
-        ))}
-      </div>
+      <LeaguePills
+        keys={keys}
+        active={league}
+        onSelect={setLeague}
+        labelFor={(k) => data.ratings[k].name}
+      />
       <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
         As of {table.asOfSeason} — {sorted.length} clubs.
       </p>
       <div className="mt-2">
-        <ThemedTable
+        <SortableThemedTable
           columns={RATINGS_COLUMNS}
           rows={sorted.map((c, i) => ({
             key: c.team,
             cells: [i + 1, c.team, Math.round(c.elo), c.matches],
+            values: [i + 1, c.team, c.elo, c.matches],
           }))}
         />
       </div>
@@ -382,6 +522,7 @@ export default function SoccerTabs() {
       </div>
 
       {tab === 'rankings' && <RankingsTab />}
+      {tab === 'forecast' && <ForecastTab />}
       {tab === 'slate' && <SlateTab />}
       {tab === 'ratings' && <RatingsTab />}
     </div>

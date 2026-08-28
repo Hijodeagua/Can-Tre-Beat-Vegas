@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from soccer.clubs.daily.config import SITE_DIR, SITE_HISTORY, SITE_LATEST
-from soccer.clubs.data.leagues import LEAGUES, pool_of
+from soccer.clubs.data.leagues import LEAGUES, TIER1, pool_of
 from soccer.clubs.daily.state import DailyState
 from soccer.clubs.model.features import values_available, load_market_values_raw
 
@@ -42,6 +42,36 @@ def ratings_payload(state: DailyState) -> dict:
 
 def _round(x) -> float | None:
     return None if pd.isna(x) else round(float(x), 3)
+
+
+def elo_history_payload(state: DailyState, run_date: str) -> dict:
+    """Per top flight, each club's current-season Elo trajectory: the
+    pre-match rating at every match date, closed with today's live rating.
+    The replay updates ratings after every matchday and this export runs
+    daily, so the final point (and any post-matchday step) moves each day.
+    Powers the site's Elo trend chart."""
+    out = {}
+    for league in TIER1:
+        sub = state.history[state.history["league"] == league]
+        if sub.empty:
+            continue
+        season = sub["season"].max()
+        sub = sub[sub["season"] == season].sort_values("date")
+        engine = state.engines[pool_of(league)]
+        series: dict[str, list] = {}
+        for r in sub.itertuples():
+            series.setdefault(r.home_team, []).append(
+                [r.date, round(float(r.elo_home_pre), 1)])
+            series.setdefault(r.away_team, []).append(
+                [r.date, round(float(r.elo_away_pre), 1)])
+        for team, points in series.items():
+            current = round(float(engine.rating_for(team, league)), 1)
+            if not points or points[-1][0] < run_date:
+                points.append([run_date, current])
+            else:
+                points[-1] = [points[-1][0], current]
+        out[league] = {"season": season, "clubs": series}
+    return out
 
 
 def league_rankings_payload(ratings: dict) -> dict:
@@ -108,6 +138,7 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "graded_today": graded_today.to_dict(orient="records"),
         "ledger": ledger,
         "futures": futures,
+        "elo_history": elo_history_payload(state, run_date),
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)

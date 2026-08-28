@@ -188,3 +188,95 @@ class TestSimulateHelpers:
         )
         pts = simulate._current_table(results, "epl", "2026-27")
         assert pts == {"A": 4, "B": 0, "C": 1}
+
+
+class TestRollingLedger:
+    @pytest.fixture(autouse=True)
+    def _tmp_paths(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(grade, "PREDICTIONS_DIR", tmp_path)
+        monkeypatch.setattr(grade, "GRADES_CSV", tmp_path / "grades.csv")
+        self.dir = tmp_path
+
+    def _seed_grades(self):
+        rows = []
+        for date, correct, ll in (
+            ("2026-08-01", True, 0.5),   # outside the 7d window
+            ("2026-08-25", True, 0.6),
+            ("2026-08-27", False, 1.4),
+        ):
+            rows.append(
+                {"date": date, "league": "epl", "season": "2026-27",
+                 "home_team": "A", "away_team": "B", "pick": "H",
+                 "p_H": 0.5, "p_D": 0.3, "p_A": 0.2, "outcome": "H",
+                 "home_score": 1, "away_score": 0,
+                 "pick_correct": correct, "log_loss": ll,
+                 "graded_on": date}
+            )
+        pd.DataFrame(rows, columns=grade.LEDGER_COLUMNS).to_csv(
+            self.dir / "grades.csv", index=False)
+
+    def test_rolling_windows_split_by_match_date(self):
+        self._seed_grades()
+        summary = grade.ledger_summary("2026-08-28")
+        assert summary["graded"] == 3
+        assert summary["rolling"]["7d"]["graded"] == 2
+        assert summary["rolling"]["7d"]["accuracy"] == pytest.approx(0.5)
+        assert summary["rolling"]["30d"]["graded"] == 3
+
+    def test_no_run_date_omits_rolling(self):
+        self._seed_grades()
+        assert "rolling" not in grade.ledger_summary()
+
+    def test_recent_grades_window(self):
+        self._seed_grades()
+        recent = grade.recent_grades("2026-08-28", days=7)
+        assert list(recent["date"]) == ["2026-08-25", "2026-08-27"]
+
+
+class TestSimulateLeague:
+    """simulate_league on a tiny synthetic 7-club league: shape and
+    probability-mass identities of the Opta-style outputs."""
+
+    def _state(self):
+        from soccer.clubs.daily.scoring import ScoreParams
+        from soccer.clubs.daily.state import DailyState
+
+        clubs = list("ABCDEFG")
+        engine = ClubEloEngine(k=10, home_advantage=60)
+        engine.current_season = "2026-27"
+        for i, c in enumerate(clubs):
+            engine.ratings[c] = 1650 - 50 * i
+            engine.last_league[c] = "epl"
+            engine.last_season[c] = "2026-27"
+
+        played = [("2026-08-22", "epl", "A", "B", 2, 0)]
+        rows = make_results(played).to_dict(orient="records")
+        for h, a in [(h, a) for h in clubs for a in clubs if h != a][:12]:
+            rows.append(
+                {"date": "2026-09-05", "season": "2026-27", "league": "epl",
+                 "home_team": h, "away_team": a,
+                 "home_score": None, "away_score": None}
+            )
+        results = pd.DataFrame(rows)
+        params = ScoreParams(0.0, 0.8, {"epl": 2.6})
+        return DailyState(
+            engines={"epl": engine}, history=None, results=results,
+            outcome_model=None, score_params=params, xg_form=None,
+        )
+
+    def test_outputs_carry_opta_fields_and_mass(self):
+        sim = simulate.simulate_league(
+            self._state(), "epl", "2026-27", n_sims=200, seed=1)
+        clubs = sim["clubs"]
+        assert len(clubs) == 7
+        for key in ("exp_position", "p_uel", "p_title", "p_top4",
+                    "p_relegation", "exp_points"):
+            assert all(key in c for c in clubs)
+        assert sum(c["p_title"] for c in clubs) == pytest.approx(1.0, abs=0.02)
+        assert sum(c["p_top4"] for c in clubs) == pytest.approx(4.0, abs=0.05)
+        assert sum(c["p_uel"] for c in clubs) == pytest.approx(2.0, abs=0.05)
+        assert sum(c["p_relegation"] for c in clubs) == pytest.approx(3.0, abs=0.05)
+        assert sum(c["exp_position"] for c in clubs) == pytest.approx(28.0, abs=0.1)
+        # table ordered by expected finish, best first
+        positions = [c["exp_position"] for c in clubs]
+        assert positions == sorted(positions)

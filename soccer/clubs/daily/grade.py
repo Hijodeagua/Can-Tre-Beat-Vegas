@@ -10,11 +10,12 @@ results.csv, whether that takes one day or a postponement's three weeks.
 """
 
 import math
+from datetime import date, timedelta
 from pathlib import Path
 
 import pandas as pd
 
-from soccer.clubs.daily.config import GRADES_CSV, PREDICTIONS_DIR
+from soccer.clubs.daily.config import GRADES_CSV, PREDICTIONS_DIR, ROLLING_WINDOWS
 
 LEDGER_COLUMNS = [
     "date", "league", "season", "home_team", "away_team",
@@ -79,22 +80,50 @@ def grade_all(results: pd.DataFrame, run_date: str) -> pd.DataFrame:
     return pd.DataFrame(columns=LEDGER_COLUMNS)
 
 
-def ledger_summary() -> dict:
+def _window_stats(g: pd.DataFrame) -> dict:
+    return {
+        "graded": int(len(g)),
+        "accuracy": round(float(g["pick_correct"].mean()), 4),
+        "log_loss": round(float(g["log_loss"].mean()), 4),
+    }
+
+
+def ledger_summary(run_date: str | None = None) -> dict:
+    """Cumulative record plus, when a run date is given, rolling windows
+    over the last N days of *match* dates (grades.csv `date`, not the day
+    the grade landed) — the "how has the model been doing lately" view."""
     if not GRADES_CSV.exists():
         return {"graded": 0}
     g = pd.read_csv(GRADES_CSV)
     if g.empty:
         return {"graded": 0}
-    return {
-        "graded": int(len(g)),
-        "accuracy": round(float(g["pick_correct"].mean()), 4),
-        "log_loss": round(float(g["log_loss"].mean()), 4),
+    out = {
+        **_window_stats(g),
         "by_league": {
-            lg: {
-                "graded": int(len(sub)),
-                "accuracy": round(float(sub["pick_correct"].mean()), 4),
-                "log_loss": round(float(sub["log_loss"].mean()), 4),
-            }
-            for lg, sub in g.groupby("league")
+            lg: _window_stats(sub) for lg, sub in g.groupby("league")
         },
     }
+    if run_date:
+        rolling = {}
+        for days in ROLLING_WINDOWS:
+            start = (date.fromisoformat(run_date) - timedelta(days=days)).isoformat()
+            sub = g[(g["date"] >= start) & (g["date"] <= run_date)]
+            rolling[f"{days}d"] = (
+                _window_stats(sub) if len(sub) else {"graded": 0}
+            )
+        out["rolling"] = rolling
+    return out
+
+
+def recent_grades(run_date: str, days: int = 7) -> pd.DataFrame:
+    """Graded rows whose match date falls in the trailing window — the
+    "past week" section of the update email."""
+    if not GRADES_CSV.exists():
+        return pd.DataFrame(columns=LEDGER_COLUMNS)
+    g = pd.read_csv(GRADES_CSV)
+    start = (date.fromisoformat(run_date) - timedelta(days=days)).isoformat()
+    return (
+        g[(g["date"] >= start) & (g["date"] <= run_date)]
+        .sort_values(["date", "league", "home_team"])
+        .reset_index(drop=True)
+    )

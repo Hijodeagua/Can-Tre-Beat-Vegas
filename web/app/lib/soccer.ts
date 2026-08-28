@@ -45,8 +45,13 @@ export interface SoccerFuturesClub {
   elo: number;
   points: number;
   exp_points: number;
+  /** Mean finishing position across sims — the Opta-style projected spot. */
+  exp_position: number;
   p_title: number;
+  /** P(top 4) = the UCL places. */
   p_top4: number;
+  /** P(5th–6th) = the Europa League band. */
+  p_uel: number;
   p_relegation: number;
 }
 
@@ -54,7 +59,17 @@ export interface SoccerFuturesLeague {
   season: string;
   sims: number;
   remaining_matches: number;
-  clubs: SoccerFuturesClub[];
+  /** Present (with no clubs) when the season's fixtures aren't published. */
+  status?: string;
+  clubs?: SoccerFuturesClub[];
+}
+
+/** One club's current-season Elo trajectory: pre-match rating at each
+ * match date, closed with the live rating on the run date — so the last
+ * point moves every day the pipeline runs. */
+export interface SoccerEloHistoryLeague {
+  season: string;
+  clubs: Record<string, [string, number][]>;
 }
 
 /**
@@ -91,6 +106,7 @@ export interface SoccerLatest {
   graded_today: unknown[];
   ledger: { graded: number };
   futures: Record<string, SoccerFuturesLeague>;
+  elo_history?: Record<string, SoccerEloHistoryLeague>;
 }
 
 const data = latest as unknown as SoccerLatest;

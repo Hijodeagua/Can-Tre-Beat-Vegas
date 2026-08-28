@@ -13,20 +13,31 @@ evening's European slate in full):
 3. Grade every previously persisted slate row whose result has now landed;
    append to the running ledger.
 4. Predict the slate for [D, D+2) and persist it for future grading.
-5. Monte Carlo the rest of each league season (title / top-4 / relegation).
+5. Monte Carlo the rest of each league season (title / UCL / UEL /
+   relegation / expected finish).
 6. Write the site JSON (latest + history snapshot) and refresh the
    portable ratings artifact.
+7. Render the update email HTML + manifest. The email is written every
+   run but only marked sendable on EMAIL_WEEKDAYS (twice a week); the
+   workflow reads the manifest and the send ledger keeps reruns from
+   double-sending, exactly like the MLB pipeline.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from datetime import date
 
-from soccer.clubs.daily import export_site, grade, predict, simulate
-from soccer.clubs.daily.config import SEASON_SIMS
+from soccer.clubs.daily import emails, export_site, grade, predict, simulate
+from soccer.clubs.daily.config import (
+    EMAIL_FIXTURE_DAYS,
+    EMAIL_REPORTS_DIR,
+    EMAIL_WEEKDAYS,
+    SEASON_SIMS,
+)
 from soccer.clubs.daily.state import build_state
 from soccer.clubs.data.leagues import TIER1, current_season_for
 
@@ -53,6 +64,8 @@ def main() -> None:
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--skip-fetch", action="store_true")
     parser.add_argument("--season-sims", type=int, default=SEASON_SIMS)
+    parser.add_argument("--force-email", action="store_true",
+                        help="mark the update email sendable regardless of weekday")
     args = parser.parse_args()
     run_date = args.date
 
@@ -65,7 +78,7 @@ def main() -> None:
 
     print("== Grading")
     graded = grade.grade_all(state.results, run_date)
-    ledger = grade.ledger_summary()
+    ledger = grade.ledger_summary(run_date)
     if len(graded):
         correct = int(graded["pick_correct"].sum())
         print(f"   graded {len(graded)} matches ({correct} picks correct)")
@@ -105,6 +118,33 @@ def main() -> None:
     export_site.export(state, run_date, slate, futures, ledger, graded)
     from soccer.clubs.model import export_ratings
     export_ratings.export()
+
+    print("== Rendering update email")
+    week_slate = predict.build_slate(state, run_date,
+                                     window_days=EMAIL_FIXTURE_DAYS)
+    recent = grade.recent_grades(run_date, days=7)
+    html = emails.update_html(run_date, week_slate, recent, ledger, futures)
+    out = EMAIL_REPORTS_DIR / run_date
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "update.html").write_text(html, encoding="utf-8")
+
+    from data_jobs.email_ledger import plan
+    email_entries = {
+        "update": {
+            "path": str((out / "update.html").relative_to(EMAIL_REPORTS_DIR.parent.parent)),
+            "subject": f"⚽ Soccer Update — {run_date} "
+                       f"({len(week_slate)} fixtures this week)",
+            "date": run_date,
+        }
+    }
+    email_entries = plan(email_entries, EMAIL_REPORTS_DIR / "sent.json")
+    email_day = date.fromisoformat(run_date).weekday() in EMAIL_WEEKDAYS
+    if not (email_day or args.force_email):
+        email_entries["update"]["send"] = False
+    manifest = {"date": run_date, "emails": email_entries}
+    (EMAIL_REPORTS_DIR / "manifest_latest.json").write_text(
+        json.dumps(manifest, indent=1), encoding="utf-8")
+    print(f"manifest: {json.dumps(manifest)}")
     print("Done.")
 
 
