@@ -74,12 +74,25 @@ def elo_history_payload(state: DailyState, run_date: str) -> dict:
     return out
 
 
+def _top3(series) -> float | None:
+    """Mean of the three largest values — the league's top-end alongside
+    its overall average. None until at least three clubs report."""
+    s = pd.Series(series).dropna()
+    if len(s) < 3:
+        return None
+    return round(float(s.nlargest(3).mean()), 3)
+
+
 def league_rankings_payload(ratings: dict) -> dict:
     """One row per league: current avg Elo (from `ratings`) plus the most
-    recent season's squad economics. Value/wage and squad-composition stats
-    are reported against whichever season actually has each — coverage
-    grows league by league as more market-value uploads land, so the two
-    "as of" seasons for one league can legitimately differ."""
+    recent season's squad economics, each paired with a top-3-club average
+    (the top end of the league, not just its middle). Value/wage and
+    squad-composition stats are reported against whichever season actually
+    has each — coverage grows league by league as more market-value
+    uploads land, so the "as of" seasons for one league can legitimately
+    differ. Wage bills additionally fall back to the most recent season
+    carrying the optional wage column, since value coverage runs ahead of
+    wage coverage."""
     values = load_market_values_raw() if values_available() else pd.DataFrame()
 
     out = {}
@@ -89,16 +102,21 @@ def league_rankings_payload(ratings: dict) -> dict:
             "name": lg.name,
             "tier": lg.tier,
             "avgElo": round(sum(c["elo"] for c in clubs) / len(clubs), 1) if clubs else None,
+            "top3Elo": _top3([c["elo"] for c in clubs]),
             "eloClubCount": len(clubs),
             "valueSeason": None,
             "avgSquadValueEurM": None,
+            "top3SquadValueEurM": None,
             "avgWageBillEurM": None,
+            "top3WageBillEurM": None,
+            "wageSeason": None,
             "valueClubCount": None,
             "squadStatsSeason": None,
             "avgSquadSize": None,
             "avgAge": None,
             "avgForeigners": None,
             "avgValuePerPlayerEurM": None,
+            "top3ValuePerPlayerEurM": None,
             "squadStatsClubCount": None,
         }
         sub = values[values["league"] == league] if len(values) else values
@@ -107,9 +125,15 @@ def league_rankings_payload(ratings: dict) -> dict:
             vseason = sub[sub["season"] == value_season]
             entry["valueSeason"] = value_season
             entry["avgSquadValueEurM"] = _round(vseason["squad_value_eur_m"].mean())
+            entry["top3SquadValueEurM"] = _top3(vseason["squad_value_eur_m"])
             entry["valueClubCount"] = int(len(vseason))
-            if "wage_bill_eur_m" in vseason.columns and vseason["wage_bill_eur_m"].notna().any():
-                entry["avgWageBillEurM"] = _round(vseason["wage_bill_eur_m"].mean())
+            if "wage_bill_eur_m" in sub.columns and sub["wage_bill_eur_m"].notna().any():
+                has_wage = sub["wage_bill_eur_m"].notna()
+                wage_season = sorted(sub.loc[has_wage, "season"].unique())[-1]
+                wseason = sub[(sub["season"] == wage_season) & has_wage]
+                entry["wageSeason"] = wage_season
+                entry["avgWageBillEurM"] = _round(wseason["wage_bill_eur_m"].mean())
+                entry["top3WageBillEurM"] = _top3(wseason["wage_bill_eur_m"])
 
             has_stats = sub["squad_size"].notna() if "squad_size" in sub.columns else pd.Series(dtype=bool)
             stats_seasons = sorted(sub.loc[has_stats, "season"].unique()) if has_stats.any() else []
@@ -121,6 +145,7 @@ def league_rankings_payload(ratings: dict) -> dict:
                 entry["avgAge"] = _round(sseason["avg_age"].mean())
                 entry["avgForeigners"] = _round(sseason["foreigners"].mean())
                 entry["avgValuePerPlayerEurM"] = _round(sseason["avg_value_eur_m"].mean())
+                entry["top3ValuePerPlayerEurM"] = _top3(sseason["avg_value_eur_m"])
                 entry["squadStatsClubCount"] = int(len(sseason))
         out[league] = entry
     return out

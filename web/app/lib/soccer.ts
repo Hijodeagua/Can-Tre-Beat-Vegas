@@ -84,16 +84,24 @@ export interface SoccerLeagueRanking {
   name: string;
   tier: number;
   avgElo: number | null;
+  /** Mean of the league's three highest-rated clubs — the top end. */
+  top3Elo: number | null;
   eloClubCount: number;
   valueSeason: string | null;
   avgSquadValueEurM: number | null;
+  top3SquadValueEurM: number | null;
   avgWageBillEurM: number | null;
+  top3WageBillEurM: number | null;
+  /** Wage figures fall back to the newest season that has them, which can
+   * trail valueSeason — null until any wage upload exists. */
+  wageSeason: string | null;
   valueClubCount: number | null;
   squadStatsSeason: string | null;
   avgSquadSize: number | null;
   avgAge: number | null;
   avgForeigners: number | null;
   avgValuePerPlayerEurM: number | null;
+  top3ValuePerPlayerEurM: number | null;
   squadStatsClubCount: number | null;
 }
 
