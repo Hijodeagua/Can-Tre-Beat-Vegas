@@ -67,8 +67,6 @@ const RANKINGS_COLUMNS = [
   { header: 'Top-3 Elo', numeric: true },
   { header: 'Avg squad value', numeric: true },
   { header: 'Top-3 value', numeric: true },
-  { header: 'Avg wage bill', numeric: true },
-  { header: 'Top-3 wage', numeric: true },
   { header: 'Avg value/player', numeric: true },
   { header: 'Top-3 value/player', numeric: true },
   { header: 'Avg squad size', numeric: true },
@@ -204,8 +202,6 @@ function RankingsTab() {
             r.top3Elo == null ? DASH : Math.round(r.top3Elo),
             fmtEurM(r.avgSquadValueEurM),
             fmtEurM(r.top3SquadValueEurM),
-            fmtEurM(r.avgWageBillEurM),
-            fmtEurM(r.top3WageBillEurM),
             fmtEurM(r.avgValuePerPlayerEurM, 2),
             fmtEurM(r.top3ValuePerPlayerEurM, 2),
             fmtNum1(r.avgSquadSize),
@@ -219,8 +215,6 @@ function RankingsTab() {
             r.top3Elo,
             r.avgSquadValueEurM,
             r.top3SquadValueEurM,
-            r.avgWageBillEurM,
-            r.top3WageBillEurM,
             r.avgValuePerPlayerEurM,
             r.top3ValuePerPlayerEurM,
             r.avgSquadSize,
@@ -234,13 +228,10 @@ function RankingsTab() {
             across all ten leagues via the Champions/Europa/Conference League cross-play, so
             a Bundesliga 1550 and a Segunda 1550 mean the same thing. Every Top-3 column
             is the mean of that league&apos;s three largest values for the metric — the
-            league&apos;s ceiling next to its average. Squad-value and
-            wage-bill figures are that league&apos;s most recent{' '}
-            <code>market_values</code> upload (wages fall back to the newest season that
-            has them, and read {DASH} until an upload includes the wage column — none has
-            yet); squad size, age, foreigners and
-            value-per-player come from a newer, still-growing set of uploads and read{' '}
-            {DASH} until a league has one.
+            league&apos;s ceiling next to its average. Squad-value figures are that
+            league&apos;s most recent <code>market_values</code> upload; squad size, age,
+            foreigners and value-per-player come from a newer, still-growing set of
+            uploads and read {DASH} until a league has one.
             {anySquadStats
               ? ' "As of" season varies by league and by column — coverage is being backfilled incrementally, not all at once.'
               : ''}
