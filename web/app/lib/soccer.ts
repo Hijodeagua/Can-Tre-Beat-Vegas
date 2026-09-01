@@ -84,8 +84,12 @@ export interface SoccerLeagueRanking {
   name: string;
   tier: number;
   avgElo: number | null;
-  /** Mean of the league's three highest-rated clubs — the top end. */
-  top3Elo: number | null;
+  /** Elo bands: mean of the league's 4 strongest clubs, the 10 clubs
+   * centered on the median rank, and the 4 weakest — ceiling, midtable,
+   * floor. Null where a band doesn't fit the league size. */
+  top4Elo: number | null;
+  mid10Elo: number | null;
+  bottom4Elo: number | null;
   eloClubCount: number;
   valueSeason: string | null;
   avgSquadValueEurM: number | null;

@@ -64,7 +64,6 @@ const RANKINGS_COLUMNS = [
   { header: 'League', strong: true },
   { header: 'Div' },
   { header: 'Avg Elo', strong: true, numeric: true },
-  { header: 'Top-3 Elo', numeric: true },
   { header: 'Avg squad value', numeric: true },
   { header: 'Top-3 value', numeric: true },
   { header: 'Avg value/player', numeric: true },
@@ -79,7 +78,9 @@ const ELO_RANK_COLUMNS = [
   { header: 'League', strong: true },
   { header: 'Div' },
   { header: 'Avg Elo', strong: true, numeric: true },
-  { header: 'Top-3 Elo', numeric: true },
+  { header: 'Top-4 Avg Elo', numeric: true },
+  { header: 'Mid-10 Avg Elo', numeric: true },
+  { header: 'Bottom-4 Avg Elo', numeric: true },
 ];
 
 /** Every UEFA-glued league sorted by avg Elo, highest first — the flat
@@ -100,11 +101,13 @@ function LeagueEloRank() {
           r.name,
           r.tier === 1 ? '1st' : '2nd',
           r.avgElo == null ? DASH : Math.round(r.avgElo),
-          r.top3Elo == null ? DASH : Math.round(r.top3Elo),
+          r.top4Elo == null ? DASH : Math.round(r.top4Elo),
+          r.mid10Elo == null ? DASH : Math.round(r.mid10Elo),
+          r.bottom4Elo == null ? DASH : Math.round(r.bottom4Elo),
         ],
-        values: [i + 1, r.name, r.tier, r.avgElo, r.top3Elo],
+        values: [i + 1, r.name, r.tier, r.avgElo, r.top4Elo, r.mid10Elo, r.bottom4Elo],
       }))}
-      note="Top-3 Elo is the mean of each league's three strongest clubs — the top end of the table rather than its middle."
+      note="Top-4 / Mid-10 / Bottom-4 are the mean Elo of each league's four strongest clubs, the ten clubs centered on the median rank, and its four weakest — the ceiling, the midtable, and the floor next to the overall average. Click any header to re-sort."
     />
   );
 }
@@ -199,7 +202,6 @@ function RankingsTab() {
             r.name,
             r.tier === 1 ? '1st' : '2nd',
             r.avgElo == null ? DASH : Math.round(r.avgElo),
-            r.top3Elo == null ? DASH : Math.round(r.top3Elo),
             fmtEurM(r.avgSquadValueEurM),
             fmtEurM(r.top3SquadValueEurM),
             fmtEurM(r.avgValuePerPlayerEurM, 2),
@@ -212,7 +214,6 @@ function RankingsTab() {
             r.name,
             r.tier,
             r.avgElo,
-            r.top3Elo,
             r.avgSquadValueEurM,
             r.top3SquadValueEurM,
             r.avgValuePerPlayerEurM,

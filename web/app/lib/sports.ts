@@ -12,7 +12,7 @@
  */
 
 /** Where a sport's in-season slate is read from. */
-export type SlateSource = 'mlb' | 'odds';
+export type SlateSource = 'mlb' | 'soccer' | 'odds';
 
 export interface SportConfig {
   /** Matches the `sport` key in summary.json and the slate.json sport key. */
@@ -98,16 +98,15 @@ export const SPORTS: SportConfig[] = [
     dashBorder: 'color-mix(in srgb, #3ddc84 60%, white)',
     href: '/soccer',
     navLabel: '⚽ Soccer',
-    slateSource: 'mlb', // unused: soccer isn't in the odds feed or the cross-sport ladder yet.
+    slateSource: 'soccer',
     blurb:
       'Country-pool club Elo across Europe’s top 5 leagues plus their second divisions, ' +
       'glued together by Champions/Europa/Conference League cross-play, with squad market ' +
-      'value and transfer spend as extra outcome-model features. MLS runs alongside on its ' +
-      'own unglued pool.',
-    offseasonLead: () => 'Not on the cross-sport ladder yet — soccer runs daily but is not graded there.',
+      'value and transfer spend as extra outcome-model features. Picks are three-way ' +
+      '(win/draw/loss), so its log loss reads on a different scale from the binary sports.',
+    offseasonLead: () => 'European seasons overlap — the pipeline runs daily year-round.',
     offseasonNote:
-      'Club Elo + squad economics across 10 leagues. Not wired into the graded track-record ' +
-      'ladder above; see the Soccer page for its own rankings and daily slate.',
+      'Club Elo + squad economics across 10 leagues, graded on three-way W/D/L picks.',
   },
   {
     key: 'mlb',

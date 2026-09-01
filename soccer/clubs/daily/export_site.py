@@ -83,6 +83,23 @@ def _top3(series) -> float | None:
     return round(float(s.nlargest(3).mean()), 3)
 
 
+def _elo_bands(elos: list[float]) -> dict:
+    """Top-4 / middle-10 / bottom-4 mean Elo — the league's ceiling, its
+    midtable, and its floor. Mid-10 is the ten clubs centered on the
+    median rank, so an 18-club league reads ranks 5-14 and a 24-club
+    league 8-17. None where a band doesn't fit the league size."""
+    s = sorted(elos, reverse=True)
+    n = len(s)
+    out = {"top4Elo": None, "mid10Elo": None, "bottom4Elo": None}
+    if n >= 4:
+        out["top4Elo"] = round(sum(s[:4]) / 4, 1)
+        out["bottom4Elo"] = round(sum(s[-4:]) / 4, 1)
+    if n >= 10:
+        start = (n - 10) // 2
+        out["mid10Elo"] = round(sum(s[start:start + 10]) / 10, 1)
+    return out
+
+
 def league_rankings_payload(ratings: dict) -> dict:
     """One row per league: current avg Elo (from `ratings`) plus the most
     recent season's squad economics, each paired with a top-3-club average
@@ -102,7 +119,7 @@ def league_rankings_payload(ratings: dict) -> dict:
             "name": lg.name,
             "tier": lg.tier,
             "avgElo": round(sum(c["elo"] for c in clubs) / len(clubs), 1) if clubs else None,
-            "top3Elo": _top3([c["elo"] for c in clubs]),
+            **_elo_bands([c["elo"] for c in clubs]),
             "eloClubCount": len(clubs),
             "valueSeason": None,
             "avgSquadValueEurM": None,
