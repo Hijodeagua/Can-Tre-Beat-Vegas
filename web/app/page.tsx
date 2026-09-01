@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import GameCard from '@/app/components/GameCard';
-import MlbSlateTable from '@/app/components/MlbSlateTable';
+import DailyModels, { type DailyTab } from '@/app/components/DailyModels';
 import ModelCard from '@/app/components/ModelCard';
 import StatTile from '@/app/components/StatTile';
 import {
@@ -9,7 +8,11 @@ import {
 } from '@/app/lib/data';
 import { fmtNum, fmtPctPrecise, fmtRecord, fmtRoi, fmtTimestamp } from '@/app/lib/format';
 import { getMlbLatest, gradedLedgerRow, playedGraded } from '@/app/lib/mlb';
+import { getSoccerLatest } from '@/app/lib/soccer';
 import { accentVars, sportByName, type SportConfig } from '@/app/lib/sports';
+
+/** Soccer fixtures shown inline on the home page before "see the full slate". */
+const HOME_SOCCER_ROWS = 12;
 
 /**
  * The model home: one board for every forecasting model.
@@ -36,6 +39,14 @@ export default function HomePage() {
   const offSeason = models.filter((m) => m.model.status === 'off_season');
   const { overall } = summary;
 
+  // The daily models (MLB + soccer) share one section with a sport picker;
+  // the odds-feed sports keep a section each when their seasons start.
+  const daily = inSeason.filter((m) => m.sport.slateSource !== 'odds');
+  const oddsInSeason = inSeason.filter((m) => m.sport.slateSource === 'odds');
+  const dailyTabs = daily.map(({ sport, model }) =>
+    sport.slateSource === 'mlb' ? mlbTab(sport, model) : soccerTab(sport),
+  );
+
   return (
     <div>
       <h2 className="pixel m-0 text-[20px] leading-[1.4]" style={{ color: 'var(--th-ink)' }}>
@@ -58,7 +69,9 @@ export default function HomePage() {
 
       <TrackRecord overall={overall} models={models} />
 
-      {inSeason.map(({ sport, model }) => (
+      {dailyTabs.length > 0 && <DailyModels tabs={dailyTabs} />}
+
+      {oddsInSeason.map(({ sport, model }) => (
         <InSeasonSection key={sport.key} sport={sport} model={model} slate={slate} />
       ))}
 
@@ -147,30 +160,118 @@ function TrackRecord({
         Record · accuracy · last graded day, game-weighted across every graded day. A model
         only reports once its picks have been graded. ROI is an em dash — nothing here
         stakes money. Log-loss baseline: 0.693 = coin flip, ~0.691 = always pick home.
+        Soccer picks are three-way (win/draw/loss), so its log loss reads against a ~1.10
+        baseline and stays out of the blended headline number.
       </p>
     </section>
   );
 }
 
+/** The MLB tab of the daily-models section: slate + chips, precomputed
+ * server-side so the client component stays a dumb switcher. */
+function mlbTab(sport: SportConfig, model: SummaryModel): DailyTab {
+  const mlb = getMlbLatest();
+  const graded = playedGraded();
+  const correct = graded.filter((g) => g.pick_correct).length;
+  const ledger = gradedLedgerRow();
+  // The chip only wears the accent on a day the model actually won. A green
+  // badge reading "6/14 ❌" would celebrate a losing day.
+  const won = correct * 2 >= graded.length;
+
+  const chips = [];
+  if (graded.length > 0) {
+    chips.push({
+      text: `Yesterday ${correct}/${graded.length} correct ${won ? '✅' : '❌'}`,
+      highlight: won,
+    });
+  }
+  chips.push({
+    text: `Running accuracy ${fmtPctPrecise(ledger?.cum_accuracy ?? model.accuracy)}`,
+    highlight: false,
+  });
+
+  return {
+    key: sport.key,
+    name: sport.name,
+    emoji: sport.emoji,
+    accent: sport.accent,
+    accentInk: sport.accentInk,
+    runDate: mlb.date ?? '',
+    blurb: sport.blurb,
+    detailHref: sport.href ? `${sport.href}?tab=slate` : null,
+    detailLabel: 'Futures, grades and history →',
+    chips,
+    mlbSlate: mlb.slate,
+  };
+}
+
+/** The soccer tab: today's fixture window + the rolling tracker chips. */
+function soccerTab(sport: SportConfig): DailyTab {
+  const soccer = getSoccerLatest();
+  const rows = soccer.slate.map((r) => ({
+    date: r.date,
+    league: soccer.ratings[r.league]?.name ?? r.league,
+    home: r.home_team,
+    away: r.away_team,
+    pH: r.p_H,
+    pD: r.p_D,
+    pA: r.p_A,
+    pick: r.pick,
+    scoreH: r.score_home,
+    scoreA: r.score_away,
+  }));
+
+  const ledger = soccer.ledger as {
+    graded: number;
+    accuracy?: number;
+    rolling?: Record<string, { graded: number; accuracy?: number }>;
+  };
+  const chips = [];
+  const week = ledger.rolling?.['7d'];
+  if (week?.graded) {
+    chips.push({
+      text: `Last 7 days ${fmtPctPrecise(week.accuracy)} (${week.graded} graded)`,
+      highlight: false,
+    });
+  }
+  if (ledger.graded) {
+    chips.push({
+      text: `Running accuracy ${fmtPctPrecise(ledger.accuracy)} · ${ledger.graded} matches`,
+      highlight: false,
+    });
+  }
+
+  return {
+    key: sport.key,
+    name: sport.name,
+    emoji: sport.emoji,
+    accent: sport.accent,
+    accentInk: sport.accentInk,
+    runDate: soccer.run_date,
+    blurb: sport.blurb,
+    detailHref: sport.href ? `${sport.href}?tab=slate` : null,
+    detailLabel: 'Forecasts, ratings and the full slate →',
+    chips,
+    soccerSlate: rows.slice(0, HOME_SOCCER_ROWS),
+    moreCount: Math.max(0, rows.length - HOME_SOCCER_ROWS),
+  };
+}
+
 /**
- * One in-season model's slate, inline. Rendered per in-season sport, so NFL and
- * NBA reuse this block verbatim in their seasons — the only branch is which
- * loader supplies the games.
+ * One odds-feed model's slate, inline. NFL and NBA reuse this block verbatim
+ * in their seasons; the daily models render through DailyModels instead.
  */
 function InSeasonSection({
   sport,
-  model,
   slate,
 }: {
   sport: SportConfig;
   model: SummaryModel;
   slate: ReturnType<typeof getSlate>;
 }) {
-  const mlb = getMlbLatest();
-  const isMlb = sport.slateSource === 'mlb';
-  const oddsSport = isMlb ? undefined : slate.sports.find((s) => s.key === sport.key);
-  const games = isMlb ? mlb.slate.length : (oddsSport?.games.length ?? 0);
-  const runDate = isMlb ? mlb.date : slate.generated_at.slice(0, 10);
+  const oddsSport = slate.sports.find((s) => s.key === sport.key);
+  const games = oddsSport?.games.length ?? 0;
+  const runDate = slate.generated_at.slice(0, 10);
 
   return (
     <section className="mt-8" style={accentVars(sport)}>
@@ -200,54 +301,11 @@ function InSeasonSection({
       <div className="mt-3">
         {games === 0 ? (
           <EmptySlate hours={slate.window_hours} />
-        ) : isMlb ? (
-          <MlbSlateTable slate={mlb.slate} />
         ) : (
           <OddsSlate sport={oddsSport as Sport} />
         )}
       </div>
-
-      {isMlb && <MlbChips sport={sport} model={model} />}
     </section>
-  );
-}
-
-/** Yesterday's result and the running record, with a way into the full detail. */
-function MlbChips({ sport, model }: { sport: SportConfig; model: SummaryModel }) {
-  const graded = playedGraded();
-  const correct = graded.filter((g) => g.pick_correct).length;
-  const ledger = gradedLedgerRow();
-  // The chip only wears the accent on a day the model actually won. A green
-  // badge reading "6/14 ❌" would celebrate a losing day.
-  const won = correct * 2 >= graded.length;
-
-  return (
-    <div className="mt-3 flex flex-wrap items-center gap-2">
-      {graded.length > 0 && (
-        <span
-          className={`rounded-full px-3 py-1 text-[12px] ${won ? 'font-semibold' : ''}`}
-          style={
-            won
-              ? { background: 'var(--sport-accent)', color: 'var(--sport-accent-ink)' }
-              : { background: 'var(--th-chip)', color: 'var(--th-muted)' }
-          }
-        >
-          Yesterday {correct}/{graded.length} correct {won ? '✅' : '❌'}
-        </span>
-      )}
-      <span
-        className="rounded-full px-3 py-1 text-[12px]"
-        style={{ background: 'var(--th-chip)', color: 'var(--th-muted)' }}
-      >
-        Running accuracy {fmtPctPrecise(ledger?.cum_accuracy ?? model.accuracy)}
-      </span>
-      {sport.href && (
-        // Lands on the Slate tab — the reader is already looking at the slate.
-        <Link href={`${sport.href}?tab=slate`} className="text-[14px] underline-offset-2 hover:underline" style={{ color: 'var(--th-muted)' }}>
-          Futures, grades and history →
-        </Link>
-      )}
-    </div>
   );
 }
 

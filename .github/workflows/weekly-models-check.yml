@@ -1,0 +1,151 @@
+# Weekly models check — Monday midday UTC.
+#
+# One email walking through every model's current performance (MLB,
+# soccer, NFL) plus feature importances: permutation + SHAP + the
+# direction of association, computed live for the soccer outcome model
+# and read from the committed walk-forward artifacts for NFL. The MLB
+# model is pure Elo (no feature vector) and the email says so.
+
+name: Weekly Models Check
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+    inputs:
+      skip_email:
+        description: "Build the report but skip the email send"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-models-check
+  cancel-in-progress: false
+
+env:
+  REPORT_EMAIL: tremayne.watterson@gmail.com
+
+jobs:
+  models-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build models check report
+        id: report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m data_jobs.reports.models_check
+
+          MANIFEST=reports/models_check/manifest_latest.json
+          {
+            echo "date=$(jq -r '.date' $MANIFEST)"
+            echo "models_path=$(jq -r '.emails.models.path // ""' $MANIFEST)"
+            echo "models_subject=$(jq -r '.emails.models.subject // ""' $MANIFEST)"
+            echo "models_send=$(jq -r '.emails.models.send // false' $MANIFEST)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/models_check/
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Models check: ${{ steps.report.outputs.date }}"
+            bash .github/scripts/git-push-retry.sh main
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Decide whether to send email
+        id: emailgate
+        shell: bash
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          set -euo pipefail
+          SKIP="${{ github.event.inputs.skip_email }}"
+          if [ "${SKIP:-false}" = "true" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "Email skipped by input."
+            exit 0
+          fi
+          if [ -z "${SMTP_USERNAME:-}" ] || [ -z "${SMTP_PASSWORD:-}" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Email not sent - SMTP credentials not configured."
+            exit 0
+          fi
+          echo "send=true" >> "$GITHUB_OUTPUT"
+
+      - name: "Email: models check"
+        id: email-models
+        if: ${{ steps.emailgate.outputs.send == 'true' && steps.report.outputs.models_path != '' && steps.report.outputs.models_send == 'true' }}
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.REPORT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: ${{ steps.report.outputs.models_subject }}
+          html_body: file://${{ steps.report.outputs.models_path }}
+          ignore_cert: true
+
+      - name: Verify email delivered
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.report.outputs.models_send == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.email-models.outcome }}" = "failure" ]; then
+            echo "::error::Models check email failed to send - check SMTP credentials."
+            exit 1
+          fi
+          echo "Attempted email sent successfully."
+
+      - name: Record delivery
+        if: ${{ always() && steps.email-models.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m data_jobs.email_ledger record \
+            --manifest reports/models_check/manifest_latest.json --types "models"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/models_check/sent.json
+          if [ -n "$(git status --porcelain reports/models_check/sent.json)" ]; then
+            git commit -m "Models check: record delivery ${{ steps.report.outputs.date }}"
+            bash .github/scripts/git-push-retry.sh main
+          fi
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: models-check-${{ github.run_number }}
+          path: reports/models_check/
+          retention-days: 30

@@ -24,6 +24,17 @@ MAX_GOALS = 8            # Poisson scoreline grid is [0, MAX_GOALS] per side
 MIN_LAMBDA = 0.2
 RELEGATION_SPOTS = 3     # bottom-3 = drop zone (incl. any playoff spot)
 UCL_SPOTS = 4
+UEL_SPOTS = 2            # the next band down (5th-6th) = Europa League
+
+# Twice-weekly update email: rendered every run, but the manifest only
+# marks it sendable on these UTC weekdays (Mon=0 ... Sun=6). Monday wraps
+# the weekend round; Thursday wraps midweek and previews the weekend.
+EMAIL_WEEKDAYS = (0, 3)
+EMAIL_FIXTURE_DAYS = 7   # "games this week" horizon for the email
+ROLLING_WINDOWS = (7, 30)  # rolling performance windows, in days
+
+# Email HTML + manifest + send ledger, mirroring reports/mlb_daily/.
+EMAIL_REPORTS_DIR = REPO_ROOT / "reports" / "soccer"
 
 # League goal rates are estimated from this many most recent completed
 # seasons (COVID-era home rates argue against reaching further back).

@@ -1,6 +1,7 @@
 """
-Rest-of-season Monte Carlo per league: title, top-4 and relegation odds
-plus expected points, from N replays of the remaining fixtures.
+Rest-of-season Monte Carlo per league: title, UCL (top-4), Europa League
+(5th-6th) and relegation odds plus expected points and expected final
+position, from N replays of the remaining fixtures.
 
 Each sim carries its own copy of the league's ratings and updates them
 live with the engine's tuned K / MOV rules as sampled results come in, so
@@ -22,6 +23,7 @@ from soccer.clubs.daily.config import (
     RELEGATION_SPOTS,
     SEASON_SIMS,
     UCL_SPOTS,
+    UEL_SPOTS,
 )
 from soccer.clubs.daily.state import DailyState
 from soccer.clubs.data.leagues import pool_of
@@ -72,8 +74,10 @@ def simulate_league(state: DailyState, league: str, season: str,
     rng = np.random.default_rng(seed)
     titles = {c: 0 for c in clubs}
     top4 = {c: 0 for c in clubs}
+    uel = {c: 0 for c in clubs}
     releg = {c: 0 for c in clubs}
     pts_sum = {c: 0.0 for c in clubs}
+    pos_sum = {c: 0.0 for c in clubs}
 
     for _ in range(n_sims):
         ratings = dict(start_ratings)
@@ -103,12 +107,16 @@ def simulate_league(state: DailyState, league: str, season: str,
         titles[order[0]] += 1
         for c in order[:UCL_SPOTS]:
             top4[c] += 1
+        for c in order[UCL_SPOTS:UCL_SPOTS + UEL_SPOTS]:
+            uel[c] += 1
         for c in order[-RELEGATION_SPOTS:]:
             releg[c] += 1
         for c in clubs:
             pts_sum[c] += pts[c]
+        for i, c in enumerate(order):
+            pos_sum[c] += i + 1
 
-    table = sorted(clubs, key=lambda c: pts_sum[c], reverse=True)
+    table = sorted(clubs, key=lambda c: pos_sum[c])
     return {
         "season": season,
         "sims": n_sims,
@@ -119,8 +127,10 @@ def simulate_league(state: DailyState, league: str, season: str,
                 "elo": round(start_ratings[c], 1),
                 "points": base_pts.get(c, 0),
                 "exp_points": round(pts_sum[c] / n_sims, 1),
+                "exp_position": round(pos_sum[c] / n_sims, 1),
                 "p_title": round(titles[c] / n_sims, 4),
                 "p_top4": round(top4[c] / n_sims, 4),
+                "p_uel": round(uel[c] / n_sims, 4),
                 "p_relegation": round(releg[c] / n_sims, 4),
             }
             for c in table

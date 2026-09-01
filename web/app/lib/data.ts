@@ -112,6 +112,9 @@ export interface SummaryModel extends SummaryMetrics {
   last_graded: string | null;
   /** Games on this sport's current slate. */
   slate_games: number;
+  /** 2 for binary win/loss picks, 3 for soccer's W/D/L — different
+   * log-loss scales, so only 2-way models blend into the headline. */
+  outcomes?: number;
   /** Month-precision season start, present only while off-season. */
   season_starts?: string | null;
 }

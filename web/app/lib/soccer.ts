@@ -45,8 +45,13 @@ export interface SoccerFuturesClub {
   elo: number;
   points: number;
   exp_points: number;
+  /** Mean finishing position across sims — the Opta-style projected spot. */
+  exp_position: number;
   p_title: number;
+  /** P(top 4) = the UCL places. */
   p_top4: number;
+  /** P(5th–6th) = the Europa League band. */
+  p_uel: number;
   p_relegation: number;
 }
 
@@ -54,7 +59,17 @@ export interface SoccerFuturesLeague {
   season: string;
   sims: number;
   remaining_matches: number;
-  clubs: SoccerFuturesClub[];
+  /** Present (with no clubs) when the season's fixtures aren't published. */
+  status?: string;
+  clubs?: SoccerFuturesClub[];
+}
+
+/** One club's current-season Elo trajectory: pre-match rating at each
+ * match date, closed with the live rating on the run date — so the last
+ * point moves every day the pipeline runs. */
+export interface SoccerEloHistoryLeague {
+  season: string;
+  clubs: Record<string, [string, number][]>;
 }
 
 /**
@@ -69,16 +84,28 @@ export interface SoccerLeagueRanking {
   name: string;
   tier: number;
   avgElo: number | null;
+  /** Elo bands: mean of the league's 4 strongest clubs, the 10 clubs
+   * centered on the median rank, and the 4 weakest — ceiling, midtable,
+   * floor. Null where a band doesn't fit the league size. */
+  top4Elo: number | null;
+  mid10Elo: number | null;
+  bottom4Elo: number | null;
   eloClubCount: number;
   valueSeason: string | null;
   avgSquadValueEurM: number | null;
+  top3SquadValueEurM: number | null;
   avgWageBillEurM: number | null;
+  top3WageBillEurM: number | null;
+  /** Wage figures fall back to the newest season that has them, which can
+   * trail valueSeason — null until any wage upload exists. */
+  wageSeason: string | null;
   valueClubCount: number | null;
   squadStatsSeason: string | null;
   avgSquadSize: number | null;
   avgAge: number | null;
   avgForeigners: number | null;
   avgValuePerPlayerEurM: number | null;
+  top3ValuePerPlayerEurM: number | null;
   squadStatsClubCount: number | null;
 }
 
@@ -91,6 +118,7 @@ export interface SoccerLatest {
   graded_today: unknown[];
   ledger: { graded: number };
   futures: Record<string, SoccerFuturesLeague>;
+  elo_history?: Record<string, SoccerEloHistoryLeague>;
 }
 
 const data = latest as unknown as SoccerLatest;

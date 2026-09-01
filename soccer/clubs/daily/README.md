@@ -3,20 +3,21 @@
 Runs once per day (GitHub Actions, `.github/workflows/soccer-daily.yml`) —
 the club-football sibling of `mlb/daily`: refresh results, rebuild the
 glued Elo, grade what played, predict what's next, Monte Carlo the tables,
-publish the site JSON.
+publish the site JSON, and render the twice-weekly update email.
 
 ## Module map
 
 | Module | Job |
 |---|---|
-| `run.py` | Orchestrator CLI — `python -m soccer.clubs.daily.run [--date D] [--skip-fetch] [--season-sims N]` |
-| `config.py` | Paths, slate window, sim defaults |
+| `run.py` | Orchestrator CLI — `python -m soccer.clubs.daily.run [--date D] [--skip-fetch] [--season-sims N] [--force-email]` |
+| `config.py` | Paths, slate window, sim defaults, email weekdays |
 | `state.py` | One glued Elo replay + in-run outcome/score model fits, shared by every step |
 | `scoring.py` | Elo expectation → Poisson goal rates (margin map refit each run; league totals from the last 2 seasons) |
 | `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, most likely scoreline; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once results land; running ledger at `data/soccer_clubs/predictions/grades.csv` |
-| `simulate.py` | Per-league rest-of-season Monte Carlo with live in-sim Elo (title / top-4 / relegation / expected points) |
-| `export_site.py` | `web/public/data/soccer/latest.json` + per-day history snapshots |
+| `simulate.py` | Per-league rest-of-season Monte Carlo with live in-sim Elo (title / UCL / UEL / relegation / expected points + position) |
+| `export_site.py` | `web/public/data/soccer/latest.json` (incl. `elo_history` for the site's daily-updating Elo chart) + per-day history snapshots |
+| `emails.py` | The update email HTML: week's fixtures, past week + rolling tracker, Opta-style final-table forecasts |
 
 ## Data flow for a run dated D (UTC)
 
@@ -37,8 +38,15 @@ publish the site JSON.
    input. Predictions only ever use matches completed before the run.
 5. Rest-of-season Monte Carlo per league (default 1000 sims): sampled
    Poisson scores with live Elo updates inside each sim; tie-breaks
-   uniform (goal difference is not modeled as a tiebreaker).
+   uniform (goal difference is not modeled as a tiebreaker). Per club:
+   expected points and finishing position plus P(title), P(top 4 = UCL),
+   P(5th–6th = UEL), P(bottom 3 = relegation).
 6. Site JSON + history snapshot + the portable ratings artifact.
+7. The update email (`reports/soccer/{D}/update.html`) is rendered every
+   run; the manifest marks it sendable only on Mondays and Thursdays
+   (`EMAIL_WEEKDAYS`), the workflow delivers it over the same SMTP
+   secrets as the MLB emails, and `data_jobs/email_ledger.py` keeps
+   reruns from double-sending.
 
 ## Modeling notes
 
@@ -56,5 +64,8 @@ publish the site JSON.
   MLS reports the same status permanently — its source is a completed-match
   log, not a fixture list, so it never has a slate or futures sim, only
   ratings and squad economics.
-- **No emails yet** — the MLB pipeline's three-email machinery is the
-  template if/when this earns an inbox slot.
+- **Emails** — one combined update email, twice a week (Mon/Thu), built
+  on the MLB pipeline's manifest + send-ledger machinery. A separate
+  weekly models check (`data_jobs/reports/models_check.py`,
+  `.github/workflows/weekly-models-check.yml`) covers cross-model
+  performance and feature importances.
