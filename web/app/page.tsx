@@ -6,13 +6,18 @@ import {
   getMeta, getSlate, getSlateSport, getSummary,
   type Sport, type SummaryModel,
 } from '@/app/lib/data';
-import { fmtNum, fmtPctPrecise, fmtRecord, fmtRoi, fmtTimestamp } from '@/app/lib/format';
+import { getCfbLatest, matchupLabel } from '@/app/lib/cfb';
+import {
+  fmtNum, fmtPctPrecise, fmtRecord, fmtRoi, fmtSimScore, fmtTimestamp,
+} from '@/app/lib/format';
 import { getMlbLatest, gradedLedgerRow, playedGraded } from '@/app/lib/mlb';
 import { getSoccerLatest } from '@/app/lib/soccer';
 import { accentVars, sportByName, type SportConfig } from '@/app/lib/sports';
 
 /** Soccer fixtures shown inline on the home page before "see the full slate". */
 const HOME_SOCCER_ROWS = 12;
+/** Same cap for college football — a Saturday can run to 60+ games. */
+const HOME_CFB_ROWS = 12;
 
 /**
  * The model home: one board for every forecasting model.
@@ -44,7 +49,11 @@ export default function HomePage() {
   const daily = inSeason.filter((m) => m.sport.slateSource !== 'odds');
   const oddsInSeason = inSeason.filter((m) => m.sport.slateSource === 'odds');
   const dailyTabs = daily.map(({ sport, model }) =>
-    sport.slateSource === 'mlb' ? mlbTab(sport, model) : soccerTab(sport),
+    sport.slateSource === 'mlb'
+      ? mlbTab(sport, model)
+      : sport.slateSource === 'cfb'
+        ? cfbTab(sport)
+        : soccerTab(sport),
   );
 
   return (
@@ -254,6 +263,54 @@ function soccerTab(sport: SportConfig): DailyTab {
     chips,
     soccerSlate: rows.slice(0, HOME_SOCCER_ROWS),
     moreCount: Math.max(0, rows.length - HOME_SOCCER_ROWS),
+  };
+}
+
+/** The college-football tab: the two-day slate + the rolling tracker chips. */
+function cfbTab(sport: SportConfig): DailyTab {
+  const cfb = getCfbLatest();
+  const rows = cfb.slate.map((r) => ({
+    key: String(r.game_id),
+    date: r.date,
+    matchup: `${matchupLabel(r)}${r.home_fcs || r.away_fcs ? ' (FCS)' : ''}`,
+    pick: r.pick,
+    pickProb: r.pick_prob,
+    score: fmtSimScore(r.pred_home_score, r.pred_away_score, r.pick === r.home_team),
+  }));
+
+  const ledger = cfb.ledger;
+  const chips = [];
+  const week = ledger.rolling?.['7d'];
+  if (week?.graded) {
+    chips.push({
+      text: `Last 7 days ${fmtPctPrecise(week.accuracy)} (${week.graded} graded)`,
+      highlight: false,
+    });
+  }
+  if (ledger.graded) {
+    chips.push({
+      text: `Running accuracy ${fmtPctPrecise(ledger.accuracy)} · ${ledger.graded} games`,
+      highlight: false,
+    });
+  }
+  const top = cfb.ratings[0];
+  if (top) {
+    chips.push({ text: `Elo #1 ${top.team} (${Math.round(top.elo)})`, highlight: false });
+  }
+
+  return {
+    key: sport.key,
+    name: sport.name,
+    emoji: sport.emoji,
+    accent: sport.accent,
+    accentInk: sport.accentInk,
+    runDate: cfb.run_date,
+    blurb: sport.blurb,
+    detailHref: sport.href ? `${sport.href}?tab=slate` : null,
+    detailLabel: 'Top 25, forecasts and grades →',
+    chips,
+    cfbSlate: rows.slice(0, HOME_CFB_ROWS),
+    moreCount: Math.max(0, rows.length - HOME_CFB_ROWS),
   };
 }
 

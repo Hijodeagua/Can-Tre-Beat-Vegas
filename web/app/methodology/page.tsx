@@ -28,6 +28,13 @@ const SOURCES = [
       'the NFL model.',
   },
   {
+    name: 'CFBFASTR-DATA',
+    what:
+      'ESPN-derived college football schedules and results, 2001–present, with per-season ' +
+      'conference membership and FBS/FCS tags — the spine of the college Elo. ESPN’s public ' +
+      'scoreboard fills in the trailing week’s finals.',
+  },
+  {
     name: 'MLB RESULTS',
     what:
       'Daily scores and season-to-date records feed the Elo ratings and the ' +

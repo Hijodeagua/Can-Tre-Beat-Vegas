@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-02T14:02:43Z",
+  "generated_at": "2026-09-02T16:54:11Z",
   "overall": {
-    "record": "109-95",
-    "games": 204,
-    "accuracy": 0.5343,
+    "record": "113-100",
+    "games": 213,
+    "accuracy": 0.5305,
     "log_loss": 0.6967,
     "brier": 0.2516,
     "roi": null,
@@ -29,14 +29,28 @@
       "emoji": "\u26bd",
       "outcomes": 3,
       "status": "in_season",
-      "record": "48-38",
-      "games": 86,
-      "accuracy": 0.5581,
-      "log_loss": 0.9385,
+      "record": "52-43",
+      "games": 95,
+      "accuracy": 0.5474,
+      "log_loss": 0.9548,
       "brier": null,
       "roi": null,
       "last_graded": "2026-08-31",
-      "slate_games": 12
+      "slate_games": 6
+    },
+    {
+      "sport": "College Football",
+      "emoji": "\ud83c\udf93",
+      "outcomes": 2,
+      "status": "in_season",
+      "record": null,
+      "games": 0,
+      "accuracy": null,
+      "log_loss": null,
+      "brier": null,
+      "roi": null,
+      "last_graded": null,
+      "slate_games": 11
     },
     {
       "sport": "NFL",

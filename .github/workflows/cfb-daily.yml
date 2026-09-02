@@ -1,0 +1,185 @@
+# Daily college-football pipeline: refreshes the season's results from
+# cfbfastR-data (+ ESPN scoreboard fill-in), replays the tuned FBS Elo,
+# grades persisted slates, predicts the next two days, Monte Carlos the
+# rest of the regular season, and commits the data + site JSON. The
+# college sibling of soccer-daily.yml, including the twice-weekly update
+# email: rendered every run, marked sendable only on Mondays and Thursdays
+# (EMAIL_WEEKDAYS in CFB/daily/config.py); the send ledger keeps reruns
+# from double-sending.
+
+name: Daily CFB Report
+
+on:
+  schedule:
+    # 10:00 UTC = 6:00 AM ET (DST): Saturday-night finals are in and the
+    # upstream nightly reprocess has usually landed; Thursday/Friday
+    # kickoffs are hours away.
+    - cron: "0 10 * * *"
+
+  push:
+    branches: [main]
+    paths:
+      - "CFB/daily/**"
+      - ".github/workflows/cfb-daily.yml"
+
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: "Override run date (YYYY-MM-DD ET, default today)"
+        required: false
+        default: ""
+        type: string
+      force_email:
+        description: "Send the update email even off-schedule"
+        required: false
+        default: false
+        type: boolean
+      skip_email:
+        description: "Skip the email send"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+env:
+  REPORT_EMAIL: tremayne.watterson@gmail.com
+
+concurrency:
+  group: cfb-daily-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cfb-daily:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run daily pipeline
+        id: pipeline
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_DATE="${{ github.event.inputs.run_date }}"
+          FORCE="${{ github.event.inputs.force_email }}"
+          ARGS=()
+          [ -n "${RUN_DATE:-}" ] && ARGS+=(--date "$RUN_DATE")
+          [ "${FORCE:-false}" = "true" ] && ARGS+=(--force-email)
+          python -m CFB.daily.run "${ARGS[@]}"
+
+          MANIFEST=reports/cfb/manifest_latest.json
+          {
+            echo "date=$(jq -r '.date' $MANIFEST)"
+            echo "update_path=$(jq -r '.emails.update.path // ""' $MANIFEST)"
+            echo "update_subject=$(jq -r '.emails.update.subject // ""' $MANIFEST)"
+            echo "update_send=$(jq -r '.emails.update.send // false' $MANIFEST)"
+          } >> "$GITHUB_OUTPUT"
+
+      # The home page's cross-sport strip reads this. Rebuilt here so the
+      # day's fresh grades reach it in the same commit as the CFB JSON.
+      - name: Build cross-sport summary JSON
+        run: python -m data_jobs.build_summary
+
+      - name: Commit and push outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/college_football/ web/public/data/cfb/ \
+                  web/public/data/summary.json reports/cfb/
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "CFB daily: ${{ steps.pipeline.outputs.date }}"
+            bash .github/scripts/git-push-retry.sh main
+          else
+            echo "No changes to commit."
+          fi
+
+      # Secrets can't be used in `if:` expressions, so gate in bash —
+      # same mechanism as the MLB and soccer workflows.
+      - name: Decide whether to send email
+        id: emailgate
+        shell: bash
+        env:
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          set -euo pipefail
+          SKIP="${{ github.event.inputs.skip_email }}"
+          if [ "${SKIP:-false}" = "true" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "Email skipped by input."
+            exit 0
+          fi
+          if [ -z "${SMTP_USERNAME:-}" ] || [ -z "${SMTP_PASSWORD:-}" ]; then
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Email not sent - SMTP credentials not configured."
+            exit 0
+          fi
+          echo "send=true" >> "$GITHUB_OUTPUT"
+
+      - name: "Email: CFB update"
+        id: email-update
+        if: ${{ steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.update_path != '' && steps.pipeline.outputs.update_send == 'true' }}
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
+          server_port: ${{ secrets.SMTP_PORT || 587 }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ env.REPORT_EMAIL }}
+          from: ${{ secrets.SMTP_FROM || secrets.SMTP_USERNAME }}
+          subject: ${{ steps.pipeline.outputs.update_subject }}
+          html_body: file://${{ steps.pipeline.outputs.update_path }}
+          ignore_cert: true
+
+      # continue-on-error above keeps a bad SMTP credential from hiding
+      # behind a green run — surface it explicitly here.
+      - name: Verify email delivered
+        if: ${{ always() && steps.emailgate.outputs.send == 'true' && steps.pipeline.outputs.update_send == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.email-update.outcome }}" = "failure" ]; then
+            echo "::error::Update email failed to send - check SMTP credentials."
+            exit 1
+          fi
+          echo "Attempted email sent successfully."
+
+      # Idempotency ledger: remember the delivery keyed on (type, date)
+      # with a content hash, so a rerun of the same day re-sends nothing
+      # unless the report content changed. Recorded only after a
+      # successful send - a failed send is retried next run.
+      - name: Record delivery
+        if: ${{ always() && steps.email-update.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m data_jobs.email_ledger record \
+            --manifest reports/cfb/manifest_latest.json --types "update"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/cfb/sent.json
+          if [ -n "$(git status --porcelain reports/cfb/sent.json)" ]; then
+            git commit -m "CFB daily: record delivery ${{ steps.pipeline.outputs.date }}"
+            bash .github/scripts/git-push-retry.sh main
+          fi
