@@ -45,7 +45,12 @@ GRID = {
     "season_regression": [0.05, 0.10, 0.15, 0.20],
     "entry_rating": [1380.0, 1420.0, 1460.0],
     "entry_rating_t2": [1150.0, 1250.0, 1350.0],
-    "division_carry": [0.0, 0.25, 0.5, 0.75, 1.0],
+    # Pinned, not swept: the objective scores top-flight matches only, so
+    # it cannot see the damage a partial carry does to relegated clubs in
+    # the second division (a 0.25 carry cut relegated Premier League sides
+    # ~200 Elo overnight, inverting the Championship table vs. ClubElo).
+    # Sweeping it again requires an objective that scores both divisions.
+    "division_carry": [1.0],
 }
 
 

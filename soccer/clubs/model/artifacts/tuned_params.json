@@ -1,104 +1,101 @@
 {
-  "tunedAt": "2026-08-22T23:32:26+00:00",
-  "objective": "one-step-ahead Brier on top-flight matches (draw = 0.5), two-division pool replay",
-  "burnInSeasons": 2,
-  "holdoutFrom": "2024-25",
-  "grid": {
-    "k": [
-      10.0,
-      12.0,
-      14.0,
-      18.0
-    ],
-    "home_advantage": [
-      45.0,
-      60.0,
-      75.0
-    ],
-    "season_regression": [
-      0.05,
-      0.1,
-      0.15,
-      0.2
-    ],
-    "entry_rating": [
-      1380.0,
-      1420.0,
-      1460.0
-    ],
-    "entry_rating_t2": [
-      1150.0,
-      1250.0,
-      1350.0
-    ],
-    "division_carry": [
-      0.0,
-      0.25,
-      0.5,
-      0.75,
-      1.0
-    ]
+ "tunedAt": "2026-08-22T23:32:26+00:00",
+ "objective": "one-step-ahead Brier on top-flight matches (draw = 0.5), two-division pool replay",
+ "burnInSeasons": 2,
+ "holdoutFrom": "2024-25",
+ "grid": {
+  "k": [
+   10.0,
+   12.0,
+   14.0,
+   18.0
+  ],
+  "home_advantage": [
+   45.0,
+   60.0,
+   75.0
+  ],
+  "season_regression": [
+   0.05,
+   0.1,
+   0.15,
+   0.2
+  ],
+  "entry_rating": [
+   1380.0,
+   1420.0,
+   1460.0
+  ],
+  "entry_rating_t2": [
+   1150.0,
+   1250.0,
+   1350.0
+  ],
+  "division_carry": [
+   1.0
+  ]
+ },
+ "params": {
+  "epl": {
+   "k": 14.0,
+   "home_advantage": 60.0,
+   "season_regression": 0.1,
+   "entry_rating": 1380.0,
+   "entry_rating_t2": 1150.0,
+   "division_carry": 1.0,
+   "brier": 0.15364,
+   "matches_scored": 4560
   },
-  "params": {
-    "epl": {
-      "k": 14.0,
-      "home_advantage": 60.0,
-      "season_regression": 0.1,
-      "entry_rating": 1380.0,
-      "entry_rating_t2": 1150.0,
-      "division_carry": 0.25,
-      "brier": 0.15364,
-      "matches_scored": 4560
-    },
-    "bundesliga": {
-      "k": 12.0,
-      "home_advantage": 60.0,
-      "season_regression": 0.15,
-      "entry_rating": 1380.0,
-      "entry_rating_t2": 1350.0,
-      "division_carry": 0.5,
-      "brier": 0.1586,
-      "matches_scored": 3672
-    },
-    "la_liga": {
-      "k": 10.0,
-      "home_advantage": 75.0,
-      "season_regression": 0.05,
-      "entry_rating": 1460.0,
-      "entry_rating_t2": 1250.0,
-      "division_carry": 0.5,
-      "brier": 0.14709,
-      "matches_scored": 3800
-    },
-    "serie_a": {
-      "k": 12.0,
-      "home_advantage": 45.0,
-      "season_regression": 0.05,
-      "entry_rating": 1460.0,
-      "entry_rating_t2": 1150.0,
-      "division_carry": 0.75,
-      "brier": 0.14682,
-      "matches_scored": 3420
-    },
-    "ligue_1": {
-      "k": 12.0,
-      "home_advantage": 45.0,
-      "season_regression": 0.1,
-      "entry_rating": 1420.0,
-      "entry_rating_t2": 1250.0,
-      "division_carry": 1.0,
-      "brier": 0.15731,
-      "matches_scored": 2865
-    },
-    "mls": {
-      "k": 10.0,
-      "home_advantage": 75.0,
-      "season_regression": 0.2,
-      "entry_rating": 1460.0,
-      "entry_rating_t2": 1350.0,
-      "division_carry": 1.0,
-      "brier": 0.16856,
-      "matches_scored": 4262
-    }
+  "bundesliga": {
+   "k": 12.0,
+   "home_advantage": 60.0,
+   "season_regression": 0.15,
+   "entry_rating": 1380.0,
+   "entry_rating_t2": 1350.0,
+   "division_carry": 1.0,
+   "brier": 0.1586,
+   "matches_scored": 3672
+  },
+  "la_liga": {
+   "k": 10.0,
+   "home_advantage": 75.0,
+   "season_regression": 0.05,
+   "entry_rating": 1460.0,
+   "entry_rating_t2": 1250.0,
+   "division_carry": 1.0,
+   "brier": 0.14709,
+   "matches_scored": 3800
+  },
+  "serie_a": {
+   "k": 12.0,
+   "home_advantage": 45.0,
+   "season_regression": 0.05,
+   "entry_rating": 1460.0,
+   "entry_rating_t2": 1150.0,
+   "division_carry": 1.0,
+   "brier": 0.14682,
+   "matches_scored": 3420
+  },
+  "ligue_1": {
+   "k": 12.0,
+   "home_advantage": 45.0,
+   "season_regression": 0.1,
+   "entry_rating": 1420.0,
+   "entry_rating_t2": 1250.0,
+   "division_carry": 1.0,
+   "brier": 0.15731,
+   "matches_scored": 2865
+  },
+  "mls": {
+   "k": 10.0,
+   "home_advantage": 75.0,
+   "season_regression": 0.2,
+   "entry_rating": 1460.0,
+   "entry_rating_t2": 1350.0,
+   "division_carry": 1.0,
+   "brier": 0.16856,
+   "matches_scored": 4262
   }
+ },
+ "note": "division_carry pinned to 1.0 on 2026-09-02: the tuning objective scores top-flight matches only and was blind to relegated clubs being crushed toward the tier-2 entry rating; stored brier values predate the pin."
 }

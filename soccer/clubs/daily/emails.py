@@ -180,12 +180,14 @@ def _forecast_section(futures: dict) -> str:
                 rows,
             )
         )
+    sims = next((s.get("sims") for s in futures.values() if s.get("sims")), None)
+    sims_txt = f"{sims:,} replays" if sims else "replays"
     parts.append(
-        "<p style='color:#666;font-size:12px;'>Rest-of-season Monte Carlo "
-        "(1,000 replays of the remaining fixtures with live in-sim Elo). "
-        "Proj = projected finish ordered by expected position; xPts / xPos = "
-        "expected points and position; UCL = top 4, UEL = 5th&ndash;6th, "
-        "Rel = bottom 3.</p>"
+        f"<p style='color:#666;font-size:12px;'>Rest-of-season Monte Carlo "
+        f"({sims_txt} of the remaining fixtures with live in-sim Elo). "
+        f"Proj = projected finish ordered by expected position; xPts / xPos = "
+        f"expected points and position; UCL = top 4, UEL = 5th&ndash;6th, "
+        f"Rel = bottom 3.</p>"
     )
     return "".join(parts)
 

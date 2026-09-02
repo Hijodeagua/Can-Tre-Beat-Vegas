@@ -19,7 +19,11 @@ SITE_HISTORY = SITE_DIR / "history"
 SLATE_WINDOW_DAYS = 2
 
 # Rest-of-season Monte Carlo.
-SEASON_SIMS = 1000
+# 10k sims: at 1k, seed-to-seed noise on relegation odds ran to ±4
+# points, enough to visibly reorder neighbors in the forecast table; a
+# full 10k pass is ~0.5s/league per 1k sims, so the accuracy is nearly
+# free. Noise now ~±1 point.
+SEASON_SIMS = 10000
 MAX_GOALS = 8            # Poisson scoreline grid is [0, MAX_GOALS] per side
 MIN_LAMBDA = 0.2
 RELEGATION_SPOTS = 3     # bottom-3 = drop zone (incl. any playoff spot)
