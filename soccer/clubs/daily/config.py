@@ -19,7 +19,13 @@ SITE_HISTORY = SITE_DIR / "history"
 SLATE_WINDOW_DAYS = 2
 
 # Rest-of-season Monte Carlo.
-SEASON_SIMS = 1000
+# 30k sims. Measured seed-to-seed spread of the published odds (worst
+# club, 3 seeds): ±4.1pts at 1k, still ±2pts at 10k, ±0.6pts at 30k —
+# at ~19s/league (~1.6 min/day for five leagues) the displayed
+# percentages stop wobbling between runs. Beyond 30k, model error (the
+# ~3pt independent-Poisson draw deficit) dominates sampling noise, so
+# more sims buy nothing visible.
+SEASON_SIMS = 30000
 MAX_GOALS = 8            # Poisson scoreline grid is [0, MAX_GOALS] per side
 MIN_LAMBDA = 0.2
 RELEGATION_SPOTS = 3     # bottom-3 = drop zone (incl. any playoff spot)

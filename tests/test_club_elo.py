@@ -151,6 +151,16 @@ class TestClubEloEngine:
         assert rec["elo_away_pre"] == 1600  # no switch, no blend
         assert e.last_league["Promoted"] == "epl"
 
+    def test_default_carry_keeps_rating_across_divisions(self):
+        # Production posture (ClubElo-style): a club already rated in the
+        # pool keeps its rating unchanged through promotion or relegation;
+        # only never-seen clubs get an entry rating. Guards the 2026-09
+        # fix for relegated clubs being crushed toward the tier-2 entry.
+        e = ClubEloEngine(entry_rating=1400, entry_rating_t2=1250)
+        e.ratings["Down"] = 1460
+        e.last_league["Down"] = "epl"
+        assert e.rating_for("Down", "championship") == pytest.approx(1460)
+
     def test_rating_for_previews_the_blend_without_mutating(self):
         e = ClubEloEngine(entry_rating=1400, entry_rating_t2=1250,
                           division_carry=0.25)

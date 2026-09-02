@@ -46,10 +46,14 @@ DEFAULTS = {
     "entry_rating_t2": 1250.0,  # first-ever appearance, second division
     # How much of a club's rating survives a division switch: on its first
     # match in the other tier, r <- entry(tier) + carry * (r - entry(tier)).
-    # 0 reproduces the flat entry rating (division form ignored), 1 carries
-    # the rating unchanged. Tuned — promotion selects overperformers, so
-    # full carry overrates promoted clubs (winner's curse).
-    "division_carry": 0.5,
+    # Pinned at 1.0 — carry the rating unchanged, the way ClubElo does.
+    # The old tuned values (0.25-0.5) came from an objective that scored
+    # top-flight matches only, which is blind to the damage on the way
+    # DOWN: a relegated West Ham went 1460 -> 1228 on its first
+    # Championship match, landing below mid-table Serie B sides while
+    # public ClubElo had it as the strongest club in the division. Entry
+    # ratings still apply to clubs the pool has never seen.
+    "division_carry": 1.0,
 }
 
 

@@ -36,7 +36,7 @@ publish the site JSON, and render the twice-weekly update email.
    slate windows and postponed fixtures resolve cleanly whenever they play.
 4. The slate for [D, D+2) is predicted and persisted — tomorrow's grading
    input. Predictions only ever use matches completed before the run.
-5. Rest-of-season Monte Carlo per league (default 1000 sims): sampled
+5. Rest-of-season Monte Carlo per league (default 10000 sims): sampled
    Poisson scores with live Elo updates inside each sim; tie-breaks
    uniform (goal difference is not modeled as a tiebreaker). Per club:
    expected points and finishing position plus P(title), P(top 4 = UCL),
