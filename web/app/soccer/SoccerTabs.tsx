@@ -18,7 +18,7 @@ import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtPct, missing } from '@/app/lib/format';
 import {
   getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER, GLUED_LEAGUES,
-  type SoccerSlateRow,
+  comparableElo, comparableEloBands, type SoccerSlateRow,
 } from '@/app/lib/soccer';
 
 const TABS = [
@@ -83,31 +83,50 @@ const ELO_RANK_COLUMNS = [
   { header: 'Bottom-4 Avg Elo', numeric: true },
 ];
 
-/** Every UEFA-glued league sorted by avg Elo, highest first — the flat
- * "who's the strongest league" ranking, as opposed to the table below it
- * which stays grouped by country pool. Leagues with no rated clubs yet sort
- * last. MLS is excluded here — see GLUED_LEAGUES. */
+/** Every league with a cross-league-comparable Elo, highest first — the
+ * flat "who's the strongest league" ranking, as opposed to the table below
+ * it which stays grouped by country pool. A glued league contributes its
+ * own average; an unglued one (MLS today) contributes its squad-value
+ * anchor when one has been fit — see `comparableElo`. A league with
+ * neither (no rated clubs yet, or an unglued league with no anchor) sorts
+ * last and is marked with a dagger either way, so "anchored" and "not yet
+ * placeable" never look identical to a measured row. */
 function LeagueEloRank() {
   const ranked = [...orderedLeagueRankings()]
-    .filter(([key]) => GLUED_LEAGUES.includes(key))
-    .sort((a, b) => (b[1].avgElo ?? -Infinity) - (a[1].avgElo ?? -Infinity));
+    .sort((a, b) => (comparableElo(b[1]) ?? -Infinity) - (comparableElo(a[1]) ?? -Infinity));
   return (
     <SortableThemedTable
       columns={ELO_RANK_COLUMNS}
-      rows={ranked.map(([key, r], i) => ({
-        key,
-        cells: [
-          i + 1,
-          r.name,
-          r.tier === 1 ? '1st' : '2nd',
-          r.avgElo == null ? DASH : Math.round(r.avgElo),
-          r.top4Elo == null ? DASH : Math.round(r.top4Elo),
-          r.mid10Elo == null ? DASH : Math.round(r.mid10Elo),
-          r.bottom4Elo == null ? DASH : Math.round(r.bottom4Elo),
-        ],
-        values: [i + 1, r.name, r.tier, r.avgElo, r.top4Elo, r.mid10Elo, r.bottom4Elo],
-      }))}
-      note="Top-4 / Mid-10 / Bottom-4 are the mean Elo of each league's four strongest clubs, the ten clubs centered on the median rank, and its four weakest — the ceiling, the midtable, and the floor next to the overall average. Click any header to re-sort."
+      rows={ranked.map(([key, r], i) => {
+        const elo = comparableElo(r);
+        const bands = comparableEloBands(r);
+        const label = r.glued ? r.name : `${r.name}†`;
+        return {
+          key,
+          cells: [
+            i + 1,
+            label,
+            r.tier === 1 ? '1st' : '2nd',
+            elo == null ? DASH : Math.round(elo),
+            bands.top4 == null ? DASH : Math.round(bands.top4),
+            bands.mid10 == null ? DASH : Math.round(bands.mid10),
+            bands.bottom4 == null ? DASH : Math.round(bands.bottom4),
+          ],
+          values: [i + 1, r.name, r.tier, elo, bands.top4, bands.mid10, bands.bottom4],
+        };
+      })}
+      note={
+        <>
+          Top-4 / Mid-10 / Bottom-4 are the mean Elo of each league&apos;s four strongest
+          clubs, the ten clubs centered on the median rank, and its four weakest — the
+          ceiling, the midtable, and the floor next to the overall average.{' '}
+          <b>†</b> = not on the glued scale by shared matches — placed here by a squad-value
+          anchor (regression of glued-league club Elo on ln(squad value), applied to this
+          league&apos;s own values) rather than measured, so treat it as roughly which tier
+          it plays at, not a precise figure; see League Economics below for the fit&apos;s
+          R² and residual spread. Click any header to re-sort.
+        </>
+      }
     />
   );
 }
@@ -180,6 +199,7 @@ function RankingsTab() {
   if (rows.length === 0) return <Empty>Awaiting the first daily run.</Empty>;
 
   const anySquadStats = rows.some(([, r]) => r.squadStatsSeason);
+  const anchoredRows = rows.filter(([, r]) => !r.glued && r.anchorMethod);
   const allClubs = allClubsRanked();
   const top10 = allClubs.slice(0, 10);
   const bottom10 = allClubs.slice(-10).reverse();
@@ -196,37 +216,41 @@ function RankingsTab() {
       </h3>
       <SortableThemedTable
         columns={RANKINGS_COLUMNS}
-        rows={rows.map(([key, r]) => ({
-          key,
-          cells: [
-            r.name,
-            r.tier === 1 ? '1st' : '2nd',
-            r.avgElo == null ? DASH : Math.round(r.avgElo),
-            fmtEurM(r.avgSquadValueEurM),
-            fmtEurM(r.top3SquadValueEurM),
-            fmtEurM(r.avgValuePerPlayerEurM, 2),
-            fmtEurM(r.top3ValuePerPlayerEurM, 2),
-            fmtNum1(r.avgSquadSize),
-            fmtNum1(r.avgAge),
-            fmtNum1(r.avgForeigners),
-          ],
-          values: [
-            r.name,
-            r.tier,
-            r.avgElo,
-            r.avgSquadValueEurM,
-            r.top3SquadValueEurM,
-            r.avgValuePerPlayerEurM,
-            r.top3ValuePerPlayerEurM,
-            r.avgSquadSize,
-            r.avgAge,
-            r.avgForeigners,
-          ],
-        }))}
+        rows={rows.map(([key, r]) => {
+          const elo = comparableElo(r);
+          const label = r.glued ? r.name : `${r.name}†`;
+          return {
+            key,
+            cells: [
+              label,
+              r.tier === 1 ? '1st' : '2nd',
+              elo == null ? DASH : Math.round(elo),
+              fmtEurM(r.avgSquadValueEurM),
+              fmtEurM(r.top3SquadValueEurM),
+              fmtEurM(r.avgValuePerPlayerEurM, 2),
+              fmtEurM(r.top3ValuePerPlayerEurM, 2),
+              fmtNum1(r.avgSquadSize),
+              fmtNum1(r.avgAge),
+              fmtNum1(r.avgForeigners),
+            ],
+            values: [
+              r.name,
+              r.tier,
+              elo,
+              r.avgSquadValueEurM,
+              r.top3SquadValueEurM,
+              r.avgValuePerPlayerEurM,
+              r.top3ValuePerPlayerEurM,
+              r.avgSquadSize,
+              r.avgAge,
+              r.avgForeigners,
+            ],
+          };
+        })}
         note={
           <>
             Avg Elo is each league&apos;s current club ratings, averaged — the same scale
-            across all ten leagues via the Champions/Europa/Conference League cross-play, so
+            across all glued leagues via the Champions/Europa/Conference League cross-play, so
             a Bundesliga 1550 and a Segunda 1550 mean the same thing. Every Top-3 column
             is the mean of that league&apos;s three largest values for the metric — the
             league&apos;s ceiling next to its average. Squad-value figures are that
@@ -236,9 +260,22 @@ function RankingsTab() {
             {anySquadStats
               ? ' "As of" season varies by league and by column — coverage is being backfilled incrementally, not all at once.'
               : ''}
-            {' '}MLS&apos;s Elo is on its own scale — a separate confederation means it
-            never plays the ten leagues above and never exchanges rating points with them,
-            so its number isn&apos;t comparable to theirs even though it shares this column.
+            {anchoredRows.length > 0 && (
+              <>
+                {' '}
+                <b>†</b> {anchoredRows.map(([, r]) => r.name).join(', ')} —
+                {anchoredRows.length === 1 ? ' its' : ' their'} Elo above is a squad-value
+                anchor, not a measured rating: a different confederation means{' '}
+                {anchoredRows.length === 1 ? 'it' : 'they'} never {anchoredRows.length === 1 ? 'plays' : 'play'} the
+                glued leagues, so there are no shared matches to calibrate against directly.
+                Instead it&apos;s the Elo implied by regressing glued-league club Elo on
+                ln(squad value) —{' '}
+                {anchoredRows
+                  .map(([, r]) => `R²${anchoredRows.length > 1 ? ` ${r.name}` : ''}=${r.anchorR2 ?? DASH} (±${r.anchorResidualStdElo ?? DASH} Elo, ${r.anchorFitClubs ?? DASH} clubs)`)
+                  .join('; ')}{' '}
+                — good for roughly which tier it plays at, not a precise figure.
+              </>
+            )}
           </>
         }
       />
@@ -251,8 +288,9 @@ function RankingsTab() {
         <ClubEloExtremes title="Bottom 10 (★ = bottom 5)" clubs={bottom10} markFirst={5} />
       </div>
       <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
-        Every club currently rated across all ten leagues, one shared Elo scale via the UEFA
-        glue — not per-league, the whole pool at once. A club&apos;s current-season table only;
+        Every club currently rated across all {GLUED_LEAGUES.length} glued leagues, one shared
+        Elo scale via the UEFA glue — not per-league, the whole pool at once. A club&apos;s
+        current-season table only;
         a newly promoted or relegated side with few matches at its new level can still be noisy.
       </p>
     </div>

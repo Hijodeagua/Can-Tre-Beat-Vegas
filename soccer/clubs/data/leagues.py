@@ -33,6 +33,19 @@ class League:
     # "2020-21") flow through unchanged wherever they're compared as plain
     # strings.
     source: str = "openfootball"
+    # Whether this pool exchanges Elo points with the others via UEFA
+    # cross-play, i.e. whether its rating sits on the shared glued scale.
+    # False for any league with no competitive matches against the glued
+    # pools (MLS: different confederation, never plays them). An unglued
+    # league can still appear in cross-league rankings via a squad-value
+    # anchor (soccer/clubs/model/value_anchor.py) — a regression fit on the
+    # glued pools' club value/Elo relationship, applied to this league's own
+    # squad values. Onboarding a future unglued league (Liga MX, Brasileirão,
+    # …) needs: a League entry here with glued=False and its own `pool`, a
+    # fetcher for results.csv rows tagged with its league key, and a
+    # market_values/values_<season>.csv upload with that same key — nothing
+    # in value_anchor.py or the exporters is MLS-specific.
+    glued: bool = True
 
 
 LEAGUES: dict[str, League] = {
@@ -55,7 +68,7 @@ LEAGUES: dict[str, League] = {
         # first_season "2013" is a deliberate cutoff, not upstream's limit
         # (the source goes back to 1996) — pre-2013 MLS was a smaller,
         # differently-structured league not worth diluting the pool's burn-in.
-        League("mls", "MLS", "", "2013", "", "", "USA", 1, "mls", source="mls"),
+        League("mls", "MLS", "", "2013", "", "", "USA", 1, "mls", source="mls", glued=False),
     ]
 }
 
