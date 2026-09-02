@@ -76,6 +76,33 @@ def _top25_section(ratings: list[dict]) -> str:
     return _table(["#", "Team", "Conf", "W-L", "Pt diff", "Elo"], rows)
 
 
+def _conferences_section(conferences: dict) -> str:
+    ranked = sorted(conferences.values(), key=lambda c: -(c["avgElo"] or 0))
+    rows = []
+    for i, c in enumerate(ranked, start=1):
+        def _e(v):
+            return "&mdash;" if v is None else f"{v:.0f}"
+        rows.append(
+            f"<tr><td style='{STYLE_TD}'>{i}</td>"
+            f"<td style='{STYLE_TD}'><b>{c['name']}</b></td>"
+            f"<td style='{STYLE_TD}'>{c['teams']}</td>"
+            f"<td style='{STYLE_TD}'><b>{_e(c['avgElo'])}</b></td>"
+            f"<td style='{STYLE_TD}'>{_e(c.get('top4Elo'))}</td>"
+            f"<td style='{STYLE_TD}'>{_e(c.get('medianElo'))}</td>"
+            f"<td style='{STYLE_TD}'>{_e(c.get('bottom4Elo'))}</td>"
+            f"<td style='{STYLE_TD}'>{c.get('topN', 0)}</td>"
+            f"<td style='{STYLE_TD}'>{c['bestTeam']} ({c['bestElo']:.0f})</td></tr>"
+        )
+    return (
+        f"<h3 style='{STYLE_H3}'>Conferences by average Elo</h3>"
+        + _table(["#", "Conference", "Teams", "Avg", "Top 4", "Median",
+                  "Bottom 4", f"In top {TOP_N}", "Best team"], rows)
+        + f"<p style='{STYLE_NOTE}'>One Elo scale across all of FBS; Top 4 / "
+          f"Median / Bottom 4 are each conference's ceiling, middle and "
+          f"floor next to its average.</p>"
+    )
+
+
 def _fixtures_section(fixtures: pd.DataFrame) -> str:
     if fixtures.empty:
         return "<p>No FBS games in the coming week.</p>"
@@ -224,11 +251,12 @@ def _forecast_section(futures: dict | None) -> str:
 
 def update_html(run_date: str, ratings: list[dict], fixtures: pd.DataFrame,
                 recent: pd.DataFrame, ledger: dict, futures: dict | None,
-                week: int | None) -> str:
+                week: int | None, conferences: dict | None = None) -> str:
     week_txt = f" &middot; week {week}" if week else ""
     body = (
         "<h2 style='font-size:16px;margin:20px 0 0 0;'>&#127942; Elo top 25</h2>"
         + _top25_section(ratings)
+        + (_conferences_section(conferences) if conferences else "")
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128197; Games this week</h2>"
         + _fixtures_section(fixtures)
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128200; Model performance</h2>"

@@ -203,3 +203,30 @@ class TestSimulate:
         assert got["C"]["p_conf_title"] == 1.0 and got["A"]["p_conf_title"] == 0.0
         assert got["A"]["p_ccg"] == 1.0 and got["B"]["p_ccg"] == 0.0
         assert BOWL_ELIGIBLE_WINS == 6
+
+
+class TestSitePayload:
+    def test_conference_bands_and_preseason(self):
+        from CFB.daily.export_site import conferences_payload, ratings_payload
+        rows = [
+            _row(1, "2026-09-05", "A", "B", 20, 10, hconf="East", aconf="East"),
+            _row(2, "2026-09-12", "C", "D", hconf="West", aconf="West"),
+        ]
+        confs = {"A": "East", "B": "East", "C": "West", "D": "West", "E": "East"}
+        st = _state(_games(rows), {"A": 1600.0, "B": 1500.0, "C": 1450.0,
+                                   "D": 1350.0, "E": 1400.0}, confs)
+        pre = {"A": 1580.0, "B": 1520.0, "C": 1450.0, "D": 1350.0, "E": 1400.0}
+        ratings = ratings_payload(st, preseason=pre)
+        a = next(r for r in ratings if r["team"] == "A")
+        assert a["rank"] == 1 and a["preseason_rank"] == 1 and a["preseason_elo"] == 1580.0
+        b = next(r for r in ratings if r["team"] == "B")
+        assert b["wins"] == 0 and b["losses"] == 1 and b["preseason_rank"] == 2
+        conf = conferences_payload(ratings, top_n=3)
+        east = conf["East"]
+        assert east["teams"] == 3 and east["medianElo"] == 1500.0
+        assert east["avgElo"] == pytest.approx(1500.0)
+        assert east["preseasonAvgElo"] == pytest.approx(1500.0)
+        assert east["top4Elo"] is None            # fewer than four programs
+        assert east["topN"] == 2 and east["bestTeam"] == "A" and east["worstTeam"] == "E"
+        west = conf["West"]
+        assert west["medianElo"] == 1400.0 and west["topN"] == 1

@@ -5,9 +5,12 @@
  * `MlbTabs.tsx` and `SoccerTabs.tsx`. All data comes from
  * `public/data/cfb/latest.json`.
  *
- * Top 25 is the tab this page exists for — the Elo board, with the
- * conference-strength table underneath it (the college analogue of the
- * soccer league rankings). Forecasts is the rest-of-season Monte Carlo:
+ * Conference Rankings is the tab this page exists for — the cross-
+ * conference table the soccer page's League Rankings is the model for:
+ * every conference on one Elo scale with its ceiling / middle / floor,
+ * then the highest- and lowest-rated programs across all of FBS. Top 25
+ * is the board itself, with each program's preseason rank alongside.
+ * Forecasts is the rest-of-season Monte Carlo:
  * expected wins, bowl / undefeated odds and the conference title races,
  * plus the daily-updating Elo trend chart for the top 25.
  */
@@ -22,6 +25,7 @@ import {
 } from '@/app/lib/cfb';
 
 const TABS = [
+  { slug: 'conferences', label: 'Conference Rankings' },
   { slug: 'top25', label: 'Top 25' },
   { slug: 'forecast', label: 'Forecasts' },
   { slug: 'slate', label: 'This Week' },
@@ -87,12 +91,14 @@ function ConferencePills({
 
 const RATINGS_COLUMNS = [
   { header: '#', numeric: true },
+  { header: 'Pre', numeric: true },
   { header: 'Team', strong: true },
   { header: 'Conf' },
   { header: 'W–L' },
   { header: 'Conf W–L' },
   { header: 'Pt diff', numeric: true },
   { header: 'Elo', strong: true, numeric: true },
+  { header: 'Δ pre', numeric: true },
 ];
 
 const CONFERENCE_COLUMNS = [
@@ -100,10 +106,117 @@ const CONFERENCE_COLUMNS = [
   { header: 'Conference', strong: true },
   { header: 'Teams', numeric: true },
   { header: 'Avg Elo', strong: true, numeric: true },
-  { header: 'Top-4 Elo', numeric: true },
-  { header: 'Bottom-4 Elo', numeric: true },
+  { header: 'Top-4 Avg Elo', numeric: true },
+  { header: 'Median Elo', numeric: true },
+  { header: 'Bottom-4 Avg Elo', numeric: true },
+  { header: 'Preseason avg', numeric: true },
+  { header: `In top ${data.top_n}`, numeric: true },
   { header: 'Best team' },
+  { header: 'Worst team' },
 ];
+
+const PROGRAM_COLUMNS = [
+  { header: '#' },
+  { header: 'Program', strong: true },
+  { header: 'Conf' },
+  { header: 'Elo', strong: true },
+];
+
+function fmtElo(v: number | null | undefined): string | number {
+  return missing(v) ? DASH : Math.round(v as number);
+}
+
+/** Top-10 or bottom-10 program Elo, with the first five marked by a ★ —
+ * the soccer page's ClubEloExtremes, for programs. */
+function ProgramExtremes({
+  title, rows, markFirst,
+}: {
+  title: string;
+  rows: { team: string; conf: string; elo: number }[];
+  markFirst: number;
+}) {
+  return (
+    <div>
+      <h4 className="pixel m-0 text-[10px]" style={{ color: 'var(--th-ink)' }}>
+        {title}
+      </h4>
+      <div className="mt-2">
+        <ThemedTable
+          columns={PROGRAM_COLUMNS}
+          rows={rows.map((r, i) => ({
+            key: r.team,
+            cells: [i + 1, i < markFirst ? `★ ${r.team}` : r.team, r.conf, Math.round(r.elo)],
+          }))}
+        />
+      </div>
+    </div>
+  );
+}
+
+function ConferencesTab() {
+  const conferences = orderedConferences();
+  if (conferences.length === 0) return <Empty>Awaiting the first daily run.</Empty>;
+  const programs = data.ratings.map((r) => ({
+    team: r.team, conf: r.conference_short, elo: r.elo,
+  }));
+  const top10 = programs.slice(0, 10);
+  const bottom10 = programs.slice(-10).reverse();
+
+  return (
+    <div>
+      <h3 className="pixel m-3 mt-6 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        Conferences by Avg Elo
+      </h3>
+      <SortableThemedTable
+        columns={CONFERENCE_COLUMNS}
+        rows={conferences.map((c, i) => ({
+          key: c.name,
+          cells: [
+            i + 1,
+            c.name,
+            c.teams,
+            fmtElo(c.avgElo),
+            fmtElo(c.top4Elo),
+            fmtElo(c.medianElo),
+            fmtElo(c.bottom4Elo),
+            fmtElo(c.preseasonAvgElo),
+            c.topN,
+            `${c.bestTeam} (${Math.round(c.bestElo)})`,
+            `${c.worstTeam} (${Math.round(c.worstElo)})`,
+          ],
+          values: [
+            i + 1, c.name, c.teams, c.avgElo, c.top4Elo, c.medianElo, c.bottom4Elo,
+            c.preseasonAvgElo, c.topN, c.bestElo, c.worstElo,
+          ],
+        }))}
+        note={
+          <>
+            Every conference on one Elo scale — inter-conference games are what tie the
+            scale together, and the August regression pulls each program toward its own
+            conference&apos;s mean (75% conference, 25% the 1500 base), so an SEC 1500 and a
+            Sun Belt 1500 mean the same thing. Top-4 / Median / Bottom-4 are each
+            conference&apos;s ceiling, middle and floor next to its average; Preseason avg
+            is the same average on the morning of the season&apos;s first game. The
+            independents are two programs, not a conference. Click any header to re-sort.
+          </>
+        }
+      />
+
+      <h3 className="pixel m-3 mt-8 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        Highest &amp; Lowest Rated Programs
+      </h3>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <ProgramExtremes title="Top 10 (★ = top 5)" rows={top10} markFirst={5} />
+        <ProgramExtremes title="Bottom 10 (★ = bottom 5)" rows={bottom10} markFirst={5} />
+      </div>
+      <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        All {data.ratings.length} FBS programs on the one scale, not per conference. A
+        program in its first FBS season enters at 1250 and can only prove otherwise on the
+        field — the bottom of this list is where that shows.
+      </p>
+    </div>
+  );
+}
 
 function Top25Tab() {
   const [conf, setConf] = useState('All');
@@ -112,7 +225,6 @@ function Top25Tab() {
   const rows = conf === 'All'
     ? data.ratings.slice(0, data.top_n)
     : data.ratings.filter((r) => r.conference === conf);
-  const conferences = orderedConferences();
 
   return (
     <div>
@@ -125,43 +237,30 @@ function Top25Tab() {
       <div className="mt-2">
         <SortableThemedTable
           columns={RATINGS_COLUMNS}
-          rows={rows.map((r) => ({
-            key: r.team,
-            cells: [
-              r.rank,
-              r.team,
-              r.conference_short,
-              `${r.wins}–${r.losses}`,
-              `${r.conf_wins}–${r.conf_losses}`,
-              fmtSigned(r.pts_diff),
-              Math.round(r.elo),
-            ],
-            values: [r.rank, r.team, r.conference_short, r.wins, r.conf_wins, r.pts_diff, r.elo],
-          }))}
-          note="Ratings after every game played through the run date; records and point differential are season-to-date (regular season). Elo is on one scale across all of FBS. Click any header to re-sort."
+          rows={rows.map((r) => {
+            const delta = r.preseason_elo == null ? null : r.elo - r.preseason_elo;
+            return {
+              key: r.team,
+              cells: [
+                r.rank,
+                r.preseason_rank ?? DASH,
+                r.team,
+                r.conference_short,
+                `${r.wins}–${r.losses}`,
+                `${r.conf_wins}–${r.conf_losses}`,
+                fmtSigned(r.pts_diff),
+                Math.round(r.elo),
+                delta == null ? DASH : fmtSigned(Math.round(delta)),
+              ],
+              values: [
+                r.rank, r.preseason_rank, r.team, r.conference_short, r.wins,
+                r.conf_wins, r.pts_diff, r.elo, delta,
+              ],
+            };
+          })}
+          note="Ratings after every game played through the run date; Pre is the program's rank on the morning of the season's first game (after the August regression, before any result) and Δ pre the Elo moved since. Records and point differential are season-to-date (regular season). Click any header to re-sort."
         />
       </div>
-
-      <h3 className="pixel m-3 mt-8 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
-        Conferences by Avg Elo
-      </h3>
-      <SortableThemedTable
-        columns={CONFERENCE_COLUMNS}
-        rows={conferences.map((c, i) => ({
-          key: c.name,
-          cells: [
-            i + 1,
-            c.name,
-            c.teams,
-            Math.round(c.avgElo),
-            c.top4Elo == null ? DASH : Math.round(c.top4Elo),
-            c.bottom4Elo == null ? DASH : Math.round(c.bottom4Elo),
-            `${c.bestTeam} (${Math.round(c.bestElo)})`,
-          ],
-          values: [i + 1, c.name, c.teams, c.avgElo, c.top4Elo, c.bottom4Elo, c.bestTeam],
-        }))}
-        note="Top-4 / Bottom-4 are the mean Elo of each conference's four strongest and four weakest programs — its ceiling and its floor next to the average. Season regression pulls each program toward its conference mean every August (75% conference mean, 25% the 1500 base), which is what keeps a Sun Belt 1500 and an SEC 1500 meaning the same thing."
-      />
     </div>
   );
 }
@@ -439,6 +538,7 @@ export default function CfbTabs() {
         })}
       </div>
 
+      {tab === 'conferences' && <ConferencesTab />}
       {tab === 'top25' && <Top25Tab />}
       {tab === 'forecast' && <ForecastTab />}
       {tab === 'slate' && <SlateTab />}

@@ -105,9 +105,10 @@ def main(argv=None) -> int:
     print("== Rendering update email")
     week_slate = predict.build_slate(state, run_date, window_days=EMAIL_FIXTURE_DAYS)
     ratings = export_site.ratings_payload(state)
+    conferences = export_site.conferences_payload(ratings)
     week = export_site.current_week(state, run_date)
     html = emails.update_html(run_date, ratings, week_slate, recent, ledger,
-                              futures, week)
+                              futures, week, conferences)
     out = EMAIL_REPORTS_DIR / run_date
     out.mkdir(parents=True, exist_ok=True)
     (out / "update.html").write_text(html, encoding="utf-8")

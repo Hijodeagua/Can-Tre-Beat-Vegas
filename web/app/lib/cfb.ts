@@ -22,17 +22,29 @@ export interface CfbRating {
   /** Career FBS games in the replay (2001-present). */
   games: number;
   rank: number;
+  /** Rating and rank on the morning of the season's first game — after
+   * the August regression, before any result. */
+  preseason_elo: number | null;
+  preseason_rank: number | null;
 }
 
 export interface CfbConference {
   name: string;
   short: string;
   teams: number;
+  /** Elo bands: the average, the four strongest, the median, the four
+   * weakest — a conference's average, ceiling, middle and floor. */
   avgElo: number;
   top4Elo: number | null;
+  medianElo: number | null;
   bottom4Elo: number | null;
+  preseasonAvgElo: number | null;
+  /** Programs currently inside the site's top N. */
+  topN: number;
   bestTeam: string;
   bestElo: number;
+  worstTeam: string;
+  worstElo: number;
   independent: boolean;
 }
 

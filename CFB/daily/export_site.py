@@ -19,7 +19,7 @@ import pandas as pd
 
 from CFB.daily.config import SITE_DIR, SITE_HISTORY, SITE_LATEST, TOP_N
 from CFB.daily.simulate import current_records
-from CFB.daily.state import DailyState
+from CFB.daily.state import DailyState, build_state
 from CFB.data.teams import conference_short
 from CFB.model.elo import INDEPENDENT
 
@@ -36,9 +36,25 @@ def _records(df: pd.DataFrame | None) -> list[dict]:
     return json.loads(df.to_json(orient="records"))
 
 
-def ratings_payload(state: DailyState) -> list[dict]:
+def preseason_ratings(state: DailyState) -> dict[str, float]:
+    """Every program's rating on the morning of the season's first game —
+    after the August regression, before any result. The Top 25's "Pre"
+    column and the conference table's preseason view read from this."""
+    season_games = state.games[state.games["season"] == state.season]
+    if season_games.empty:
+        return {}
+    first = str(season_games["date"].min())
+    pre = build_state(state.games, run_date=first)
+    return {t: float(pre.engine.rating_for(t)) for t in pre.fbs_teams()}
+
+
+def ratings_payload(state: DailyState,
+                    preseason: dict[str, float] | None = None) -> list[dict]:
     teams = state.fbs_teams()
     rec = current_records(state.games, state.season, teams).set_index("team")
+    pre = preseason if preseason is not None else preseason_ratings(state)
+    pre_rank = {t: i for i, t in enumerate(
+        sorted(pre, key=lambda t: -pre[t]), start=1)}
     rows = []
     for t in teams:
         rows.append({
@@ -52,6 +68,8 @@ def ratings_payload(state: DailyState) -> list[dict]:
             "conf_losses": int(rec.loc[t, "conf_losses"]),
             "pts_diff": int(rec.loc[t, "pts_diff"]),
             "games": int(state.engine.games_played.get(t, 0)),
+            "preseason_elo": round(pre[t], 1) if t in pre else None,
+            "preseason_rank": pre_rank.get(t),
         })
     rows.sort(key=lambda r: -r["elo"])
     for i, r in enumerate(rows, start=1):
@@ -59,26 +77,44 @@ def ratings_payload(state: DailyState) -> list[dict]:
     return rows
 
 
-def conferences_payload(ratings: list[dict]) -> dict:
-    """Per conference: member count, avg Elo, top-4 / bottom-4 mean, best
-    team — the college analogue of the soccer league_rankings table."""
+def _bands(elos: list[float]) -> dict:
+    """Avg / top-4 / median / bottom-4 Elo — a conference's average, its
+    ceiling, its middle and its floor (the soccer page's league bands,
+    with a median in place of mid-10 since conferences run 8-18 teams)."""
+    s = sorted(elos, reverse=True)
+    n = len(s)
+    mid = (s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2) if n else None
+    return {
+        "avgElo": round(sum(s) / n, 1) if n else None,
+        "top4Elo": round(sum(s[:4]) / 4, 1) if n >= 4 else None,
+        "medianElo": round(mid, 1) if mid is not None else None,
+        "bottom4Elo": round(sum(s[-4:]) / 4, 1) if n >= 4 else None,
+    }
+
+
+def conferences_payload(ratings: list[dict], top_n: int = TOP_N) -> dict:
+    """Per conference: member count, Elo bands (current and preseason),
+    programs in the top N, best and worst team — the college analogue of
+    the soccer league_rankings table."""
     out = {}
     by_conf: dict[str, list[dict]] = {}
     for r in ratings:
         if r["conference"]:
             by_conf.setdefault(r["conference"], []).append(r)
     for conf, members in by_conf.items():
-        elos = sorted((m["elo"] for m in members), reverse=True)
-        n = len(elos)
+        members = sorted(members, key=lambda m: -m["elo"])
+        pre = [m["preseason_elo"] for m in members if m.get("preseason_elo") is not None]
         out[conf] = {
             "name": conf,
             "short": conference_short(conf),
-            "teams": n,
-            "avgElo": round(sum(elos) / n, 1),
-            "top4Elo": round(sum(elos[:4]) / 4, 1) if n >= 4 else None,
-            "bottom4Elo": round(sum(elos[-4:]) / 4, 1) if n >= 4 else None,
+            "teams": len(members),
+            **_bands([m["elo"] for m in members]),
+            "preseasonAvgElo": _bands(pre)["avgElo"] if pre else None,
+            "topN": sum(1 for m in members if m["rank"] <= top_n),
             "bestTeam": members[0]["team"],
             "bestElo": members[0]["elo"],
+            "worstTeam": members[-1]["team"],
+            "worstElo": members[-1]["elo"],
             "independent": conf == INDEPENDENT,
         }
     return out
