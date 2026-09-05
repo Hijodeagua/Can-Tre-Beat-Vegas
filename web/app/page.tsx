@@ -7,8 +7,9 @@ import {
   type Sport, type SummaryModel,
 } from '@/app/lib/data';
 import { getCfbLatest, matchupLabel } from '@/app/lib/cfb';
+import { getNflLatest, matchupLabel as nflMatchupLabel } from '@/app/lib/nfl';
 import {
-  fmtNum, fmtPctPrecise, fmtRecord, fmtRoi, fmtSimScore, fmtTimestamp,
+  fmtNum, fmtPct, fmtPctPrecise, fmtRecord, fmtRoi, fmtSimScore, fmtTimestamp,
 } from '@/app/lib/format';
 import { getMlbLatest, gradedLedgerRow, playedGraded } from '@/app/lib/mlb';
 import { getSoccerLatest } from '@/app/lib/soccer';
@@ -18,15 +19,17 @@ import { accentVars, sportByName, type SportConfig } from '@/app/lib/sports';
 const HOME_SOCCER_ROWS = 12;
 /** Same cap for college football — a Saturday can run to 60+ games. */
 const HOME_CFB_ROWS = 12;
+/** An NFL week is at most 16 games, so the whole slate fits. */
+const HOME_NFL_ROWS = 16;
 
 /**
  * The model home: one board for every forecasting model.
  *
  * Everything sport-specific is a lookup into `SPORTS` (identity and copy) and
  * `summary.json` (numbers). Whichever models are in season render their slate
- * inline; the rest fall through to the dashed "up next season" grid. When NFL
- * comes online in September its section appears here because its status in the
- * summary flips — not because anything on this page changes.
+ * inline; the rest fall through to the dashed "up next season" grid. A sport
+ * comes online here because its status in the summary flips — not because
+ * anything on this page changes.
  */
 
 export default function HomePage() {
@@ -44,8 +47,8 @@ export default function HomePage() {
   const offSeason = models.filter((m) => m.model.status === 'off_season');
   const { overall } = summary;
 
-  // The daily models (MLB + soccer) share one section with a sport picker;
-  // the odds-feed sports keep a section each when their seasons start.
+  // The daily models (MLB, soccer, CFB, NFL) share one section with a sport
+  // picker; the odds-feed sports keep a section each when their seasons start.
   const daily = inSeason.filter((m) => m.sport.slateSource !== 'odds');
   const oddsInSeason = inSeason.filter((m) => m.sport.slateSource === 'odds');
   const dailyTabs = daily.map(({ sport, model }) =>
@@ -53,7 +56,9 @@ export default function HomePage() {
       ? mlbTab(sport, model)
       : sport.slateSource === 'cfb'
         ? cfbTab(sport)
-        : soccerTab(sport),
+        : sport.slateSource === 'nfl'
+          ? nflTab(sport)
+          : soccerTab(sport),
   );
 
   return (
@@ -309,8 +314,62 @@ function cfbTab(sport: SportConfig): DailyTab {
     detailHref: sport.href ? `${sport.href}?tab=slate` : null,
     detailLabel: 'Top 25, forecasts and grades →',
     chips,
-    cfbSlate: rows.slice(0, HOME_CFB_ROWS),
+    gameSlate: rows.slice(0, HOME_CFB_ROWS),
     moreCount: Math.max(0, rows.length - HOME_CFB_ROWS),
+    morePage: 'the CFB page',
+  };
+}
+
+/** The NFL tab: the next week's slate + the rolling tracker chips. */
+function nflTab(sport: SportConfig): DailyTab {
+  const nfl = getNflLatest();
+  const rows = nfl.slate.map((r) => ({
+    key: r.game_id,
+    date: `${r.weekday.slice(0, 3)} ${r.date}`,
+    matchup: `${nflMatchupLabel(r)}${r.div_game ? ' (div)' : ''}`,
+    pick: r.pick,
+    pickProb: r.pick_prob,
+    score: fmtSimScore(r.pred_home_score, r.pred_away_score, r.pick === r.home_team),
+  }));
+
+  const ledger = nfl.ledger;
+  const chips = [];
+  const week = ledger.rolling?.['7d'];
+  if (week?.graded) {
+    chips.push({
+      text: `Last 7 days ${fmtPctPrecise(week.accuracy)} (${week.graded} graded)`,
+      highlight: false,
+    });
+  }
+  if (ledger.graded) {
+    chips.push({
+      text: `Running accuracy ${fmtPctPrecise(ledger.accuracy)} · ${ledger.graded} games`,
+      highlight: false,
+    });
+  }
+  const top = nfl.ratings[0];
+  if (top) {
+    chips.push({ text: `Elo #1 ${top.team} (${Math.round(top.elo)})`, highlight: false });
+  }
+  const fav = nfl.futures.teams?.[0];
+  if (fav) {
+    chips.push({ text: `Super Bowl favourite ${fav.team} ${fmtPct(fav.p_sb)}`, highlight: false });
+  }
+
+  return {
+    key: sport.key,
+    name: sport.name,
+    emoji: sport.emoji,
+    accent: sport.accent,
+    accentInk: sport.accentInk,
+    runDate: nfl.run_date,
+    blurb: sport.blurb,
+    detailHref: sport.href ? `${sport.href}?tab=slate` : null,
+    detailLabel: 'Power rankings, forecasts and grades →',
+    chips,
+    gameSlate: rows.slice(0, HOME_NFL_ROWS),
+    moreCount: Math.max(0, rows.length - HOME_NFL_ROWS),
+    morePage: 'the NFL page',
   };
 }
 

@@ -61,7 +61,7 @@ def test_mlb_record_ignores_row_order(tmp_path):
 def test_ungraded_model_reports_null_not_zero():
     # The site renders every null as an em dash. A zero here would publish a
     # 0% accuracy for a model that has simply never been graded.
-    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED)
+    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED, cfb_grades_csv=UNGRADED, nfl_grades_csv=UNGRADED)
     nfl = next(m for m in models if m["sport"] == "NFL")
     assert nfl["record"] is None
     assert nfl["accuracy"] is None
@@ -72,7 +72,7 @@ def test_ungraded_model_reports_null_not_zero():
 
 
 def test_roi_is_always_null():
-    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED)
+    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED, cfb_grades_csv=UNGRADED, nfl_grades_csv=UNGRADED)
     assert all(m["roi"] is None for m in models)
     assert build_overall(models)["roi"] is None
 
@@ -93,7 +93,7 @@ def test_overall_is_game_weighted_not_a_mean_of_models():
 
 
 def test_overall_with_nothing_graded_reports_nothing():
-    overall = build_overall(build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED))
+    overall = build_overall(build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED, cfb_grades_csv=UNGRADED, nfl_grades_csv=UNGRADED))
     assert overall["record"] is None
     assert overall["accuracy"] is None
     assert overall["sports_reporting"] == 0
@@ -112,17 +112,28 @@ def test_overall_skips_models_missing_a_metric():
 
 
 def test_in_season_from_a_populated_slate():
-    slate = {"sports": [{"key": "nfl", "games": [{"game_id": "x"}, {"game_id": "y"}]}]}
+    slate = {"sports": [{"key": "nba", "games": [{"game_id": "x"}, {"game_id": "y"}]}]}
     models = build_models(TODAY, mlb_latest=None, slate=slate)
-    nfl = next(m for m in models if m["sport"] == "NFL")
-    assert nfl["status"] == "in_season"
-    assert nfl["slate_games"] == 2
+    nba = next(m for m in models if m["sport"] == "NBA")
+    assert nba["status"] == "in_season"
+    assert nba["slate_games"] == 2
     # An in-season sport has no "up next season" copy to render.
-    assert "season_starts" not in nfl
+    assert "season_starts" not in nba
+
+
+def test_nfl_in_season_from_the_elo_slate():
+    # NFL reads the Elo pipeline's slate (the next NFL week), not the odds feed.
+    nfl_latest = {"slate": [{"game_id": "2026_01_NE_SEA"}]}
+    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED,
+                          soccer_grades_csv=UNGRADED, nfl_latest=nfl_latest,
+                          nfl_grades_csv=UNGRADED)
+    nfl = next(m for m in models if m["sport"] == "NFL")
+    assert nfl["status"] == "in_season" and nfl["slate_games"] == 1
+    assert nfl["record"] is None   # nothing graded yet -> no record
 
 
 def test_off_season_model_carries_a_season_start():
-    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED)
+    models = build_models(TODAY, mlb_latest=None, slate=None, grades_csv=UNGRADED, soccer_grades_csv=UNGRADED, cfb_grades_csv=UNGRADED, nfl_grades_csv=UNGRADED)
     nfl = next(m for m in models if m["sport"] == "NFL")
     nba = next(m for m in models if m["sport"] == "NBA")
     assert nfl["season_starts"] == "2026-09"

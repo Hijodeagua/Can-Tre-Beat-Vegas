@@ -28,6 +28,13 @@ const SOURCES = [
       'the NFL model.',
   },
   {
+    name: 'NFLVERSE',
+    what:
+      'The nflverse games file — every NFL game since 1999 with scores, rest days and the ' +
+      'closing line — is the spine of the NFL Elo. Only the scores and rest days reach the ' +
+      'ratings; the line is kept for grading the market, never for making a pick.',
+  },
+  {
     name: 'CFBFASTR-DATA',
     what:
       'ESPN-derived college football schedules and results, 2001–present, with per-season ' +

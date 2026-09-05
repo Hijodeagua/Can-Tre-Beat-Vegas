@@ -1,0 +1,70 @@
+{
+  "tunedAt": "2026-09-05T07:41:06+00:00",
+  "objective": "one-step-ahead log loss on all games incl. playoffs, seasons 2005-2023; coordinate descent over GRID",
+  "scoreFrom": 2005,
+  "holdoutFrom": 2024,
+  "grid": {
+    "k": [
+      12.0,
+      15.0,
+      18.0,
+      20.0,
+      22.0,
+      25.0,
+      30.0
+    ],
+    "home_advantage": [
+      30.0,
+      40.0,
+      48.0,
+      55.0,
+      62.0,
+      70.0,
+      80.0
+    ],
+    "season_regression": [
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.5
+    ],
+    "playoff_k_mult": [
+      1.0,
+      1.2,
+      1.5
+    ],
+    "margin_cap": [
+      14.0,
+      21.0,
+      28.0,
+      35.0,
+      45.0,
+      60.0
+    ],
+    "rest_bonus": [
+      0.0,
+      10.0,
+      20.0,
+      25.0,
+      35.0,
+      50.0
+    ]
+  },
+  "params": {
+    "k": 20.0,
+    "home_advantage": 48.0,
+    "season_regression": 0.4,
+    "playoff_k_mult": 1.0,
+    "margin_cap": 45.0,
+    "rest_bonus": 20.0
+  },
+  "trainLogLoss": 0.62952,
+  "trainGames": 5128,
+  "holdoutLogLoss": 0.62358,
+  "holdoutGames": 570,
+  "defaultsTrainLogLoss": 0.6327,
+  "defaultsHoldoutLogLoss": 0.62732
+}

@@ -10,7 +10,7 @@ import type { MlbSlateRow } from '@/app/lib/mlb';
 /**
  * The home page's daily-model section: one banner, a sport pill per daily
  * model, and the selected model's slate + chips below it. Replaces the old
- * one-section-per-sport stack so the reader clicks ⚾/⚽ instead of
+ * one-section-per-sport stack so the reader clicks ⚾/⚽/🎓/🏈 instead of
  * scrolling past whichever table they didn't come for.
  *
  * Deliberately dumb: every number and row is prepared by the server page
@@ -36,7 +36,8 @@ export interface SoccerSlateLine {
   scoreA: number;
 }
 
-export interface CfbSlateLine {
+/** One row of a two-way pick slate — college football and the NFL share it. */
+export interface GameSlateLine {
   key: string;
   date: string;
   matchup: string;
@@ -58,9 +59,11 @@ export interface DailyTab {
   chips: DailyChip[];
   mlbSlate?: MlbSlateRow[];
   soccerSlate?: SoccerSlateLine[];
-  cfbSlate?: CfbSlateLine[];
-  /** Fixtures beyond the rows shown (soccer slates can run long). */
+  gameSlate?: GameSlateLine[];
+  /** Fixtures beyond the rows shown (soccer and CFB slates can run long). */
   moreCount?: number;
+  /** Where the rest of a truncated slate lives ("the CFB page"). */
+  morePage?: string;
 }
 
 const SOCCER_COLUMNS = [
@@ -72,7 +75,7 @@ const SOCCER_COLUMNS = [
   { header: 'Sim score' },
 ];
 
-const CFB_COLUMNS = [
+const GAME_COLUMNS = [
   { header: 'Date' },
   { header: 'Matchup', strong: true },
   { header: 'Model pick', strong: true },
@@ -83,7 +86,7 @@ const CFB_COLUMNS = [
 function games(tab: DailyTab): number {
   return (
     tab.mlbSlate?.length
-    ?? ((tab.soccerSlate?.length ?? tab.cfbSlate?.length ?? 0) + (tab.moreCount ?? 0))
+    ?? ((tab.soccerSlate?.length ?? tab.gameSlate?.length ?? 0) + (tab.moreCount ?? 0))
   );
 }
 
@@ -162,16 +165,16 @@ export default function DailyModels({ tabs }: { tabs: DailyTab[] }) {
           </div>
         ) : tab.mlbSlate ? (
           <MlbSlateTable slate={tab.mlbSlate} />
-        ) : tab.cfbSlate ? (
+        ) : tab.gameSlate ? (
           <ThemedTable
-            columns={CFB_COLUMNS}
-            rows={tab.cfbSlate.map((r) => ({
+            columns={GAME_COLUMNS}
+            rows={tab.gameSlate.map((r) => ({
               key: r.key,
               cells: [r.date, r.matchup, r.pick, fmtPct(r.pickProb), r.score],
             }))}
             note={
               (tab.moreCount ?? 0) > 0
-                ? `${tab.moreCount} more games in the window — the full slate lives on the CFB page.`
+                ? `${tab.moreCount} more games in the window — the full slate lives on ${tab.morePage ?? 'the sport page'}.`
                 : undefined
             }
           />

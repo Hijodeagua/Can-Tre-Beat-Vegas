@@ -70,6 +70,16 @@ Details and the two places an edge might actually live are in
   Carlos expected wins / bowl / undefeated / conference-title odds; model
   card at `whosyurgoat.app/vegas/cfb` and a Mon/Thu update email
   (`CFB/`, writeup in `CFB/README.md`)
+- **NFL Elo daily model** — the betting-blind sibling of the LightGBM model:
+  a franchise-continuous Elo over every game since 1999 (bye-week rest
+  edge, capped margin of victory, 40% off-season regression; tuned on
+  2005-23, 2024-25 holdout log-loss 0.624 vs 0.691 for always-pick-home), a
+  daily runner that grades the ledger against a paired always-home
+  baseline, predicts the next week with the model's own line and expected
+  scores, and Monte Carlos the rest of the season through the full playoff
+  bracket (division / playoff / #1 seed / conference / Super Bowl odds);
+  model card at `whosyurgoat.app/vegas/nfl` and a Tue/Thu update email
+  (`NFL/elo/`, `NFL/daily/`, writeup in `NFL/elo/README.md`)
 - **Daily HTML reports** — automated odds breakdowns, bookmaker performance,
   and team odds-history charts (`reports/`)
 - **Weekly NFL picks** — model picks vs. Vegas, graded week by week
@@ -184,6 +194,7 @@ GitHub Actions keep the data flowing without manual pulls:
 | `daily-report.yml` | daily (10:00 UTC) | MLB daily pipeline: pulls new box scores, updates Elo, sends the futures / slate / grade emails, commits site data (see `mlb/daily/README.md`) |
 | `soccer-daily.yml` | daily (10:00 UTC) | Club-soccer daily pipeline: refreshes top-5 league + UEFA results, regrades the ledger, predicts the slate, Monte Carlos the tables, commits site data (see `soccer/clubs/daily/README.md`) |
 | `cfb-daily.yml` | daily (10:00 UTC) | College-football daily pipeline: refreshes the season from cfbfastR-data, replays the FBS Elo, grades the ledger, predicts the slate, Monte Carlos the regular season, commits site data; Mon/Thu update email (see `CFB/daily/README.md`) |
+| `nfl-daily.yml` | daily (10:00 UTC) | NFL Elo daily pipeline: refreshes the nflverse schedule, replays the betting-blind Elo, grades the ledger, predicts the next week, Monte Carlos the season and the playoff bracket, commits site data; Tue/Thu update email (see `NFL/daily/README.md`) |
 
 The 2x-daily cadence is deliberate — it captures a morning line and an
 evening line before games while conserving the free-tier API quota.
@@ -201,6 +212,8 @@ Can-Tre-Beat-Vegas/
 │   ├── reports/             # Daily report generators
 │   └── export_web_json.py   # Next-48-hours slate → web/public/data/
 ├── NFL/
+│   ├── elo/                 # Betting-blind NFL Elo engine, tuner, tuned_params.json
+│   ├── daily/               # Daily slate/grade/futures runner + email (see daily/README.md)
 │   ├── model/               # v1 (superseded, kept for provenance)
 │   │   ├── features.py      # Rolling feature engineering (79 features)
 │   │   ├── schedule.py      # nflverse schedule loader
@@ -268,6 +281,8 @@ Steps to get there:
   against a two-season holdout (`soccer/clubs/`)
 - [x] College football Elo + daily pipeline (`CFB/`), the third daily
   model alongside MLB and club soccer
+- [x] NFL Elo + daily pipeline (`NFL/elo/`, `NFL/daily/`), the fourth daily
+  model — betting-blind, so its line can be held up against the books
 - [ ] NCAAF on the odds feed (`americanfootball_ncaaf` in
   `data_jobs/odds_api/config.py`) so the college model has a market to
   lose to — ~180 credits/month in season on top of NFL's ~180, so it
