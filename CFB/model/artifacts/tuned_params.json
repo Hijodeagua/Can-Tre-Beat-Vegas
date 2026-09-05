@@ -1,0 +1,81 @@
+{
+  "tunedAt": "2026-09-02T16:39:43+00:00",
+  "objective": "one-step-ahead log loss on all FBS-involved games, seasons 2005-2023; coordinate descent over GRID",
+  "scoreFrom": 2005,
+  "holdoutFrom": 2024,
+  "grid": {
+    "k": [
+      20.0,
+      25.0,
+      30.0,
+      35.0,
+      40.0,
+      50.0
+    ],
+    "home_advantage": [
+      40.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      95.0
+    ],
+    "season_regression": [
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6
+    ],
+    "conf_weight": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "fcs_rating": [
+      850.0,
+      950.0,
+      1000.0,
+      1050.0,
+      1100.0,
+      1150.0,
+      1250.0
+    ],
+    "entry_rating": [
+      1100.0,
+      1150.0,
+      1200.0,
+      1250.0,
+      1300.0,
+      1350.0,
+      1400.0,
+      1500.0
+    ],
+    "margin_cap": [
+      21.0,
+      28.0,
+      35.0,
+      45.0,
+      60.0,
+      80.0,
+      100.0
+    ]
+  },
+  "params": {
+    "k": 35.0,
+    "home_advantage": 50.0,
+    "season_regression": 0.3,
+    "conf_weight": 0.75,
+    "fcs_rating": 950.0,
+    "entry_rating": 1250.0,
+    "margin_cap": 80.0
+  },
+  "trainLogLoss": 0.49542,
+  "trainGames": 15101,
+  "holdoutLogLoss": 0.49884,
+  "holdoutGames": 1861,
+  "defaultsTrainLogLoss": 0.50518,
+  "defaultsHoldoutLogLoss": 0.51058
+}

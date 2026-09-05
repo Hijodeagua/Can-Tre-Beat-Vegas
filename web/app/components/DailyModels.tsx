@@ -36,6 +36,15 @@ export interface SoccerSlateLine {
   scoreA: number;
 }
 
+export interface CfbSlateLine {
+  key: string;
+  date: string;
+  matchup: string;
+  pick: string;
+  pickProb: number;
+  score: string;
+}
+
 export interface DailyTab {
   key: string;
   name: string;
@@ -49,6 +58,7 @@ export interface DailyTab {
   chips: DailyChip[];
   mlbSlate?: MlbSlateRow[];
   soccerSlate?: SoccerSlateLine[];
+  cfbSlate?: CfbSlateLine[];
   /** Fixtures beyond the rows shown (soccer slates can run long). */
   moreCount?: number;
 }
@@ -62,8 +72,19 @@ const SOCCER_COLUMNS = [
   { header: 'Sim score' },
 ];
 
+const CFB_COLUMNS = [
+  { header: 'Date' },
+  { header: 'Matchup', strong: true },
+  { header: 'Model pick', strong: true },
+  { header: 'Win prob' },
+  { header: 'Exp. score' },
+];
+
 function games(tab: DailyTab): number {
-  return tab.mlbSlate?.length ?? ((tab.soccerSlate?.length ?? 0) + (tab.moreCount ?? 0));
+  return (
+    tab.mlbSlate?.length
+    ?? ((tab.soccerSlate?.length ?? tab.cfbSlate?.length ?? 0) + (tab.moreCount ?? 0))
+  );
 }
 
 export default function DailyModels({ tabs }: { tabs: DailyTab[] }) {
@@ -141,6 +162,19 @@ export default function DailyModels({ tabs }: { tabs: DailyTab[] }) {
           </div>
         ) : tab.mlbSlate ? (
           <MlbSlateTable slate={tab.mlbSlate} />
+        ) : tab.cfbSlate ? (
+          <ThemedTable
+            columns={CFB_COLUMNS}
+            rows={tab.cfbSlate.map((r) => ({
+              key: r.key,
+              cells: [r.date, r.matchup, r.pick, fmtPct(r.pickProb), r.score],
+            }))}
+            note={
+              (tab.moreCount ?? 0) > 0
+                ? `${tab.moreCount} more games in the window — the full slate lives on the CFB page.`
+                : undefined
+            }
+          />
         ) : (
           <ThemedTable
             columns={SOCCER_COLUMNS}

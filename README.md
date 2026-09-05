@@ -61,6 +61,15 @@ Details and the two places an edge might actually live are in
   Monte Carlo, today's slate with simulated scores, yesterday's graded
   report card) plus the model card at `whosyurgoat.app/vegas/mlb`
   (`mlb/daily/`, writeup in `reports/mlb_elo_stat_associations.md`)
+- **College football daily model** — betting-blind FBS Elo over every
+  FBS-involved game since 2001 (conference-aware season regression so
+  realignment is handled by construction, one pooled FCS opponent, capped
+  margin of victory; tuned on 2005-23, 2024-25 holdout log-loss 0.499), a
+  daily runner that grades the slate against a paired always-pick-home
+  baseline, predicts the next two days with expected scores, and Monte
+  Carlos expected wins / bowl / undefeated / conference-title odds; model
+  card at `whosyurgoat.app/vegas/cfb` and a Mon/Thu update email
+  (`CFB/`, writeup in `CFB/README.md`)
 - **Daily HTML reports** — automated odds breakdowns, bookmaker performance,
   and team odds-history charts (`reports/`)
 - **Weekly NFL picks** — model picks vs. Vegas, graded week by week
@@ -174,6 +183,7 @@ GitHub Actions keep the data flowing without manual pulls:
 | `unified-odds.yml` | 2x daily (10:00 / 22:00 UTC) | Fetches NFL + NBA odds snapshots, re-exports web JSON, commits |
 | `daily-report.yml` | daily (10:00 UTC) | MLB daily pipeline: pulls new box scores, updates Elo, sends the futures / slate / grade emails, commits site data (see `mlb/daily/README.md`) |
 | `soccer-daily.yml` | daily (10:00 UTC) | Club-soccer daily pipeline: refreshes top-5 league + UEFA results, regrades the ledger, predicts the slate, Monte Carlos the tables, commits site data (see `soccer/clubs/daily/README.md`) |
+| `cfb-daily.yml` | daily (10:00 UTC) | College-football daily pipeline: refreshes the season from cfbfastR-data, replays the FBS Elo, grades the ledger, predicts the slate, Monte Carlos the regular season, commits site data; Mon/Thu update email (see `CFB/daily/README.md`) |
 
 The 2x-daily cadence is deliberate — it captures a morning line and an
 evening line before games while conserving the free-tier API quota.
@@ -217,6 +227,10 @@ Can-Tre-Beat-Vegas/
 │       ├── data/            # League + UEFA results, transfers, fixtures
 │       ├── model/           # Per-league Elo, UEFA glue, outcome model
 │       └── daily/           # Daily slate/grade/futures runner
+├── CFB/                     # College football — FBS Elo + daily pipeline
+│   ├── data/                # cfbfastR-data fetcher, team aliases
+│   ├── model/               # CfbEloEngine, tuner, tuned_params.json
+│   └── daily/               # Daily slate/grade/futures runner + email
 ├── data/                    # Odds snapshots + stats
 │   ├── odds_api_data_*.csv  # NFL odds snapshots (timestamped)
 │   ├── nba/                 # NBA odds snapshots + actual game results
@@ -252,6 +266,13 @@ Steps to get there:
   (`soccer/`, see `soccer/SPEC.md` for the full roadmap)
 - [x] Club Elo for the top-5 European leagues, tuned per league and validated
   against a two-season holdout (`soccer/clubs/`)
+- [x] College football Elo + daily pipeline (`CFB/`), the third daily
+  model alongside MLB and club soccer
+- [ ] NCAAF on the odds feed (`americanfootball_ncaaf` in
+  `data_jobs/odds_api/config.py`) so the college model has a market to
+  lose to — ~180 credits/month in season on top of NFL's ~180, so it
+  needs the NBA gate or a one-snapshot-a-day cadence first (see
+  `CFB/DATA_PULL_PLAN.md` §7)
 - [ ] Odds API soccer keys (`soccer_epl`, …) and club model picks on the
   slate (quota permitting)
 - [ ] World Cup odds ingestion (add `soccer_fifa_world_cup` to the Odds API

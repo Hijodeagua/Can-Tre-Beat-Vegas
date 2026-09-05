@@ -1,9 +1,16 @@
 # College football Elo — data pull plan
 
-> **Status: planning.** Nothing built yet. This is the shopping list for a CFB
-> rating engine that mirrors `NFL/model/v2/` — same walk-forward discipline,
-> same "the market is the benchmark" honesty — on a sport where the data is
-> shaped very differently.
+> **Status: Tier 0-1 built, from a different source.** The spine, the
+> per-season conference map and the FBS/FCS tags all come from cfbfastR-data
+> (`CFB/data/fetch_schedule.py`) rather than Sports Reference exports, and
+> the engine, tuner and daily pipeline are in `CFB/model/` and `CFB/daily/`
+> (see `CFB/README.md`). §1, §3.4 and §8 below are implemented as written;
+> §2-3's CFR pulls are superseded; §4-7 remain the roadmap for what to add
+> next. Kept as the design record.
+>
+> Original framing: the shopping list for a CFB rating engine that mirrors
+> `NFL/model/v2/` — same walk-forward discipline, same "the market is the
+> benchmark" honesty — on a sport where the data is shaped very differently.
 
 Source is [Sports Reference / College Football](https://www.sports-reference.com/cfb/)
 (CFR). Every pull below is a **manual export**: each CFR table has

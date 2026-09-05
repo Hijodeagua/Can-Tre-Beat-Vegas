@@ -12,7 +12,7 @@
  */
 
 /** Where a sport's in-season slate is read from. */
-export type SlateSource = 'mlb' | 'soccer' | 'odds';
+export type SlateSource = 'mlb' | 'soccer' | 'cfb' | 'odds';
 
 export interface SportConfig {
   /** Matches the `sport` key in summary.json and the slate.json sport key. */
@@ -128,6 +128,28 @@ export const SPORTS: SportConfig[] = [
     },
     offseasonNote:
       'Team-level Elo with a rest-of-season Monte Carlo. Grading resumes with the first played game.',
+  },
+  {
+    key: 'cfb',
+    name: 'College Football',
+    emoji: '🎓',
+    accent: '#3ddc84',
+    accentInk: '#06120b',
+    tint: 'color-mix(in srgb, #3ddc84 22%, white)',
+    dashBorder: 'color-mix(in srgb, #3ddc84 60%, white)',
+    href: '/cfb',
+    navLabel: '🎓 CFB',
+    slateSource: 'cfb',
+    blurb:
+      'Betting-blind FBS Elo (K=35, +50 home, margin-weighted, conference-aware season ' +
+      'regression, pooled FCS opponent) tuned on 2005–2023; 2024–25 holdout log-loss 0.499 ' +
+      'across every FBS-involved game.',
+    offseasonLead: ({ seasonStarts }) => {
+      const when = monthYear(seasonStarts);
+      return when ? `Kickoff ${when}.` : 'Season start to be confirmed.';
+    },
+    offseasonNote:
+      'Program-level Elo with a rest-of-season Monte Carlo. Grading resumes with the first played game.',
   },
   {
     key: 'nfl',
