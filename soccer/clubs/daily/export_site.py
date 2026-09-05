@@ -17,6 +17,7 @@ from soccer.clubs.daily.config import SITE_DIR, SITE_HISTORY, SITE_LATEST
 from soccer.clubs.data.leagues import LEAGUES, TIER1, pool_of
 from soccer.clubs.daily.state import DailyState
 from soccer.clubs.model.features import values_available, load_market_values_raw
+from soccer.clubs.model import value_anchor
 
 SQUAD_STAT_COLS = ["squad_size", "avg_age", "foreigners", "avg_value_eur_m"]
 
@@ -109,8 +110,21 @@ def league_rankings_payload(ratings: dict) -> dict:
     uploads land, so the "as of" seasons for one league can legitimately
     differ. Wage bills additionally fall back to the most recent season
     carrying the optional wage column, since value coverage runs ahead of
-    wage coverage."""
+    wage coverage.
+
+    An unglued league (`lg.glued is False` — MLS today, any future
+    non-UEFA league tomorrow) additionally gets a squad-value-anchored
+    Elo: since it has no shared matches to calibrate against, its
+    `anchoredElo`/`anchoredTop4Elo`/… are estimated from where its own
+    squad values fall on the glued leagues' value/Elo line
+    (`value_anchor.py`), not measured. `anchorMethod` is null whenever
+    the anchor isn't available (no value data yet, or too few glued
+    clubs with values to fit a line) — the site should show that
+    league's comparable-Elo columns as unavailable rather than falling
+    back to its own unglued average, which isn't on the same scale."""
     values = load_market_values_raw() if values_available() else pd.DataFrame()
+    glued_leagues = [k for k, lg in LEAGUES.items() if lg.glued]
+    fit = value_anchor.fit_glued_value_elo(ratings, values, glued_leagues) if len(values) else None
 
     out = {}
     for league, lg in LEAGUES.items():
@@ -118,9 +132,21 @@ def league_rankings_payload(ratings: dict) -> dict:
         entry = {
             "name": lg.name,
             "tier": lg.tier,
+            "glued": lg.glued,
             "avgElo": round(sum(c["elo"] for c in clubs) / len(clubs), 1) if clubs else None,
             **_elo_bands([c["elo"] for c in clubs]),
             "eloClubCount": len(clubs),
+            # Comparable-Elo anchor for an unglued league only (null for a
+            # glued one — its avgElo above is already comparable).
+            "anchoredElo": None,
+            "anchoredTop4Elo": None,
+            "anchoredMid10Elo": None,
+            "anchoredBottom4Elo": None,
+            "anchorMethod": None,
+            "anchorFitClubs": None,
+            "anchorR2": None,
+            "anchorResidualStdElo": None,
+            "anchorValueSeason": None,
             "valueSeason": None,
             "avgSquadValueEurM": None,
             "top3SquadValueEurM": None,
@@ -164,6 +190,20 @@ def league_rankings_payload(ratings: dict) -> dict:
                 entry["avgValuePerPlayerEurM"] = _round(sseason["avg_value_eur_m"].mean())
                 entry["top3ValuePerPlayerEurM"] = _top3(sseason["avg_value_eur_m"])
                 entry["squadStatsClubCount"] = int(len(sseason))
+
+            if not lg.glued and fit is not None:
+                anchored = value_anchor.anchor_clubs(fit, vseason["squad_value_eur_m"])
+                if anchored:
+                    entry["anchoredElo"] = round(float(sum(anchored) / len(anchored)), 1)
+                    bands = _elo_bands(anchored)
+                    entry["anchoredTop4Elo"] = bands["top4Elo"]
+                    entry["anchoredMid10Elo"] = bands["mid10Elo"]
+                    entry["anchoredBottom4Elo"] = bands["bottom4Elo"]
+                    entry["anchorMethod"] = "squad_value_regression"
+                    entry["anchorFitClubs"] = fit.n_clubs
+                    entry["anchorR2"] = fit.r2
+                    entry["anchorResidualStdElo"] = fit.residual_std_elo
+                    entry["anchorValueSeason"] = value_season
         out[league] = entry
     return out
 

@@ -64,6 +64,19 @@ publish the site JSON, and render the twice-weekly update email.
   MLS reports the same status permanently — its source is a completed-match
   log, not a fixture list, so it never has a slate or futures sim, only
   ratings and squad economics.
+- **Cross-league ranking for an unglued league** — MLS (or any future
+  league with `glued=False` in `data/leagues.py`) has no shared matches
+  against the ten UEFA-glued leagues, so it can't be placed on their Elo
+  scale by measurement. `model/value_anchor.py` fits ln(squad value) ->
+  Elo across the glued leagues' clubs (R²~0.7, ~190 clubs as of 2026) and
+  applies that line to the unglued league's own market-value upload,
+  exported as `anchoredElo`/`anchoredTop4Elo`/… alongside the league's
+  own (unglued) `avgElo`. The site's League Rankings tab uses the anchor
+  where available and marks it with a dagger — never presented as
+  equivalent to a measured rating. Onboarding a new unglued league needs
+  only a `League` entry with `glued=False`, a fetcher, and a
+  `market_values` upload under that league's key; nothing in
+  `value_anchor.py` or the exporters is MLS-specific.
 - **Emails** — one combined update email, twice a week (Mon/Thu), built
   on the MLB pipeline's manifest + send-ledger machinery. A separate
   weekly models check (`data_jobs/reports/models_check.py`,

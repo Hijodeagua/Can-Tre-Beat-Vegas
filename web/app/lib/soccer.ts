@@ -83,14 +83,34 @@ export interface SoccerEloHistoryLeague {
 export interface SoccerLeagueRanking {
   name: string;
   tier: number;
+  /** Whether this pool trades Elo points with the others via UEFA
+   * cross-play — false means `avgElo` sits on its own scale and the
+   * `anchored*` fields (if any) are what's cross-league comparable. */
+  glued: boolean;
   avgElo: number | null;
   /** Elo bands: mean of the league's 4 strongest clubs, the 10 clubs
    * centered on the median rank, and the 4 weakest — ceiling, midtable,
-   * floor. Null where a band doesn't fit the league size. */
+   * floor. Null where a band doesn't fit the league size. On the pool's
+   * own scale — for an unglued league, not cross-league comparable. */
   top4Elo: number | null;
   mid10Elo: number | null;
   bottom4Elo: number | null;
   eloClubCount: number;
+  /** Squad-value-implied Elo on the glued scale (see value_anchor.py),
+   * for an unglued league only — null for a glued one (its avgElo above
+   * is already comparable) and null for an unglued one with no fitted
+   * anchor yet (too little value data). Never a substitute for a
+   * measured rating: `anchorMethod` names how it was estimated, and
+   * `anchorR2`/`anchorResidualStdElo` say how loose it is. */
+  anchoredElo: number | null;
+  anchoredTop4Elo: number | null;
+  anchoredMid10Elo: number | null;
+  anchoredBottom4Elo: number | null;
+  anchorMethod: string | null;
+  anchorFitClubs: number | null;
+  anchorR2: number | null;
+  anchorResidualStdElo: number | null;
+  anchorValueSeason: string | null;
   valueSeason: string | null;
   avgSquadValueEurM: number | null;
   top3SquadValueEurM: number | null;
@@ -143,13 +163,38 @@ export const LEAGUE_ORDER = [
   'mls',
 ];
 
-/** The ten UEFA-glued leagues share one Elo scale; MLS does not (separate
- * confederation, never plays them). Cross-league Elo comparisons — the
- * league-avg-Elo ranking, the global top/bottom-club list — only mean
- * something within this set. */
-export const GLUED_LEAGUES = LEAGUE_ORDER.filter((k) => k !== 'mls');
+/** The UEFA-glued leagues share one Elo scale; an unglued league (MLS
+ * today — see `glued` on each ranking row, sourced from the pipeline's
+ * League registry) does not. Read from data rather than hardcoded, so a
+ * future unglued league needs no change here. Cross-league *club* Elo
+ * comparisons (the global top/bottom-club list) only mean something
+ * within this set — the league table itself can still place an unglued
+ * league via its value anchor; see `comparableElo`. */
+export const GLUED_LEAGUES = LEAGUE_ORDER.filter(
+  (k) => (data.league_rankings?.[k]?.glued ?? true) !== false,
+);
 
 export function orderedLeagueRankings(): [string, SoccerLeagueRanking][] {
   const rankings = data.league_rankings ?? {};
   return LEAGUE_ORDER.filter((k) => k in rankings).map((k) => [k, rankings[k]]);
+}
+
+/**
+ * The Elo figure that's actually comparable across leagues: a glued
+ * league's own average/bands, or an unglued league's squad-value anchor
+ * when one has been fit. Null means "not placeable on the shared scale
+ * yet" — never fall back to an unglued league's own average here, since
+ * that number isn't on the same scale (that's the whole reason it's
+ * unglued).
+ */
+export function comparableElo(r: SoccerLeagueRanking): number | null {
+  return r.glued ? r.avgElo : r.anchoredElo;
+}
+
+export function comparableEloBands(
+  r: SoccerLeagueRanking,
+): { top4: number | null; mid10: number | null; bottom4: number | null } {
+  return r.glued
+    ? { top4: r.top4Elo, mid10: r.mid10Elo, bottom4: r.bottom4Elo }
+    : { top4: r.anchoredTop4Elo, mid10: r.anchoredMid10Elo, bottom4: r.anchoredBottom4Elo };
 }
