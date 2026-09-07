@@ -211,7 +211,13 @@ def main(argv=None) -> int:
 
     # Idempotency: consult the send ledger so a rerun re-sends nothing
     # unless the content actually changed (then it goes out as "(updated)").
-    from mlb.daily.send_ledger import plan
+    from data_jobs.email_archive import publish
+    from mlb.daily.send_ledger import email_date, plan
+    # Archive (and stamp the permalink footer) before the ledger hashes it.
+    # The grade email is keyed by the graded date, like its ledger entry.
+    for t, entry in emails.items():
+        entry["date"] = email_date(t, run_date, yesterday)
+    emails = publish("mlb", emails)
     emails = plan(emails, run_date, yesterday)
 
     manifest = {"date": run_date, "graded_date": yesterday, "emails": emails}

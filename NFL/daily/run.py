@@ -114,6 +114,9 @@ def main(argv=None) -> int:
             "date": run_date,
         }
     }
+    from data_jobs.email_archive import publish
+    # Archive (and stamp the permalink footer) before the ledger hashes it.
+    email_entries = publish("nfl", email_entries)
     email_entries = plan(email_entries, EMAIL_REPORTS_DIR / "sent.json")
     email_day = date.fromisoformat(run_date).weekday() in EMAIL_WEEKDAYS
     if not (email_day or args.force_email):

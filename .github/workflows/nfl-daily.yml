@@ -110,7 +110,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/nfl/ data/schedules/nflverse_games.csv web/public/data/nfl/ \
-                  web/public/data/summary.json reports/nfl/
+                  web/public/data/summary.json reports/nfl/ web/public/emails/
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "NFL daily: ${{ steps.pipeline.outputs.date }}"
             bash .github/scripts/git-push-retry.sh main

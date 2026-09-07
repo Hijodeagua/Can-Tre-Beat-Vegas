@@ -80,6 +80,13 @@ Details and the two places an edge might actually live are in
   bracket (division / playoff / #1 seed / conference / Super Bowl odds);
   model card at `whosyurgoat.app/vegas/nfl` and a Tue/Thu update email
   (`NFL/elo/`, `NFL/daily/`, writeup in `NFL/elo/README.md`)
+- **Email archive** — every report email each pipeline sends is archived as
+  sent under `web/public/emails/<league>/` with a permalink footer (this
+  email, the previous one of its kind, the league's archive), indexed in
+  `web/public/emails/index.json` and browsable by league at
+  `whosyurgoat.app/vegas/emails` (`data_jobs/email_archive.py`); the weekly
+  models-check email draws its permutation / SHAP importances as email-safe
+  bar charts (`data_jobs/reports/email_charts.py`)
 - **Daily HTML reports** — automated odds breakdowns, bookmaker performance,
   and team odds-history charts (`reports/`)
 - **Weekly NFL picks** — model picks vs. Vegas, graded week by week
