@@ -20,6 +20,7 @@ interface NavLink {
 const HOME: NavLink = { href: '/', label: 'Home' };
 const SOURCES: NavLink = { href: '/methodology', label: 'Data sources' };
 const EMAILS: NavLink = { href: '/emails', label: 'Emails' };
+const MODELS: NavLink = { href: '/models', label: 'How it works' };
 
 const pillBase = 'rounded-full px-3 py-1 text-[14px] no-underline transition-none';
 
@@ -81,6 +82,7 @@ export default function Nav() {
         ))
       )}
 
+      <Pill link={MODELS} active={isActive(MODELS.href)} />
       <Pill link={EMAILS} active={isActive(EMAILS.href)} />
       <Pill link={SOURCES} active={isActive(SOURCES.href)} />
     </nav>

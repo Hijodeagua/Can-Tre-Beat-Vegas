@@ -1,0 +1,1193 @@
+{
+ "generated_at": "2026-09-07T21:51:38+00:00",
+ "test_from": "2026-01-01",
+ "train_matches": 56996,
+ "test_matches": 1825,
+ "test_date_range": [
+  "2026-01-01",
+  "2026-09-06"
+ ],
+ "test_outcomes": {
+  "A": 556,
+  "D": 481,
+  "H": 788
+ },
+ "train_frequencies": {
+  "A": 0.2867920555828479,
+  "D": 0.26900133342690713,
+  "H": 0.44420661099024494
+ },
+ "frequency_log_loss": 1.0769585476422165,
+ "league_names": {
+  "epl": "Premier League",
+  "championship": "Championship",
+  "bundesliga": "Bundesliga",
+  "bundesliga_2": "2. Bundesliga",
+  "la_liga": "La Liga",
+  "la_liga_2": "Segunda Divisi\u00f3n",
+  "serie_a": "Serie A",
+  "serie_b": "Serie B",
+  "ligue_1": "Ligue 1",
+  "ligue_2": "Ligue 2",
+  "mls": "MLS"
+ },
+ "perm_repeats": 10,
+ "goals_half_life": 10.0,
+ "goals_prior": 8.0,
+ "models": {
+  "A": {
+   "name": "Differences \u00b7 logistic",
+   "features": [
+    "elo_gap",
+    "spend_diff_z",
+    "net_diff_z",
+    "value_diff_z",
+    "wage_diff_z",
+    "xg_net_diff"
+   ],
+   "kind": "logistic",
+   "short": "diffs",
+   "kpis": {
+    "n": 1825,
+    "accuracy": 0.4915068493150685,
+    "log_loss": 1.021113062727821,
+    "brier": 0.611386896415519,
+    "mcfadden_r2": 0.051854813759227625,
+    "ece": 0.018490035525488804,
+    "home_cal_slope": 1.0471655030213611,
+    "draw_picks": 0,
+    "draw_pick_accuracy": null,
+    "mean_p_draw": 0.2674188268889872,
+    "pick_mix": {
+     "A": 448,
+     "D": 0,
+     "H": 1377
+    }
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "log_loss": 1.061295837549659,
+     "accuracy": 0.4392523364485981
+    },
+    "championship": {
+     "n": 307,
+     "log_loss": 1.0598422220126833,
+     "accuracy": 0.4364820846905538
+    },
+    "bundesliga": {
+     "n": 180,
+     "log_loss": 0.9668000405400711,
+     "accuracy": 0.55
+    },
+    "la_liga": {
+     "n": 239,
+     "log_loss": 0.9816048840261609,
+     "accuracy": 0.5271966527196653
+    },
+    "serie_a": {
+     "n": 234,
+     "log_loss": 0.9631439153206106,
+     "accuracy": 0.5598290598290598
+    },
+    "serie_b": {
+     "n": 129,
+     "log_loss": 1.029238720508323,
+     "accuracy": 0.46511627906976744
+    },
+    "ligue_1": {
+     "n": 179,
+     "log_loss": 1.0237154358510245,
+     "accuracy": 0.5027932960893855
+    },
+    "mls": {
+     "n": 343,
+     "log_loss": 1.0525433217415663,
+     "accuracy": 0.4752186588921283
+    }
+   },
+   "permutation": [
+    {
+     "feature": "elo_gap",
+     "mean": 0.06498293879096369,
+     "std": 0.00596724151752727
+    },
+    {
+     "feature": "spend_diff_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "net_diff_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "value_diff_z",
+     "mean": 0.012507059491350314,
+     "std": 0.001861914284003787
+    },
+    {
+     "feature": "wage_diff_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "xg_net_diff",
+     "mean": 0.0,
+     "std": 0.0
+    }
+   ],
+   "shap": [
+    {
+     "feature": "elo_gap",
+     "mean_abs": 0.16535737093512226
+    },
+    {
+     "feature": "spend_diff_z",
+     "mean_abs": 1.122224742721432e-06
+    },
+    {
+     "feature": "net_diff_z",
+     "mean_abs": 7.79322473370932e-08
+    },
+    {
+     "feature": "value_diff_z",
+     "mean_abs": 0.06337606075748257
+    },
+    {
+     "feature": "wage_diff_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "xg_net_diff",
+     "mean_abs": 0.0008686646393996198
+    }
+   ],
+   "direction": [
+    {
+     "feature": "elo_gap",
+     "coef": 0.0027094598365541424
+    },
+    {
+     "feature": "spend_diff_z",
+     "coef": 0.04026439528036509
+    },
+    {
+     "feature": "net_diff_z",
+     "coef": 0.0037566425739052364
+    },
+    {
+     "feature": "value_diff_z",
+     "coef": 0.0898267860683503
+    },
+    {
+     "feature": "wage_diff_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "xg_net_diff",
+     "coef": 0.12727662086659902
+    }
+   ],
+   "converged": true
+  },
+  "B": {
+   "name": "Sides \u00b7 logistic",
+   "features": [
+    "elo_home_adj",
+    "elo_away_pre",
+    "home_spend_z",
+    "away_spend_z",
+    "home_net_z",
+    "away_net_z",
+    "home_value_z",
+    "away_value_z",
+    "home_wage_z",
+    "away_wage_z",
+    "home_xg_net",
+    "away_xg_net"
+   ],
+   "kind": "logistic",
+   "short": "sides",
+   "kpis": {
+    "n": 1825,
+    "accuracy": 0.4947945205479452,
+    "log_loss": 1.0212464103723913,
+    "brier": 0.6116245663430491,
+    "mcfadden_r2": 0.05173099502464207,
+    "ece": 0.022377734752001128,
+    "home_cal_slope": 1.033848962678495,
+    "draw_picks": 0,
+    "draw_pick_accuracy": null,
+    "mean_p_draw": 0.25672144509411804,
+    "pick_mix": {
+     "A": 451,
+     "D": 0,
+     "H": 1374
+    }
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "log_loss": 1.0682216139083098,
+     "accuracy": 0.4392523364485981
+    },
+    "championship": {
+     "n": 307,
+     "log_loss": 1.0618317535399415,
+     "accuracy": 0.44299674267100975
+    },
+    "bundesliga": {
+     "n": 180,
+     "log_loss": 0.965566283209269,
+     "accuracy": 0.5555555555555556
+    },
+    "la_liga": {
+     "n": 239,
+     "log_loss": 0.9748952100783863,
+     "accuracy": 0.5271966527196653
+    },
+    "serie_a": {
+     "n": 234,
+     "log_loss": 0.9648497115909093,
+     "accuracy": 0.5598290598290598
+    },
+    "serie_b": {
+     "n": 129,
+     "log_loss": 1.0289821481129295,
+     "accuracy": 0.46511627906976744
+    },
+    "ligue_1": {
+     "n": 179,
+     "log_loss": 1.0205053141031237,
+     "accuracy": 0.5027932960893855
+    },
+    "mls": {
+     "n": 343,
+     "log_loss": 1.0530818022937938,
+     "accuracy": 0.4839650145772595
+    }
+   },
+   "permutation": [
+    {
+     "feature": "elo_home_adj",
+     "mean": 0.06147557834570894,
+     "std": 0.0059679799834906015
+    },
+    {
+     "feature": "elo_away_pre",
+     "mean": 0.058062578971319945,
+     "std": 0.004818948610153423
+    },
+    {
+     "feature": "home_spend_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_spend_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_net_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_net_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_value_z",
+     "mean": 0.00599730598103756,
+     "std": 0.002044549004699219
+    },
+    {
+     "feature": "away_value_z",
+     "mean": 0.004665055993464895,
+     "std": 0.0011179327603589634
+    },
+    {
+     "feature": "home_wage_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_xg_net",
+     "mean": 0.0,
+     "std": 0.0
+    }
+   ],
+   "shap": [
+    {
+     "feature": "elo_home_adj",
+     "mean_abs": 0.21608211934949445
+    },
+    {
+     "feature": "elo_away_pre",
+     "mean_abs": 0.20424729977070488
+    },
+    {
+     "feature": "home_spend_z",
+     "mean_abs": 0.0002842081561730674
+    },
+    {
+     "feature": "away_spend_z",
+     "mean_abs": 0.00016634101955681534
+    },
+    {
+     "feature": "home_net_z",
+     "mean_abs": 2.9409764293896024e-05
+    },
+    {
+     "feature": "away_net_z",
+     "mean_abs": 3.1361542152774335e-05
+    },
+    {
+     "feature": "home_value_z",
+     "mean_abs": 0.049944812131085974
+    },
+    {
+     "feature": "away_value_z",
+     "mean_abs": 0.0427078986875677
+    },
+    {
+     "feature": "home_wage_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "mean_abs": 0.0001836531131317745
+    },
+    {
+     "feature": "away_xg_net",
+     "mean_abs": 0.0007436406071846857
+    }
+   ],
+   "direction": [
+    {
+     "feature": "elo_home_adj",
+     "coef": 0.002799051599073793
+    },
+    {
+     "feature": "elo_away_pre",
+     "coef": -0.0025792450871576027
+    },
+    {
+     "feature": "home_spend_z",
+     "coef": 0.05839216173015069
+    },
+    {
+     "feature": "away_spend_z",
+     "coef": -0.015239101557494715
+    },
+    {
+     "feature": "home_net_z",
+     "coef": 0.012290437020754351
+    },
+    {
+     "feature": "away_net_z",
+     "coef": 0.007216908701506682
+    },
+    {
+     "feature": "home_value_z",
+     "coef": 0.10283382634345889
+    },
+    {
+     "feature": "away_value_z",
+     "coef": -0.07274515278326123
+    },
+    {
+     "feature": "home_wage_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "coef": 0.10321810031272478
+    },
+    {
+     "feature": "away_xg_net",
+     "coef": -0.1444305169505279
+    }
+   ],
+   "converged": false
+  },
+  "C": {
+   "name": "Sides + goals form \u00b7 logistic",
+   "features": [
+    "elo_home_adj",
+    "elo_away_pre",
+    "home_spend_z",
+    "away_spend_z",
+    "home_net_z",
+    "away_net_z",
+    "home_value_z",
+    "away_value_z",
+    "home_wage_z",
+    "away_wage_z",
+    "home_xg_net",
+    "away_xg_net",
+    "home_att",
+    "home_def",
+    "away_att",
+    "away_def"
+   ],
+   "kind": "logistic",
+   "short": "sides+goals",
+   "kpis": {
+    "n": 1825,
+    "accuracy": 0.4947945205479452,
+    "log_loss": 1.020184472650925,
+    "brier": 0.610790100201913,
+    "mcfadden_r2": 0.05271704757401008,
+    "ece": 0.02373368301366465,
+    "home_cal_slope": 1.043199456082291,
+    "draw_picks": 0,
+    "draw_pick_accuracy": null,
+    "mean_p_draw": 0.25912213301335457,
+    "pick_mix": {
+     "A": 461,
+     "D": 0,
+     "H": 1364
+    }
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "log_loss": 1.0622658467688015,
+     "accuracy": 0.4439252336448598
+    },
+    "championship": {
+     "n": 307,
+     "log_loss": 1.0607719431945395,
+     "accuracy": 0.4364820846905538
+    },
+    "bundesliga": {
+     "n": 180,
+     "log_loss": 0.9635654549612752,
+     "accuracy": 0.5555555555555556
+    },
+    "la_liga": {
+     "n": 239,
+     "log_loss": 0.9819075395387162,
+     "accuracy": 0.5146443514644351
+    },
+    "serie_a": {
+     "n": 234,
+     "log_loss": 0.962933940514806,
+     "accuracy": 0.5555555555555556
+    },
+    "serie_b": {
+     "n": 129,
+     "log_loss": 1.0236948991566932,
+     "accuracy": 0.4728682170542636
+    },
+    "ligue_1": {
+     "n": 179,
+     "log_loss": 1.0249665328348927,
+     "accuracy": 0.49162011173184356
+    },
+    "mls": {
+     "n": 343,
+     "log_loss": 1.0492271356466016,
+     "accuracy": 0.5014577259475219
+    }
+   },
+   "permutation": [
+    {
+     "feature": "elo_home_adj",
+     "mean": 0.024884938199744133,
+     "std": 0.0026654146416855017
+    },
+    {
+     "feature": "elo_away_pre",
+     "mean": 0.020438728721044776,
+     "std": 0.001980759231541628
+    },
+    {
+     "feature": "home_spend_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_spend_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_net_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_net_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_value_z",
+     "mean": 0.00504568529240208,
+     "std": 0.0010534442013559059
+    },
+    {
+     "feature": "away_value_z",
+     "mean": 0.005448494275033644,
+     "std": 0.0010740092106324567
+    },
+    {
+     "feature": "home_wage_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_xg_net",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_att",
+     "mean": 0.002354743928289249,
+     "std": 0.001762451753175958
+    },
+    {
+     "feature": "home_def",
+     "mean": 0.0006613748968347544,
+     "std": 0.0006528701225000585
+    },
+    {
+     "feature": "away_att",
+     "mean": 0.002469339410259752,
+     "std": 0.0014968382992689658
+    },
+    {
+     "feature": "away_def",
+     "mean": 0.0017533125506433267,
+     "std": 0.000938720536455623
+    }
+   ],
+   "shap": [
+    {
+     "feature": "elo_home_adj",
+     "mean_abs": 0.1334455560199091
+    },
+    {
+     "feature": "elo_away_pre",
+     "mean_abs": 0.12800727267069506
+    },
+    {
+     "feature": "home_spend_z",
+     "mean_abs": 0.0002867166796047261
+    },
+    {
+     "feature": "away_spend_z",
+     "mean_abs": 0.00020965726627244477
+    },
+    {
+     "feature": "home_net_z",
+     "mean_abs": 1.641127778828167e-05
+    },
+    {
+     "feature": "away_net_z",
+     "mean_abs": 3.658257206381136e-05
+    },
+    {
+     "feature": "home_value_z",
+     "mean_abs": 0.047040438348086855
+    },
+    {
+     "feature": "away_value_z",
+     "mean_abs": 0.04430778441786561
+    },
+    {
+     "feature": "home_wage_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "mean_abs": 0.0001286775564362986
+    },
+    {
+     "feature": "away_xg_net",
+     "mean_abs": 0.0006121679444803713
+    },
+    {
+     "feature": "home_att",
+     "mean_abs": 0.03896992264547084
+    },
+    {
+     "feature": "home_def",
+     "mean_abs": 0.028021231651196434
+    },
+    {
+     "feature": "away_att",
+     "mean_abs": 0.033570502717812103
+    },
+    {
+     "feature": "away_def",
+     "mean_abs": 0.02784407360361183
+    }
+   ],
+   "direction": [
+    {
+     "feature": "elo_home_adj",
+     "coef": 0.0017286066943301836
+    },
+    {
+     "feature": "elo_away_pre",
+     "coef": -0.0015419412920441198
+    },
+    {
+     "feature": "home_spend_z",
+     "coef": 0.06468459318810088
+    },
+    {
+     "feature": "away_spend_z",
+     "coef": -0.020276070931726325
+    },
+    {
+     "feature": "home_net_z",
+     "coef": 0.006858326849424773
+    },
+    {
+     "feature": "away_net_z",
+     "coef": 0.015390690539554107
+    },
+    {
+     "feature": "home_value_z",
+     "coef": 0.09685386853957018
+    },
+    {
+     "feature": "away_value_z",
+     "coef": -0.06429683894768008
+    },
+    {
+     "feature": "home_wage_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "coef": 0.07676578482720249
+    },
+    {
+     "feature": "away_xg_net",
+     "coef": -0.11650228487434598
+    },
+    {
+     "feature": "home_att",
+     "coef": 0.41391406564110234
+    },
+    {
+     "feature": "home_def",
+     "coef": -0.3073862561842356
+    },
+    {
+     "feature": "away_att",
+     "coef": -0.3508414019141134
+    },
+    {
+     "feature": "away_def",
+     "coef": 0.3865839270160643
+    }
+   ],
+   "converged": false
+  },
+  "D": {
+   "name": "Goals regressor \u00b7 Poisson",
+   "features": [
+    "elo_home_adj",
+    "elo_away_pre",
+    "home_spend_z",
+    "away_spend_z",
+    "home_net_z",
+    "away_net_z",
+    "home_value_z",
+    "away_value_z",
+    "home_wage_z",
+    "away_wage_z",
+    "home_xg_net",
+    "away_xg_net",
+    "home_att",
+    "home_def",
+    "away_att",
+    "away_def"
+   ],
+   "kind": "poisson",
+   "short": "goals",
+   "kpis": {
+    "n": 1825,
+    "accuracy": 0.49424657534246574,
+    "log_loss": 1.0207821922798208,
+    "brier": 0.6111509443884511,
+    "mcfadden_r2": 0.052162040484643124,
+    "ece": 0.023448726384471014,
+    "home_cal_slope": 1.0934363371503644,
+    "draw_picks": 0,
+    "draw_pick_accuracy": null,
+    "mean_p_draw": 0.23953707641650668,
+    "pick_mix": {
+     "A": 467,
+     "D": 0,
+     "H": 1358
+    }
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "log_loss": 1.0664166960118304,
+     "accuracy": 0.4392523364485981
+    },
+    "championship": {
+     "n": 307,
+     "log_loss": 1.0579339962009338,
+     "accuracy": 0.4364820846905538
+    },
+    "bundesliga": {
+     "n": 180,
+     "log_loss": 0.9695222886712456,
+     "accuracy": 0.5555555555555556
+    },
+    "la_liga": {
+     "n": 239,
+     "log_loss": 0.981321197151566,
+     "accuracy": 0.5104602510460251
+    },
+    "serie_a": {
+     "n": 234,
+     "log_loss": 0.9630462064898581,
+     "accuracy": 0.5598290598290598
+    },
+    "serie_b": {
+     "n": 129,
+     "log_loss": 1.0261231312780021,
+     "accuracy": 0.4883720930232558
+    },
+    "ligue_1": {
+     "n": 179,
+     "log_loss": 1.0266427544080372,
+     "accuracy": 0.48044692737430167
+    },
+    "mls": {
+     "n": 343,
+     "log_loss": 1.0477756960871092,
+     "accuracy": 0.5014577259475219
+    }
+   },
+   "permutation": [
+    {
+     "feature": "elo_home_adj",
+     "mean": 0.020076686320087765,
+     "std": 0.003683360897843107
+    },
+    {
+     "feature": "elo_away_pre",
+     "mean": 0.01886645335303283,
+     "std": 0.0028391540249268292
+    },
+    {
+     "feature": "home_spend_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_spend_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_net_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_net_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_value_z",
+     "mean": 0.0027989684464670315,
+     "std": 0.00076876695482819
+    },
+    {
+     "feature": "away_value_z",
+     "mean": 0.004485327819947682,
+     "std": 0.0010861722982313544
+    },
+    {
+     "feature": "home_wage_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "away_xg_net",
+     "mean": 0.0,
+     "std": 0.0
+    },
+    {
+     "feature": "home_att",
+     "mean": 0.005287503244568059,
+     "std": 0.0018375288896288673
+    },
+    {
+     "feature": "home_def",
+     "mean": 0.001290359825607723,
+     "std": 0.0009106256076080597
+    },
+    {
+     "feature": "away_att",
+     "mean": 0.003484700095020754,
+     "std": 0.0009827412525784908
+    },
+    {
+     "feature": "away_def",
+     "mean": 0.001520330604212461,
+     "std": 0.0007426712879325499
+    }
+   ],
+   "shap": [
+    {
+     "feature": "elo_home_adj",
+     "mean_abs": 0.09435537424754917
+    },
+    {
+     "feature": "elo_away_pre",
+     "mean_abs": 0.095314953666636
+    },
+    {
+     "feature": "home_spend_z",
+     "mean_abs": 0.00017540167699155168
+    },
+    {
+     "feature": "away_spend_z",
+     "mean_abs": 0.00013983068097008113
+    },
+    {
+     "feature": "home_net_z",
+     "mean_abs": 1.874833772912352e-05
+    },
+    {
+     "feature": "away_net_z",
+     "mean_abs": 1.7988168516961237e-05
+    },
+    {
+     "feature": "home_value_z",
+     "mean_abs": 0.026271490111835827
+    },
+    {
+     "feature": "away_value_z",
+     "mean_abs": 0.028894857102984152
+    },
+    {
+     "feature": "home_wage_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "mean_abs": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "mean_abs": 6.692836963422143e-05
+    },
+    {
+     "feature": "away_xg_net",
+     "mean_abs": 0.0003254084232981156
+    },
+    {
+     "feature": "home_att",
+     "mean_abs": 0.0349312878675099
+    },
+    {
+     "feature": "home_def",
+     "mean_abs": 0.02369385363682203
+    },
+    {
+     "feature": "away_att",
+     "mean_abs": 0.029774106750954273
+    },
+    {
+     "feature": "away_def",
+     "mean_abs": 0.030460547934795856
+    }
+   ],
+   "direction": [
+    {
+     "feature": "elo_home_adj",
+     "coef": 0.20551469889928026
+    },
+    {
+     "feature": "elo_away_pre",
+     "coef": -0.21061689536486267
+    },
+    {
+     "feature": "home_spend_z",
+     "coef": 0.030391852142010074
+    },
+    {
+     "feature": "away_spend_z",
+     "coef": -0.024346627184781117
+    },
+    {
+     "feature": "home_net_z",
+     "coef": 0.0046951493594716825
+    },
+    {
+     "feature": "away_net_z",
+     "coef": 0.0012451779365376388
+    },
+    {
+     "feature": "home_value_z",
+     "coef": 0.054544325904011856
+    },
+    {
+     "feature": "away_value_z",
+     "coef": -0.06036680464452183
+    },
+    {
+     "feature": "home_wage_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "away_wage_z",
+     "coef": 0.0
+    },
+    {
+     "feature": "home_xg_net",
+     "coef": 0.021592856052917143
+    },
+    {
+     "feature": "away_xg_net",
+     "coef": -0.03414454856854512
+    },
+    {
+     "feature": "home_att",
+     "coef": 0.08603748601362778
+    },
+    {
+     "feature": "home_def",
+     "coef": -0.06558045653728119
+    },
+    {
+     "feature": "away_att",
+     "coef": -0.07266445732365147
+    },
+    {
+     "feature": "away_def",
+     "coef": 0.045007014846622964
+    }
+   ],
+   "goals": {
+    "home_mae": 0.9718317383976346,
+    "home_rmse": 1.2098183823732946,
+    "away_mae": 0.8506424200288195,
+    "away_rmse": 1.072891849598835,
+    "total_mae": 1.3054505390164097,
+    "mean_pred_home": 1.5601292694939144,
+    "mean_actual_home": 1.5775342465753424,
+    "mean_pred_away": 1.204535933887411,
+    "mean_actual_away": 1.2657534246575342,
+    "exact_score_rate": 0.1210958904109589,
+    "naive_home_mae": 1.045461437417902,
+    "naive_away_mae": 0.8987232126102458
+   }
+  }
+ },
+ "paired": {
+  "B": {
+   "all": {
+    "n": 1825,
+    "d_ll_mean": 0.00013334764457045828,
+    "d_ll_se": 0.0010489587506170718
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "d_ll_mean": 0.006925776358650677,
+     "d_ll_se": 0.00449316976135504
+    },
+    "championship": {
+     "n": 307,
+     "d_ll_mean": 0.001989531527258265,
+     "d_ll_se": 0.001514810787435064
+    },
+    "bundesliga": {
+     "n": 180,
+     "d_ll_mean": -0.0012337573308019373,
+     "d_ll_se": 0.003687805585327463
+    },
+    "la_liga": {
+     "n": 239,
+     "d_ll_mean": -0.006709673947774526,
+     "d_ll_se": 0.0023741821303670547
+    },
+    "serie_a": {
+     "n": 234,
+     "d_ll_mean": 0.0017057962702988134,
+     "d_ll_se": 0.0031447760197988645
+    },
+    "serie_b": {
+     "n": 129,
+     "d_ll_mean": -0.00025657239539366713,
+     "d_ll_se": 0.0037555157207670746
+    },
+    "ligue_1": {
+     "n": 179,
+     "d_ll_mean": -0.003210121747900529,
+     "d_ll_se": 0.0032409581804249236
+    },
+    "mls": {
+     "n": 343,
+     "d_ll_mean": 0.0005384805522276078,
+     "d_ll_se": 0.0023288911834962317
+    }
+   }
+  },
+  "C": {
+   "all": {
+    "n": 1825,
+    "d_ll_mean": -0.0009285900768959401,
+    "d_ll_se": 0.0014454304217791027
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "d_ll_mean": 0.0009700092191423173,
+     "d_ll_se": 0.004476802350055236
+    },
+    "championship": {
+     "n": 307,
+     "d_ll_mean": 0.0009297211818561124,
+     "d_ll_se": 0.0038245184859824867
+    },
+    "bundesliga": {
+     "n": 180,
+     "d_ll_mean": -0.0032345855787956246,
+     "d_ll_se": 0.004361007584033045
+    },
+    "la_liga": {
+     "n": 239,
+     "d_ll_mean": 0.0003026555125555762,
+     "d_ll_se": 0.0031638151538253443
+    },
+    "serie_a": {
+     "n": 234,
+     "d_ll_mean": -0.0002099748058046462,
+     "d_ll_se": 0.003920098781357324
+    },
+    "serie_b": {
+     "n": 129,
+     "d_ll_mean": -0.005543821351629819,
+     "d_ll_se": 0.0045398899801917915
+    },
+    "ligue_1": {
+     "n": 179,
+     "d_ll_mean": 0.0012510969838684268,
+     "d_ll_se": 0.0046906593668007935
+    },
+    "mls": {
+     "n": 343,
+     "d_ll_mean": -0.0033161860949646013,
+     "d_ll_se": 0.003689655672286878
+    }
+   }
+  },
+  "D": {
+   "all": {
+    "n": 1825,
+    "d_ll_mean": -0.00033087044800012184,
+    "d_ll_se": 0.0023119954770864214
+   },
+   "by_league": {
+    "epl": {
+     "n": 214,
+     "d_ll_mean": 0.005120858462171359,
+     "d_ll_se": 0.007417887213314006
+    },
+    "championship": {
+     "n": 307,
+     "d_ll_mean": -0.0019082258117495688,
+     "d_ll_se": 0.005544538499124552
+    },
+    "bundesliga": {
+     "n": 180,
+     "d_ll_mean": 0.002722248131174662,
+     "d_ll_se": 0.008149077862219198
+    },
+    "la_liga": {
+     "n": 239,
+     "d_ll_mean": -0.0002836868745946913,
+     "d_ll_se": 0.005884430138177441
+    },
+    "serie_a": {
+     "n": 234,
+     "d_ll_mean": -9.77088307525871e-05,
+     "d_ll_se": 0.006494143372476468
+    },
+    "serie_b": {
+     "n": 129,
+     "d_ll_mean": -0.0031155892303210437,
+     "d_ll_se": 0.005261929608518438
+    },
+    "ligue_1": {
+     "n": 179,
+     "d_ll_mean": 0.0029273185570126963,
+     "d_ll_se": 0.007245973079534414
+    },
+    "mls": {
+     "n": 343,
+     "d_ll_mean": -0.004767625654457246,
+     "d_ll_se": 0.005721581240218373
+    }
+   }
+  }
+ }
+}

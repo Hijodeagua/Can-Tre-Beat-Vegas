@@ -80,6 +80,12 @@ Details and the two places an edge might actually live are in
   bracket (division / playoff / #1 seed / conference / Super Bowl odds);
   model card at `whosyurgoat.app/vegas/nfl` and a Tue/Thu update email
   (`NFL/elo/`, `NFL/daily/`, writeup in `NFL/elo/README.md`)
+- **How the models work** — `whosyurgoat.app/vegas/models` walks every model
+  from its data source to its graded pick, each step linking to the file that
+  does it (`web/app/lib/modelDocs.ts`); the club-soccer sides-vs-differences
+  study (four outcome models on this year's matches, with KPIs and feature
+  importances) is at `reports/soccer/sides_vs_diffs_2026.html`
+  (`soccer/clubs/model/report_sides_2026.py`)
 - **Email archive** — every report email each pipeline sends is archived as
   sent under `web/public/emails/<league>/` with a permalink footer (this
   email, the previous one of its kind, the league's archive), indexed in

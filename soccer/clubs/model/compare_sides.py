@@ -34,7 +34,7 @@ Outputs `artifacts/sides_vs_diffs.csv` (per test season and overall, per
 learner and feature set) and, for the record, the fully trained sides
 model on every row as `artifacts/outcome_model_sides.pkl`.
 
-    python -m soccer.clubs.model.compare_sides [--first-test-season 2018-19]
+    python -m soccer.clubs.model.compare_sides [--first-test-season 2022-23]
 """
 
 from __future__ import annotations
@@ -223,7 +223,7 @@ def walk_forward(table: pd.DataFrame, first_test: str) -> tuple[pd.DataFrame, pd
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--first-test-season", default="2018-19")
+    ap.add_argument("--first-test-season", default="2022-23")
     args = ap.parse_args()
 
     table = build_table()
