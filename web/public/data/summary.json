@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-09-08T00:09:00Z",
+  "generated_at": "2026-09-08T14:35:17Z",
   "overall": {
-    "record": "186-109",
-    "games": 295,
-    "accuracy": 0.6305,
-    "log_loss": 0.5288,
-    "brier": 0.1821,
+    "record": "213-147",
+    "games": 360,
+    "accuracy": 0.5917,
+    "log_loss": 0.5277,
+    "brier": 0.1816,
     "roi": null,
     "sports_reporting": 3
   },
@@ -22,35 +22,35 @@
       "brier": 0.2516,
       "roi": null,
       "last_graded": "2026-08-15",
-      "slate_games": 11
+      "slate_games": 15
     },
     {
       "sport": "Soccer",
       "emoji": "\u26bd",
       "outcomes": 3,
       "status": "in_season",
-      "record": "52-43",
-      "games": 95,
-      "accuracy": 0.5474,
-      "log_loss": 0.9548,
+      "record": "78-81",
+      "games": 159,
+      "accuracy": 0.4906,
+      "log_loss": 1.0002,
       "brier": null,
       "roi": null,
-      "last_graded": "2026-08-31",
-      "slate_games": 10
+      "last_graded": "2026-09-07",
+      "slate_games": 9
     },
     {
       "sport": "College Football",
       "emoji": "\ud83c\udf93",
       "outcomes": 2,
       "status": "in_season",
-      "record": "73-9",
-      "games": 82,
-      "accuracy": 0.8902,
-      "log_loss": 0.2873,
-      "brier": 0.0822,
+      "record": "74-9",
+      "games": 83,
+      "accuracy": 0.8916,
+      "log_loss": 0.2875,
+      "brier": 0.0821,
       "roi": null,
-      "last_graded": "2026-09-06",
-      "slate_games": 1
+      "last_graded": "2026-09-07",
+      "slate_games": 0
     },
     {
       "sport": "NFL",
