@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-08T23:51:42Z",
+  "generated_at": "2026-09-09T14:07:17Z",
   "window_hours": 48,
   "sports": [
     {
       "key": "nfl",
       "name": "NFL",
       "snapshot": {
-        "file": "odds_api_data_2026-09-08-2351.csv",
-        "pulled_at_et": "2026-09-08 19:51:41"
+        "file": "odds_api_data_2026-09-09-1407.csv",
+        "pulled_at_et": "2026-09-09 10:07:16"
       },
       "games": [
         {
@@ -16,23 +16,23 @@
           "home_team": "Seattle Seahawks",
           "away_team": "New England Patriots",
           "consensus": {
-            "home_ml": -179.56,
-            "away_ml": 150.78,
-            "home_spread": -3.17,
-            "home_spread_odds": -113.11,
-            "away_spread_odds": -18.44,
+            "home_ml": -178.56,
+            "away_ml": 150.56,
+            "home_spread": -3.11,
+            "home_spread_odds": -116.11,
+            "away_spread_odds": 28.78,
             "total": 44.5,
-            "over_odds": -109.44,
-            "under_odds": -109.78,
-            "home_win_prob": 0.6169679357167299
+            "over_odds": -111.0,
+            "under_odds": -108.33,
+            "home_win_prob": 0.6162873649269814
           },
           "books": [
             {
               "book": "DraftKings",
               "home_ml": -170.0,
               "away_ml": 142.0,
-              "home_spread_odds": -118.0,
-              "away_spread_odds": -102.0,
+              "home_spread_odds": -120.0,
+              "away_spread_odds": 100.0,
               "over_odds": -108.0,
               "under_odds": -112.0
             },
@@ -47,8 +47,8 @@
             },
             {
               "book": "FanDuel",
-              "home_ml": -176.0,
-              "away_ml": 148.0,
+              "home_ml": -180.0,
+              "away_ml": 152.0,
               "home_spread_odds": -104.0,
               "away_spread_odds": -118.0,
               "over_odds": -110.0,
@@ -56,39 +56,39 @@
             },
             {
               "book": "LowVig.ag",
-              "home_ml": -177.0,
-              "away_ml": 155.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": 100.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
+              "home_ml": -180.0,
+              "away_ml": 157.0,
+              "home_spread_odds": -116.0,
+              "away_spread_odds": 105.0,
+              "over_odds": -113.0,
+              "under_odds": -102.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": -177.0,
-              "away_ml": 155.0,
-              "home_spread_odds": -117.0,
-              "away_spread_odds": -103.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_ml": -180.0,
+              "away_ml": 157.0,
+              "home_spread_odds": -120.0,
+              "away_spread_odds": 100.0,
+              "over_odds": -115.0,
+              "under_odds": -105.0
             },
             {
               "book": "BetRivers",
-              "home_ml": -195.0,
-              "away_ml": 155.0,
-              "home_spread_odds": -104.0,
-              "away_spread_odds": -118.0,
-              "over_odds": -112.0,
-              "under_odds": -109.0
+              "home_ml": -186.0,
+              "away_ml": 150.0,
+              "home_spread_odds": -120.0,
+              "away_spread_odds": -103.0,
+              "over_odds": -113.0,
+              "under_odds": -108.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -185.0,
-              "away_ml": 150.0,
+              "home_ml": -175.0,
+              "away_ml": 145.0,
               "home_spread_odds": -105.0,
               "away_spread_odds": -125.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
+              "over_odds": -110.0,
+              "under_odds": -108.0
             },
             {
               "book": "Bovada",
@@ -115,8 +115,118 @@
             "total": 44.94,
             "home_ml": -206.0,
             "away_ml": 169.8,
-            "spread_delta": 0.83,
+            "spread_delta": 0.89,
             "total_delta": -0.44
+          },
+          "model": null
+        },
+        {
+          "game_id": "acc580d74344ea3b31bbcdd057fe6a9c",
+          "commence_et": "2026-09-10 20:35",
+          "home_team": "Los Angeles Rams",
+          "away_team": "San Francisco 49ers",
+          "consensus": {
+            "home_ml": -206.56,
+            "away_ml": 171.56,
+            "home_spread": -3.56,
+            "home_spread_odds": -115.0,
+            "away_spread_odds": -81.78,
+            "total": 48.22,
+            "over_odds": -110.33,
+            "under_odds": -108.89,
+            "home_win_prob": 0.6466144074051915
+          },
+          "books": [
+            {
+              "book": "DraftKings",
+              "home_ml": -198.0,
+              "away_ml": 164.0,
+              "home_spread_odds": -118.0,
+              "away_spread_odds": -102.0,
+              "over_odds": -108.0,
+              "under_odds": -112.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": -215.0,
+              "away_ml": 183.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -115.0,
+              "under_odds": -105.0
+            },
+            {
+              "book": "FanDuel",
+              "home_ml": -205.0,
+              "away_ml": 172.0,
+              "home_spread_odds": -120.0,
+              "away_spread_odds": -102.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": -205.0,
+              "away_ml": 177.0,
+              "home_spread_odds": -114.0,
+              "away_spread_odds": 103.0,
+              "over_odds": -110.0,
+              "under_odds": -104.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": -205.0,
+              "away_ml": 177.0,
+              "home_spread_odds": -118.0,
+              "away_spread_odds": -102.0,
+              "over_odds": -113.0,
+              "under_odds": -107.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -205.0,
+              "away_ml": 160.0,
+              "home_spread_odds": -113.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -109.0,
+              "under_odds": -112.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": -210.0,
+              "away_ml": 170.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -108.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -210.0,
+              "away_ml": 175.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -115.0,
+              "under_odds": -105.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -206.0,
+              "away_ml": 166.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-05-07 19:00:28",
+            "spread": -2.5,
+            "total": 48.5,
+            "home_ml": -148.0,
+            "away_ml": 124.0,
+            "spread_delta": -1.06,
+            "total_delta": -0.28
           },
           "model": null
         }
@@ -126,8 +236,8 @@
       "key": "nba",
       "name": "NBA",
       "snapshot": {
-        "file": "nba_odds_api_data_2026-09-08-2351.csv",
-        "pulled_at_et": "2026-09-08 19:51:41"
+        "file": "nba_odds_api_data_2026-09-09-1407.csv",
+        "pulled_at_et": "2026-09-09 10:07:16"
       },
       "games": []
     }
