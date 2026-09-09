@@ -14,6 +14,7 @@ What each section reports, and where it comes from:
   feature vector, so there is nothing for SHAP/permutation to attribute;
   the honest check is the graded record vs. baseline, and the email says
   exactly that.
+
 - Soccer — the club pipeline's ledger (cumulative + rolling 7d/30d), and
   live-computed importances for the outcome model: the last ~15% of the
   replay history (by date) is held out, the multinomial logistic is refit
@@ -27,6 +28,13 @@ What each section reports, and where it comes from:
   SHAP table. Those CSVs are regenerated offline by
   NFL/model/v2/feature_importance.py, not recomputed here — the training
   window is 24 seasons and this is a weekly email.
+Importances are drawn, not tabulated: magnitude (permutation Δlog-loss,
+mean |SHAP|, normalised score) as one-hue bar charts with the value at
+the tip, and the direction of association as a diverging chart around
+zero — see data_jobs/reports/email_charts.py for the email-safe markup.
+
+Every rendered email is also archived (data_jobs/email_archive.py) with a
+permalink footer, so past checks are browsable at /vegas/emails.
 """
 
 from __future__ import annotations
@@ -38,6 +46,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from data_jobs.reports.email_charts import BLUE, RED, diverging_chart, hbar_chart, legend
 
 REPO = Path(__file__).resolve().parent.parent.parent
 OUT_DIR = REPO / "reports" / "models_check"
@@ -176,26 +186,30 @@ def soccer_importances() -> str:
     home_coef = model.coef_[home_idx]
 
     order = np.argsort(-perm.importances_mean)
-    rows = []
-    for i in order:
-        assoc = "raises home-win odds" if home_coef[i] > 0 else "lowers home-win odds"
-        rows.append([
-            f"<b>{FEATURES[i]}</b>",
-            f"{perm.importances_mean[i]:+.4f} &plusmn; {perm.importances_std[i]:.4f}",
-            _fmt(shap_mean[i]),
-            f"{home_coef[i]:+.3f} ({assoc})",
-        ])
+    perm_rows = [(FEATURES[i], float(perm.importances_mean[i]),
+                  f"&plusmn; {perm.importances_std[i]:.4f}") for i in order]
+    shap_rows = [(FEATURES[i], float(shap_mean[i]), None) for i in order]
+    coef_rows = [(FEATURES[i], float(home_coef[i]),
+                  "raises home-win odds" if home_coef[i] > 0 else "lowers home-win odds")
+                 for i in order]
     return (
-        _table(["Feature", "Permutation &Delta;log-loss", "Mean |SHAP|",
-                "Home-win coef (association)"], rows)
+        f"<h4 style='{STYLE_H3}'>Permutation importance &mdash; &Delta; held-out log loss</h4>"
+        + hbar_chart(perm_rows, digits=4, signed=True)
+        + f"<h4 style='{STYLE_H3}'>Mean |SHAP|</h4>"
+        + hbar_chart(shap_rows, digits=4)
+        + f"<h4 style='{STYLE_H3}'>Direction of association &mdash; home-win coefficient</h4>"
+        + legend([(BLUE, "raises home-win odds"), (RED, "lowers home-win odds")])
+        + diverging_chart(coef_rows, digits=3)
         + f"<p style='{STYLE_NOTE}'>Multinomial logistic refit on matches "
         f"before {cut} and evaluated on the {len(hold)} most recent "
         f"({int(HOLDOUT_FRAC * 100)}%) held-out matches. Permutation = how much "
         f"held-out log loss degrades when the feature is shuffled "
-        f"({PERM_REPEATS} repeats); SHAP is the exact linear attribution "
+        f"({PERM_REPEATS} repeats, &plusmn; one standard deviation at the tip); "
+        f"SHAP is the exact linear attribution "
         f"|coef &middot; (x &minus; x&#772;)| averaged over rows and classes. "
-        f"The coefficient column is the H-class weight on the z-scored "
-        f"feature &mdash; its sign is the direction of association.</p>"
+        f"The bottom chart is the H-class weight on the z-scored feature "
+        f"&mdash; its sign is the direction of association. Features are "
+        f"ordered by permutation importance in all three charts.</p>"
     )
 
 
@@ -225,29 +239,34 @@ def nfl_section() -> str:
     if uniform.exists():
         u = pd.read_csv(uniform).head(15)
         rows = [
-            [str(int(r["uniform_rank"])), f"<b>{r['feature']}</b>",
-             f"{r['avg_rank']:.1f}", _fmt(r.get("avg_norm_score"), 3)]
+            (f"{int(r['uniform_rank'])}. {r['feature']}", float(r["avg_norm_score"]),
+             f"avg rank {r['avg_rank']:.1f}")
             for _, r in u.iterrows()
         ]
         parts.append(
             f"<h3 style='{STYLE_H3}'>Top 15 features &mdash; uniform ranking "
             f"across 5 model families</h3>"
-            + _table(["#", "Feature", "Avg (perm+SHAP) rank", "Norm. score"], rows)
+            + hbar_chart(rows, digits=3, max_value=1.0)
+            + f"<p style='{STYLE_NOTE}'>Bar = normalised importance score "
+            f"(0&ndash;1, permutation and SHAP averaged across logistic, random "
+            f"forest, extra-trees, XGBoost and LightGBM); the tip carries the "
+            f"feature's average rank across those five.</p>"
         )
 
     lgbm = NFL_IMPORTANCE / "perm_lgbm.csv"
     if lgbm.exists():
         l = pd.read_csv(lgbm).head(10)
-        rows = [
-            [f"<b>{r['feature']}</b>",
-             f"{r['perm_importance']:+.4f} &plusmn; {r['perm_std']:.4f}",
-             _fmt(r["shap_mean_abs"])]
-            for _, r in l.iterrows()
-        ]
+        perm_rows = [(r["feature"], float(r["perm_importance"]),
+                      f"&plusmn; {r['perm_std']:.4f}") for _, r in l.iterrows()]
+        shap_rows = [(r["feature"], float(r["shap_mean_abs"]), None)
+                     for _, r in l.iterrows()]
         parts.append(
             f"<h3 style='{STYLE_H3}'>Production family (LGBM) &mdash; top 10 by "
             f"permutation</h3>"
-            + _table(["Feature", "Permutation &Delta;log-loss", "Mean |SHAP|"], rows)
+            + f"<h4 style='{STYLE_H3}'>Permutation importance &mdash; &Delta; held-out log loss</h4>"
+            + hbar_chart(perm_rows, digits=4, signed=True)
+            + f"<h4 style='{STYLE_H3}'>Mean |SHAP|</h4>"
+            + hbar_chart(shap_rows, digits=3)
             + f"<p style='{STYLE_NOTE}'>Fit 2002&ndash;2023 with production "
             f"recency weighting, measured on a held-out 2024&ndash;25 window "
             f"the model never saw. Regenerated offline by "
@@ -314,6 +333,7 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     (out / "check.html").write_text(html, encoding="utf-8")
 
+    from data_jobs.email_archive import publish
     from data_jobs.email_ledger import plan
     emails = {
         "models": {
@@ -322,6 +342,9 @@ def main() -> int:
             "date": run_date,
         }
     }
+    # Archive (and stamp the permalink footer) before the ledger hashes it,
+    # so the delivered and archived copies are the same bytes.
+    emails = publish("models", emails)
     emails = plan(emails, OUT_DIR / "sent.json")
     manifest = {"date": run_date, "emails": emails}
     (OUT_DIR / "manifest_latest.json").write_text(

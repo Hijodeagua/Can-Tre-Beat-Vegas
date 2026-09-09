@@ -3,8 +3,8 @@
  *
  * This array is the only place a sport is named. The nav, the track-record
  * ladder, the in-season slate section and the "up next season" cards are all
- * rendered by mapping over it, so bringing NFL online when the season starts
- * is a change to this file plus its route — not a new page and not a redesign.
+ * rendered by mapping over it, so bringing a sport online is a change to this
+ * file plus its route — not a new page and not a redesign.
  *
  * The *numbers* live in `public/data/summary.json` (written by
  * `data_jobs/build_summary.py`); what lives here is the fixed identity of each
@@ -12,7 +12,7 @@
  */
 
 /** Where a sport's in-season slate is read from. */
-export type SlateSource = 'mlb' | 'soccer' | 'cfb' | 'odds';
+export type SlateSource = 'mlb' | 'soccer' | 'cfb' | 'nfl' | 'odds';
 
 export interface SportConfig {
   /** Matches the `sport` key in summary.json and the slate.json sport key. */
@@ -66,10 +66,10 @@ function pullDate(pulledAt: string | null): string | null {
 }
 
 /**
- * Off-season copy for a sport fed by the odds API.
+ * Off-season copy for a sport fed by the odds API (NBA today; NFL used it
+ * before its Elo pipeline gave it a page of its own).
  *
- * Shared by NFL and NBA because the only true difference between them is the
- * verb. The handoff gave NBA a "last pull ... at the end of the previous
+ * Kept generic because the only sport-specific part is the verb. The handoff gave NBA a "last pull ... at the end of the previous
  * season" line, which described a feed that had been idle since June — the
  * unified odds job now pulls both sports on the same schedule, so that
  * sentence would print a stale-feed claim next to today's date. The copy is
@@ -159,15 +159,20 @@ export const SPORTS: SportConfig[] = [
     accentInk: '#06120b',
     tint: 'color-mix(in srgb, #ffd23f 30%, white)',
     dashBorder: 'color-mix(in srgb, #ffd23f 70%, white)',
-    href: null,
-    navLabel: null,
-    slateSource: 'odds',
+    href: '/nfl',
+    navLabel: '🏈 NFL',
+    slateSource: 'nfl',
     blurb:
-      'LightGBM straight-up and against-the-spread models on schedule, results and team stats.',
-    offseasonLead: (opts) => oddsOffseasonLead('Kickoff', opts),
+      'Betting-blind NFL Elo (K=20, +48 home, +20 off a bye, margin-weighted, 40% off-season ' +
+      'regression) tuned on 2005–2023; 2024–25 holdout log-loss 0.624 and 66% straight up ' +
+      'across every game incl. playoffs, against 0.691 for always-pick-home.',
+    offseasonLead: ({ seasonStarts }) => {
+      const when = monthYear(seasonStarts);
+      return when ? `Kickoff ${when}.` : 'Season start to be confirmed.';
+    },
     offseasonNote:
-      'LightGBM straight-up and against-the-spread models are trained but not yet wired into the ' +
-      'slate, so there is no graded record to show.',
+      'Team-level Elo with a rest-of-season Monte Carlo through the playoff bracket. Grading ' +
+      'resumes with the first played game.',
   },
   {
     key: 'nba',

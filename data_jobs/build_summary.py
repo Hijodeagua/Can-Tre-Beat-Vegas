@@ -3,9 +3,9 @@
 Aggregate every forecasting model's graded record into one cross-sport file.
 
 The `/vegas` home page opens with a track-record strip covering all models at
-once. No existing job produces that: the MLB pipeline writes its own ledger and
-the odds job writes the slate, but nothing spans them. This module reads what
-those two already publish and writes:
+once. No existing job produces that: each daily pipeline (MLB, soccer, CFB,
+NFL) writes its own ledger and the odds job writes the slate, but nothing
+spans them. This module reads what those already publish and writes:
 
     web/public/data/summary.json
 
@@ -37,6 +37,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 MLB_GRADES_CSV = REPO_ROOT / "data" / "mlb" / "predictions" / "grades.csv"
 SOCCER_GRADES_CSV = REPO_ROOT / "data" / "soccer_clubs" / "predictions" / "grades.csv"
 CFB_GRADES_CSV = REPO_ROOT / "data" / "college_football" / "predictions" / "grades.csv"
+NFL_GRADES_CSV = REPO_ROOT / "data" / "nfl" / "predictions" / "grades.csv"
 
 # A sport counts as in season while its last graded day is this recent. Longer
 # than an All-Star break, shorter than an off-season.
@@ -50,7 +51,7 @@ SPORTS: List[Dict[str, Any]] = [
     {"key": "mlb", "sport": "MLB", "emoji": "⚾", "source": "mlb", "start_month": 3},
     {"key": "soccer", "sport": "Soccer", "emoji": "⚽", "source": "soccer", "start_month": 8},
     {"key": "cfb", "sport": "College Football", "emoji": "\U0001f393", "source": "cfb", "start_month": 8},
-    {"key": "nfl", "sport": "NFL", "emoji": "\U0001f3c8", "source": "odds", "start_month": 9},
+    {"key": "nfl", "sport": "NFL", "emoji": "\U0001f3c8", "source": "nfl", "start_month": 9},
     {"key": "nba", "sport": "NBA", "emoji": "\U0001f3c0", "source": "odds", "start_month": 10},
 ]
 
@@ -169,12 +170,12 @@ def soccer_record(grades_csv: Path = SOCCER_GRADES_CSV) -> Dict[str, Any]:
     }
 
 
-def cfb_record(grades_csv: Path = CFB_GRADES_CSV) -> Dict[str, Any]:
+def game_ledger_record(grades_csv: Path) -> Dict[str, Any]:
     """
-    Cumulative college-football record from the CFB pipeline's game-level
-    ledger (one row per graded game with pick_correct, log loss and Brier
-    on the binary home-win pick — so, unlike soccer, Brier is defined and
-    the log loss blends with MLB's).
+    Cumulative record from a game-level ledger (one row per graded game with
+    pick_correct, log loss and Brier on the binary home-win pick — so, unlike
+    soccer, Brier is defined and the log loss blends with MLB's). The CFB and
+    NFL pipelines write the same shape.
     """
     empty = {"games": 0, "correct": 0, "accuracy": None, "log_loss": None,
              "brier": None, "last_graded": None}
@@ -203,6 +204,15 @@ def cfb_record(grades_csv: Path = CFB_GRADES_CSV) -> Dict[str, Any]:
     }
 
 
+def cfb_record(grades_csv: Path = CFB_GRADES_CSV) -> Dict[str, Any]:
+    return game_ledger_record(grades_csv)
+
+
+def nfl_record(grades_csv: Path = NFL_GRADES_CSV) -> Dict[str, Any]:
+    """The NFL Elo pipeline's ledger (`NFL/daily/grade.py`), same shape as CFB's."""
+    return game_ledger_record(grades_csv)
+
+
 def odds_sport_games(slate: Optional[Dict[str, Any]], key: str) -> int:
     """How many games this sport has on the current odds slate."""
     for sport in (slate or {}).get("sports", []):
@@ -220,6 +230,8 @@ def build_models(
     soccer_grades_csv: Path = SOCCER_GRADES_CSV,
     cfb_latest: Optional[Dict[str, Any]] = None,
     cfb_grades_csv: Path = CFB_GRADES_CSV,
+    nfl_latest: Optional[Dict[str, Any]] = None,
+    nfl_grades_csv: Path = NFL_GRADES_CSV,
 ) -> List[Dict[str, Any]]:
     models: List[Dict[str, Any]] = []
 
@@ -237,6 +249,13 @@ def build_models(
         elif spec["source"] == "cfb":
             record = cfb_record(cfb_grades_csv)
             slate_games = len((cfb_latest or {}).get("slate") or [])
+            since = _days_since(record["last_graded"], today)
+            in_season = slate_games > 0 or (since is not None and since <= IN_SEASON_GRACE_DAYS)
+        elif spec["source"] == "nfl":
+            # The Elo pipeline's slate is the next NFL week; between the Super
+            # Bowl and September it is empty, so the grace window decides.
+            record = nfl_record(nfl_grades_csv)
+            slate_games = len((nfl_latest or {}).get("slate") or [])
             since = _days_since(record["last_graded"], today)
             in_season = slate_games > 0 or (since is not None and since <= IN_SEASON_GRACE_DAYS)
         else:
@@ -321,10 +340,12 @@ def build_summary(
     mlb_latest = _read_json(output_dir / "mlb" / "latest.json")
     soccer_latest = _read_json(output_dir / "soccer" / "latest.json")
     cfb_latest = _read_json(output_dir / "cfb" / "latest.json")
+    nfl_latest = _read_json(output_dir / "nfl" / "latest.json")
     slate = _read_json(output_dir / "slate.json")
 
     models = build_models(today, mlb_latest, slate, grades_csv,
-                          soccer_latest=soccer_latest, cfb_latest=cfb_latest)
+                          soccer_latest=soccer_latest, cfb_latest=cfb_latest,
+                          nfl_latest=nfl_latest)
     return {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "overall": build_overall(models),
