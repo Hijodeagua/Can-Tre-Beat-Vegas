@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-09T23:50:56Z",
+  "generated_at": "2026-09-10T14:00:08Z",
   "overall": {
-    "record": "217-152",
-    "games": 369,
-    "accuracy": 0.5881,
-    "log_loss": 0.5277,
-    "brier": 0.1816,
+    "record": "218-152",
+    "games": 370,
+    "accuracy": 0.5892,
+    "log_loss": 0.5272,
+    "brier": 0.1813,
     "roi": null,
-    "sports_reporting": 3
+    "sports_reporting": 4
   },
   "models": [
     {
@@ -57,14 +57,14 @@
       "emoji": "\ud83c\udfc8",
       "outcomes": 2,
       "status": "in_season",
-      "record": null,
-      "games": 0,
-      "accuracy": null,
-      "log_loss": null,
-      "brier": null,
+      "record": "1-0",
+      "games": 1,
+      "accuracy": 1.0,
+      "log_loss": 0.414,
+      "brier": 0.1149,
       "roi": null,
-      "last_graded": null,
-      "slate_games": 16
+      "last_graded": "2026-09-09",
+      "slate_games": 15
     },
     {
       "sport": "NBA",
