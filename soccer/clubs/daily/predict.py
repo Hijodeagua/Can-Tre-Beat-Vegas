@@ -1,6 +1,7 @@
 """
 Predict the slate: every league fixture dated inside the run's window,
-with W/D/L probabilities, the model pick, and the most likely scoreline.
+with W/D/L probabilities, the model pick, and a scoreline that agrees
+with that pick.
 
 The slate is persisted to data/soccer_clubs/predictions/slate_{D}.csv the
 day it is predicted — that file, written before the matches were played, is
@@ -22,6 +23,7 @@ SLATE_COLUMNS = [
     "date", "league", "season", "home_team", "away_team",
     "elo_home_pre", "elo_away_pre", "p_H", "p_D", "p_A",
     "pick", "lambda_home", "lambda_away", "score_home", "score_away",
+    "score_prob",
 ]
 
 
@@ -52,18 +54,22 @@ def build_slate(state: DailyState, run_date: str,
     feats = pd.DataFrame(rows)
     slate = state.outcome_probs(feats)
 
+    # The published scoreline is conditioned on the pick, so a row can
+    # never read "Pick: Manchester City / Score: 1-1". See
+    # scoring.representative_score.
     picks, lams, scores = [], [], []
     for _, m in slate.iterrows():
         pick = max("HDA", key=lambda c: m[f"p_{c}"])
         lam = state.score_params.lambdas(m["league"], m["exp_home"])
         picks.append(pick)
         lams.append(lam)
-        scores.append(scoring.most_likely_score(*lam))
+        scores.append(scoring.representative_score(*lam, pick))
     slate["pick"] = picks
     slate["lambda_home"] = [round(l[0], 2) for l in lams]
     slate["lambda_away"] = [round(l[1], 2) for l in lams]
     slate["score_home"] = [s[0] for s in scores]
     slate["score_away"] = [s[1] for s in scores]
+    slate["score_prob"] = [round(s[2], 4) for s in scores]
 
     for c in ("p_H", "p_D", "p_A"):
         slate[c] = slate[c].round(4)

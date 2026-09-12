@@ -82,6 +82,56 @@ class TestScoring:
         assert scoring.most_likely_score(2.6, 0.4) == (2, 0)
         assert scoring.most_likely_score(0.4, 2.6) == (0, 2)
 
+    def test_unconditional_mode_is_a_draw_at_league_average_rates(self):
+        # The reason representative_score exists: at ordinary rates the
+        # single likeliest cell is 1-1 even with a clear home edge, which
+        # is what put a draw next to two thirds of the slate's picks.
+        assert scoring.most_likely_score(1.55, 1.15) == (1, 1)
+
+    def test_representative_score_always_agrees_with_the_pick(self):
+        for lam_h, lam_a in ((1.55, 1.15), (2.6, 0.4), (0.4, 2.6), (1.1, 1.1)):
+            h, a, _ = scoring.representative_score(lam_h, lam_a, "H")
+            assert h > a
+            h, a, _ = scoring.representative_score(lam_h, lam_a, "A")
+            assert h < a
+            h, a, _ = scoring.representative_score(lam_h, lam_a, "D")
+            assert h == a
+
+    def test_representative_score_is_the_conditional_mode(self):
+        # It must be the *likeliest* score in the picked region, not just
+        # any consistent one: with a home edge that means 1-0, not 3-0.
+        assert scoring.representative_score(1.55, 1.15, "H")[:2] == (1, 0)
+        assert scoring.representative_score(2.6, 0.4, "H")[:2] == (2, 0)
+
+    def test_representative_score_prob_is_unconditional(self):
+        lam_h, lam_a = 1.55, 1.15
+        h, a, p = scoring.representative_score(lam_h, lam_a, "H")
+        grid = scoring.score_grid(lam_h, lam_a)
+        assert abs(p - grid[h, a]) < 1e-12
+        assert 0.0 < p < 0.2   # the likeliest exact score is still a long shot
+
+    def test_representative_score_matches_a_monte_carlo_of_the_same_grid(self):
+        # The conditional mode is the exact answer to "sim it, keep the
+        # sims that match the pick, take the commonest score" — so a large
+        # sample of the same distribution has to land on it.
+        import numpy as np
+
+        lam_h, lam_a = 1.55, 1.15
+        rng = np.random.default_rng(0)
+        hs = np.minimum(rng.poisson(lam_h, 200_000), scoring.MAX_GOALS)
+        as_ = np.minimum(rng.poisson(lam_a, 200_000), scoring.MAX_GOALS)
+        home_wins = hs > as_
+        pairs, counts = np.unique(
+            np.stack([hs[home_wins], as_[home_wins]], axis=1), axis=0,
+            return_counts=True)
+        assert tuple(pairs[counts.argmax()]) == scoring.representative_score(
+            lam_h, lam_a, "H")[:2]
+
+    def test_outcome_mask_partitions_the_grid(self):
+        masks = [scoring.outcome_mask(o) for o in "HDA"]
+        assert sum(m.sum() for m in masks) == (scoring.MAX_GOALS + 1) ** 2
+        assert not (masks[0] & masks[1]).any()
+
     def test_lambdas_split_total_and_margin(self):
         p = scoring.ScoreParams(margin_a=-0.5, margin_b=1.6, league_total={"epl": 2.8})
         lam_h, lam_a = p.lambdas("epl", 0.75)
@@ -262,6 +312,7 @@ class TestSimulateLeague:
         return DailyState(
             engines={"epl": engine}, history=None, results=results,
             outcome_model=None, score_params=params, xg_form=None,
+            shot_form=None,
         )
 
     def test_outputs_carry_opta_fields_and_mass(self):
