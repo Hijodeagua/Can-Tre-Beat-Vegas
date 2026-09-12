@@ -4,7 +4,10 @@ One email, three sections, mirroring the MLB renderers' email-client-safe
 style (table markup, inline styles only):
 
 1. Games this week — every fixture in the next EMAIL_FIXTURE_DAYS days
-   with W/D/L probabilities, the model pick, and the most likely score.
+   with W/D/L probabilities, the model pick, and the likeliest scoreline
+   consistent with that pick (see scoring.representative_score — an
+   unconditional modal score printed 1-1 for two thirds of the slate and
+   contradicted the pick on most of those rows).
 2. Past week + rolling tracker — graded results from the trailing seven
    days plus 7d/30d/season accuracy and log loss.
 3. Final-table forecast — per top flight, the Monte Carlo's expected
@@ -59,6 +62,17 @@ def _table(headers: list[str], rows: list[str]) -> str:
     )
 
 
+def _score_odds(match) -> str:
+    """The projected scoreline's own probability, greyed out next to it.
+    Worth the pixels because it is small — the likeliest exact score in
+    soccer is usually a ~10% shot — and printing a bare scoreline without
+    it invites reading a projection as a prediction."""
+    p = match.get("score_prob")
+    if p is None or pd.isna(p):
+        return ""
+    return (f" <span style='color:#999;'>({_pct(float(p))})</span>")
+
+
 def _fixtures_section(fixtures: pd.DataFrame) -> str:
     if fixtures.empty:
         return "<p>No league fixtures in the coming week.</p>"
@@ -74,11 +88,12 @@ def _fixtures_section(fixtures: pd.DataFrame) -> str:
                 f"<td style='{STYLE_TD}'><b>{m['home_team']}</b> v {m['away_team']}</td>"
                 f"<td style='{STYLE_TD}'>{_pct(m['p_H'])} / {_pct(m['p_D'])} / {_pct(m['p_A'])}</td>"
                 f"<td style='{STYLE_TD}'><b>{pick_team}</b></td>"
-                f"<td style='{STYLE_TD}'>{int(m['score_home'])}&ndash;{int(m['score_away'])}</td></tr>"
+                f"<td style='{STYLE_TD}'>{int(m['score_home'])}&ndash;{int(m['score_away'])}"
+                f"{_score_odds(m)}</td></tr>"
             )
         parts.append(
             f"<h3 style='{STYLE_H3}'>{_league_name(league)}</h3>"
-            + _table(["Date", "Match", "H / D / A", "Pick", "Sim score"], rows)
+            + _table(["Date", "Match", "H / D / A", "Pick", "Proj score"], rows)
         )
     return "".join(parts)
 

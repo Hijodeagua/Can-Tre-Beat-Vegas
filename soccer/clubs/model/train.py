@@ -1,7 +1,9 @@
 """
 Train the club match-outcome model: multinomial logistic regression over
 {home win, draw, away win} on the venue-adjusted Elo gap plus the
-squad-economics differentials, pooled across the five leagues (the
+squad-economics differentials and the two chance-creation form features
+(rolling xG net, rolling shots-on-target net), pooled across the five
+leagues (the
 gap-to-probability curve is shared; each league's Elo pool already carries
 its own tuned parameters).
 
@@ -38,11 +40,12 @@ from soccer.clubs.model.features import (
     transfers_available,
     values_available,
 )
+from soccer.clubs.model.shots import SHOT_FEATURES, attach_shots, shots_available
 from soccer.clubs.model.xg import XG_FEATURES, attach_xg, xg_available
 
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 
-FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES
+FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
 SPLIT_SEASON = "2024-25"
 # The economics features are sparse (a small, growing fraction of rows are
 # nonzero as market-value uploads backfill), so their gradient signal is
@@ -56,7 +59,7 @@ MAX_ITER = 5000
 def build_table() -> pd.DataFrame:
     _, history = run_all_european()
     league_only = history[~history["league"].str.startswith("uefa:")]
-    return attach_xg(attach_features(league_only))
+    return attach_shots(attach_xg(attach_features(league_only)))
 
 
 def frequency_baseline(train: pd.DataFrame, test: pd.DataFrame) -> float:
@@ -83,6 +86,8 @@ def main() -> None:
         print("No market-value uploads — value/wage features are 0.")
     if not xg_available():
         print("No xg_matches.csv — xg_net_diff is 0.")
+    if not shots_available():
+        print("No shots_matches.csv — sot_net_diff is 0.")
 
     model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
     model.fit(train[FEATURES], train["outcome"])

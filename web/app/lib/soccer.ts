@@ -36,8 +36,12 @@ export interface SoccerSlateRow {
   pick: 'H' | 'D' | 'A';
   lambda_home: number;
   lambda_away: number;
+  /** Likeliest scoreline consistent with `pick`, not the unconditional
+   * modal score — see soccer/clubs/daily/scoring.py. */
   score_home: number;
   score_away: number;
+  /** Unconditional probability of exactly that scoreline. */
+  score_prob?: number;
 }
 
 export interface SoccerFuturesClub {

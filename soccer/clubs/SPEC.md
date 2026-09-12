@@ -123,6 +123,48 @@ ago; xG form carries chance-creation signal that neither Elo nor the
 table has). In the shipped model it lands as the strongest non-Elo
 coefficient (±0.11 vs squad value's ±0.09).
 
+**Current status: dormant.** `xg_matches.csv` has not moved past
+2025-01-04, so the staleness guard zeroes this feature on every live
+slate — the model is running Elo-only on the chance-creation axis until
+`fetch_xg.py` starts landing again from Actions. That is a fetcher
+problem, not a modeling one; the shot layer below was added as an
+independent feed for exactly this reason.
+
+## Shot form (football-data.co.uk layer)
+
+`data/shots_matches.csv` holds shots and shots on target for both sides
+of every top-5-league match back to each league's first season in
+results.csv (25,468 matches). `data/fetch_shots.py` refreshes it from
+football-data.co.uk, falling back to the public-domain
+`datasets/football-datasets` GitHub mirror — the mirror lags a season but
+is reachable from the dev sandbox, so `--source mirror` is what produced
+the committed backfill and what a developer can rerun locally.
+
+`model/shots.py` turns it into one feature, `sot_net_diff`: each side's
+rolling mean shots-on-target net (on target for − on target against) over
+its last 10 league matches, differenced, strictly pre-match, with the same
+130-day staleness guard and the same 0-impute where there is no coverage.
+The window/warm-up/staleness/attach machinery is shared with the xG layer
+in `model/form.py`.
+
+Validated on the 2024-25 + 2025-26 holdout, added on top of the *full*
+existing feature set: log loss 1.0199 → 1.0180, +2.9 SE paired, and it
+improves each of the three season splits tried (2023-24, 2024-25,
+2025-26). Total shots validate too (+2.8 SE) but add nothing on top of
+shots on target, so only the on-target feature ships.
+
+Two things it buys over the xG feature beside it: coverage (41.5% of
+training rows carry shot form against xG's 32.2%, and 57% of a live
+slate against xG's 0%), and liveness. On the same holdout, Elo +
+economics + shot form (1.0181) beats Elo + economics + xG form (1.0199).
+They are complements, not substitutes — both stay in the model, and a
+revived Understat feed makes the pair stronger.
+
+Coverage is top-5 flights only. football-data.co.uk publishes the second
+divisions too, but the mirror does not, so their name mapping can't be
+derived or verified from the sandbox; those leagues 0-impute exactly as
+they already do for xG.
+
 ## Probability model
 
 Multinomial logistic regression over {home win, draw, away win} on the
@@ -233,16 +275,20 @@ soccer/clubs/
 │   ├── fetch_uefa.py        # champions-league repo → uefa_results.csv
 │   ├── fetch_mls.py         # philo92/mls-elo → results.csv (merges "mls" rows only)
 │   ├── fetch_xg.py          # understat.com → xg_matches.csv (Actions-only; merge posture)
+│   ├── fetch_shots.py       # football-data.co.uk (+ GitHub mirror) → shots_matches.csv
 │   ├── fetch_transfers.py   # ewenme/transfers → club_season_transfers.csv
 │   ├── market_values/       # optional squad value / wage uploads (see README)
 │   ├── results.csv          # committed league results + current-season fixtures
 │   ├── xg_matches.csv       # committed per-match xG (top-5 flights, 2014-15 →)
+│   ├── shots_matches.csv    # committed per-match shots + shots on target (top-5)
 │   ├── uefa_results.csv     # committed UCL/UEL/UECL results, league-mapped
 │   └── club_season_transfers.csv
 ├── model/
 │   ├── elo.py               # ClubEloEngine (per-league pools, rollover, entry rating)
 │   ├── europe.py            # UEFA cross-league glue replay
+│   ├── form.py              # shared rolling-form machinery (window, warm-up, staleness)
 │   ├── xg.py                # rolling xG-form feature (xg_net_diff)
+│   ├── shots.py             # rolling shot-form feature (sot_net_diff)
 │   ├── features.py          # spend / value / wage differentials (z within league-season)
 │   ├── tune.py              # per-league parameter grid search
 │   ├── train.py             # pooled multinomial outcome model + temporal validation
@@ -257,6 +303,7 @@ python -m soccer.clubs.data.fetch_uefa        # refresh UCL/UEL/UECL results
 python -m soccer.clubs.data.fetch_mls         # refresh MLS results (run after fetch_results)
 python -m soccer.clubs.data.fetch_transfers   # refresh transfer aggregates
 python -m soccer.clubs.data.fetch_xg          # refresh per-match xG (Actions only)
+python -m soccer.clubs.data.fetch_shots       # refresh per-match shots (--source mirror works locally)
 python -m soccer.clubs.model.tune             # re-tune per-league parameters
 python -m soccer.clubs.model.train            # outcome model + holdout metrics
 python -m soccer.clubs.model.export_ratings   # -> artifacts/club_elo_ratings.json
@@ -295,6 +342,14 @@ site consumes.
 - [x] xG layer: per-match xG committed + Actions-refreshed, rolling
   xG-net form as the strongest non-Elo model feature (validated +2.1 SE
   on the 2023-24 holdout)
+- [x] Shot layer: per-match shots + shots on target committed and
+  Actions-refreshed, rolling shots-on-target form as a validated model
+  feature (+2.9 SE on the 2024-25 + 2025-26 holdout) and the live
+  chance-creation signal while Understat is stale
+- [ ] Revive the Understat feed — `xg_matches.csv` has been stuck at
+  2025-01-04, so `xg_net_diff` is 0 on every live slate
+- [ ] Shot coverage for the second divisions (needs a football-data.co.uk
+  name mapping that can't be derived from the sandbox-reachable mirror)
 - [ ] Second-division futures (promotion odds) — one config flip in
   `daily/run.py` once wanted
 - [ ] Wage bills populated (Capology/FBref, still manual)

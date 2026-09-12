@@ -13,7 +13,7 @@ publish the site JSON, and render the twice-weekly update email.
 | `config.py` | Paths, slate window, sim defaults, email weekdays |
 | `state.py` | One glued Elo replay + in-run outcome/score model fits, shared by every step |
 | `scoring.py` | Elo expectation → Poisson goal rates (margin map refit each run; league totals from the last 2 seasons) |
-| `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, most likely scoreline; persisted as `slate_{D}.csv` |
+| `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, likeliest scoreline consistent with that pick; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once results land; running ledger at `data/soccer_clubs/predictions/grades.csv` |
 | `simulate.py` | Per-league rest-of-season Monte Carlo with live in-sim Elo (title / UCL / UEL / relegation / expected points + position) |
 | `export_site.py` | `web/public/data/soccer/latest.json` (incl. `elo_history` for the site's daily-updating Elo chart) + per-day history snapshots |
@@ -21,7 +21,7 @@ publish the site JSON, and render the twice-weekly update email.
 
 ## Data flow for a run dated D (UTC)
 
-1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` refresh the committed CSVs
+1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` + `fetch_shots` refresh the committed CSVs
    (best-effort; the 10:00 UTC schedule means the prior evening's European
    matches are final and upstream has usually caught up). Order matters:
    `fetch_results` rewrites `results.csv` whole from the openfootball

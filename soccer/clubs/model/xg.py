@@ -19,12 +19,20 @@ none (the committed backfill ends 2025-01-04, so without the guard a
 break but not a season-long gap, so predictions fall back to Elo-only
 until `data/fetch_xg.py` (run by the daily Actions job) has refreshed the
 file past the gap.
+
+That fallback is not hypothetical right now: the committed file has not
+moved past 2025-01-04, so every live slate is being scored with this
+feature at 0. The shot-form layer (`shots.py`, football-data.co.uk) was
+added as an independent chance-creation feed for exactly that reason —
+it covers the same ground from a publisher that is currently updating.
+Reviving this one is a fetcher problem, not a modeling problem.
 """
 
-from collections import deque
 from pathlib import Path
 
 import pandas as pd
+
+from soccer.clubs.model.form import MatchValues, RollingForm, attach, replay
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 XG_CSV = DATA_DIR / "xg_matches.csv"
@@ -44,79 +52,39 @@ def load_xg() -> pd.DataFrame:
     return pd.read_csv(XG_CSV)
 
 
-class _Form:
-    """Per-(league, team) rolling xG state, fed matches in date order."""
+# The rolling window, warm-up minimum, staleness guard and pre-match
+# attach loop are shared with the shot-form layer; see model/form.py.
+class _Form(RollingForm):
+    """xG form with this module's tuning baked in."""
 
     def __init__(self) -> None:
-        self.hist: dict[tuple, deque] = {}
-        self.last_date: dict[tuple, str] = {}
-
-    def net(self, league: str, team: str, asof: str) -> float | None:
-        key = (league, team)
-        q = self.hist.get(key)
-        if q is None or len(q) < MIN_MATCHES:
-            return None
-        age = (pd.Timestamp(asof) - pd.Timestamp(self.last_date[key])).days
-        if age > MAX_AGE_DAYS:
-            return None
-        return sum(f - a for f, a in q) / len(q)
-
-    def push(self, league: str, home: str, away: str, date: str,
-             xg_home: float, xg_away: float) -> None:
-        for team, f, a in ((home, xg_home, xg_away), (away, xg_away, xg_home)):
-            self.hist.setdefault((league, team), deque(maxlen=WINDOW)).append((f, a))
-            self.last_date[(league, team)] = date
+        super().__init__(WINDOW, MIN_MATCHES, MAX_AGE_DAYS)
 
 
-def _diff(form: _Form, league: str, home: str, away: str, date: str) -> float:
-    h = form.net(league, home, date)
-    a = form.net(league, away, date)
-    if h is None or a is None:
-        return 0.0   # one-sided form would bias the differential
-    return h - a
+def match_values() -> MatchValues:
+    """(league, date, home, away) -> (home xG, away xG)."""
+    if not xg_available():
+        return {}
+    return {
+        (r.league, r.date, r.home_team, r.away_team): (r.xg_home, r.xg_away)
+        for r in load_xg().itertuples()
+    }
 
 
 def attach_xg(history: pd.DataFrame) -> pd.DataFrame:
     """Add `xg_net_diff` to a replay-history table (strictly pre-match:
     each row's feature uses only xG matches dated before it). Rows from
     leagues or eras the xG file doesn't cover get 0."""
-    history = history.copy()
-    if not xg_available():
-        history["xg_net_diff"] = 0.0
-        return history
-
-    xg = load_xg()
-    xg_by_key = {
-        (r.league, r.date, r.home_team, r.away_team): (r.xg_home, r.xg_away)
-        for r in xg.itertuples()
-    }
-    order = history["date"].astype(str).argsort(kind="stable")
-    form = _Form()
-    vals = pd.Series(0.0, index=history.index)
-    for i in order:
-        row = history.iloc[i]
-        vals.iloc[i] = _diff(form, row["league"], row["home_team"],
-                             row["away_team"], row["date"])
-        hit = xg_by_key.get((row["league"], row["date"],
-                             row["home_team"], row["away_team"]))
-        if hit is not None:
-            form.push(row["league"], row["home_team"], row["away_team"],
-                      row["date"], *hit)
-    history["xg_net_diff"] = vals
-    return history
+    return attach(history, "xg_net_diff", match_values(), _Form)
 
 
-def current_form() -> _Form:
+def current_form() -> RollingForm:
     """Form state after every committed xG match — what the daily slate
     features against (with the same staleness guard applied at query
-    time via `_Form.net`)."""
-    form = _Form()
-    if not xg_available():
-        return form
-    for r in load_xg().sort_values("date").itertuples():
-        form.push(r.league, r.home_team, r.away_team, r.date, r.xg_home, r.xg_away)
-    return form
+    time via `RollingForm.net`)."""
+    return replay(match_values(), _Form)
 
 
-def slate_diff(form: _Form, league: str, home: str, away: str, date: str) -> float:
-    return _diff(form, league, home, away, date)
+def slate_diff(form: RollingForm, league: str, home: str, away: str,
+               date: str) -> float:
+    return form.diff(league, home, away, date)

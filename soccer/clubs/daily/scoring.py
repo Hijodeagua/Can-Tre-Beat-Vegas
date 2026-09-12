@@ -12,6 +12,18 @@ combine into per-side rates λ_home = (total + margin) / 2 and
 Independent Poisson is deliberate: on this dataset the observed 1-1 rate
 (11.7%) matches the independent-Poisson prediction (11.8%) and 0-0 is only
 0.6pp underweight, so a Dixon–Coles correction isn't buying anything yet.
+
+Turning the grid back into ONE scoreline to publish is a separate problem
+from modeling it, and the obvious answer is the wrong one. The single most
+likely cell of a soccer score grid is a low draw almost regardless of who
+is playing: at league-average rates 1-1 is the modal cell until the
+favorite's edge is enormous, so an unconditional argmax printed 1-1 for
+65% of the slate and contradicted the model's own pick on most of those
+rows — "Pick: Manchester City / Score: 1-1". Draws are ~25% of real
+results, so that display was wrong about the league as well as about
+itself. `representative_score` conditions on the picked outcome instead:
+the most likely exact scoreline **given** that side wins (or given a
+draw). See its docstring for why that is the right conditional.
 """
 
 from dataclasses import dataclass
@@ -61,7 +73,49 @@ def score_grid(lam_h: float, lam_a: float) -> np.ndarray:
     return grid / grid.sum()
 
 
+def outcome_mask(outcome: str) -> np.ndarray:
+    """Boolean [0, MAX_GOALS]^2 mask of the cells consistent with H/D/A."""
+    g = np.arange(MAX_GOALS + 1)
+    home, away = np.meshgrid(g, g, indexing="ij")
+    if outcome == "H":
+        return home > away
+    if outcome == "A":
+        return home < away
+    return home == away
+
+
 def most_likely_score(lam_h: float, lam_a: float) -> tuple[int, int]:
+    """Modal cell of the whole grid — the unconditional most likely exact
+    score. Kept because it is the honest answer to "what one scoreline is
+    likeliest", but it is not what the slate publishes: see
+    `representative_score`."""
     grid = score_grid(lam_h, lam_a)
     i, j = np.unravel_index(int(grid.argmax()), grid.shape)
     return int(i), int(j)
+
+
+def representative_score(lam_h: float, lam_a: float,
+                         outcome: str) -> tuple[int, int, float]:
+    """The scoreline to publish next to a pick of `outcome`: the most
+    likely exact score among the scores that produce that outcome, with
+    its unconditional probability.
+
+    This is the exact form of "simulate the match a lot of times, throw
+    away the sims that disagree with the pick, and report the scoreline
+    that came up most often" — the conditional modal scoreline. Computing
+    it off the grid rather than by sampling just removes the sampling
+    noise: a 10-run Monte Carlo picks its answer from 10 draws of a
+    distribution whose modal cell only holds ~11% of the mass, so it would
+    disagree with itself run to run, and averaging away that noise by
+    raising the sim count only converges back on the same unconditional
+    1-1 that made this worth fixing. Conditioning is what fixes it, not
+    the number of sims.
+
+    The returned probability is unconditional (P of exactly this score,
+    not P given the outcome), so it can be read next to p_H / p_D / p_A
+    without rescaling.
+    """
+    grid = score_grid(lam_h, lam_a)
+    masked = np.where(outcome_mask(outcome), grid, 0.0)
+    i, j = np.unravel_index(int(masked.argmax()), grid.shape)
+    return int(i), int(j), float(grid[i, j])
