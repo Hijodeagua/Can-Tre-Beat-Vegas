@@ -1,0 +1,29 @@
+name: PR checks
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: pr-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    uses: Hijodeagua/tre_pom/.github/workflows/pr-checks.yml@v1
+    with:
+      gitleaks: true
+      trivy: true
+      cycodeScanTypes: ""        # "secret sca iac sast" once Cycode creds exist
+      # Report-only: this repo has pre-existing HIGH/CRITICAL dependency CVEs.
+      # Findings are printed in the job log but do not fail the check.
+      # Flip back to true once Trivy is clean.
+      blockOnFindings: false
+    secrets:
+      CYCODE_CLIENT_ID: ${{ secrets.CYCODE_CLIENT_ID }}
+      CYCODE_CLIENT_SECRET: ${{ secrets.CYCODE_CLIENT_SECRET }}
