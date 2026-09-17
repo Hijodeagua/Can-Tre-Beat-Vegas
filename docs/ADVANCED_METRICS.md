@@ -130,7 +130,7 @@ before 2024-25, scored 2024-25 onward. Feature sets: the round-1
 shipping set (`base`: gap + economics + xG net + SoT net) and `full` =
 exactly `train.FEATURES`: home Elo, away Elo, gap, economics, xG and SoT
 form, every advanced Understat column, and the league / tier / season
-context (46 inputs). Learners from `common/learners.py`, fixed
+context (44 inputs). Learners from `common/learners.py`, fixed
 hyperparameters, same rows. Measured **after** the Understat backfill,
 so npxG, xPts, PPDA and deep completions are real numbers on every row
 2014-15 onward.
@@ -345,7 +345,9 @@ from `common/learners.py` at fixed hyperparameters:
 | selection | Elo + raw Elos + success, logistic | 0.63297 | 0.22126 | +2.49 SE |
 
 **What ships: the full set with a random forest.** It ties the logistic
-on the clean window (0.61687 vs 0.61691) and beats Elo by +1.16 SE; the
+on the clean window (0.61687 vs 0.61691 — a gap one twentieth of the
+seed noise floor, so read them as indistinguishable) and beats Elo by
++1.16 SE; the
 compact success-only set is still the best *pooled* number, but the
 brief is every feature in, and the forest gives that set away nothing on
 the honest window. Boosting at the shared hyperparameters overfits 6k
@@ -476,7 +478,9 @@ feature.
 | FBS-vs-FBS | Elo + raw Elos + core, random forest | 0.54469 | 0.18519 | +2.22 SE |
 
 **What ships: the full set with a random forest** — the best of the three
-learners on the full set in both scopes. The compact core set is still a
+learners on the full set in both scopes, though its margin over the
+logistic (0.0008) is under two seed standard deviations, so only the win
+over boosting is a real separation; see the seed spread below. The compact core set is still a
 little better in absolute terms (its extra columns cost about 0.002), but
 the brief is every feature in, and the forest is the learner that loses
 least to them.
@@ -525,37 +529,68 @@ compared against the *same* inner model (fit on the pre-validation
 window), not against the shipped one, so calibration is not charged for
 the season it has to hold out.
 
-### First results — CFB (5 seeds)
+### Results — all three sports
 
-**Seed spread is the scale to read learner gaps against.** Refitting the
-shipped CFB forest across seeds moves test log loss between 0.49321 and
-0.49435 (sd 0.0006). The forest-vs-logistic gap on the same window is
-0.49347 vs 0.49426 — about one seed standard deviation. So on CFB the
-two are indistinguishable, and the round-2 claim that the forest is
-"best of the three learners" holds only against boosting. The
-forest-vs-Elo gain (+1.1 SE overall, +1.6 FBS-vs-FBS) is a paired test
-over 1,853 games and is unaffected by this.
+**Seed spread is the scale to read learner gaps against.** Refitting each
+shipped forest across seeds, on its own test window:
 
-**The CFB forest is under-confident on favourites.** Reliability on the
-test window:
+| sport | seeds | test log loss range | sd |
+|---|---|---|---|
+| soccer | 8 | 1.01411 – 1.01470 | 0.00018 |
+| CFB | 20 | 0.49260 – 0.49438 | 0.00050 |
+| NFL | 20 | 0.61642 – 0.61947 | 0.00087 |
 
-| predicted bucket | n | mean predicted | actual | gap |
-|---|---|---|---|---|
-| 0.0-0.1 | 18 | 0.074 | 0.222 | −0.148 |
-| 0.2-0.3 | 134 | 0.253 | 0.239 | +0.014 |
-| 0.4-0.5 | 176 | 0.451 | 0.449 | +0.002 |
-| 0.6-0.7 | 250 | 0.649 | 0.636 | +0.013 |
-| 0.8-0.9 | 263 | 0.850 | 0.901 | −0.051 |
-| 0.9-1.0 | 309 | 0.948 | 0.977 | −0.029 |
+Against that scale, the round-2 learner claims come out differently by
+sport:
 
-It is well behaved through the middle and 3-5 points low at the top —
-leaf frequencies cannot reach 1.0, which is the usual forest pattern.
-The lowest bucket is 18 games and says nothing.
+- **Soccer holds.** Forest 1.01453 vs logistic 1.01634 is 0.0018 — about
+  **ten seed standard deviations**. The forest genuinely beats the
+  logistic there, and the +2.36 SE gain over the round-1 model stands.
+- **NFL was a tie and is a tie.** Forest 0.61687 vs logistic 0.61691 is
+  0.00004, one twentieth of the noise floor. Report them as
+  indistinguishable. The gain over Elo alone (0.62411 → 0.61687) is
+  about eight seed sd and is real.
+- **CFB overstated it.** Forest 0.49347 vs logistic 0.49426 is 0.0008 —
+  under two seed sd. On CFB the two learners are indistinguishable and
+  only the win over boosting stands. The forest-vs-Elo gain (+1.1 SE
+  overall, +1.6 FBS-vs-FBS) is a paired test over 1,853 games and is
+  unaffected.
 
-**Post-hoc calibration does not fix it**, at least not fit on a single
-season: against the same inner model (0.49561), isotonic scores 0.53033
-(−2.31 SE) and sigmoid 0.50032 (−2.05 SE). Both make the published
-number worse. If the under-confidence is worth correcting, it needs a
-calibrator fit across several seasons by cross-validation, not one
-held-out year — or a learner whose probabilities are better in the tail
-to begin with, which is what `tune` may find.
+**Reliability.** Predicted vs actual by bucket, shipped model, test
+window:
+
+| bucket | soccer (n, gap) | CFB (n, gap) | NFL (n, gap) |
+|---|---|---|---|
+| 0.2-0.3 | 1027, +0.016 | 134, +0.014 | 29, −0.043 |
+| 0.3-0.4 | 1945, +0.001 | 143, +0.006 | 87, +0.067 |
+| 0.4-0.5 | 1942, +0.007 | 176, +0.002 | 132, +0.019 |
+| 0.5-0.6 | 1479, +0.003 | 248, +0.014 | 87, +0.032 |
+| 0.6-0.7 | 686, +0.006 | 250, +0.013 | 104, −0.004 |
+| 0.7-0.8 | 328, −0.035 | 232, −0.013 | 75, +0.029 |
+| 0.8-0.9 | 79, +0.032 | 263, **−0.051** | 55, −0.067 |
+| 0.9-1.0 | 8, −0.094 | 309, **−0.029** | — | 
+
+(positive = the model predicted higher than it happened)
+
+Soccer is well calibrated where its mass is: every bucket from 0.3 to
+0.7 holds 7,500 of its 7,827 matches and is within 0.007. **CFB is the
+one real miscalibration**: 3-5 points under-confident on favourites over
+572 games in the top two buckets — leaf frequencies cannot reach 1.0,
+the usual forest ceiling. NFL's buckets hold 29-132 games each, where a
+±0.06 gap is inside binomial noise; nothing to conclude there.
+
+**Post-hoc calibration does not help anywhere.** Against the same inner
+model (so calibration is not charged for the season it holds out):
+
+| sport | inner | isotonic | sigmoid |
+|---|---|---|---|
+| soccer | 1.01625 | 1.02064 (−2.07 SE) | 1.01699 (−1.70 SE) |
+| CFB | 0.49561 | 0.53033 (−2.31 SE) | 0.50032 (−2.05 SE) |
+| NFL | 0.61558 | 0.63579 (−0.98 SE) | 0.61626 (−0.23 SE) |
+
+Every cell is worse or neutral. One validation season is not enough to
+fit a calibrator. If CFB's tail is worth correcting it needs a
+calibrator fit across several seasons by cross-validation, or a learner
+with better tail probabilities — which is what `tune` may find.
+
+
