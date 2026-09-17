@@ -1,5 +1,5 @@
 game_id,date,season,week,season_type,home_team,away_team,home_conference,away_conference,neutral,home_fcs,away_fcs,elo_home_pre,elo_away_pre,p_home,p_home_elo,model,pick,pick_prob,pred_home_score,pred_away_score,pred_total,notes
-401858225,2026-09-17,2026,3,regular,Pittsburgh,Syracuse,ACC,ACC,False,False,False,1588.8,1340.9,0.871,0.8475,elo+adj_epa,Pittsburgh,0.871,36.4,19.8,56.2,
+401858225,2026-09-17,2026,3,regular,Pittsburgh,Syracuse,ACC,ACC,False,False,False,1588.8,1340.9,0.9041,0.8475,elo+efficiency:gbm,Pittsburgh,0.9041,36.4,19.8,56.2,
 401858455,2026-09-18,2026,3,regular,Oregon,Portland State,Big Ten,Big Sky,False,False,True,1767.5,950.0,0.9933,0.9933,elo,Oregon,0.9933,54.1,5.8,59.8,
-401856811,2026-09-18,2026,3,regular,Texas Tech,Houston,Big 12,Big 12,False,False,False,1759.8,1588.5,0.8247,0.7814,elo+adj_epa,Texas Tech,0.8247,32.9,20.5,53.4,
-401858226,2026-09-18,2026,3,regular,Wake Forest,Miami,ACC,ACC,False,False,False,1552.4,1810.7,0.2212,0.2317,elo+adj_epa,Miami,0.7788,21.4,32.9,54.3,
+401856811,2026-09-18,2026,3,regular,Texas Tech,Houston,Big 12,Big 12,False,False,False,1759.8,1588.5,0.8531,0.7814,elo+efficiency:gbm,Texas Tech,0.8531,32.9,20.5,53.4,
+401858226,2026-09-18,2026,3,regular,Wake Forest,Miami,ACC,ACC,False,False,False,1552.4,1810.7,0.2172,0.2317,elo+efficiency:gbm,Miami,0.7828,21.4,32.9,54.3,
