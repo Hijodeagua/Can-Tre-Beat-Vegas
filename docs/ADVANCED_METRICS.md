@@ -143,8 +143,16 @@ so npxG, xPts, PPDA and deep completions are real numbers on every row
 | all | full | logistic | 1.01634 | 0.60896 | +1.17 SE |
 | all | **full** | **random forest** | **1.01453** | **0.60747** | **+2.36 SE** |
 | all | full | boosting | 1.02764 | 0.61579 | −4.59 SE |
+| top-5 (n=3649) | base | logistic | 0.98317 | 0.58545 | — |
+| top-5 | full | logistic | 0.98072 | 0.58412 | +1.44 SE |
+| top-5 | **full** | **random forest** | **0.97917** | **0.58281** | **+2.08 SE** |
+| top-5 | full | boosting | 0.99033 | 0.58932 | −2.21 SE |
 
-By season, round-1 model → full forest: 2024-25 1.01207 → 1.01111
+Top-5 by season, round-1 model → full forest: 2024-25 0.98042 → 0.97727
+(+1.14 SE), 2025-26 0.98701 → 0.98209 (+1.76 SE), 2026-27 0.97006 →
+0.96701.
+
+By season, all leagues, round-1 model → full forest: 2024-25 1.01207 → 1.01111
 (+0.53 SE), **2025-26 1.01603 → 1.00924 (+3.20 SE)**, 2026-27 1.00132 →
 0.99497 (+0.93); the two small MLS slices are a wash. 2025-26 is the
 first full season with the whole advanced layer live on both sides, and
