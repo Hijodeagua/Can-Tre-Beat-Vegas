@@ -98,3 +98,20 @@ def test_backfill_walks_reports_and_uses_ledger_dates(repo):
     # backfill adds nothing.
     assert FOOTER_MARK not in (repo / "web/public/emails/models/2026-08-31_models.html").read_text()
     assert backfill(repo_root=repo, archive_dir=repo / "web/public/emails") == 0
+
+
+def test_merge_index_is_a_keyed_union(tmp_path):
+    a = {"emails": [{"league": "nfl", "type": "update", "date": "2026-09-17", "archived_at": "1"},
+                    {"league": "nfl", "type": "update", "date": "2026-09-16", "archived_at": "1"}]}
+    b = {"emails": [{"league": "soccer", "type": "update", "date": "2026-09-17", "archived_at": "2"},
+                    {"league": "nfl", "type": "update", "date": "2026-09-17", "archived_at": "3", "subject": "later"}]}
+    merged = email_archive.merge_index(a, b)
+    keys = sorted((e["league"], e["date"]) for e in merged["emails"])
+    assert keys == [("nfl", "2026-09-16"), ("nfl", "2026-09-17"), ("soccer", "2026-09-17")]
+    assert next(e for e in merged["emails"] if e["league"] == "nfl" and e["date"] == "2026-09-17")["subject"] == "later"
+    # The CLI round-trips through files.
+    (tmp_path / "a.json").write_text(json.dumps(a)); (tmp_path / "b.json").write_text(json.dumps(b))
+    assert email_archive.main(["merge-index", "--ours", str(tmp_path / "a.json"),
+                               "--theirs", str(tmp_path / "b.json"), "--out", str(tmp_path / "out.json")]) == 0
+    out = json.loads((tmp_path / "out.json").read_text())
+    assert len(out["emails"]) == 3 and out["generated_at"]
