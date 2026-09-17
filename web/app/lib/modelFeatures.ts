@@ -82,11 +82,18 @@ export const SOCCER_FEATURES: ForecastModel = {
 export const NFL_FEATURES: ForecastModel = {
   title: 'Football model features',
   engine:
-    'Win probability from Elo alone — betting-blind, no closing line — with the score model ' +
-    'refit from the engine’s own replay each run, then the rest of the season replayed with ' +
-    'live in-sim Elo through the seven-team bracket.',
+    'Win probability from a betting-blind Elo plus one efficiency layer: each side’s ' +
+    'opponent-adjusted success rate on offence and defence, from nflverse play-by-play, in a ' +
+    'regularised logistic refit each run. The score model is refit from the engine’s own ' +
+    'replay, then the rest of the season is replayed with live in-sim Elo through the ' +
+    'seven-team bracket.',
   features: [
     ...ELO_PAIR('Team', 'plus +48 home advantage — zero at a neutral site'),
+    {
+      name: 'Adjusted success rate',
+      detail:
+        'home and away offence and defence, ridge-adjusted for every opponent faced (half-life 5 weeks, prior season at half weight), plus the cross-unit matchup net; falls back to Elo alone when the play-by-play feed is more than 10 days behind',
+    },
     { name: 'Rest', detail: '+20 Elo off a bye (10+ days) at prediction time' },
     { name: 'Margin of victory', detail: 'ln-damped, capped at 45 points, shrunk when the favourite wins' },
     { name: 'Postseason weight', detail: 'playoff results update at K × playoff multiplier' },
@@ -96,8 +103,11 @@ export const NFL_FEATURES: ForecastModel = {
   gaps:
     'Ablation on held-out seasons says margin of victory and season regression carry this ' +
     'model, home advantage is worth very little, and the bye-week bonus is worth less than ' +
-    'nothing — the model scores better without it. No efficiency input at all: DVOA is ' +
-    'proprietary, but EPA per play is a fetcher away from the same publisher as the schedule.',
+    'nothing — the model scores better without it. The success-rate layer is worth about ' +
+    '0.005 log loss over Elo alone across 2015–2025 (+3 SE); adjusted EPA, pass/rush splits, ' +
+    'drive, red-zone, third-down and pace metrics were all collected and tested and none ' +
+    'beat it on the clean 2024–25 window, so they stay out. The season simulation and the ' +
+    'expected score still run on Elo alone.',
 };
 
 export const CFB_FEATURES: ForecastModel = {

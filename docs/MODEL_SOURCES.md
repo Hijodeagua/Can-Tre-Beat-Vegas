@@ -69,6 +69,7 @@ on 586 holdout games (always-pick-home is 0.691).
 | Postseason K multiplier | same (`game_type`) | same | same | 0.000 — tuned to 1.0, already off |
 | Rest / bye bonus (+20 at 10+ days) | same (`home_rest`, `away_rest`) | same | same | **−0.0006 — better without it** |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
+| Adjusted success rate (second stage: home/away offence + defence, matchup net) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0046 log loss** walk-forward 2015-2025 (+2.96 SE), +0.0056 on 2024-25 |
 
 Training windows:
 
@@ -91,6 +92,7 @@ Elo only. Baseline log loss **0.48462** on 2,038 holdout games.
 | Home advantage (+50) | same (`neutral_site`) | same | same | **+0.011** |
 | FBS entry rating (1250) | same | same | same | +0.001 |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
+| Adjusted success rate (second stage: home/away offence + defence, matchup net) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0046 log loss** walk-forward 2015-2025 (+2.96 SE), +0.0056 on 2024-25 |
 
 Training windows:
 

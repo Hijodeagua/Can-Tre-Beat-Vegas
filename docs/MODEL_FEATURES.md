@@ -79,8 +79,28 @@ Title / UCL / UEL / relegation odds and expected points come out of that.
 
 Pick and forecast: `NFL/daily/{predict,simulate}.py`.
 
-**Win probability — Elo alone.** No regression on top; the rating carries
-every situational edge:
+**Win probability — Elo plus adjusted success rate.** A regularised
+logistic on top of the Elo (`NFL/model/advanced.py`, fit in-run on
+2002 → last completed week, ties excluded), with six inputs:
+
+* **Elo logit** — the Elo win probability below, as a logit
+* **Home offence success** — the home team's opponent-adjusted success
+  rate above league average (weighted ridge over every offence-vs-defence
+  game before this week; half-life 5 weeks, prior season at half weight)
+* **Away offence success**, **home defence success** (allowed, so lower is
+  better), **away defence success** — same fit
+* **Success matchup net** — (home offence + away defence) − (away offence
+  + home defence)
+
+Success rate is nflverse's `success` flag (EPA > 0) over pass and run
+plays. Walk-forward 2015–2025: log loss 0.63468 → 0.63007, +2.96 SE
+paired; the clean 2024–25 window 0.62411 → 0.61853. Falls back to Elo
+alone when `data/nfl/team_games.csv` is missing or more than 10 days
+behind the spine's last completed game; the slate's `model` column says
+which one each pick used. Full ablation and the metrics collected but not
+promoted: [ADVANCED_METRICS.md](ADVANCED_METRICS.md).
+
+**Elo** — the rating carries every situational edge:
 
 * **Home Elo** — team Elo, plus home advantage (+48, and **zero** at a
   neutral site)
@@ -111,8 +131,9 @@ seven-team bracket per conference.
 
 **Not in the live forecast:** `NFL/model/v2/` is a 45-feature LightGBM
 research model (rolling box-score rates, weather, roof, QB, and the
-closing line). It informs nothing on the site — the board is the Elo
-engine above.
+closing line). It informs nothing on the site. The rest-of-season
+simulation and the expected score still run on Elo alone; only the
+pick's win probability carries the success-rate stage.
 
 ---
 
