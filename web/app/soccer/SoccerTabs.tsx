@@ -13,9 +13,11 @@
  */
 import { useEffect, useState } from 'react';
 import EloTrendChart from '@/app/components/EloTrendChart';
+import ModelFeatures from '@/app/components/ModelFeatures';
 import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtPct, missing } from '@/app/lib/format';
+import { SOCCER_FEATURES } from '@/app/lib/modelFeatures';
 import {
   getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER, GLUED_LEAGUES,
   comparableElo, comparableEloBands, type SoccerSlateRow,
@@ -400,6 +402,8 @@ function ForecastTab() {
         />
       </div>
 
+      <ModelFeatures model={SOCCER_FEATURES} sims={sim.sims} />
+
       {history && (
         <section className="mt-8">
           <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
@@ -416,6 +420,7 @@ function ForecastTab() {
                   ? Object.entries(projection.clubs).map(([team, points]) => ({
                       team,
                       points: points as [string, number, number, number][],
+                      samples: projection.samples?.[team],
                     }))
                   : undefined
               }

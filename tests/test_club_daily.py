@@ -349,6 +349,31 @@ class TestSimulateLeague:
         start = sum(c["elo"] for c in sim["clubs"])
         assert sum(r[-1][0] for r in proj["clubs"].values()) == pytest.approx(start, abs=0.5)
 
+    def test_sample_seasons_move_where_the_mean_cannot(self):
+        state = self._state()
+        sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=300, seed=1)
+        proj = sim["projection"]
+        samples = proj["samples"]
+        assert set(samples) == set("ABCDEFG")
+        for paths in samples.values():
+            assert len(paths) == 3
+            for path in paths:
+                assert len(path) == len(proj["dates"])
+        # The mean rating barely moves by construction (expected Elo
+        # change is ~0), so the sample seasons are what carry the spread:
+        # they must not all land on the same rating.
+        for club, paths in samples.items():
+            finals = {path[-1] for path in paths}
+            if len(finals) > 1:
+                break
+        else:
+            raise AssertionError("no club's sample seasons differ from each other")
+        # A sample is a real simulated season, so it sits inside the
+        # simulated spread rather than hugging the mean.
+        mean_final = {c: rows[-1][0] for c, rows in proj["clubs"].items()}
+        assert any(abs(path[-1] - mean_final[c]) > 1.0
+                   for c, paths in samples.items() for path in paths)
+
     def test_as_of_keeps_checkpoints_in_the_future(self):
         state = self._state()
         # A fixture still unplayed on a past date is simulated, but its

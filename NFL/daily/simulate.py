@@ -26,10 +26,19 @@ field. The NFL's is a rulebook, so it is played out here:
 
 Alongside the odds the sim reports a `projection` block: the mean and
 10th/90th-percentile Elo of every team at a handful of checkpoint dates
-across the remaining regular season, read off the live in-sim ratings.
-That is the projected continuation the site's Elo trend chart draws —
-the same simulation behind the table, not a second model. The bracket is
-left out of it: the postseason is not every team's season.
+across the remaining regular season, read off the live in-sim ratings,
+plus a few individual simulated seasons.
+
+Those individual seasons are the point of exporting anything beyond the
+mean. An Elo update is K * (actual - expected) and the sim draws results
+at its own expected rate, so every team's *expected* rating change is
+about zero: the mean across the sims is flat by construction no matter
+how far single seasons swing. The percentiles and the sample paths are
+what carry the movement, and a chart that draws only the mean would say
+the board never changes — which the odds in this same payload flatly
+contradict.
+The bracket is left out of it: the postseason is not every team's
+season.
 """
 
 from __future__ import annotations
@@ -37,7 +46,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from NFL.daily.config import PROJECTION_POINTS, SEASON_SIMS
+from NFL.daily.config import PROJECTION_POINTS, PROJECTION_SAMPLES, SEASON_SIMS
 from NFL.daily.state import DailyState
 from NFL.elo.engine import REST_BONUS_DAYS
 from NFL.elo.teams import (
@@ -85,6 +94,14 @@ def _checkpoints(dates: list[str], n: int = PROJECTION_POINTS) -> list[str]:
         return uniq
     last = len(uniq) - 1
     return [uniq[i] for i in sorted({round(i * last / (n - 1)) for i in range(n)})]
+
+
+def _samples(R: np.ndarray, n: int) -> np.ndarray:
+    """The first `n` sims' ratings, whole — one row per simulated season.
+    The same row index across checkpoints (and across teams) is the same
+    season, so a path drawn from them is coherent rather than a fresh draw
+    per point."""
+    return R[:min(n, R.shape[0])].copy()
 
 
 def _elo_stats(R: np.ndarray) -> np.ndarray:
@@ -144,10 +161,12 @@ def simulate_season(state: DailyState, season: int | None = None,
     snap_before = {max(i for i, d in enumerate(dates) if d <= cp) + 1: slot
                    for slot, cp in enumerate(checkpoints)}
     snaps: dict[int, np.ndarray] = {}
+    paths: dict[int, np.ndarray] = {}
 
     for i, r in enumerate(ordered.itertuples(index=False)):
         if i in snap_before:
             snaps[snap_before[i]] = _elo_stats(R)
+            paths[snap_before[i]] = _samples(R, PROJECTION_SAMPLES)
         h, a = idx.get(r.home_team), idx.get(r.away_team)
         if h is None or a is None:
             continue
@@ -171,6 +190,7 @@ def simulate_season(state: DailyState, season: int | None = None,
             cwins[:, a] += ~home_won; closs[:, a] += home_won
     if len(dates) in snap_before:
         snaps[snap_before[len(dates)]] = _elo_stats(R)
+        paths[snap_before[len(dates)]] = _samples(R, PROJECTION_SAMPLES)
 
     # --- standings -> seeds ---------------------------------------------------
     pct = _pct(wins, losses, ties)
@@ -275,6 +295,7 @@ def simulate_season(state: DailyState, season: int | None = None,
             "p_conf": round(float(champ[:, i].mean()), 4),
             "p_sb": round(float(sb[:, i].mean()), 4),
         })
+    n_paths = min(PROJECTION_SAMPLES, n_sims)
     table = sorted(rows_out, key=lambda r: (-r["p_sb"], -r["exp_wins"], -r["elo"]))
     return {
         "season": season,
@@ -288,6 +309,12 @@ def simulate_season(state: DailyState, season: int | None = None,
                      round(float(snaps[s][1, idx[t]]), 1),
                      round(float(snaps[s][2, idx[t]]), 1)]
                     for s in range(len(checkpoints))]
+                for t in teams
+            },
+            "samples": {
+                t: [[round(float(paths[s][p, idx[t]]), 1)
+                     for s in range(len(checkpoints))]
+                    for p in range(n_paths)]
                 for t in teams
             },
         } if len(snaps) == len(checkpoints) else None,

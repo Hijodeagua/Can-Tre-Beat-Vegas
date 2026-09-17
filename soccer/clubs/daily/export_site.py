@@ -82,9 +82,14 @@ def elo_history_payload(state: DailyState, run_date: str) -> dict:
 def elo_projection_payload(futures: dict, run_date: str) -> dict:
     """Per top flight, each club's *projected* Elo: the rest-of-season
     Monte Carlo's mean live rating at each checkpoint date with the
-    10th/90th-percentile band around it, anchored on today's actual
-    rating so the site's chart can draw it as the continuation of the
-    `elo_history` line rather than a floating second series.
+    10th/90th-percentile band around it, plus a few whole simulated
+    seasons — all anchored on today's actual rating so the site's chart
+    can draw them as the continuation of the `elo_history` line rather
+    than a floating second series.
+
+    The sample seasons are not decoration: the mean is flat by
+    construction (see `simulate.py`), so they and the band are the only
+    parts of this block that show the table moving.
 
     The block is moved out of `futures` (where `simulate_league` put it)
     and up to the top level next to `elo_history`: it is chart data on the
@@ -99,15 +104,21 @@ def elo_projection_payload(futures: dict, run_date: str) -> dict:
         # so the projected line leaves the actual line at today's value.
         now = {c["team"]: c["elo"] for c in sim.get("clubs", [])}
         clubs = {}
+        samples = {}
         for team, rows in proj["clubs"].items():
             elo = now.get(team)
             anchor = [[run_date, elo, elo, elo]] if elo is not None else []
             clubs[team] = anchor + [[d, *row] for d, row in zip(proj["dates"], rows)]
+            # Each sample season opens on the same actual rating, so a
+            # path lines up point-for-point with the mean above it.
+            head = [elo] if elo is not None else []
+            samples[team] = [head + path for path in proj["samples"][team]]
         out[league] = {
             "season": sim["season"],
             "sims": sim["sims"],
             "from_date": run_date,
             "clubs": clubs,
+            "samples": samples,
         }
     return out
 

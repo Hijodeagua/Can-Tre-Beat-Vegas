@@ -147,9 +147,14 @@ def elo_history_payload(state: DailyState, run_date: str) -> dict:
 def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
     """Every program's *projected* Elo: the rest-of-season Monte Carlo's mean
     live rating at each checkpoint date with the 10th/90th-percentile band
-    around it, anchored on today's actual rating so the site's chart draws
-    it as the continuation of the `elo_history` line rather than a
-    floating second series.
+    around it, plus a few whole simulated seasons — all anchored on
+    today's actual rating so the site's chart draws them as the
+    continuation of the `elo_history` line rather than a floating second
+    series.
+
+    The sample seasons are not decoration: the mean is flat by
+    construction (see `simulate.py`), so they and the band are the only
+    parts of this block that show the board moving.
 
     The block is moved out of `futures` (where the sim put it) and up to
     the top level next to `elo_history`: it is chart data on the same
@@ -161,15 +166,21 @@ def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
         return {}
     now = {t["team"]: t["elo"] for t in futures.get("teams", [])}
     teams = {}
+    samples = {}
     for team, rows in proj["teams"].items():
         elo = now.get(team)
         anchor = [[run_date, elo, elo, elo]] if elo is not None else []
         teams[team] = anchor + [[d, *row] for d, row in zip(proj["dates"], rows)]
+        # Each sample season opens on the same actual rating, so a path
+        # lines up point-for-point with the mean above it.
+        head = [elo] if elo is not None else []
+        samples[team] = [head + path for path in proj["samples"][team]]
     return {
         "season": futures.get("season"),
         "sims": futures.get("sims"),
         "from_date": run_date,
         "teams": teams,
+        "samples": samples,
     }
 
 

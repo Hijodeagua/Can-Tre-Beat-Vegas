@@ -85,6 +85,10 @@ export interface SoccerEloProjectionLeague {
   sims: number;
   from_date: string;
   clubs: Record<string, [string, number, number, number][]>;
+  /** A few whole simulated seasons per club, one rating per checkpoint —
+   * what the mean can't show, since expected Elo change is ~0. Path `i`
+   * of every club is the same simulated season. */
+  samples: Record<string, number[][]>;
 }
 
 /**

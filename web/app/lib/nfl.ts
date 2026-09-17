@@ -164,6 +164,10 @@ export interface NflEloProjection {
   sims: number;
   from_date: string;
   teams: Record<string, [string, number, number, number][]>;
+  /** A few whole simulated seasons per team, one rating per checkpoint —
+   * what the mean can't show, since expected Elo change is ~0. Path `i`
+   * of every team is the same simulated season. */
+  samples: Record<string, number[][]>;
 }
 
 export interface NflLatest {

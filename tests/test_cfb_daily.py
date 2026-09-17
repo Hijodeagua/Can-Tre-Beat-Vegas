@@ -211,6 +211,11 @@ class TestSimulate:
         now = next(t for t in futures["teams"] if t["team"] == "A")["elo"]
         assert a[0] == ["2026-09-20", now, now, now]
         assert [p[0] for p in a[1:]] == proj["dates"]
+        # Sample seasons line up point-for-point with the mean and open
+        # on the same actual rating.
+        paths = payload["samples"]["A"]
+        assert len(paths) == 3
+        assert all(len(path) == len(a) and path[0] == now for path in paths)
 
     def test_as_of_keeps_checkpoints_in_the_future(self):
         st = self._league()

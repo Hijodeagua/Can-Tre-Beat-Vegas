@@ -12,10 +12,17 @@ and margin into one draw.
 
 Alongside the odds the sim reports a `projection` block: the mean and
 10th/90th-percentile Elo of every club at a handful of checkpoint dates
-across the remaining fixtures, read straight off the live in-sim ratings.
-That is what the site's Elo trend chart draws as the projected
-continuation of each club's season-to-date line — the same simulation
-behind the table, not a second model.
+across the remaining fixtures, read straight off the live in-sim ratings,
+plus a few individual simulated seasons.
+
+Those individual seasons are the point of exporting anything beyond the
+mean. An Elo update is K * (actual - expected) and the sim draws results
+at its own expected rate, so every club's *expected* rating change is
+about zero: the mean across 30,000 seasons is flat by construction no
+matter how far single seasons swing. The percentiles and the sample paths
+are what carry the movement, and a chart that draws only the mean would
+say the table never changes — which the odds in this same payload
+flatly contradict.
 
 A league with no published fixtures for the current season (Ligue 1 until
 its upstream repo catches up) is skipped and reported as such.
@@ -28,6 +35,7 @@ from soccer.clubs.daily import scoring
 from soccer.clubs.daily.config import (
     MAX_GOALS,
     PROJECTION_POINTS,
+    PROJECTION_SAMPLES,
     RELEGATION_SPOTS,
     SEASON_SIMS,
     UCL_SPOTS,
@@ -169,6 +177,10 @@ def simulate_league(state: DailyState, league: str, season: str,
     # projected line and the band around it.
     mean = snaps.mean(axis=1)
     lo, hi = np.percentile(snaps, [10, 90], axis=1)
+    # The first PROJECTION_SAMPLES sims, whole: sims[p][club] is one
+    # club's rating through one simulated season, and the same p across
+    # clubs is the same season.
+    n_paths = min(PROJECTION_SAMPLES, n_sims)
     return {
         "season": season,
         "sims": n_sims,
@@ -178,6 +190,11 @@ def simulate_league(state: DailyState, league: str, season: str,
             "clubs": {
                 c: [[round(float(mean[s, j]), 1), round(float(lo[s, j]), 1),
                      round(float(hi[s, j]), 1)] for s in range(len(checkpoints))]
+                for c, j in club_idx.items()
+            },
+            "samples": {
+                c: [[round(float(snaps[s, p, j]), 1) for s in range(len(checkpoints))]
+                    for p in range(n_paths)]
                 for c, j in club_idx.items()
             },
         },

@@ -16,9 +16,11 @@
  */
 import { useEffect, useState } from 'react';
 import EloTrendChart from '@/app/components/EloTrendChart';
+import ModelFeatures from '@/app/components/ModelFeatures';
 import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtNum, fmtPct, fmtPctPrecise, fmtSigned, fmtSimScore, missing } from '@/app/lib/format';
+import { CFB_FEATURES } from '@/app/lib/modelFeatures';
 import {
   getCfbLatest, matchupLabel, orderedConferences,
   type CfbSlateRow, type CfbWindowStats,
@@ -306,6 +308,7 @@ function ForecastTab() {
         .map(([team, points]) => ({
           team,
           points: points as [string, number, number, number][],
+          samples: projection.samples?.[team],
         }))
     : undefined;
   const sims = data.futures.sims ?? 0;
@@ -350,6 +353,8 @@ function ForecastTab() {
           }
         />
       </div>
+
+      <ModelFeatures model={CFB_FEATURES} sims={sims} />
 
       {series.length > 0 && history && (
         <section className="mt-8">

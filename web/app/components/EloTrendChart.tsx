@@ -13,12 +13,19 @@ import { useId, useMemo, useState } from 'react';
  *   (`elo_history` in latest.json), so the chart moves every day the job
  *   runs, not just on matchdays.
  * - "Projection" adds where the rest-of-season Monte Carlo expects each
- *   rating to go (`elo_projection`): the mean live in-sim rating at a
- *   handful of checkpoint dates with the 10th–90th-percentile band around
- *   it, continuing each line from today's value. It is the same simulation
- *   behind the forecast table, so the two can't disagree. A page with no
- *   projection in its data (nothing left to simulate) just doesn't get the
- *   control.
+ *   rating to go (`elo_projection`), continuing each line from today's
+ *   value. It is the same simulation behind the forecast table, so the two
+ *   can't disagree. A page with no projection in its data (nothing left to
+ *   simulate) just doesn't get the control.
+ *
+ *   What it draws is three whole simulated seasons per labelled team, with
+ *   the mean over the run behind them. That ordering is deliberate: an Elo
+ *   update is K × (actual − expected) and the sim draws results at its own
+ *   expected rate, so a team's *expected* rating change is about zero and
+ *   the mean over thousands of seasons is flat by construction. Drawing
+ *   only the mean says "nothing changes", which is the one thing the
+ *   simulation does not say — the sample seasons cross each other and the
+ *   hover band spans more Elo than the gaps between the labelled teams.
  *
  * Twenty clubs can't wear twenty distinguishable hues, so the league's
  * best `highlight` and worst `highlight` by current Elo — the two ends
@@ -43,6 +50,9 @@ export interface EloSeries {
 export interface EloProjectionSeries {
   team: string;
   points: [string, number, number, number][];
+  /** A few whole simulated seasons, each one rating per `points` entry.
+   * Path `i` of every team comes from the same simulated season. */
+  samples?: number[][];
 }
 
 // Categorical slots 1-5 from the validated reference palette, themed in
@@ -96,9 +106,9 @@ export default function EloTrendChart({
   const clipId = `elo-plot-${useId()}`;
 
   const projected = useMemo(() => {
-    const out = new Map<string, [string, number, number, number][]>();
+    const out = new Map<string, EloProjectionSeries>();
     for (const p of projection ?? []) {
-      if (p.points.length > 1) out.set(p.team, p.points);
+      if (p.points.length > 1) out.set(p.team, p);
     }
     return out;
   }, [projection]);
@@ -127,7 +137,8 @@ export default function EloTrendChart({
         group: inTop ? 'top' : inBottom ? 'bottom' : null,
         color: inTop || inBottom ? SERIES_COLORS[slot] : null,
         points: s.points,
-        proj,
+        proj: proj?.points,
+        samples: proj?.samples ?? [],
       };
     });
 
@@ -143,6 +154,11 @@ export default function EloTrendChart({
       for (const [d, mean] of s.proj ?? []) {
         ts.push(ms(d));
         elos.push(mean);
+      }
+      // Sample seasons are drawn, so they set the scale; the percentile
+      // band is not (it appears on hover, clipped to the plot).
+      if (s.color) {
+        for (const path of s.samples) elos.push(...path.slice(0, (s.proj ?? []).length));
       }
     }
     const t0 = Math.min(...ts);
@@ -163,6 +179,13 @@ export default function EloTrendChart({
       projPts: (s.proj ?? []).map(([d, mean, lo, hi]) => ({
         d, e: mean, px: x(d), py: y(mean), band: [lo, hi] as [number, number],
       })) as Pt[],
+      // One polyline per simulated season, on the projection's own dates.
+      // Truncated to the dates it has, so a short or malformed path draws
+      // what it covers instead of throwing.
+      samplePts: s.samples.map((path) =>
+        path.slice(0, (s.proj ?? []).length)
+          .map((e, i) => ({ px: x(s.proj![i][0]), py: y(e) })),
+      ),
     }));
 
     // End labels for the highlighted teams, anchored on whichever line
@@ -354,24 +377,16 @@ export default function EloTrendChart({
               strokeOpacity={model.dense ? MUTED_OPACITY / 2 : MUTED_OPACITY}
               strokeWidth={1.25}
             />
-            {s.projPts.length > 0 && !model.dense && (
-              <polyline
-                points={line(s.projPts)}
-                fill="none"
-                stroke={MUTED_LINE}
-                strokeOpacity={MUTED_OPACITY}
-                strokeWidth={1.25}
-                strokeDasharray="2 3"
-              />
-            )}
           </g>
         ))}
 
         {/* The hovered line's percentile band, clipped to the plot so it
-            can't widen the y scale or spill into the label column. In a
-            dense chart the pack's projections aren't drawn, so the hovered
-            one is drawn here with its band rather than leaving it floating. */}
-        {hovered && hovered.projPts.length > 0 && !hovered.color && model.dense && (
+            can't widen the y scale or spill into the label column. The
+            pack's own projections aren't drawn — with three sample seasons
+            per labelled side on the plot, a second screen of grey dotted
+            lines is noise — so the hovered one is drawn here with its band
+            rather than leaving it floating. */}
+        {hovered && hovered.projPts.length > 0 && !hovered.color && (
           <polyline
             points={line(hovered.projPts)}
             fill="none"
@@ -392,6 +407,23 @@ export default function EloTrendChart({
             fillOpacity={0.18}
           />
         )}
+
+        {/* Individual simulated seasons, under the mean: these are what
+            show the table actually moving. */}
+        {highlighted.map((s) => (
+          <g key={`samples-${s.team}`} clipPath={`url(#${clipId})`}>
+            {s.samplePts.map((path, i) => (
+              <polyline
+                key={i}
+                points={path.map((p) => `${p.px},${p.py}`).join(' ')}
+                fill="none"
+                stroke={s.color!}
+                strokeOpacity={0.4}
+                strokeWidth={1}
+              />
+            ))}
+          </g>
+        ))}
 
         {highlighted.map((s) => (
           <g key={s.team}>
@@ -494,9 +526,9 @@ export default function EloTrendChart({
         Labelled lines are the top {model.labels.filter((l) => l.group === 'top').length} and
         bottom {model.labels.filter((l) => l.group === 'bottom').length} by current Elo, numbered
         by rank — filled markers at the top of the table, ringed at the bottom; grey is the rest
-        of the pack{showProjection && model.dense ? ', which is too crowded to project and stops at today' : ''}.
+        of the pack{showProjection ? ', which stops at today — hover any grey line to project it' : ''}.
         {showProjection
-          ? ' Right of the “today” rule, dashes are the simulation’s mean projected rating; hovering a projected point washes in that line’s 10th–90th percentile band and prints the range.'
+          ? ' Right of the “today” rule, the thin lines are three whole simulated seasons per labelled side — they cross because the table does — and the dashes are the mean over every simulation, which is flat by construction: each game’s expected Elo change is about zero, so the average season is the one season where nothing moves. Hovering a projected point washes in that line’s 10th–90th percentile band and prints the range.'
           : ''}{' '}
         Hover any point for the exact value.
       </p>

@@ -32,6 +32,13 @@ MAX_GOALS = 8            # Poisson scoreline grid is [0, MAX_GOALS] per side
 # keeps the exported block small; the site draws them as the projected
 # continuation of the Elo trend chart.
 PROJECTION_POINTS = 8
+# Individual simulated seasons exported alongside the mean, so the site's
+# projection reads as a fan of possible seasons rather than one flat line.
+# Every team's path with the same index comes from the same simulated
+# season, so the crossings on the chart are a coherent season, not three
+# unrelated draws. Three is enough to show the spread without turning the
+# chart into spaghetti.
+PROJECTION_SAMPLES = 3
 MIN_LAMBDA = 0.2
 RELEGATION_SPOTS = 3     # bottom-3 = drop zone (incl. any playoff spot)
 UCL_SPOTS = 4
