@@ -11,7 +11,14 @@ reaches a rating or a pick.
 Last checked against the code and the tuned artifacts on 2026-09-17.
 
 - [Soccer](#soccer-model-features) · [Football — NFL](#football-model-features--nfl) · [Football — CFB](#football-model-features--cfb) · [Baseball — MLB](#baseball-model-features--mlb)
+- [What the inputs are measured to be worth](#what-the-inputs-are-measured-to-be-worth)
+- [What's missing, and what it would cost](#whats-missing-and-what-it-would-cost)
 - [Why a projected Elo line looks flat](#why-a-projected-elo-line-looks-flat)
+
+Every "worth" figure below is measured by
+`python -m data_jobs.build_importance`, on seasons the model was never
+fitted or tuned on, and is committed next to each model's own parameters.
+Nothing in this file is an opinion about which feature matters.
 
 ---
 
@@ -170,6 +177,165 @@ for a single game.
 
 ---
 
+## What the inputs are measured to be worth
+
+Increase in log loss when the input is taken away, on held-out seasons.
+Two methods, because the models are two different kinds of thing: the
+soccer outcome model is a fitted logistic, so its features can be
+shuffled (permutation importance). An Elo engine has no feature matrix —
+"home advantage" is a constant, not a column — so each component is
+neutralised and the whole history replayed (ablation). An ablation folds
+in everything downstream of it, so the two are not interchangeable and
+the numbers are not comparable across the two tables.
+
+Run `python -m data_jobs.build_importance` to refresh; the site shows the
+same numbers under *What its inputs are worth* on `/models`.
+
+**Club soccer outcome model** — permutation, 7,827 holdout matches
+(2024-25 onward), baseline log loss 1.01755:
+
+| feature | worth | note |
+|---|---|---|
+| `elo_gap` | **+0.048** | ±0.002 |
+| `value_diff_z` | +0.011 | ±0.001 — the only economics feature doing any work |
+| `sot_net_diff` | +0.006 | ±0.001 |
+| `xg_net_diff` | +0.0001 | the Understat feed stops at 2025-01-04 |
+| `spend_diff_z` | 0.000 | **constant over the window** — no data |
+| `net_diff_z` | 0.000 | **constant over the window** — no data |
+| `wage_diff_z` | 0.000 | **constant over the window** — no data |
+
+**NFL Elo** — ablation, 586 holdout games (2024 onward), baseline 0.62424:
+
+| component | worth | note |
+|---|---|---|
+| Margin of victory | **+0.025** | margin ignored ⇒ every win counts the same |
+| Season regression | +0.019 | ratings carried over untouched |
+| Home advantage | +0.002 | the +48 is worth very little out of sample |
+| Postseason K weight | 0.000 | tuned to 1.0, so it is already switched off |
+| Rest (bye week) | **−0.0006** | the model scores *better* without the +20 |
+
+**College football Elo** — ablation, 2,038 holdout games, baseline 0.48462:
+
+| component | worth | note |
+|---|---|---|
+| FCS opponent rating | **+0.038** | all of FCS pooled as one 950-rated team |
+| Margin of victory | +0.037 | |
+| Season regression | +0.028 | |
+| Conference regression | +0.011 | realignment handling |
+| Home advantage | +0.011 | |
+| FBS entry rating | +0.001 | few programs arrive |
+
+**MLB Elo** — ablation, 34,665 games (2012 onward), baseline 0.67965:
+
+| component | worth | note |
+|---|---|---|
+| Season carryover | +0.003 | |
+| Home advantage | +0.002 | |
+| Margin of victory | +0.001 | |
+
+A coin flip is 0.693 and always-picking-home is ~0.691, so the whole MLB
+rating engine buys about 0.013 nats. Baseball at the game level is close
+to a coin flip and the model says so. The starting-pitcher, rest and
+travel adjustments are applied by the daily pipeline rather than the
+replay, so they are **not** in that table yet — a gap, not a claim that
+they do nothing.
+
+---
+
+## What's missing, and what it would cost
+
+The measured table above is also the critique: three of soccer's seven
+features contribute nothing, the NFL's rest bonus is worth less than
+nothing, and college football's crudest component — one synthetic rating
+standing in for all of FCS — is its most load-bearing. Ranked by what I
+would do first, with the cost of each.
+
+**Cheap, and already blocked on nothing.**
+
+| # | Model | Change | Why | Cost |
+|---|---|---|---|---|
+| 1 | Soccer | Refresh the transfer aggregates past 2022-23 | `spend_diff_z` and `net_diff_z` are constant on every holdout row *and* every live slate. Two of seven features are decoration until this lands | a fetcher run, no modelling |
+| 2 | Soccer | Add the wage column to the market-value uploads | `wage_diff_z` has a fitted weight of 0.000 for want of data | an upload |
+| 3 | NFL | Drop or re-tune the bye-week bonus | Ablation says the model is *better* without it (−0.0006 on holdout). It was tuned to +20 on 2005-23; the effect has decayed | one tuner run |
+| 4 | Soccer | Corners, cards and fouls | The football-data.co.uk files the shots fetcher already downloads carry HC/AC, HY/AY, HF/AF — they are being parsed and thrown away | one fetcher column change + the usual holdout test |
+| 5 | CFB | Rate FCS opponents individually, or in tiers | The pooled 950 is the single biggest component in the ablation, which means ~13% of the schedule is handled by the crudest thing in the model | schedule already carries the opponent; needs an FCS rating pool |
+| 6 | Soccer | Rest days and fixture congestion | Computable from results.csv alone (days since last match, midweek European tie). A real effect the model cannot currently see | no new data |
+
+**The DVOA question.** DVOA itself is proprietary (FTN/Football
+Outsiders, paywalled, no API), so it cannot go in. The honest open
+analogue is **EPA per play** with offensive and defensive splits, plus
+success rate — and both football models already read their spine from the
+same publishers that ship it: nflverse for the NFL, cfbfastR-data for
+college, both plain CSVs over raw.githubusercontent.com with no API key.
+So the data is a fetcher away for both.
+
+What is *not* a fetcher away is the decision it forces. The live NFL and
+CFB boards are deliberately Elo alone: one rating, betting-blind, no
+fitted layer. Adding EPA means either
+
+- **(a)** folding it into the rating (an EPA-adjusted K or a preseason
+  prior, the way the MLB engine prices its starting pitcher) — keeps the
+  board a rating, modest gain, cheap; or
+- **(b)** a fitted outcome model on top of Elo + EPA, the way club soccer
+  already works — the bigger win and the bigger change, because it makes
+  the football board a model-of-a-rating rather than a rating.
+
+`NFL/model/v2/` is already a 45-feature LightGBM that does (b) and beats
+Elo on holdout, but it also sees the closing line, so it cannot feed a
+betting-blind board as-is. Stripping the market features out of it and
+walking it forward honestly is the real project here, and it is a project,
+not an afternoon.
+
+**Aggregate margin.** Worth separating from the per-game MOV multiplier:
+season point differential (and its Pythagorean win expectation) is a
+well-established predictor that Elo only sees one game at a time, damped
+and capped. "Rating vs point differential" residual is a cheap feature for
+either football model and needs no new data.
+
+**Other sports, briefly.** MLB's starting-pitcher, rest and travel layers
+are applied by the daily pipeline rather than the replay, so they are not
+in the ablation at all — closing that is the first job there, ahead of any
+new feature (park factors, bullpen, lineup handedness, weather). Soccer
+possession and passing need a new publisher (FBref), which is a scraper
+and a terms question rather than a CSV, so it sits below everything above.
+
+**Two results-derived candidates were tested rather than argued about**,
+since both come free of new data. Neither ships. Run
+`python -m soccer.clubs.model.eval_goals_form` to reproduce:
+
+| candidate | coverage | holdout splits improved | weakest split | verdict |
+|---|---|---|---|---|
+| `goals_net_diff` (rolling goal difference) | 92.3% of rows | 3/3 | +0.4 SE | under the bar |
+| `surprise_net_diff` (result minus Elo expectation) | 96.3% | 3/3 | +0.3 SE | under the bar |
+| both together | — | 2/3 | **−0.6 SE** | worse than either |
+
+The bar is the one the shots layer cleared: every split improves *and*
+the paired test reaches about +2 SE. Both candidates move every split in
+the right direction with a stable positive coefficient, so there is a
+little signal there — just not enough to distinguish from noise on
+58,908 matches, which is the expected answer. Elo is *built* from these
+results, so the rating already contains most of what they say.
+
+The third row is the interesting one. Put in together, the coefficients
+flip — goal form +0.068, surprise −0.126 — and the pair scores worse than
+either alone on the earliest split. They are near-substitutes fighting
+each other, which is direct evidence that "recent goal difference" and
+"recent overperformance against the rating" are the same fact twice.
+A third variant along those lines should be expected to do the same.
+
+What this says about the "what about goals?" question: the goals are
+already in there, via the rating. The form features that earn their place
+here are the ones carrying information the result log does *not* have —
+which is why shots-on-target works (+2.9 SE when it was added) and why
+the remaining candidates worth chasing are chance quality, possession and
+efficiency rather than another summary of the score line.
+
+Both modules stay in the repo next to `eval_goals_form.py`, which prints
+the paired test and a SHIP / does-not-clear verdict, so the next
+candidate is one command rather than an argument.
+
+---
+
 ## Why a projected Elo line looks flat
 
 An Elo update is `K × (actual − expected)`, and a simulation draws results
@@ -187,11 +353,12 @@ today. Three individual simulated NFL seasons had Seattle finishing on
 1704, 1620 and 1741 against a mean of 1660.8, and today's top five
 survived intact in none of them.
 
-So the site's projection draws **whole simulated seasons** (three per
-labelled side, each one a coherent season shared across teams) with the
-mean behind them, and the percentile band on hover. Anything that reports
-only the mean — a chart, a table column, a summary line — is reporting the
-one season in which nothing happens, and should be treated as a bug.
+So the site's projection draws **simulated seasons and never an average
+of them**: each side's median run (the one simulated season that finished
+mid-distribution) in bold, three whole seasons shared across sides behind
+it, and the percentile band on hover. Anything that reports the mean
+instead — a chart, a table column, a summary line — is reporting the one
+season in which nothing happens, and should be treated as a bug.
 Exported as `elo_projection.samples` next to `elo_projection.clubs` /
 `elo_projection.teams` in each sport's `latest.json`; produced in
 `soccer/clubs/daily/simulate.py`, `NFL/daily/simulate.py` and

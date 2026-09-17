@@ -34,6 +34,10 @@ export interface ForecastModel {
   /** How the forecast is produced, in one sentence. */
   engine: string;
   features: ModelFeature[];
+  /** What the measured importance run says this model is missing or
+   * wasting — the critique, not a disclaimer. Kept next to the feature
+   * list because a feature list without one reads as a boast. */
+  gaps: string;
 }
 
 const ELO_PAIR = (side: string, home: string): ModelFeature[] => [
@@ -65,6 +69,14 @@ export const SOCCER_FEATURES: ForecastModel = {
     },
     { name: 'Shot form', detail: 'rolling shots-on-target net — the chance-creation feed that is live' },
   ],
+  gaps:
+    'Measured on held-out seasons, the Elo gap is worth about four times the next feature ' +
+    'and squad value is the only economics feature doing any work — the two transfer-spend ' +
+    'features are constant on every recent row, so three of seven contribute nothing today. ' +
+    'Rolling goal form and form-as-surprise were both tested and neither cleared the bar — ' +
+    'the goals are already in the rating, and together the two fight each other — so the ' +
+    'candidates worth chasing carry what the score line does not: possession, chance ' +
+    'quality, and the corners, cards and fouls sitting unparsed in files already downloaded.',
 };
 
 export const NFL_FEATURES: ForecastModel = {
@@ -81,6 +93,11 @@ export const NFL_FEATURES: ForecastModel = {
     { name: 'Season carryover', detail: '40% regression to 1500, franchise moves carry their rating' },
     { name: 'Ties', detail: 'scored as a half win, plain K' },
   ],
+  gaps:
+    'Ablation on held-out seasons says margin of victory and season regression carry this ' +
+    'model, home advantage is worth very little, and the bye-week bonus is worth less than ' +
+    'nothing — the model scores better without it. No efficiency input at all: DVOA is ' +
+    'proprietary, but EPA per play is a fetcher away from the same publisher as the schedule.',
 };
 
 export const CFB_FEATURES: ForecastModel = {
@@ -99,6 +116,12 @@ export const CFB_FEATURES: ForecastModel = {
     { name: 'FBS entry rating', detail: 'a first FBS game starts a program at 1250, not at average' },
     { name: 'Margin of victory', detail: 'ln-damped, capped at 80 points' },
   ],
+  gaps:
+    'Ablation on held-out seasons makes the pooled FCS rating the single most load-bearing ' +
+    'component — one synthetic 950-rated team standing in for every non-FBS opponent, about ' +
+    '13% of the schedule, is the crudest thing in the model and it matters more than home ' +
+    'advantage. No efficiency input: cfbFastR ships EPA per play from the same repo as the ' +
+    'schedule spine.',
 };
 
 export const MLB_FEATURES: ForecastModel = {
@@ -116,4 +139,10 @@ export const MLB_FEATURES: ForecastModel = {
     { name: 'Travel', detail: '−0.31 × miles^⅓, capped at −4 Elo' },
     { name: 'Run rates', detail: 'EWMA runs scored/allowed, half-life 20 games, shrunk to the league mean' },
   ],
+  gaps:
+    'The whole rating engine buys about 0.013 nats of log loss over always-picking-home, ' +
+    'which is what baseball looks like at the game level. The pitcher, rest and travel ' +
+    'adjustments are applied by the daily pipeline rather than the replay, so they are not ' +
+    'in the measured breakdown yet — that is the next job here, ahead of park factors, ' +
+    'bullpen quality or lineup handedness.',
 };

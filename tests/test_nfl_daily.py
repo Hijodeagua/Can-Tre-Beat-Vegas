@@ -228,14 +228,14 @@ class TestSimulate:
         proj = sim["projection"]
         # Two remaining game dates in the fixture set, both checkpoints.
         assert proj["dates"] == ["2026-10-01", "2026-11-01"]
-        assert set(proj["teams"]) == set(TEAMS)
-        for rows in proj["teams"].values():
-            assert len(rows) == 2
-            for mean, lo, hi in rows:
-                assert lo <= mean <= hi
+        assert set(proj["median"]) == set(TEAMS)
+        for team, median in proj["median"].items():
+            assert len(median) == 2
+            for value, (lo, hi) in zip(median, proj["band"][team]):
+                assert lo <= value <= hi
         # Elo is a random walk from a known rating, so the spread across
         # sims grows as more games are played.
-        width = [sum(r[i][2] - r[i][1] for r in proj["teams"].values()) / 32
+        width = [sum(b[i][1] - b[i][0] for b in proj["band"].values()) / 32
                  for i in (0, 1)]
         assert width[1] > width[0] > 0
 
@@ -251,8 +251,11 @@ class TestSimulate:
         now = next(t for t in futures["teams"] if t["team"] == "KC")["elo"]
         assert kc[0] == ["2026-09-20", now, now, now]
         assert [p[0] for p in kc[1:]] == ["2026-10-01", "2026-11-01"]
-        # Sample seasons line up point-for-point with the mean and open
-        # on the same actual rating.
+        # Each row is [date, median run, p10, p90].
+        for _, value, lo, hi in kc:
+            assert lo <= value <= hi
+        # Sample seasons line up point-for-point with it and open on the
+        # same actual rating.
         paths = payload["samples"]["KC"]
         assert len(paths) == 3
         assert all(len(path) == len(kc) and path[0] == now for path in paths)

@@ -1,0 +1,29 @@
+{
+  "name": "MLB Elo",
+  "method": "component ablation",
+  "metric": "increase in log loss when the component is neutralised",
+  "baseline": 0.67965,
+  "n": 34665,
+  "window": "2012 onward",
+  "features": [
+    {
+      "name": "Season carryover",
+      "sd": null,
+      "detail": "no rating carried across seasons",
+      "value": 0.00273
+    },
+    {
+      "name": "Home advantage",
+      "sd": null,
+      "detail": "home edge set to 0 Elo",
+      "value": 0.00226
+    },
+    {
+      "name": "Margin of victory",
+      "sd": null,
+      "detail": "run margin ignored in the update",
+      "value": 0.00133
+    }
+  ],
+  "caveat": "Only the rating engine's own components are ablated here. The starting-pitcher, rest and travel adjustments are applied by the daily pipeline rather than the replay, so their contribution is not measured yet \u2014 see research/SP-BACKTEST.md for the pitcher layer's own out-of-sample test."
+}

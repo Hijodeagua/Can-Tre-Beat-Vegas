@@ -77,17 +77,20 @@ export interface SoccerEloHistoryLeague {
 }
 
 /** Where the rest-of-season sim expects each club's rating to go:
- * [ISO date, mean, 10th pct, 90th pct] per checkpoint, opening on today's
- * actual rating so the chart can continue the history line. A league with
- * no fixtures left to simulate has no entry. */
+ * [ISO date, median run, 10th pct, 90th pct] per checkpoint, opening on
+ * today's actual rating so the chart can continue the history line. The
+ * middle value is one real simulated season (the one that finished
+ * mid-distribution), not an average — averaging returns today's rating
+ * for everyone. A league with no fixtures left to simulate has no
+ * entry. */
 export interface SoccerEloProjectionLeague {
   season: string;
   sims: number;
   from_date: string;
   clubs: Record<string, [string, number, number, number][]>;
-  /** A few whole simulated seasons per club, one rating per checkpoint —
-   * what the mean can't show, since expected Elo change is ~0. Path `i`
-   * of every club is the same simulated season. */
+  /** A few whole simulated seasons per club, one rating per checkpoint.
+   * Unlike the median runs above, path `i` of every club comes from the
+   * same simulated season, so their crossings are one coherent league. */
   samples: Record<string, number[][]>;
 }
 

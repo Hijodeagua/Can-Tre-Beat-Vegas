@@ -200,19 +200,19 @@ class TestSimulate:
         # Two remaining game dates in the fixture set, both checkpoints;
         # the FCS opponent's date is one of them and never updates Podunk.
         assert proj["dates"] == ["2026-10-01", "2026-11-20"]
-        assert set(proj["teams"]) == set(st.fbs_teams())
-        for rows in proj["teams"].values():
-            assert len(rows) == 2
-            for mean, lo, hi in rows:
-                assert lo <= mean <= hi
+        assert set(proj["median"]) == set(st.fbs_teams())
+        for team, median in proj["median"].items():
+            assert len(median) == 2
+            for value, (lo, hi) in zip(median, proj["band"][team]):
+                assert lo <= value <= hi
         payload = elo_projection_payload(futures, "2026-09-20")
         assert futures.get("projection") is None
         a = payload["teams"]["A"]
         now = next(t for t in futures["teams"] if t["team"] == "A")["elo"]
         assert a[0] == ["2026-09-20", now, now, now]
         assert [p[0] for p in a[1:]] == proj["dates"]
-        # Sample seasons line up point-for-point with the mean and open
-        # on the same actual rating.
+        # Sample seasons line up point-for-point with the median run and
+        # open on the same actual rating.
         paths = payload["samples"]["A"]
         assert len(paths) == 3
         assert all(len(path) == len(a) and path[0] == now for path in paths)

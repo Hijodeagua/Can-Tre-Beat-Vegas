@@ -1,0 +1,60 @@
+{
+  "name": "Club soccer outcome model",
+  "method": "permutation importance",
+  "metric": "increase in holdout log loss when the feature is shuffled",
+  "baseline": 1.01755,
+  "n": 7827,
+  "window": "2024-25 onward (never fitted on)",
+  "features": [
+    {
+      "name": "elo_gap",
+      "value": 0.04776,
+      "sd": 0.0024,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "value_diff_z",
+      "value": 0.01108,
+      "sd": 0.00118,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "sot_net_diff",
+      "value": 0.00619,
+      "sd": 0.00075,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xg_net_diff",
+      "value": 0.00014,
+      "sd": 7e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "spend_diff_z",
+      "value": 0.0,
+      "sd": 0.0,
+      "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+      "constant": true
+    },
+    {
+      "name": "net_diff_z",
+      "value": 0.0,
+      "sd": 0.0,
+      "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+      "constant": true
+    },
+    {
+      "name": "wage_diff_z",
+      "value": 0.0,
+      "sd": 0.0,
+      "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+      "constant": true
+    }
+  ],
+  "caveat": "A feature already feeding zeros on every live slate cannot be damaged by shuffling, so a zero here can mean 'no signal' or 'no data' \u2014 see the dormant features in docs/MODEL_FEATURES.md."
+}

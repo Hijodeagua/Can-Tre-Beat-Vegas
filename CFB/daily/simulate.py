@@ -20,19 +20,18 @@ Mechanics
 - Bowl eligibility is BOWL_ELIGIBLE_WINS total wins (the one-FCS-win rule
   and APR exceptions are not modeled).
 
-Alongside the odds the sim reports a `projection` block: the mean and
-10th/90th-percentile Elo of every program at a handful of checkpoint dates
-across the remaining regular season, read off the live in-sim ratings,
-plus a few individual simulated seasons.
+Alongside the odds the sim reports a `projection` block: every program's
+live in-sim Elo at a handful of checkpoint dates across the remaining
+regular season, read three ways — a median simulated season, the
+10th/90th percentile band, and a few whole simulated seasons
+(`_projection_block`).
 
-Those individual seasons are the point of exporting anything beyond the
-mean. An Elo update is K * (actual - expected) and the sim draws results
-at its own expected rate, so every program's *expected* rating change is
-about zero: the mean across the sims is flat by construction no matter
-how far single seasons swing. The percentiles and the sample paths are
-what carry the movement, and a chart that draws only the mean would say
-the board never changes — which the odds in this same payload flatly
-contradict.
+What is deliberately absent is the mean. An Elo update is
+K * (actual - expected) and the sim draws results at its own expected
+rate, so every program's *expected* rating change is about zero: averaging
+the sims returns today's rating for everybody, however far single seasons
+swing. A chart led by that average says the board never changes, which is
+the one thing the odds in this same payload rule out.
 
 What is deliberately NOT here: the 12-team playoff field. Selection is a
 committee ranking, and inventing one would put a made-up number next to
@@ -77,18 +76,59 @@ def _checkpoints(dates: list[str], n: int = PROJECTION_POINTS) -> list[str]:
     return [uniq[i] for i in sorted({round(i * last / (n - 1)) for i in range(n)})]
 
 
-def _samples(R: np.ndarray, n: int) -> np.ndarray:
-    """The first `n` sims' ratings, whole — one row per simulated season.
-    The same row index across checkpoints (and across teams) is the same
-    season, so a path drawn from them is coherent rather than a fresh draw
-    per point."""
-    return R[:min(n, R.shape[0])].copy()
+def _projection_block(snaps: np.ndarray, checkpoints: list[str],
+                      index: dict[str, int], n_samples: int) -> dict:
+    """The projection payload, out of a (checkpoints, sims, sides) array of
+    live in-sim ratings. Sibling of the same helper in the other two
+    daily pipelines.
 
+    Three readings of the same simulations, because none of them tells the
+    whole truth alone:
 
-def _elo_stats(R: np.ndarray) -> np.ndarray:
-    """Mean and 10th/90th-percentile rating per program across the sims —
-    the projected line and the band around it, as a (3, teams) array."""
-    return np.vstack([R.mean(axis=0), np.percentile(R, [10, 90], axis=0)])
+    - `median` — for each side, the one simulated season whose final
+      rating is that side's median. A real season, so it moves the way a
+      season moves; picked per side, so two median lines are *not* the
+      same simulated season.
+    - `band` — the 10th/90th percentile at each checkpoint. Where a side
+      could plausibly be, and by the end of a season it is wider than the
+      gaps between the sides.
+    - `samples` — the first `n_samples` sims, whole. Path p of every side
+      comes from the same simulated season, so these crossings are a
+      coherent board rather than unrelated draws.
+
+    The mean is deliberately not here. A fair game's expected Elo change
+    is about zero, so averaging the sims returns today's rating for
+    everyone — the one season in which nothing happens, which is the one
+    thing the simulation does not predict.
+    """
+    if not checkpoints:
+        # Nothing left to project (every remaining fixture is already
+        # past the run date); the export drops the block on this.
+        return {"dates": [], "median": {}, "band": {}, "samples": {}}
+    n_sims = snaps.shape[1]
+    mid = n_sims // 2
+    # Median *run*, not the pointwise median: rank the sims by where each
+    # side ends up and keep the whole season of the one in the middle.
+    median_sim = np.argsort(snaps[-1], axis=0)[mid]
+    lo, hi = np.percentile(snaps, [10, 90], axis=1)
+    n_paths = min(n_samples, n_sims)
+    r1 = lambda x: round(float(x), 1)
+    return {
+        "dates": checkpoints,
+        "median": {
+            side: [r1(snaps[s, median_sim[j], j]) for s in range(len(checkpoints))]
+            for side, j in index.items()
+        },
+        "band": {
+            side: [[r1(lo[s, j]), r1(hi[s, j])] for s in range(len(checkpoints))]
+            for side, j in index.items()
+        },
+        "samples": {
+            side: [[r1(snaps[s, p, j]) for s in range(len(checkpoints))]
+                   for p in range(n_paths)]
+            for side, j in index.items()
+        },
+    }
 
 
 def current_records(games: pd.DataFrame, season: int, teams: list[str]) -> pd.DataFrame:
@@ -176,13 +216,11 @@ def simulate_season(state: DailyState, season: int | None = None,
     checkpoints = _checkpoints([d for d in dates if as_of is None or d > as_of])
     snap_before = {max(i for i, d in enumerate(dates) if d <= cp) + 1: slot
                    for slot, cp in enumerate(checkpoints)}
-    snaps: dict[int, np.ndarray] = {}
-    paths: dict[int, np.ndarray] = {}
+    snaps = np.zeros((len(checkpoints), n_sims, n), dtype=np.float32)
 
     for i, r in enumerate(ordered.itertuples(index=False)):
         if i in snap_before:
-            snaps[snap_before[i]] = _elo_stats(R)
-            paths[snap_before[i]] = _samples(R, PROJECTION_SAMPLES)
+            snaps[snap_before[i]] = R
         if _is_ccg(r):
             continue
         h = idx.get(r.home_team) if r.home_division == FBS else None
@@ -213,8 +251,7 @@ def simulate_season(state: DailyState, season: int | None = None,
                 cwins[:, a] += ~home_won
                 closs[:, a] += home_won
     if len(dates) in snap_before:
-        snaps[snap_before[len(dates)]] = _elo_stats(R)
-        paths[snap_before[len(dates)]] = _samples(R, PROJECTION_SAMPLES)
+        snaps[snap_before[len(dates)]] = R
 
     # Conference standings -> CCG -> champion.
     ccg = np.zeros((n_sims, n), dtype=bool)
@@ -278,27 +315,12 @@ def simulate_season(state: DailyState, season: int | None = None,
             "p_ccg": None if indep else round(float(ccg[:, i].mean()), 4),
             "p_conf_title": None if indep else round(float(champ[:, i].mean()), 4),
         })
-    n_paths = min(PROJECTION_SAMPLES, n_sims)
     table = sorted(rows_out, key=lambda r: (-r["exp_wins"], -r["elo"]))
     return {
         "season": season,
         "sims": n_sims,
         "remaining_games": int(len(remaining)),
         "teams": table,
-        "projection": {
-            "dates": checkpoints,
-            "teams": {
-                t: [[round(float(snaps[s][0, idx[t]]), 1),
-                     round(float(snaps[s][1, idx[t]]), 1),
-                     round(float(snaps[s][2, idx[t]]), 1)]
-                    for s in range(len(checkpoints))]
-                for t in teams
-            },
-            "samples": {
-                t: [[round(float(paths[s][p, idx[t]]), 1)
-                     for s in range(len(checkpoints))]
-                    for p in range(n_paths)]
-                for t in teams
-            },
-        } if len(snaps) == len(checkpoints) else None,
+        "projection": _projection_block(snaps, checkpoints, idx,
+                                        PROJECTION_SAMPLES) if checkpoints else None,
     }

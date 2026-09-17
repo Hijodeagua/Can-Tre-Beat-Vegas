@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-09-17T16:45:46+00:00",
+  "models": {
+    "nfl": {
+      "name": "NFL Elo",
+      "method": "component ablation",
+      "metric": "increase in holdout log loss when the component is neutralised",
+      "baseline": 0.62424,
+      "n": 586,
+      "window": "2024 onward (never tuned on)",
+      "features": [
+        {
+          "name": "Margin of victory",
+          "value": 0.02504,
+          "sd": null,
+          "detail": "every win counts the same, whatever the margin"
+        },
+        {
+          "name": "Season regression",
+          "value": 0.01877,
+          "sd": null,
+          "detail": "ratings carry over untouched"
+        },
+        {
+          "name": "Home advantage",
+          "value": 0.00174,
+          "sd": null,
+          "detail": "home edge set to 0 Elo"
+        },
+        {
+          "name": "Postseason K weight",
+          "value": 0.0,
+          "sd": null,
+          "detail": "playoff games update like any other"
+        },
+        {
+          "name": "Rest (bye week)",
+          "value": -0.00065,
+          "sd": null,
+          "detail": "no bonus off a bye"
+        }
+      ],
+      "caveat": "Neutralising a component changes every rating after it, so these are contributions to the whole replay, not to one game. 'Margin of victory' clamps the margin to a point rather than removing the multiplier, which also shrinks the update size \u2014 read it as 'margin ignored', not as a clean K-preserving swap."
+    },
+    "cfb": {
+      "name": "College football Elo",
+      "method": "component ablation",
+      "metric": "increase in holdout log loss when the component is neutralised",
+      "baseline": 0.48462,
+      "n": 2038,
+      "window": "2024 onward (never tuned on)",
+      "features": [
+        {
+          "name": "FCS opponent rating",
+          "value": 0.03772,
+          "sd": null,
+          "detail": "non-FBS opponents rated as average FBS"
+        },
+        {
+          "name": "Margin of victory",
+          "value": 0.0365,
+          "sd": null,
+          "detail": "every win counts the same, whatever the margin"
+        },
+        {
+          "name": "Season regression",
+          "value": 0.02754,
+          "sd": null,
+          "detail": "ratings carry over untouched"
+        },
+        {
+          "name": "Conference regression",
+          "value": 0.01125,
+          "sd": null,
+          "detail": "regress to 1500 alone, ignoring the new conference"
+        },
+        {
+          "name": "Home advantage",
+          "value": 0.01073,
+          "sd": null,
+          "detail": "home edge set to 0 Elo"
+        },
+        {
+          "name": "FBS entry rating",
+          "value": 0.00078,
+          "sd": null,
+          "detail": "a new FBS program starts at average"
+        }
+      ],
+      "caveat": "Neutralising a component changes every rating after it, so these are contributions to the whole replay, not to one game. 'Margin of victory' clamps the margin to a point rather than removing the multiplier, which also shrinks the update size."
+    },
+    "soccer": {
+      "name": "Club soccer outcome model",
+      "method": "permutation importance",
+      "metric": "increase in holdout log loss when the feature is shuffled",
+      "baseline": 1.01755,
+      "n": 7827,
+      "window": "2024-25 onward (never fitted on)",
+      "features": [
+        {
+          "name": "elo_gap",
+          "value": 0.04776,
+          "sd": 0.0024,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "value_diff_z",
+          "value": 0.01108,
+          "sd": 0.00118,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "sot_net_diff",
+          "value": 0.00619,
+          "sd": 0.00075,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "xg_net_diff",
+          "value": 0.00014,
+          "sd": 7e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "spend_diff_z",
+          "value": 0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "net_diff_z",
+          "value": 0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "wage_diff_z",
+          "value": 0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        }
+      ],
+      "caveat": "A feature already feeding zeros on every live slate cannot be damaged by shuffling, so a zero here can mean 'no signal' or 'no data' \u2014 see the dormant features in docs/MODEL_FEATURES.md."
+    },
+    "mlb": {
+      "name": "MLB Elo",
+      "method": "component ablation",
+      "metric": "increase in log loss when the component is neutralised",
+      "baseline": 0.67965,
+      "n": 34665,
+      "window": "2012 onward",
+      "features": [
+        {
+          "name": "Season carryover",
+          "sd": null,
+          "detail": "no rating carried across seasons",
+          "value": 0.00273
+        },
+        {
+          "name": "Home advantage",
+          "sd": null,
+          "detail": "home edge set to 0 Elo",
+          "value": 0.00226
+        },
+        {
+          "name": "Margin of victory",
+          "sd": null,
+          "detail": "run margin ignored in the update",
+          "value": 0.00133
+        }
+      ],
+      "caveat": "Only the rating engine's own components are ablated here. The starting-pitcher, rest and travel adjustments are applied by the daily pipeline rather than the replay, so their contribution is not measured yet \u2014 see research/SP-BACKTEST.md for the pitcher layer's own out-of-sample test."
+    }
+  }
+}

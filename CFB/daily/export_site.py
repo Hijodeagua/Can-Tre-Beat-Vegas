@@ -145,16 +145,16 @@ def elo_history_payload(state: DailyState, run_date: str) -> dict:
 
 
 def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
-    """Every program's *projected* Elo: the rest-of-season Monte Carlo's mean
-    live rating at each checkpoint date with the 10th/90th-percentile band
-    around it, plus a few whole simulated seasons — all anchored on
-    today's actual rating so the site's chart draws them as the
-    continuation of the `elo_history` line rather than a floating second
-    series.
+    """Every program's *projected* Elo from the rest-of-season Monte Carlo:
+    its live rating at each checkpoint date read as a median simulated
+    season with the 10th/90th-percentile band around it, plus a
+    few whole simulated seasons — all anchored on today's actual rating so
+    the site's chart draws them as the continuation of the `elo_history`
+    line rather than a floating second series.
 
-    The sample seasons are not decoration: the mean is flat by
-    construction (see `simulate.py`), so they and the band are the only
-    parts of this block that show the board moving.
+    The headline value is a real simulated season, not an average of
+    them: the average is flat by construction (see `simulate.py`), so a
+    chart led by it would report that the board stops moving.
 
     The block is moved out of `futures` (where the sim put it) and up to
     the top level next to `elo_history`: it is chart data on the same
@@ -167,12 +167,13 @@ def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
     now = {t["team"]: t["elo"] for t in futures.get("teams", [])}
     teams = {}
     samples = {}
-    for team, rows in proj["teams"].items():
+    for team, median in proj["median"].items():
         elo = now.get(team)
-        anchor = [[run_date, elo, elo, elo]] if elo is not None else []
-        teams[team] = anchor + [[d, *row] for d, row in zip(proj["dates"], rows)]
+        band = proj["band"][team]
+        rows = [[d, m, *b] for d, m, b in zip(proj["dates"], median, band)]
+        teams[team] = ([[run_date, elo, elo, elo]] if elo is not None else []) + rows
         # Each sample season opens on the same actual rating, so a path
-        # lines up point-for-point with the mean above it.
+        # lines up point-for-point with the median above it.
         head = [elo] if elo is not None else []
         samples[team] = [head + path for path in proj["samples"][team]]
     return {

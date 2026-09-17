@@ -18,14 +18,19 @@ import { useId, useMemo, useState } from 'react';
  *   can't disagree. A page with no projection in its data (nothing left to
  *   simulate) just doesn't get the control.
  *
- *   What it draws is three whole simulated seasons per labelled team, with
- *   the mean over the run behind them. That ordering is deliberate: an Elo
- *   update is K × (actual − expected) and the sim draws results at its own
- *   expected rate, so a team's *expected* rating change is about zero and
- *   the mean over thousands of seasons is flat by construction. Drawing
- *   only the mean says "nothing changes", which is the one thing the
- *   simulation does not say — the sample seasons cross each other and the
- *   hover band spans more Elo than the gaps between the labelled teams.
+ *   What it draws is simulated seasons, never an average of them. The bold
+ *   line is that side's *median run* — the one simulated season whose final
+ *   rating came out in the middle of its distribution, so it wanders the
+ *   way a season wanders; picked per side, so two bold lines are not the
+ *   same simulated season. Behind it are three whole seasons that *are*
+ *   shared across sides, so their crossings are a coherent league.
+ *
+ *   No mean appears anywhere: an Elo update is K × (actual − expected) and
+ *   the sim draws results at its own expected rate, so a side's expected
+ *   rating change is about zero and averaging thousands of seasons hands
+ *   back today's rating for everybody. A chart led by that average reports
+ *   that the table stops moving, which is the one thing the simulation
+ *   rules out.
  *
  * Twenty clubs can't wear twenty distinguishable hues, so the league's
  * best `highlight` and worst `highlight` by current Elo — the two ends
@@ -45,8 +50,10 @@ export interface EloSeries {
   points: [string, number][]; // [ISO date, elo]
 }
 
-/** One team's projected Elo: [ISO date, mean, 10th pct, 90th pct]. The
- * first point is today's actual rating, so the line joins the history. */
+/** One team's projected Elo: [ISO date, median run, 10th pct, 90th pct].
+ * The first point is today's actual rating, so the line joins the
+ * history. The middle value is a real simulated season, not an average —
+ * see the sim's `_projection_block`. */
 export interface EloProjectionSeries {
   team: string;
   points: [string, number, number, number][];
@@ -516,7 +523,8 @@ export default function EloTrendChart({
             whiteSpace: 'nowrap',
           }}
         >
-          <b>{hover.team}</b> · {hover.date} · {hover.band ? 'proj ' : ''}Elo{' '}
+          <b>{hover.team}</b> · {hover.date} ·{' '}
+          {hover.band ? 'median run ' : 'Elo '}
           {Math.round(hover.elo)}
           {hover.band && ` (${Math.round(hover.band[0])}–${Math.round(hover.band[1])})`}
         </div>
@@ -528,7 +536,7 @@ export default function EloTrendChart({
         by rank — filled markers at the top of the table, ringed at the bottom; grey is the rest
         of the pack{showProjection ? ', which stops at today — hover any grey line to project it' : ''}.
         {showProjection
-          ? ' Right of the “today” rule, the thin lines are three whole simulated seasons per labelled side — they cross because the table does — and the dashes are the mean over every simulation, which is flat by construction: each game’s expected Elo change is about zero, so the average season is the one season where nothing moves. Hovering a projected point washes in that line’s 10th–90th percentile band and prints the range.'
+          ? ' Right of the “today” rule every line is a simulated season, never an average of them: the dashes are each side’s median run — the one season that finished mid-distribution, picked per side — and the thin lines are three whole seasons shared across sides, so those crossings are one coherent league. An average would be flat, since each game’s expected Elo change is about zero. Hovering a projected point washes in that line’s 10th–90th percentile band and prints the range.'
           : ''}{' '}
         Hover any point for the exact value.
       </p>

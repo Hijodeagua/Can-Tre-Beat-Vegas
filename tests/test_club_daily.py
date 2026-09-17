@@ -338,18 +338,26 @@ class TestSimulateLeague:
         proj = sim["projection"]
         # One remaining fixture date in the fixture set, so one checkpoint.
         assert proj["dates"] == ["2026-09-05"]
-        assert set(proj["clubs"]) == set("ABCDEFG")
-        for rows in proj["clubs"].values():
-            assert len(rows) == len(proj["dates"])
-            for mean, lo, hi in rows:
-                assert lo <= mean <= hi
-        # Every simulated match is inside the league, and an Elo update is
-        # zero-sum, so the projected mean ratings still total what the
-        # clubs started on.
-        start = sum(c["elo"] for c in sim["clubs"])
-        assert sum(r[-1][0] for r in proj["clubs"].values()) == pytest.approx(start, abs=0.5)
+        assert set(proj["median"]) == set("ABCDEFG")
+        assert set(proj["band"]) == set("ABCDEFG")
+        for club, median in proj["median"].items():
+            assert len(median) == len(proj["dates"])
+            for value, (lo, hi) in zip(median, proj["band"][club]):
+                assert lo <= value <= hi
 
-    def test_sample_seasons_move_where_the_mean_cannot(self):
+    def test_median_is_a_real_run_not_an_average(self):
+        state = self._state()
+        sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=300, seed=1)
+        proj = sim["projection"]
+        # Every simulated match is inside the league and an Elo update is
+        # zero-sum, so the *mean* would total exactly what the clubs
+        # started on. A set of median runs does not, because each one is
+        # one club's own mid-distribution season rather than an average.
+        start = sum(c["elo"] for c in sim["clubs"])
+        medians = sum(m[-1] for m in proj["median"].values())
+        assert medians != pytest.approx(start, abs=0.5)
+
+    def test_sample_seasons_move_where_an_average_cannot(self):
         state = self._state()
         sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=300, seed=1)
         proj = sim["projection"]
@@ -359,20 +367,10 @@ class TestSimulateLeague:
             assert len(paths) == 3
             for path in paths:
                 assert len(path) == len(proj["dates"])
-        # The mean rating barely moves by construction (expected Elo
-        # change is ~0), so the sample seasons are what carry the spread:
-        # they must not all land on the same rating.
-        for club, paths in samples.items():
-            finals = {path[-1] for path in paths}
-            if len(finals) > 1:
-                break
-        else:
-            raise AssertionError("no club's sample seasons differ from each other")
-        # A sample is a real simulated season, so it sits inside the
-        # simulated spread rather than hugging the mean.
-        mean_final = {c: rows[-1][0] for c, rows in proj["clubs"].items()}
-        assert any(abs(path[-1] - mean_final[c]) > 1.0
-                   for c, paths in samples.items() for path in paths)
+        # Averaging is what flattens a projection, so the sample seasons
+        # have to disagree with each other to be worth drawing.
+        assert any(len({path[-1] for path in paths}) > 1
+                   for paths in samples.values())
 
     def test_as_of_keeps_checkpoints_in_the_future(self):
         state = self._state()
@@ -380,7 +378,8 @@ class TestSimulateLeague:
         # date is not a checkpoint — it folds into the next one.
         sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=50, seed=1,
                                        as_of="2026-09-05")
-        assert sim["projection"]["dates"] == []
+        assert sim["projection"] == {"dates": [], "median": {}, "band": {},
+                                     "samples": {}}
         sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=50, seed=1,
                                        as_of="2026-09-01")
         assert sim["projection"]["dates"] == ["2026-09-05"]

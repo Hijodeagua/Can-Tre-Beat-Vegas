@@ -70,6 +70,15 @@
   --viz-3: #1baf7a;
   --viz-4: #eda100;
   --viz-5: #e87ba4;
+
+  /*
+   * Diverging pair for a signed magnitude (the importance chart: a model
+   * component that earns its place vs one the model is better off
+   * without). Blue against red because they read as opposites; the
+   * midpoint is the surface, not a third hue.
+   */
+  --viz-pos: #2a78d6;
+  --viz-neg: #e34948;
 }
 
 /*
@@ -106,6 +115,8 @@
   --viz-3: #199e70;
   --viz-4: #c98500;
   --viz-5: #d55181;
+  --viz-pos: #3987e5;
+  --viz-neg: #e66767;
 }
 
 body {

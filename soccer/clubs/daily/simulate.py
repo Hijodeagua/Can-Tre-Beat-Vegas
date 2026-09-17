@@ -10,19 +10,17 @@ as the MLB futures sim). Match scores are sampled from the independent-
 Poisson grid parameterized by the live Elo expectation, which bakes W/D/L
 and margin into one draw.
 
-Alongside the odds the sim reports a `projection` block: the mean and
-10th/90th-percentile Elo of every club at a handful of checkpoint dates
-across the remaining fixtures, read straight off the live in-sim ratings,
-plus a few individual simulated seasons.
+Alongside the odds the sim reports a `projection` block: every club's
+live in-sim Elo at a handful of checkpoint dates across the remaining
+fixtures, read three ways — a median simulated season, the 10th/90th
+percentile band, and a few whole simulated seasons (`_projection_block`).
 
-Those individual seasons are the point of exporting anything beyond the
-mean. An Elo update is K * (actual - expected) and the sim draws results
-at its own expected rate, so every club's *expected* rating change is
-about zero: the mean across 30,000 seasons is flat by construction no
-matter how far single seasons swing. The percentiles and the sample paths
-are what carry the movement, and a chart that draws only the mean would
-say the table never changes — which the odds in this same payload
-flatly contradict.
+What is deliberately absent is the mean. An Elo update is
+K * (actual - expected) and the sim draws results at its own expected
+rate, so every club's *expected* rating change is about zero: averaging
+30,000 seasons returns today's rating for everybody, however far single
+seasons swing. A chart led by that average says the table never changes,
+which is the one thing the odds in this same payload rule out.
 
 A league with no published fixtures for the current season (Ligue 1 until
 its upstream repo catches up) is skipped and reported as such.
@@ -68,6 +66,61 @@ def _checkpoints(dates: list[str], n: int = PROJECTION_POINTS) -> list[str]:
         return uniq
     last = len(uniq) - 1
     return [uniq[i] for i in sorted({round(i * last / (n - 1)) for i in range(n)})]
+
+
+def _projection_block(snaps: np.ndarray, checkpoints: list[str],
+                      index: dict[str, int], n_samples: int) -> dict:
+    """The projection payload, out of a (checkpoints, sims, sides) array of
+    live in-sim ratings. Sibling of the same helper in `NFL/daily/` and
+    `CFB/daily/simulate.py`.
+
+    Three readings of the same simulations, because none of them tells the
+    whole truth alone:
+
+    - `median` — for each side, the one simulated season whose final
+      rating is that side's median. A real season, so it moves the way a
+      season moves; picked per side, so two median lines are *not* the
+      same simulated season.
+    - `band` — the 10th/90th percentile at each checkpoint. Where a side
+      could plausibly be, and by the end of a season it is wider than the
+      gaps between the sides.
+    - `samples` — the first `n_samples` sims, whole. Path p of every side
+      comes from the same simulated season, so these crossings are a
+      coherent league rather than unrelated draws.
+
+    The mean is deliberately not here. A fair game's expected Elo change
+    is about zero, so averaging the sims returns today's rating for
+    everyone — the one season in which nothing happens, which is the one
+    thing the simulation does not predict.
+    """
+    if not checkpoints:
+        # Nothing left to project (every remaining fixture is already
+        # past the run date); the export drops the block on this.
+        return {"dates": [], "median": {}, "band": {}, "samples": {}}
+    n_sims = snaps.shape[1]
+    mid = n_sims // 2
+    # Median *run*, not the pointwise median: rank the sims by where each
+    # side ends up and keep the whole season of the one in the middle.
+    median_sim = np.argsort(snaps[-1], axis=0)[mid]
+    lo, hi = np.percentile(snaps, [10, 90], axis=1)
+    n_paths = min(n_samples, n_sims)
+    r1 = lambda x: round(float(x), 1)
+    return {
+        "dates": checkpoints,
+        "median": {
+            side: [r1(snaps[s, median_sim[j], j]) for s in range(len(checkpoints))]
+            for side, j in index.items()
+        },
+        "band": {
+            side: [[r1(lo[s, j]), r1(hi[s, j])] for s in range(len(checkpoints))]
+            for side, j in index.items()
+        },
+        "samples": {
+            side: [[r1(snaps[s, p, j]) for s in range(len(checkpoints))]
+                   for p in range(n_paths)]
+            for side, j in index.items()
+        },
+    }
 
 
 def simulate_league(state: DailyState, league: str, season: str,
@@ -173,31 +226,12 @@ def simulate_league(state: DailyState, league: str, season: str,
             pos_sum[c] += i + 1
 
     table = sorted(clubs, key=lambda c: pos_sum[c])
-    # Mean and 10th/90th-percentile Elo per club per checkpoint — the
-    # projected line and the band around it.
-    mean = snaps.mean(axis=1)
-    lo, hi = np.percentile(snaps, [10, 90], axis=1)
-    # The first PROJECTION_SAMPLES sims, whole: sims[p][club] is one
-    # club's rating through one simulated season, and the same p across
-    # clubs is the same season.
-    n_paths = min(PROJECTION_SAMPLES, n_sims)
     return {
         "season": season,
         "sims": n_sims,
         "remaining_matches": len(fixtures),
-        "projection": {
-            "dates": checkpoints,
-            "clubs": {
-                c: [[round(float(mean[s, j]), 1), round(float(lo[s, j]), 1),
-                     round(float(hi[s, j]), 1)] for s in range(len(checkpoints))]
-                for c, j in club_idx.items()
-            },
-            "samples": {
-                c: [[round(float(snaps[s, p, j]), 1) for s in range(len(checkpoints))]
-                    for p in range(n_paths)]
-                for c, j in club_idx.items()
-            },
-        },
+        "projection": _projection_block(snaps, checkpoints, club_idx,
+                                        PROJECTION_SAMPLES),
         "clubs": [
             {
                 "team": c,

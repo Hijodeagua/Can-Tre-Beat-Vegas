@@ -8,14 +8,15 @@
  * It ships collapsed — a reader who came for the odds shouldn't have to
  * scroll past a feature list to reach them — and open it names every
  * feature, with a dormant one struck through and its reason given rather
- * than dropped from the list.
+ * than dropped from the list, and then what the model is measured to be
+ * missing. The critique ships with the feature list on purpose: a list of
+ * inputs with no account of what they are worth reads as a boast.
  *
  * The note under it is the part worth keeping even if the rest is
  * collapsed: these forecasts are thousands of replayed seasons, so the
- * ratings and the table move inside every run. The averaged rating is
- * flat only because a fair game's expected Elo change is about zero —
- * which is why the chart above draws individual simulated seasons and not
- * just the mean.
+ * ratings and the table move inside every run. Averaging them would be
+ * flat, because a fair game's expected Elo change is about zero — which
+ * is why the chart above draws individual simulated seasons instead.
  */
 
 import { SHEET_URL, type ForecastModel } from '@/app/lib/modelFeatures';
@@ -68,12 +69,18 @@ export default function ModelFeatures({
             </li>
           ))}
         </ul>
+        <p
+          className="m-0 mt-3 rounded border-l-2 pl-3 text-[12px]"
+          style={{ borderColor: 'var(--th-border)', color: 'var(--th-muted)' }}
+        >
+          <b style={{ color: 'var(--th-ink)' }}>What this is missing.</b> {model.gaps}
+        </p>
         <p className="mb-0 mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
           {sims ? `${sims.toLocaleString()} replayed ${unit}s, rerun daily. ` : ''}
           Ratings move inside every replay, so the table on screen is one point in a
-          distribution, not a fixed outcome — the averaged rating barely moves only because a
-          fair game&apos;s expected Elo change is about zero, which is why the chart draws
-          individual simulated {unit}s rather than the average alone.{' '}
+          distribution, not a fixed outcome. Averaging those replays would barely move at all
+          — a fair game&apos;s expected Elo change is about zero — which is why the chart draws
+          individual simulated {unit}s and never their average.{' '}
           <a
             href={SHEET_URL}
             target="_blank"
