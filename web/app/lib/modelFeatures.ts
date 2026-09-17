@@ -78,31 +78,40 @@ export const SOCCER_FEATURES: ForecastModel = {
       detail: 'deep completions, deep share (a field-tilt proxy — Understat publishes no possession), PPDA (pressing), xPts form',
     },
     { name: 'Rest and congestion', detail: 'rest days, matches in the last 14 days, a European tie in the last 7 — from the whole calendar' },
+    { name: 'League, tier, season', detail: 'one pooled model with the context as inputs; per-league sub-models scored worse in 9 of 11 leagues' },
   ],
   gaps:
-    'Measured on 2024-25 onward, the full 31-feature set beats the old seven-feature model by about ' +
-    '0.0008 log loss (+1.4 SE) with a logistic; a random forest scores 0.0017 worse than that ' +
-    'logistic (noise-level) and ships anyway because it can use npxG, PPDA and deep completions ' +
-    'non-linearly once the Understat backfill lands — those columns were empty when this was ' +
-    'measured. Possession itself is in no free feed the site has; deep share stands in for it. ' +
-    'A rating level matters on its own: a big favourite above 1625 Elo wins 77% of the time, ' +
-    'the same gap below 1325 wins 56%.',
+    'Measured on 2024-25 onward with the Understat backfill in place, the full-set random ' +
+    'forest scores 1.01453 to the old seven-feature model’s 1.01749 (+2.4 SE) and beats a ' +
+    'logistic on the same inputs (1.01634); the gain is concentrated in 2025-26, the first full ' +
+    'season with npxG, PPDA and deep completions live on both sides (+3.2 SE). Possession ' +
+    'itself is in no free feed the site has; deep share stands in for it. A rating level ' +
+    'matters on its own: a big favourite above 1625 Elo wins 77% of the time, the same gap ' +
+    'below 1325 wins 56%.',
 };
 
 export const NFL_FEATURES: ForecastModel = {
   title: 'Football model features',
   engine:
-    'Win probability from a betting-blind Elo plus one efficiency layer: each side’s ' +
-    'opponent-adjusted success rate on offence and defence, from nflverse play-by-play, in a ' +
-    'regularised logistic refit each run. The score model is refit from the engine’s own ' +
+    'Win probability from a random forest over the betting-blind Elo — the two ratings as ' +
+    'their own inputs beside the Elo probability — and every efficiency feature built from ' +
+    'nflverse play-by-play, refit each run. The score model is refit from the engine’s own ' +
     'replay, then the rest of the season is replayed with live in-sim Elo through the ' +
     'seven-team bracket.',
   features: [
-    ...ELO_PAIR('Team', 'plus +48 home advantage — zero at a neutral site'),
+    ...ELO_PAIR('Team', 'each fed to the forest on its own, plus the Elo win probability'),
     {
-      name: 'Adjusted success rate',
+      name: 'Opponent-adjusted ratings',
       detail:
-        'home and away offence and defence, ridge-adjusted for every opponent faced (half-life 5 weeks, prior season at half weight), plus the cross-unit matchup net; falls back to Elo alone when the play-by-play feed is more than 10 days behind',
+        'offence and defence, both sides, ridge-adjusted for every opponent faced (half-life 5 weeks, prior season at half weight): EPA/play, success rate, dropback and rush EPA and success, early-down EPA and success, explosive rate, points and EPA per drive, red-zone TD rate, third-down conversion — plus every cross-unit matchup net',
+    },
+    {
+      name: 'Form (EWMA, 5-game half-life)',
+      detail: 'PROE (all and neutral), pass rate, neutral pace, drives, plays/yards per drive, series success, red-zone trips/points/EPA, third-down EPA/distance/short/long, sack rate for and against, net special-teams EPA, raw EPA for and against',
+    },
+    {
+      name: 'Fallback',
+      detail: 'Elo alone when the play-by-play feed is more than 10 days behind or a side has no rating',
     },
     { name: 'Rest', detail: '+20 Elo off a bye (10+ days) at prediction time' },
     { name: 'Margin of victory', detail: 'ln-damped, capped at 45 points, shrunk when the favourite wins' },
@@ -113,27 +122,35 @@ export const NFL_FEATURES: ForecastModel = {
   gaps:
     'Ablation on held-out seasons says margin of victory and season regression carry this ' +
     'model, home advantage is worth very little, and the bye-week bonus is worth less than ' +
-    'nothing — the model scores better without it. The success-rate layer is worth about ' +
-    '0.005 log loss over Elo alone across 2015–2025 (+3 SE); adjusted EPA, pass/rush splits, ' +
-    'drive, red-zone, third-down and pace metrics were all collected and tested and none ' +
-    'beat it on the clean 2024–25 window, so they stay out. The season simulation and the ' +
-    'expected score still run on Elo alone.',
+    'nothing — the model scores better without it. On the clean 2024–25 window the full ' +
+    '41-input forest scores 0.61687 to Elo’s 0.62411 (+1.2 SE), tied with a logistic on the ' +
+    'same inputs; boosting overfits and is worse than Elo alone. A rating level matters on ' +
+    'its own: a favourite by 75+ Elo wins 79% of the time above 1575 and 59% below 1425. ' +
+    'The season simulation and the expected score still run on Elo alone.',
 };
 
 export const CFB_FEATURES: ForecastModel = {
   title: 'Football model features',
   engine:
-    'Win probability from a betting-blind Elo plus one efficiency layer: each program’s ' +
-    'opponent-adjusted EPA per play on offence and defence from the SportsDataverse weekly ' +
-    'summaries, in a regularised logistic refit each run. The score model is refit from the ' +
+    'Win probability from a random forest over the betting-blind Elo — the two ratings as ' +
+    'their own inputs beside the Elo probability — and every efficiency feature from the ' +
+    'SportsDataverse weekly summaries, refit each run. The score model is refit from the ' +
     'engine’s own replay, then the rest of the regular season is replayed with live in-sim ' +
     'Elo. The 12-team playoff field is deliberately not modelled.',
   features: [
-    ...ELO_PAIR('Program', 'plus +50 home advantage — zero at a neutral site'),
+    ...ELO_PAIR('Program', 'each fed to the forest on its own, plus the Elo win probability'),
     {
-      name: 'Adjusted EPA',
+      name: 'Opponent-adjusted EPA',
       detail:
-        'home and away offence and defence, opponent-adjusted, from the snapshot through the previous week (never the current one), blended with the prior season’s regressed final until a program has games; games with an FCS side, and any week the feed is two weeks behind, fall back to Elo',
+        'home and away offence and defence, from the snapshot through the previous week (never the current one), blended with the prior season’s regressed final until a program has games; plus the matchup net',
+    },
+    {
+      name: 'Efficiency, both sides',
+      detail: 'success rate, early-down EPA, explosive rate, havoc, EPA per drive, drives per game, plays and yards per drive, red-zone and third-down success, third-down distance, pass rate, pass and rush EPA — each with its cross-unit matchup net',
+    },
+    {
+      name: 'Fallback',
+      detail: 'Elo alone for games with an FCS side, a side without a strength row, or any week the weekly feed is two weeks behind',
     },
     {
       name: 'Conference regression',
@@ -147,10 +164,10 @@ export const CFB_FEATURES: ForecastModel = {
     'Ablation on held-out seasons makes the pooled FCS rating the single most load-bearing ' +
     'component — one synthetic 950-rated team standing in for every non-FBS opponent, about ' +
     '13% of the schedule, is the crudest thing in the model and it matters more than home ' +
-    'advantage. The adjusted-EPA layer is worth about 0.005 log loss over Elo alone on ' +
-    '2024–25 (+2.6 SE on FBS-vs-FBS games); success rate, early-down, explosive, havoc, drive, ' +
-    'red-zone, third-down and pass/rush splits were collected and tested and none beat it ' +
-    'by enough to ship. The season simulation still runs on Elo alone.',
+    'advantage. On 2024–25 the full 33-input forest scores 0.49347 to Elo’s 0.49768 overall ' +
+    '(+1.1 SE) and 0.54657 to 0.55358 on FBS-vs-FBS games (+1.6 SE), the best of the three ' +
+    'learners tried. A favourite by 250+ Elo wins 95% of the time above 1650 and 89% below ' +
+    '1350. The season simulation still runs on Elo alone.',
 };
 
 export const MLB_FEATURES: ForecastModel = {

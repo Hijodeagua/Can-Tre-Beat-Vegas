@@ -1,36 +1,190 @@
 {
-  "name": "Club soccer outcome model",
+  "name": "Club soccer outcome model (random_forest: Elo pair + gap, economics, form, advanced Understat)",
   "method": "permutation importance",
   "metric": "increase in holdout log loss when the feature is shuffled",
-  "baseline": 1.01755,
+  "baseline": 1.01453,
   "n": 7827,
   "window": "2024-25 onward (never fitted on)",
   "features": [
     {
-      "name": "elo_gap",
-      "value": 0.04776,
-      "sd": 0.0024,
+      "name": "value_diff_z",
+      "value": 0.01365,
+      "sd": 0.00145,
       "detail": "column shuffled 10x on 2024-25+ holdout",
       "constant": false
     },
     {
-      "name": "value_diff_z",
-      "value": 0.01108,
-      "sd": 0.00118,
+      "name": "elo_gap",
+      "value": 0.01197,
+      "sd": 0.00168,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "elo_home_pre",
+      "value": 0.00209,
+      "sd": 0.00051,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "elo_away_pre",
+      "value": 0.00159,
+      "sd": 0.00036,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "deep_share_diff",
+      "value": 0.00108,
+      "sd": 0.00034,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xpts_ewm_diff",
+      "value": 0.00105,
+      "sd": 0.00037,
       "detail": "column shuffled 10x on 2024-25+ holdout",
       "constant": false
     },
     {
       "name": "sot_net_diff",
-      "value": 0.00619,
-      "sd": 0.00075,
+      "value": 0.00076,
+      "sd": 0.00035,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "npxg_for_ewm_diff",
+      "value": 0.00033,
+      "sd": 0.0002,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "deep_diff",
+      "value": 0.00033,
+      "sd": 0.00018,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "npxg_against_ewm_diff",
+      "value": 0.00022,
+      "sd": 0.00011,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "npxg_against_r10_diff",
+      "value": 0.00019,
+      "sd": 8e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_championship",
+      "value": 0.00014,
+      "sd": 0.0001,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xg_for_ewm_diff",
+      "value": 0.0001,
+      "sd": 0.00014,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "home_att_vs_away_def",
+      "value": 8e-05,
+      "sd": 6e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "tier",
+      "value": 8e-05,
+      "sd": 6e-05,
       "detail": "column shuffled 10x on 2024-25+ holdout",
       "constant": false
     },
     {
       "name": "xg_net_diff",
-      "value": 0.00014,
+      "value": 7e-05,
+      "sd": 0.00018,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "rest_diff",
+      "value": 5e-05,
+      "sd": 0.00015,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_la_liga",
+      "value": 4e-05,
+      "sd": 2e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_serie_a",
+      "value": 4e-05,
+      "sd": 1e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xg_against_ewm_diff",
+      "value": 3e-05,
+      "sd": 0.00014,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "away_att_vs_home_def",
+      "value": 3e-05,
+      "sd": 4e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_serie_b",
+      "value": 3e-05,
       "sd": 7e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "npxg_for_r10_diff",
+      "value": 2e-05,
+      "sd": 6e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "ppda_diff",
+      "value": 2e-05,
+      "sd": 0.00011,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "uefa7_home",
+      "value": 1e-05,
+      "sd": 1e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_bundesliga_2",
+      "value": 1e-05,
+      "sd": 4e-05,
       "detail": "column shuffled 10x on 2024-25+ holdout",
       "constant": false
     },
@@ -54,6 +208,111 @@
       "sd": 0.0,
       "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
       "constant": true
+    },
+    {
+      "name": "congestion14_away",
+      "value": 0.0,
+      "sd": 0.0001,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "season_idx",
+      "value": 0.0,
+      "sd": 0.0,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "uefa7_away",
+      "value": -1e-05,
+      "sd": 1e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_epl",
+      "value": -1e-05,
+      "sd": 3e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_bundesliga",
+      "value": -1e-05,
+      "sd": 2e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "npxg_away_att_vs_home_def",
+      "value": -2e-05,
+      "sd": 8e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_ligue_1",
+      "value": -4e-05,
+      "sd": 1e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_la_liga_2",
+      "value": -6e-05,
+      "sd": 0.0001,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_ligue_2",
+      "value": -9e-05,
+      "sd": 3e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "npxg_home_att_vs_away_def",
+      "value": -0.00011,
+      "sd": 8e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "congestion14_home",
+      "value": -0.00012,
+      "sd": 0.00011,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "lg_mls",
+      "value": -0.00016,
+      "sd": 0.00018,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xg_against_r10_diff",
+      "value": -0.00018,
+      "sd": 6e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xg_for_r10_diff",
+      "value": -0.00026,
+      "sd": 7e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
+    },
+    {
+      "name": "xg_per_shot_diff",
+      "value": -0.0003,
+      "sd": 9e-05,
+      "detail": "column shuffled 10x on 2024-25+ holdout",
+      "constant": false
     }
   ],
   "caveat": "A feature already feeding zeros on every live slate cannot be damaged by shuffling, so a zero here can mean 'no signal' or 'no data' \u2014 see the dormant features in docs/MODEL_FEATURES.md."

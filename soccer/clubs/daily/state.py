@@ -19,7 +19,7 @@ from soccer.clubs.model import shots, xg
 from soccer.clubs.model.elo import ClubEloEngine
 from soccer.clubs.model.europe import run_all_european
 from soccer.clubs.model.features import attach_features
-from soccer.clubs.model.train import FEATURES, LEARNER, make_model
+from soccer.clubs.model.train import FEATURES, LEARNER, attach_context, make_model
 
 CLASSES = ["A", "D", "H"]
 
@@ -70,8 +70,8 @@ class DailyState:
         advanced form columns are attached here from each club's earlier
         matches (the fixture itself carries no metrics), with the same
         staleness rule the training table used."""
-        f = adv.attach_advanced(attach_features(feature_rows), matches=self.adv_matches,
-                                calendar=self.calendar)
+        f = attach_context(adv.attach_advanced(attach_features(feature_rows), matches=self.adv_matches,
+                                               calendar=self.calendar))
         probs = self.outcome_model.predict_proba(f[FEATURES])
         out = feature_rows.copy()
         for i, c in enumerate(self.outcome_model.classes_):
@@ -112,8 +112,9 @@ def build_state() -> DailyState:
     league_hist = history[~history["league"].str.startswith("uefa:")].copy()
     adv_matches = adv.match_metrics()
     calendar = adv._calendar()
-    featured = adv.attach_advanced(shots.attach_shots(xg.attach_xg(attach_features(league_hist))),
-                                   matches=adv_matches, calendar=calendar)
+    featured = attach_context(adv.attach_advanced(
+        shots.attach_shots(xg.attach_xg(attach_features(league_hist))),
+        matches=adv_matches, calendar=calendar))
 
     model = make_model(LEARNER)
     model.fit(featured[FEATURES], featured["outcome"])

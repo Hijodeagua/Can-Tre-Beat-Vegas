@@ -168,6 +168,9 @@ class TestProductionFeatureSet:
         rows["outcome"] = np.where(np.arange(len(rows)) % 3 == 0, "H", np.where(np.arange(len(rows)) % 3 == 1, "D", "A"))
         featured = adv.attach_advanced(rows, matches=adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m)),
                                        calendar=pd.DataFrame(columns=["team", "league", "date", "played", "uefa"]))
+        featured = train.attach_context(featured)
+        assert featured["lg_epl"].eq(1.0).all() and featured["tier"].eq(1.0).all()
+        assert featured["season_idx"].eq(14).all()
         for f in train.FEATURES:
             if f not in featured.columns:
                 featured[f] = np.nan

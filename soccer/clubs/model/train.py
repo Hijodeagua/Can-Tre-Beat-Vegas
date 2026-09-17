@@ -57,7 +57,13 @@ ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 # empty today.
 RAW_ELO = ["elo_home_pre", "elo_away_pre"]
 BASE_FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
-FEATURES = RAW_ELO + BASE_FEATURES + adv.ALL_ADVANCED
+# One pooled model, with the league, its tier and the season as inputs:
+# per-league sub-models scored worse than the pooled fit on the 2024-25+
+# holdout (1.02006 vs 1.01676) and pooled + league/tier/season scored
+# slightly better (1.01651, +0.34 SE), so the context rides along as
+# columns the learner can split on rather than as separate models.
+CONTEXT_FEATURES = [f"lg_{k}" for k in LEAGUES] + ["tier", "season_idx"]
+FEATURES = RAW_ELO + BASE_FEATURES + adv.ALL_ADVANCED + CONTEXT_FEATURES
 # Random forest, by decision rather than by the holdout number: on the
 # 2024-25+ test the full-set logistic scored 1.01676 to the forest's
 # 1.01846 (0.0017, ~0.8 SE — noise-level), and that comparison was run
@@ -78,10 +84,21 @@ SPLIT_SEASON = "2024-25"
 MAX_ITER = 5000
 
 
+def attach_context(frame: pd.DataFrame) -> pd.DataFrame:
+    """League one-hots (every league in LEAGUES, so the columns are fixed),
+    the league's tier, and the season as years since 2010."""
+    out = frame.copy()
+    for k in LEAGUES:
+        out[f"lg_{k}"] = (out["league"] == k).astype(float)
+    out["tier"] = out["league"].map(lambda k: float(LEAGUES[k].tier) if k in LEAGUES else np.nan)
+    out["season_idx"] = pd.to_numeric(out["season"].astype(str).str[:4], errors="coerce") - 2010
+    return out
+
+
 def build_table() -> pd.DataFrame:
     _, history = run_all_european()
     league_only = history[~history["league"].str.startswith("uefa:")]
-    return adv.attach_advanced(attach_shots(attach_xg(attach_features(league_only))))
+    return attach_context(adv.attach_advanced(attach_shots(attach_xg(attach_features(league_only)))))
 
 
 def make_model(kind: str = LEARNER):
