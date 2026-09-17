@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T21:24:03+00:00",
+  "generated_at": "2026-09-17T21:27:18+00:00",
   "models": {
     "nfl": {
       "name": "NFL Elo",
@@ -438,52 +438,353 @@
       "caveat": "Only the rating engine's own components are ablated here. The starting-pitcher, rest and travel adjustments are applied by the daily pipeline rather than the replay, so their contribution is not measured yet \u2014 see research/SP-BACKTEST.md for the pitcher layer's own out-of-sample test."
     },
     "nfl_second_stage": {
-      "name": "NFL second stage (Elo + adjusted success)",
+      "name": "NFL second stage (random_forest: Elo + raw Elos + every efficiency feature)",
       "method": "permutation importance",
       "metric": "increase in holdout log loss when the feature is shuffled",
-      "baseline": 0.61852,
+      "baseline": 0.61727,
       "n": 569,
       "window": "2024-2025 (clean of the Elo's own 2005-2023 tuning window)",
       "features": [
         {
           "name": "elo_logit",
-          "value": 0.07673,
-          "sd": 0.00781,
+          "value": 0.01117,
+          "sd": 0.00174,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "epa_matchup_net",
+          "value": 0.00427,
+          "sd": 0.00097,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "epa_per_drive_matchup_net",
+          "value": 0.0028,
+          "sd": 0.00146,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "elo_home_pre",
+          "value": 0.00247,
+          "sd": 0.00134,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
           "name": "success_matchup_net",
-          "value": 0.00625,
-          "sd": 0.00193,
+          "value": 0.00241,
+          "sd": 0.00067,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
-          "name": "home_off_success_adj",
-          "value": 0.00455,
-          "sd": 0.00266,
+          "name": "db_epa_matchup_net",
+          "value": 0.00195,
+          "sd": 0.00143,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "points_per_drive_matchup_net",
+          "value": 0.00175,
+          "sd": 0.00141,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "explosive_matchup_net",
+          "value": 0.00107,
+          "sd": 0.00056,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_yards_per_drive_ewm",
+          "value": 0.00103,
+          "sd": 0.00095,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "early_epa_matchup_net",
+          "value": 0.00092,
+          "sd": 0.00078,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_third_dist_ewm",
+          "value": 0.00092,
+          "sd": 0.00069,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
           "name": "away_off_success_adj",
-          "value": 0.00138,
-          "sd": 0.00294,
+          "value": 0.00083,
+          "sd": 0.00055,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
-          "name": "home_def_success_adj",
-          "value": 0.00039,
-          "sd": 0.00063,
+          "name": "home_off_third_epa_ewm",
+          "value": 0.00059,
+          "sd": 0.00024,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_success_adj",
+          "value": 0.00052,
+          "sd": 0.00071,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_epa_ewm",
+          "value": 0.00052,
+          "sd": 0.00037,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_epa_adj",
+          "value": 0.0005,
+          "sd": 0.00058,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_def_sack_rate_ewm",
+          "value": 0.0005,
+          "sd": 0.00028,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_def_epa_ewm",
+          "value": 0.00049,
+          "sd": 0.00028,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "elo_away_pre",
+          "value": 0.00042,
+          "sd": 0.00121,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_sack_rate_ewm",
+          "value": 0.0004,
+          "sd": 0.00035,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_third_epa_ewm",
+          "value": 0.00033,
+          "sd": 0.00038,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_def_epa_adj",
+          "value": 0.00028,
+          "sd": 0.00023,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_neutral_pace_ewm",
+          "value": 0.00024,
+          "sd": 0.0001,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_st_epa_net_ewm",
+          "value": 0.00024,
+          "sd": 0.00047,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "rush_epa_matchup_net",
+          "value": 0.00023,
+          "sd": 0.00028,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_rz_epa_ewm",
+          "value": 0.00023,
+          "sd": 0.00029,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_series_success_ewm",
+          "value": 0.00018,
+          "sd": 0.00033,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_def_epa_ewm",
+          "value": 0.00016,
+          "sd": 0.00018,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_drives_ewm",
+          "value": 0.00014,
+          "sd": 0.00016,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_st_epa_net_ewm",
+          "value": 0.00013,
+          "sd": 0.00048,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_proe_ewm",
+          "value": 6e-05,
+          "sd": 0.00019,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_proe_ewm",
+          "value": 5e-05,
+          "sd": 0.00046,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_plays_per_drive_ewm",
+          "value": 5e-05,
+          "sd": 0.00017,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_drives_ewm",
+          "value": 4e-05,
+          "sd": 0.00016,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_epa_ewm",
+          "value": -1e-05,
+          "sd": 0.00056,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_plays_per_drive_ewm",
+          "value": -8e-05,
+          "sd": 0.0001,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_series_success_ewm",
+          "value": -0.00011,
+          "sd": 0.00017,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_def_epa_adj",
+          "value": -0.00013,
+          "sd": 0.0001,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_neutral_pace_ewm",
+          "value": -0.00013,
+          "sd": 0.00026,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_off_yards_per_drive_ewm",
+          "value": -0.00024,
+          "sd": 0.00029,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_third_dist_ewm",
+          "value": -0.0004,
+          "sd": 0.00025,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
           "name": "away_def_success_adj",
-          "value": -0.00034,
-          "sd": 0.00055,
+          "value": -0.00041,
+          "sd": 0.00025,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_def_success_adj",
+          "value": -0.00044,
+          "sd": 0.0003,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_epa_adj",
+          "value": -0.00047,
+          "sd": 0.00036,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "third_conv_matchup_net",
+          "value": -0.00048,
+          "sd": 0.00031,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_rz_epa_ewm",
+          "value": -0.00052,
+          "sd": 0.00028,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_def_sack_rate_ewm",
+          "value": -0.00052,
+          "sd": 0.00018,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_off_sack_rate_ewm",
+          "value": -0.00061,
+          "sd": 0.00032,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "rz_td_matchup_net",
+          "value": -0.00064,
+          "sd": 0.00017,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         }
@@ -491,52 +792,248 @@
       "caveat": "This is the logistic layered on top of Elo (NFL/model/advanced.py), not the Elo engine itself \u2014 see the 'NFL Elo' section above for what the rating's own components are worth. A game with no play-by-play rating for either side falls back to Elo alone and is not in this window."
     },
     "cfb_second_stage": {
-      "name": "College football second stage (Elo + adjusted EPA)",
+      "name": "College football second stage (random_forest: Elo + raw Elos + every efficiency feature)",
       "method": "permutation importance",
       "metric": "increase in holdout log loss when the feature is shuffled",
-      "baseline": 0.49285,
+      "baseline": 0.49347,
       "n": 1853,
       "window": "2024-2025 (clean of the Elo's own 2005-2023 tuning window)",
       "features": [
         {
           "name": "elo_logit",
-          "value": 0.24943,
-          "sd": 0.00584,
+          "value": 0.04649,
+          "sd": 0.00216,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
           "name": "adj_epa_matchup_net",
-          "value": 0.03545,
-          "sd": 0.00524,
+          "value": 0.0177,
+          "sd": 0.00119,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
-          "name": "home_adj_epa_def",
-          "value": 0.00141,
-          "sd": 0.00055,
+          "name": "elo_away_pre",
+          "value": 0.00885,
+          "sd": 0.00097,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
-          "name": "home_adj_epa_off",
-          "value": 0.00064,
-          "sd": 0.00023,
+          "name": "success_matchup_net",
+          "value": 0.00659,
+          "sd": 0.00104,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
-          "name": "away_adj_epa_def",
-          "value": 0.00013,
-          "sd": 0.00074,
+          "name": "epa_drive_matchup_net",
+          "value": 0.00597,
+          "sd": 0.00085,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "early_epa_matchup_net",
+          "value": 0.00505,
+          "sd": 0.00086,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "rush_epa_matchup_net",
+          "value": 0.00365,
+          "sd": 0.00081,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "third_success_matchup_net",
+          "value": 0.00284,
+          "sd": 0.00062,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         },
         {
           "name": "away_adj_epa_off",
-          "value": 8e-05,
+          "value": 0.00281,
+          "sd": 0.00048,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "elo_home_pre",
+          "value": 0.0026,
+          "sd": 0.00093,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_adj_epa_def",
+          "value": 0.00219,
+          "sd": 0.0004,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_success_off",
+          "value": 0.00172,
           "sd": 0.00034,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "pass_epa_matchup_net",
+          "value": 0.00167,
+          "sd": 0.0002,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "rz_success_matchup_net",
+          "value": 0.00106,
+          "sd": 0.00037,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_yards_drive_off",
+          "value": 0.00095,
+          "sd": 0.00017,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_adj_epa_def",
+          "value": 0.00084,
+          "sd": 0.00027,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_adj_epa_off",
+          "value": 0.00082,
+          "sd": 0.00039,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_havoc_off",
+          "value": 0.00082,
+          "sd": 0.00018,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_drives_game_off",
+          "value": 0.00074,
+          "sd": 0.00015,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_passrate_off",
+          "value": 0.00051,
+          "sd": 0.00016,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_success_off",
+          "value": 0.00049,
+          "sd": 0.00041,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_success_def",
+          "value": 0.00044,
+          "sd": 0.0002,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "explosive_matchup_net",
+          "value": 0.00042,
+          "sd": 0.00016,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_havoc_def",
+          "value": 0.0004,
+          "sd": 0.00015,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_third_dist_off",
+          "value": 0.00038,
+          "sd": 0.00014,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_passrate_off",
+          "value": 0.00032,
+          "sd": 0.00017,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_havoc_off",
+          "value": 0.00021,
+          "sd": 0.00011,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_yards_drive_off",
+          "value": 0.00018,
+          "sd": 0.00046,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_plays_drive_off",
+          "value": 0.00013,
+          "sd": 0.00013,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_success_def",
+          "value": 0.0001,
+          "sd": 0.00021,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_plays_drive_off",
+          "value": 8e-05,
+          "sd": 0.00018,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_drives_game_off",
+          "value": 5e-05,
+          "sd": 0.00012,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "away_havoc_def",
+          "value": -3e-05,
+          "sd": 0.00028,
+          "detail": "column shuffled 10x on the held-out window",
+          "constant": false
+        },
+        {
+          "name": "home_third_dist_off",
+          "value": -0.00013,
+          "sd": 7e-05,
           "detail": "column shuffled 10x on the held-out window",
           "constant": false
         }
