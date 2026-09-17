@@ -88,7 +88,7 @@ def main(argv=None) -> int:
               f"  line {m.elo_spread:+.1f}  ({m.pred_home_score}-{m.pred_away_score})")
 
     print("== Season Monte Carlo")
-    futures = simulate.simulate_season(state, n_sims=args.season_sims)
+    futures = simulate.simulate_season(state, n_sims=args.season_sims, as_of=run_date)
     if futures:
         top = futures["teams"][0]
         print(f"   {futures['remaining_games']} games left; "

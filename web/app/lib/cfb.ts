@@ -150,6 +150,17 @@ export interface CfbEloHistory {
   teams: Record<string, [string, number][]>;
 }
 
+/** Where the rest-of-season sim expects each program's rating to go:
+ * [ISO date, mean, 10th pct, 90th pct] per checkpoint, opening on today's
+ * actual rating so the chart can continue the history line. Absent once
+ * there is nothing left to simulate. */
+export interface CfbEloProjection {
+  season: number;
+  sims: number;
+  from_date: string;
+  teams: Record<string, [string, number, number, number][]>;
+}
+
 export interface CfbLatest {
   generated_at: string;
   run_date: string;
@@ -165,6 +176,7 @@ export interface CfbLatest {
   ledger: CfbLedger;
   futures: CfbFutures;
   elo_history?: CfbEloHistory;
+  elo_projection?: CfbEloProjection;
 }
 
 const data = latest as unknown as CfbLatest;

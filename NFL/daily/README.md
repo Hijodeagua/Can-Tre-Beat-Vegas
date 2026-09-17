@@ -17,7 +17,7 @@ the site JSON, and render the twice-weekly update email.
 | `predict.py` | Slate = the next NFL week's unplayed games: win probability, pick, the model's own line, expected score; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once finals land; running ledger at `data/nfl/predictions/grades.csv` with the paired Δlog-loss vs. always-pick-home and a per-week breakdown |
 | `simulate.py` | Vectorized rest-of-season Monte Carlo with live in-sim Elo, then the seven-team bracket: expected wins, division, playoffs, #1 seed, conference title, Super Bowl |
-| `export_site.py` | `web/public/data/nfl/latest.json` (all 32, divisions, slate, ledger, futures, `elo_history`) + per-day snapshots |
+| `export_site.py` | `web/public/data/nfl/latest.json` (all 32, divisions, slate, ledger, futures, `elo_history` + `elo_projection`) + per-day snapshots |
 | `emails.py` | The update email: power ratings, this week's games, rolling tracker + past week, season forecasts |
 
 ## Data flow for a run dated D (ET)

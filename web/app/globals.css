@@ -55,6 +55,21 @@
   --th-head-bg: color-mix(in srgb, var(--sport-accent) 18%, var(--th-card));
   --th-head-ink: var(--sport-accent-ink);
   --th-zebra: color-mix(in srgb, var(--sport-accent) 6%, var(--th-card));
+
+  /*
+   * Chart series slots: the first five slots of the validated categorical
+   * palette, in that order — the order is the colourblind-safety
+   * mechanism, so they are assigned in sequence and never cycled. Stepped
+   * per theme below rather than flipped automatically, and validated
+   * against each theme's own surface (worst adjacent CVD ΔE 9.1 light /
+   * 8.4 dark). Three of the light steps sit below 3:1 on white, which is
+   * why every coloured line in a chart is also directly labelled.
+   */
+  --viz-1: #2a78d6;
+  --viz-2: #eb6834;
+  --viz-3: #1baf7a;
+  --viz-4: #eda100;
+  --viz-5: #e87ba4;
 }
 
 /*
@@ -84,6 +99,13 @@
   --th-head-bg: color-mix(in srgb, var(--sport-accent) 22%, #0b0a1a);
   --th-head-ink: var(--th-ink);
   --th-zebra: color-mix(in srgb, var(--sport-accent) 8%, transparent);
+
+  /* The same five hues, stepped for the dark surface (all >= 3:1 on it). */
+  --viz-1: #3987e5;
+  --viz-2: #d95926;
+  --viz-3: #199e70;
+  --viz-4: #c98500;
+  --viz-5: #d55181;
 }
 
 body {

@@ -351,6 +351,7 @@ function ForecastTab() {
   const sim = data.futures[league];
   const clubs = sim.clubs ?? [];
   const history = data.elo_history?.[league];
+  const projection = data.elo_projection?.[league];
 
   return (
     <div>
@@ -410,13 +411,27 @@ function ForecastTab() {
                 team,
                 points: points as [string, number][],
               }))}
+              projection={
+                projection
+                  ? Object.entries(projection.clubs).map(([team, points]) => ({
+                      team,
+                      points: points as [string, number, number, number][],
+                    }))
+                  : undefined
+              }
             />
           </div>
           <p className="mt-2 text-[12px]" style={{ color: 'var(--th-faint)' }}>
-            Each point is a club&apos;s pre-match Elo at that date; the final point is the
-            live rating as of the {data.run_date} run, so the chart adjusts daily. The top
-            six clubs by current Elo are highlighted and labeled; the grey pack is the rest
-            of the league. Hover any point for the exact value.
+            Each point is a club&apos;s pre-match Elo at that date; the last actual point is
+            the live rating as of the {data.run_date} run, so the chart adjusts daily.
+            {projection && (
+              <>
+                {' '}
+                The projection is the same {projection.sims.toLocaleString()}-run
+                rest-of-season simulation as the table above, read at checkpoint dates
+                through the final matchday.
+              </>
+            )}
           </p>
         </section>
       )}

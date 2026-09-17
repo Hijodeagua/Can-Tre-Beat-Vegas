@@ -105,7 +105,8 @@ def main() -> None:
     futures = {}
     for league in TIER1:
         season = current_season_for(league, run_date)
-        sim = simulate.simulate_league(state, league, season, n_sims=args.season_sims)
+        sim = simulate.simulate_league(state, league, season,
+                                       n_sims=args.season_sims, as_of=run_date)
         if sim is None:
             print(f"   {league}: no {season} fixtures upstream yet — skipped")
             futures[league] = {"season": season, "status": "no_fixtures"}

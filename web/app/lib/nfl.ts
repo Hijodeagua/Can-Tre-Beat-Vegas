@@ -155,6 +155,17 @@ export interface NflEloHistory {
   teams: Record<string, [string, number][]>;
 }
 
+/** Where the rest-of-season sim expects each team's rating to go:
+ * [ISO date, mean, 10th pct, 90th pct] per checkpoint, opening on today's
+ * actual rating so the chart can continue the history line. Absent once
+ * there is nothing left to simulate. */
+export interface NflEloProjection {
+  season: number;
+  sims: number;
+  from_date: string;
+  teams: Record<string, [string, number, number, number][]>;
+}
+
 export interface NflLatest {
   generated_at: string;
   run_date: string;
@@ -170,6 +181,7 @@ export interface NflLatest {
   ledger: NflLedger;
   futures: NflFutures;
   elo_history?: NflEloHistory;
+  elo_projection?: NflEloProjection;
 }
 
 const data = latest as unknown as NflLatest;

@@ -31,7 +31,6 @@ const TABS = [
 type TabSlug = (typeof TABS)[number]['slug'];
 
 const data = getNflLatest();
-const TOP_HIGHLIGHT = 12;
 
 function Empty({ children }: { children: React.ReactNode }) {
   return (
@@ -199,13 +198,27 @@ function ForecastTab() {
     return <Empty>No remaining games to simulate.</Empty>;
   }
   const rows = inScope(teams, scope);
+  // The chart follows the scope pills, and never a top-N slice: the
+  // labels name the two ends of whatever board is on screen, so the
+  // bottom of it has to be in the data.
+  const inChart = scope === 'All'
+    ? null
+    : new Set(inScope(data.ratings, scope).map((r) => r.team));
   const history = data.elo_history;
-  const top = new Set(data.ratings.slice(0, TOP_HIGHLIGHT).map((r) => r.team));
   const series = history
     ? Object.entries(history.teams)
-        .filter(([team]) => top.has(team))
+        .filter(([team]) => !inChart || inChart.has(team))
         .map(([team, points]) => ({ team, points: points as [string, number][] }))
     : [];
+  const projection = data.elo_projection;
+  const projectionSeries = projection
+    ? Object.entries(projection.teams)
+        .filter(([team]) => !inChart || inChart.has(team))
+        .map(([team, points]) => ({
+          team,
+          points: points as [string, number, number, number][],
+        }))
+    : undefined;
   const sims = data.futures.sims ?? 0;
 
   return (
@@ -254,16 +267,23 @@ function ForecastTab() {
       {series.length > 0 && history && (
         <section className="mt-8">
           <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
-            Elo Trend — {history.season} top {TOP_HIGHLIGHT}
+            Elo Trend — {history.season} {scope === 'All' ? 'all 32' : scope}
           </h3>
           <div className="mt-3">
-            <EloTrendChart series={series} />
+            <EloTrendChart series={series} projection={projectionSeries} />
           </div>
           <p className="mt-2 text-[12px]" style={{ color: 'var(--th-faint)' }}>
             Each point is a team&apos;s pre-game Elo at that date, opening with the
-            post-regression preseason rating; the final point is the live rating as of the{' '}
-            {data.run_date} run. The top six by current Elo are highlighted and labeled; the grey
-            pack is the rest of the top {TOP_HIGHLIGHT}. Hover any point for the exact value.
+            post-regression preseason rating; the last actual point is the live rating as of
+            the {data.run_date} run. The chart follows the scope pills above.
+            {projection && (
+              <>
+                {' '}
+                The projection is the same {projection.sims.toLocaleString()}-run
+                rest-of-season simulation as the table above — regular season only, since the
+                postseason isn&apos;t every team&apos;s season.
+              </>
+            )}
           </p>
         </section>
       )}

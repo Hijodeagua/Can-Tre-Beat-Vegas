@@ -286,13 +286,28 @@ function ForecastTab() {
   const rows = conf === 'All'
     ? teams.slice(0, data.top_n)
     : teams.filter((t) => t.conference === conf);
+  // The chart follows the conference pills: a conference is the league
+  // whose two ends the labels name, and "All" is all of FBS. Either way
+  // the bottom of the table has to be in the data, so this is never a
+  // top-N slice.
+  const inChart = conf === 'All'
+    ? null
+    : new Set(data.ratings.filter((r) => r.conference === conf).map((r) => r.team));
   const history = data.elo_history;
-  const top = new Set(data.ratings.slice(0, data.top_n).map((r) => r.team));
   const series = history
     ? Object.entries(history.teams)
-        .filter(([team]) => top.has(team))
+        .filter(([team]) => !inChart || inChart.has(team))
         .map(([team, points]) => ({ team, points: points as [string, number][] }))
     : [];
+  const projection = data.elo_projection;
+  const projectionSeries = projection
+    ? Object.entries(projection.teams)
+        .filter(([team]) => !inChart || inChart.has(team))
+        .map(([team, points]) => ({
+          team,
+          points: points as [string, number, number, number][],
+        }))
+    : undefined;
   const sims = data.futures.sims ?? 0;
 
   return (
@@ -339,16 +354,23 @@ function ForecastTab() {
       {series.length > 0 && history && (
         <section className="mt-8">
           <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
-            Elo Trend — {history.season} top {data.top_n}
+            Elo Trend — {history.season} {conf === 'All' ? 'FBS' : conf}
           </h3>
           <div className="mt-3">
-            <EloTrendChart series={series} />
+            <EloTrendChart series={series} projection={projectionSeries} />
           </div>
           <p className="mt-2 text-[12px]" style={{ color: 'var(--th-faint)' }}>
             Each point is a program&apos;s pre-game Elo at that date, opening with the
-            post-regression preseason rating; the final point is the live rating as of the{' '}
-            {data.run_date} run. The top six by current Elo are highlighted and labeled; the
-            grey pack is the rest of the top {data.top_n}. Hover any point for the exact value.
+            post-regression preseason rating; the last actual point is the live rating as of
+            the {data.run_date} run. The chart follows the conference pills above.
+            {projection && (
+              <>
+                {' '}
+                The projection is the same {projection.sims.toLocaleString()}-run
+                rest-of-season simulation as the table above — regular season only, no
+                playoff field.
+              </>
+            )}
           </p>
         </section>
       )}

@@ -6,6 +6,10 @@ roof with a generated_at stamp), plus `league_rankings`: a cross-league
 summary (avg Elo, avg squad value/wage, and — where the market_values
 uploads have been backfilled with them — avg squad size/age/foreigners/
 value-per-player) that powers the site's soccer rankings page.
+
+`elo_history` and `elo_projection` are the two halves of the site's Elo
+trend chart: what each club's rating has done this season, and where the
+rest-of-season sim expects it to go.
 """
 
 import json
@@ -72,6 +76,39 @@ def elo_history_payload(state: DailyState, run_date: str) -> dict:
             else:
                 points[-1] = [points[-1][0], current]
         out[league] = {"season": season, "clubs": series}
+    return out
+
+
+def elo_projection_payload(futures: dict, run_date: str) -> dict:
+    """Per top flight, each club's *projected* Elo: the rest-of-season
+    Monte Carlo's mean live rating at each checkpoint date with the
+    10th/90th-percentile band around it, anchored on today's actual
+    rating so the site's chart can draw it as the continuation of the
+    `elo_history` line rather than a floating second series.
+
+    The block is moved out of `futures` (where `simulate_league` put it)
+    and up to the top level next to `elo_history`: it is chart data on the
+    same footing, and the futures table itself never reads it.
+    """
+    out = {}
+    for league, sim in futures.items():
+        proj = sim.pop("projection", None)
+        if not proj or not proj["dates"]:
+            continue
+        # The anchor is the rating the sim itself started each club from,
+        # so the projected line leaves the actual line at today's value.
+        now = {c["team"]: c["elo"] for c in sim.get("clubs", [])}
+        clubs = {}
+        for team, rows in proj["clubs"].items():
+            elo = now.get(team)
+            anchor = [[run_date, elo, elo, elo]] if elo is not None else []
+            clubs[team] = anchor + [[d, *row] for d, row in zip(proj["dates"], rows)]
+        out[league] = {
+            "season": sim["season"],
+            "sims": sim["sims"],
+            "from_date": run_date,
+            "clubs": clubs,
+        }
     return out
 
 
@@ -211,6 +248,8 @@ def league_rankings_payload(ratings: dict) -> dict:
 def export(state: DailyState, run_date: str, slate: pd.DataFrame,
            futures: dict, ledger: dict, graded_today: pd.DataFrame) -> None:
     ratings = ratings_payload(state)
+    # Before the futures block is serialized — this pops its projection.
+    elo_projection = elo_projection_payload(futures, run_date)
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "run_date": run_date,
@@ -221,6 +260,7 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "ledger": ledger,
         "futures": futures,
         "elo_history": elo_history_payload(state, run_date),
+        "elo_projection": elo_projection,
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)

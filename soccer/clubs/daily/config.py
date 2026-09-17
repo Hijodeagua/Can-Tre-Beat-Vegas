@@ -27,6 +27,11 @@ SLATE_WINDOW_DAYS = 2
 # more sims buy nothing visible.
 SEASON_SIMS = 30000
 MAX_GOALS = 8            # Poisson scoreline grid is [0, MAX_GOALS] per side
+# Checkpoint dates the sim reports projected Elo at, spread over the
+# remaining fixtures. Eight is enough for a readable curve per club and
+# keeps the exported block small; the site draws them as the projected
+# continuation of the Elo trend chart.
+PROJECTION_POINTS = 8
 MIN_LAMBDA = 0.2
 RELEGATION_SPOTS = 3     # bottom-3 = drop zone (incl. any playoff spot)
 UCL_SPOTS = 4

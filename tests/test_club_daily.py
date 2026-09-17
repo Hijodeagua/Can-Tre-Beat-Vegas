@@ -331,3 +331,44 @@ class TestSimulateLeague:
         # table ordered by expected finish, best first
         positions = [c["exp_position"] for c in clubs]
         assert positions == sorted(positions)
+
+    def test_projection_covers_every_club_at_every_checkpoint(self):
+        state = self._state()
+        sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=200, seed=1)
+        proj = sim["projection"]
+        # One remaining fixture date in the fixture set, so one checkpoint.
+        assert proj["dates"] == ["2026-09-05"]
+        assert set(proj["clubs"]) == set("ABCDEFG")
+        for rows in proj["clubs"].values():
+            assert len(rows) == len(proj["dates"])
+            for mean, lo, hi in rows:
+                assert lo <= mean <= hi
+        # Every simulated match is inside the league, and an Elo update is
+        # zero-sum, so the projected mean ratings still total what the
+        # clubs started on.
+        start = sum(c["elo"] for c in sim["clubs"])
+        assert sum(r[-1][0] for r in proj["clubs"].values()) == pytest.approx(start, abs=0.5)
+
+    def test_as_of_keeps_checkpoints_in_the_future(self):
+        state = self._state()
+        # A fixture still unplayed on a past date is simulated, but its
+        # date is not a checkpoint — it folds into the next one.
+        sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=50, seed=1,
+                                       as_of="2026-09-05")
+        assert sim["projection"]["dates"] == []
+        sim = simulate.simulate_league(state, "epl", "2026-27", n_sims=50, seed=1,
+                                       as_of="2026-09-01")
+        assert sim["projection"]["dates"] == ["2026-09-05"]
+
+
+class TestProjectionCheckpoints:
+    def test_last_date_always_included_and_capped(self):
+        dates = [f"2026-09-{d:02d}" for d in range(1, 21)]
+        picked = simulate._checkpoints(dates * 2, n=5)
+        assert len(picked) == 5
+        assert picked[0] == dates[0] and picked[-1] == dates[-1]
+        assert picked == sorted(set(picked))
+
+    def test_fewer_dates_than_points_are_all_checkpoints(self):
+        dates = ["2026-09-05", "2026-09-01", "2026-09-05"]
+        assert simulate._checkpoints(dates, n=8) == ["2026-09-01", "2026-09-05"]

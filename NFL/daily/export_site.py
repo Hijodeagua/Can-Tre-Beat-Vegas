@@ -6,7 +6,8 @@ elo_history under one roof with a generated_at stamp).
 `ratings` is the full 32-team board ranked by Elo with season-to-date
 record; `divisions` is the eight-division summary that powers the
 division-strength table; `elo_history` is every team's current-season
-Elo trajectory for the trend chart.
+Elo trajectory and `elo_projection` where the rest-of-season sim expects
+each to go — the two halves of the trend chart.
 """
 
 from __future__ import annotations
@@ -134,6 +135,35 @@ def elo_history_payload(state: DailyState, run_date: str,
     return {"season": season, "teams": series}
 
 
+def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
+    """Every team's *projected* Elo: the rest-of-season Monte Carlo's mean
+    live rating at each checkpoint date with the 10th/90th-percentile band
+    around it, anchored on today's actual rating so the site's chart draws
+    it as the continuation of the `elo_history` line rather than a
+    floating second series.
+
+    The block is moved out of `futures` (where the sim put it) and up to
+    the top level next to `elo_history`: it is chart data on the same
+    footing, and the futures table itself never reads it. Empty when there
+    is nothing left to simulate.
+    """
+    proj = (futures or {}).pop("projection", None)
+    if not proj or not proj["dates"]:
+        return {}
+    now = {t["team"]: t["elo"] for t in futures.get("teams", [])}
+    teams = {}
+    for team, rows in proj["teams"].items():
+        elo = now.get(team)
+        anchor = [[run_date, elo, elo, elo]] if elo is not None else []
+        teams[team] = anchor + [[d, *row] for d, row in zip(proj["dates"], rows)]
+    return {
+        "season": futures.get("season"),
+        "sims": futures.get("sims"),
+        "from_date": run_date,
+        "teams": teams,
+    }
+
+
 def current_week(state: DailyState, run_date: str) -> tuple[int | None, str | None]:
     nw = next_week(state, run_date)
     if nw is None:
@@ -152,6 +182,8 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
            recent: pd.DataFrame) -> dict:
     pre = preseason_ratings(state)
     ratings = ratings_payload(state, pre)
+    # Before the futures block is serialized — this pops its projection.
+    elo_projection = elo_projection_payload(futures, run_date)
     week, label = current_week(state, run_date)
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -176,6 +208,7 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "ledger": ledger,
         "futures": futures or {"season": state.season, "status": "no_games"},
         "elo_history": elo_history_payload(state, run_date, pre),
+        "elo_projection": elo_projection,
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)

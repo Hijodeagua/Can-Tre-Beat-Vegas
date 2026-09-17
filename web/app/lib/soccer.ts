@@ -76,6 +76,17 @@ export interface SoccerEloHistoryLeague {
   clubs: Record<string, [string, number][]>;
 }
 
+/** Where the rest-of-season sim expects each club's rating to go:
+ * [ISO date, mean, 10th pct, 90th pct] per checkpoint, opening on today's
+ * actual rating so the chart can continue the history line. A league with
+ * no fixtures left to simulate has no entry. */
+export interface SoccerEloProjectionLeague {
+  season: string;
+  sims: number;
+  from_date: string;
+  clubs: Record<string, [string, number, number, number][]>;
+}
+
 /**
  * One league's cross-league ranking row. Current Elo always has a value
  * once the league has played matches; the squad-economics fields are each
@@ -143,6 +154,7 @@ export interface SoccerLatest {
   ledger: { graded: number };
   futures: Record<string, SoccerFuturesLeague>;
   elo_history?: Record<string, SoccerEloHistoryLeague>;
+  elo_projection?: Record<string, SoccerEloProjectionLeague>;
 }
 
 const data = latest as unknown as SoccerLatest;

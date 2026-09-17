@@ -23,6 +23,13 @@ field. The NFL's is a rulebook, so it is played out here:
   survivor; Championship at the higher seed; Super Bowl neutral.
 - A playoff game already on the spine as final is honoured: whenever the
   simulated bracket produces that matchup, the real result is used.
+
+Alongside the odds the sim reports a `projection` block: the mean and
+10th/90th-percentile Elo of every team at a handful of checkpoint dates
+across the remaining regular season, read off the live in-sim ratings.
+That is the projected continuation the site's Elo trend chart draws —
+the same simulation behind the table, not a second model. The bracket is
+left out of it: the postseason is not every team's season.
 """
 
 from __future__ import annotations
@@ -30,7 +37,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from NFL.daily.config import SEASON_SIMS
+from NFL.daily.config import PROJECTION_POINTS, SEASON_SIMS
 from NFL.daily.state import DailyState
 from NFL.elo.engine import REST_BONUS_DAYS
 from NFL.elo.teams import (
@@ -68,13 +75,32 @@ def current_records(games: pd.DataFrame, season: int,
     return out.reset_index()
 
 
+def _checkpoints(dates: list[str], n: int = PROJECTION_POINTS) -> list[str]:
+    """Up to `n` evenly spaced dates out of the remaining game dates, the
+    last one always included — the x positions the projected Elo line is
+    drawn through. Fewer than `n` distinct dates left means every one of
+    them is a checkpoint."""
+    uniq = sorted(set(dates))
+    if len(uniq) <= n:
+        return uniq
+    last = len(uniq) - 1
+    return [uniq[i] for i in sorted({round(i * last / (n - 1)) for i in range(n)})]
+
+
+def _elo_stats(R: np.ndarray) -> np.ndarray:
+    """Mean and 10th/90th-percentile rating per team across the sims —
+    the projected line and the band around it, as a (3, teams) array."""
+    return np.vstack([R.mean(axis=0), np.percentile(R, [10, 90], axis=0)])
+
+
 def _pct(w: np.ndarray, l: np.ndarray, t: np.ndarray) -> np.ndarray:
     g = w + l + t
     return np.where(g > 0, (w + 0.5 * t) / np.maximum(g, 1), 0.0)
 
 
 def simulate_season(state: DailyState, season: int | None = None,
-                    n_sims: int = SEASON_SIMS, seed: int | None = 0) -> dict | None:
+                    n_sims: int = SEASON_SIMS, seed: int | None = 0,
+                    as_of: str | None = None) -> dict | None:
     season = season or state.season
     games = state.games
     teams = list(TEAMS)
@@ -104,7 +130,24 @@ def simulate_season(state: DailyState, season: int | None = None,
     bye = engine.rest_bonus
     games_left = np.zeros(n)
 
-    for r in remaining.sort_values(["date", "gametime", "game_id"]).itertuples(index=False):
+    # Projection checkpoints. Each snapshot date's ratings are complete
+    # once the last remaining game on or before it has been played, so the
+    # snapshot is taken on the way into the *next* game (and after the loop
+    # for the final one) — a position the `continue` below can't skip.
+    ordered = remaining.sort_values(["date", "gametime", "game_id"])
+    dates = [str(d) for d in ordered["date"]]
+    # Only dates after the run date are checkpoints: today's own slate is
+    # unplayed, and a game still unplayed on an earlier date would draw
+    # the projected line backwards. Both fold into the first real
+    # checkpoint instead.
+    checkpoints = _checkpoints([d for d in dates if as_of is None or d > as_of])
+    snap_before = {max(i for i, d in enumerate(dates) if d <= cp) + 1: slot
+                   for slot, cp in enumerate(checkpoints)}
+    snaps: dict[int, np.ndarray] = {}
+
+    for i, r in enumerate(ordered.itertuples(index=False)):
+        if i in snap_before:
+            snaps[snap_before[i]] = _elo_stats(R)
         h, a = idx.get(r.home_team), idx.get(r.away_team)
         if h is None or a is None:
             continue
@@ -126,6 +169,8 @@ def simulate_season(state: DailyState, season: int | None = None,
         if CONFERENCE_OF.get(r.home_team) == CONFERENCE_OF.get(r.away_team):
             cwins[:, h] += home_won; closs[:, h] += ~home_won
             cwins[:, a] += ~home_won; closs[:, a] += home_won
+    if len(dates) in snap_before:
+        snaps[snap_before[len(dates)]] = _elo_stats(R)
 
     # --- standings -> seeds ---------------------------------------------------
     pct = _pct(wins, losses, ties)
@@ -236,4 +281,14 @@ def simulate_season(state: DailyState, season: int | None = None,
         "sims": n_sims,
         "remaining_games": int(len(remaining)),
         "teams": table,
+        "projection": {
+            "dates": checkpoints,
+            "teams": {
+                t: [[round(float(snaps[s][0, idx[t]]), 1),
+                     round(float(snaps[s][1, idx[t]]), 1),
+                     round(float(snaps[s][2, idx[t]]), 1)]
+                    for s in range(len(checkpoints))]
+                for t in teams
+            },
+        } if len(snaps) == len(checkpoints) else None,
     }
