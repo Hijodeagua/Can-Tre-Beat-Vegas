@@ -34,6 +34,9 @@ Details and the two places an edge might actually live are in
 > [`docs/MODEL_FEATURES.md`](docs/MODEL_FEATURES.md) — the quick sheet
 > (home Elo, away Elo and the sport-specific features, with the tuned
 > parameters and which features are currently dormant).
+> [`docs/MODEL_SOURCES.md`](docs/MODEL_SOURCES.md) — the same features
+> with the upstream each one is pulled from, its measured worth, and the
+> training window per model. Plus what an NBA board would need.
 
 - **Multi-sport odds ingestion** — The Odds API (free tier) for NFL and NBA
   moneylines, spreads, and totals across major US sportsbooks; World Cup planned
