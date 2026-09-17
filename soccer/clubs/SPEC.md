@@ -123,12 +123,17 @@ ago; xG form carries chance-creation signal that neither Elo nor the
 table has). In the shipped model it lands as the strongest non-Elo
 coefficient (±0.11 vs squad value's ±0.09).
 
-**Current status: dormant.** `xg_matches.csv` has not moved past
-2025-01-04, so the staleness guard zeroes this feature on every live
-slate — the model is running Elo-only on the chance-creation axis until
-`fetch_xg.py` starts landing again from Actions. That is a fetcher
-problem, not a modeling one; the shot layer below was added as an
-independent feed for exactly this reason.
+**Current status: dormant, fetcher replaced.** `xg_matches.csv` has not
+moved past 2025-01-04, so the staleness guard zeroes this feature on
+every live slate. `data/understat.py` now pulls the
+`getLeagueData/{league}/{season}` JSON endpoint (legacy HTML blob as
+fallback) and writes both the legacy file and the wider
+`understat_matches.csv` (npxG, xPts, PPDA, deep completions); the daily
+job probes the endpoint and runs the fetch. Where both clubs had live
+form on the 2024-25+ holdout the feature is worth +1.78 SE, so it comes
+back the day the feed does. The wider metrics are collected and evaluated
+(`model/advanced.py`, `model/eval_advanced.py`) but not promoted — see
+`docs/ADVANCED_METRICS.md`.
 
 ## Shot form (football-data.co.uk layer)
 
@@ -346,8 +351,12 @@ site consumes.
   Actions-refreshed, rolling shots-on-target form as a validated model
   feature (+2.9 SE on the 2024-25 + 2025-26 holdout) and the live
   chance-creation signal while Understat is stale
-- [ ] Revive the Understat feed — `xg_matches.csv` has been stuck at
-  2025-01-04, so `xg_net_diff` is 0 on every live slate
+- [~] Revive the Understat feed — fetcher rewritten against the
+  `getLeagueData` endpoint; waiting on the first Actions refresh to
+  confirm the live response shape (the sandbox cannot reach the host)
+- [ ] Promote any of the advanced Understat features (npxG, xPts, PPDA,
+  deep, rest) — only after a season of live rows; today's ablation is
+  scored on a dead feed and says nothing about them
 - [ ] Shot coverage for the second divisions (needs a football-data.co.uk
   name mapping that can't be derived from the sandbox-reachable mirror)
 - [ ] Second-division futures (promotion odds) — one config flip in

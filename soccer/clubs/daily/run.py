@@ -38,7 +38,7 @@ from soccer.clubs.daily.config import (
     EMAIL_WEEKDAYS,
     SEASON_SIMS,
 )
-from soccer.clubs.daily.state import build_state
+from soccer.clubs.daily.state import build_state, feed_status
 from soccer.clubs.data.leagues import TIER1, current_season_for
 
 
@@ -76,6 +76,15 @@ def main() -> None:
 
     print("== Building Elo state (glued replay + outcome/score fits)")
     state = build_state()
+
+    # One line per form feed. A STALE feed is not an error: its staleness
+    # guard already zeroes the feature and the slate runs on what is
+    # current. It is the thing to notice in the log, though.
+    print("== Feed freshness")
+    feeds = feed_status(run_date)
+    from common.freshness import gate
+    for report in feeds.values():
+        gate(report)
 
     print("== Grading")
     graded = grade.grade_all(state.results, run_date)
@@ -117,7 +126,7 @@ def main() -> None:
               f"title favorite {top['team']} {top['p_title']:.0%}")
 
     print("== Exporting site JSON + ratings artifact")
-    export_site.export(state, run_date, slate, futures, ledger, graded)
+    export_site.export(state, run_date, slate, futures, ledger, graded, feeds=feeds)
     from soccer.clubs.model import export_ratings
     export_ratings.export()
 

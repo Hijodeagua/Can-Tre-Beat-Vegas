@@ -1,0 +1,418 @@
+{
+  "scope": "all",
+  "validation": "2023-24",
+  "test_from": "2024-25",
+  "n_train": 47093,
+  "n_valid": 3466,
+  "n_test": 7827,
+  "coverage": [
+    {
+      "season": "2023-24",
+      "rows": 3466,
+      "xg_net_diff_nonzero": 0.498,
+      "xg_ewm_covered": 0.498,
+      "npxg_covered": 0.0,
+      "territory_covered": 0.0,
+      "rest_covered": 0.998
+    },
+    {
+      "season": "2024-25",
+      "rows": 3761,
+      "xg_net_diff_nonzero": 0.415,
+      "xg_ewm_covered": 0.415,
+      "npxg_covered": 0.0,
+      "territory_covered": 0.0,
+      "rest_covered": 0.998
+    },
+    {
+      "season": "2025",
+      "rows": 540,
+      "xg_net_diff_nonzero": 0.0,
+      "xg_ewm_covered": 0.0,
+      "npxg_covered": 0.0,
+      "territory_covered": 0.0,
+      "rest_covered": 0.998
+    },
+    {
+      "season": "2025-26",
+      "rows": 2963,
+      "xg_net_diff_nonzero": 0.0,
+      "xg_ewm_covered": 0.0,
+      "npxg_covered": 0.0,
+      "territory_covered": 0.0,
+      "rest_covered": 0.999
+    },
+    {
+      "season": "2026",
+      "rows": 357,
+      "xg_net_diff_nonzero": 0.0,
+      "xg_ewm_covered": 0.0,
+      "npxg_covered": 0.0,
+      "territory_covered": 0.0,
+      "rest_covered": 1.0
+    },
+    {
+      "season": "2026-27",
+      "rows": 206,
+      "xg_net_diff_nonzero": 0.0,
+      "xg_ewm_covered": 0.0,
+      "npxg_covered": 0.0,
+      "territory_covered": 0.0,
+      "rest_covered": 0.985
+    }
+  ],
+  "validation_grid": [
+    {
+      "group": "base",
+      "C": 0.1,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "base",
+      "C": 0.3,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "base",
+      "C": 1.0,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "base",
+      "C": 3.0,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+xg_ewm",
+      "C": 0.1,
+      "log_loss": 1.00605,
+      "brier": 0.60213,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+xg_ewm",
+      "C": 0.3,
+      "log_loss": 1.00605,
+      "brier": 0.60213,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+xg_ewm",
+      "C": 1.0,
+      "log_loss": 1.00605,
+      "brier": 0.60213,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+xg_ewm",
+      "C": 3.0,
+      "log_loss": 1.00606,
+      "brier": 0.60213,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+xg_rolling",
+      "C": 0.1,
+      "log_loss": 1.00631,
+      "brier": 0.60228,
+      "accuracy": 0.502,
+      "n": 3466
+    },
+    {
+      "group": "+xg_rolling",
+      "C": 0.3,
+      "log_loss": 1.00631,
+      "brier": 0.60228,
+      "accuracy": 0.502,
+      "n": 3466
+    },
+    {
+      "group": "+xg_rolling",
+      "C": 1.0,
+      "log_loss": 1.00632,
+      "brier": 0.60228,
+      "accuracy": 0.502,
+      "n": 3466
+    },
+    {
+      "group": "+xg_rolling",
+      "C": 3.0,
+      "log_loss": 1.00632,
+      "brier": 0.60228,
+      "accuracy": 0.502,
+      "n": 3466
+    },
+    {
+      "group": "+matchup",
+      "C": 0.1,
+      "log_loss": 1.00608,
+      "brier": 0.60215,
+      "accuracy": 0.5026,
+      "n": 3466
+    },
+    {
+      "group": "+matchup",
+      "C": 0.3,
+      "log_loss": 1.0061,
+      "brier": 0.60216,
+      "accuracy": 0.5029,
+      "n": 3466
+    },
+    {
+      "group": "+matchup",
+      "C": 1.0,
+      "log_loss": 1.0061,
+      "brier": 0.60216,
+      "accuracy": 0.5029,
+      "n": 3466
+    },
+    {
+      "group": "+matchup",
+      "C": 3.0,
+      "log_loss": 1.0061,
+      "brier": 0.60216,
+      "accuracy": 0.5029,
+      "n": 3466
+    },
+    {
+      "group": "+territory",
+      "C": 0.1,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+territory",
+      "C": 0.3,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+territory",
+      "C": 1.0,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+territory",
+      "C": 3.0,
+      "log_loss": 1.00622,
+      "brier": 0.60221,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+rest",
+      "C": 0.1,
+      "log_loss": 1.0071,
+      "brier": 0.6027,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+rest",
+      "C": 0.3,
+      "log_loss": 1.00711,
+      "brier": 0.60271,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+rest",
+      "C": 1.0,
+      "log_loss": 1.00711,
+      "brier": 0.60271,
+      "accuracy": 0.5017,
+      "n": 3466
+    },
+    {
+      "group": "+rest",
+      "C": 3.0,
+      "log_loss": 1.00711,
+      "brier": 0.60271,
+      "accuracy": 0.5017,
+      "n": 3466
+    }
+  ],
+  "combined": {
+    "groups": [
+      "+xg_ewm",
+      "+matchup"
+    ],
+    "C": 0.1,
+    "selection": [
+      {
+        "added": "+xg_ewm",
+        "validation_log_loss": 1.00605,
+        "gain": 0.00016
+      },
+      {
+        "added": "+matchup",
+        "validation_log_loss": 1.00591,
+        "gain": 0.00014
+      },
+      {
+        "added": "+territory",
+        "validation_log_loss": 1.00591,
+        "gain": 0.0
+      }
+    ]
+  },
+  "test": [
+    {
+      "model": "base",
+      "log_loss": 1.01755,
+      "brier": 0.60957,
+      "accuracy": 0.4929,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": NaN
+    },
+    {
+      "model": "+xg_ewm",
+      "log_loss": 1.0175,
+      "brier": 0.60954,
+      "accuracy": 0.4927,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": 0.34
+    },
+    {
+      "model": "+xg_rolling",
+      "log_loss": 1.01766,
+      "brier": 0.60961,
+      "accuracy": 0.4928,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": -0.47
+    },
+    {
+      "model": "+matchup",
+      "log_loss": 1.01787,
+      "brier": 0.6098,
+      "accuracy": 0.4925,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": -1.8
+    },
+    {
+      "model": "+territory",
+      "log_loss": 1.01755,
+      "brier": 0.60957,
+      "accuracy": 0.4929,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": 1.19
+    },
+    {
+      "model": "+rest",
+      "log_loss": 1.01739,
+      "brier": 0.60953,
+      "accuracy": 0.4912,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": 0.59
+    },
+    {
+      "model": "combined",
+      "log_loss": 1.01778,
+      "brier": 0.60974,
+      "accuracy": 0.4925,
+      "n": 7827,
+      "C": 0.1,
+      "paired_se_vs_base": -0.96
+    }
+  ],
+  "test_by_season": [
+    {
+      "season": "2024-25",
+      "n": 3761,
+      "base_log_loss": 1.01224,
+      "combined_log_loss": 1.01275,
+      "paired_se": -1.04
+    },
+    {
+      "season": "2025",
+      "n": 540,
+      "base_log_loss": 1.04534,
+      "combined_log_loss": 1.04546,
+      "paired_se": -0.73
+    },
+    {
+      "season": "2025-26",
+      "n": 2963,
+      "base_log_loss": 1.01592,
+      "combined_log_loss": 1.01588,
+      "paired_se": 0.42
+    },
+    {
+      "season": "2026",
+      "n": 357,
+      "base_log_loss": 1.05393,
+      "combined_log_loss": 1.05366,
+      "paired_se": 1.12
+    },
+    {
+      "season": "2026-27",
+      "n": 206,
+      "base_log_loss": 1.00204,
+      "combined_log_loss": 1.00215,
+      "paired_se": -0.33
+    }
+  ],
+  "combined_features": [
+    "elo_gap",
+    "spend_diff_z",
+    "net_diff_z",
+    "value_diff_z",
+    "wage_diff_z",
+    "xg_net_diff",
+    "sot_net_diff",
+    "xg_for_ewm_diff",
+    "xg_against_ewm_diff",
+    "npxg_for_ewm_diff",
+    "npxg_against_ewm_diff",
+    "home_att_vs_away_def",
+    "away_att_vs_home_def",
+    "npxg_home_att_vs_away_def",
+    "npxg_away_att_vs_home_def",
+    "xg_per_shot_diff"
+  ],
+  "stale_xg_audit": {
+    "all_test_rows": {
+      "n": 7827,
+      "with_xg_net_diff": 1.01755,
+      "without": 1.01761,
+      "paired_se_for_xg": 0.7
+    },
+    "both_sides_covered": {
+      "n": 1561,
+      "with_xg_net_diff": 0.97973,
+      "without": 0.98026,
+      "paired_se_for_xg": 1.77
+    },
+    "test_rows_top5": 3649,
+    "test_rows_top5_xg_net_diff_zero": 2088
+  }
+}

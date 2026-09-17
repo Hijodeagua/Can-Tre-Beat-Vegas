@@ -24,10 +24,14 @@ Baseline log loss **1.01755** on 7,827 holdout matches.
 | `elo_gap` | derived from `results.csv` + `uefa_results.csv` | openfootball (football.json + country repos, public domain); openfootball/champions-league | `fetch_results.py`, `fetch_uefa.py` | **+0.048** |
 | `value_diff_z` | `soccer/clubs/data/market_values/values_*.csv` | Transfermarkt, **hand-uploaded** | none — manual | **+0.011** |
 | `sot_net_diff` | `soccer/clubs/data/shots_matches.csv` | football-data.co.uk (live), datasets/football-datasets GitHub mirror (fallback) | `fetch_shots.py` | **+0.006** |
-| `xg_net_diff` | `soccer/clubs/data/xg_matches.csv` | understat.com (no API — embedded JSON blob) | `fetch_xg.py` | +0.0001 — **feed dead since 2025-01-04** |
+| `xg_net_diff` | `soccer/clubs/data/xg_matches.csv` (legacy shape of `understat_matches.csv`) | understat.com `getLeagueData/{league}/{season}` JSON, legacy HTML blob fallback | `understat.py` (`fetch_xg.py` is a shim) | +0.0001 on all rows; **+1.78 SE where both clubs had live form** — feed dead since 2025-01-04, fetcher replaced, first live refresh pending from Actions |
 | `spend_diff_z` | `soccer/clubs/data/club_season_transfers.csv` | ewenme/transfers (Transfermarkt fees) | `fetch_transfers.py` | **0.000 — upstream ends 2022-23** |
 | `net_diff_z` | same | same | same | **0.000 — same** |
 | `wage_diff_z` | `market_values/values_*.csv` (optional column) | Transfermarkt, hand-uploaded | none — manual | **0.000 — column never supplied** |
+
+Advanced Understat metrics (npxG, xPts, PPDA, deep completions), rest and
+congestion are collected and evaluated but not promoted — see
+[ADVANCED_METRICS.md](ADVANCED_METRICS.md).
 
 Ratings, scorelines and MLS:
 

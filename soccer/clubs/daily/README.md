@@ -21,7 +21,8 @@ publish the site JSON, and render the twice-weekly update email.
 
 ## Data flow for a run dated D (UTC)
 
-1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` + `fetch_shots` refresh the committed CSVs
+1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` (a shim over `data/understat.py`) + `fetch_shots` refresh the committed CSVs;
+   `state.feed_status` then logs each form feed's freshness (a STALE feed is zeroed by its guard, not an error)
    (best-effort; the 10:00 UTC schedule means the prior evening's European
    matches are final and upstream has usually caught up). Order matters:
    `fetch_results` rewrites `results.csv` whole from the openfootball

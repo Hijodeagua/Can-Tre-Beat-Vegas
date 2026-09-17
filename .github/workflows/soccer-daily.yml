@@ -73,6 +73,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # The Understat endpoint is unreachable from the dev sandbox, so the
+      # only place its live response shape can be confirmed is here. One
+      # request; the pipeline's own fetch follows either way.
+      - name: Probe Understat endpoint
+        continue-on-error: true
+        shell: bash
+        run: python -m soccer.clubs.data.understat --probe epl "$(date -u +%Y)"
+
       - name: Run daily pipeline
         id: pipeline
         shell: bash

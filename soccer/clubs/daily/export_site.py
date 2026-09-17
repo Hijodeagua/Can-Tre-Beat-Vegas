@@ -255,8 +255,19 @@ def league_rankings_payload(ratings: dict) -> dict:
     return out
 
 
+def feeds_payload(feeds: dict | None) -> dict:
+    """Per-feed freshness for the site: newest row, age, and whether the
+    feature it drives is live on this run's slate."""
+    if not feeds:
+        return {}
+    return {key: {"source": r.source, "newest": r.newest, "age_days": r.age_days,
+                  "tolerance_days": r.tolerance_days, "rows": r.rows, "fresh": r.fresh}
+            for key, r in feeds.items()}
+
+
 def export(state: DailyState, run_date: str, slate: pd.DataFrame,
-           futures: dict, ledger: dict, graded_today: pd.DataFrame) -> None:
+           futures: dict, ledger: dict, graded_today: pd.DataFrame,
+           feeds: dict | None = None) -> None:
     ratings = ratings_payload(state)
     # Before the futures block is serialized — this pops its projection.
     elo_projection = elo_projection_payload(futures, run_date)
@@ -271,6 +282,7 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "futures": futures,
         "elo_history": elo_history_payload(state, run_date),
         "elo_projection": elo_projection,
+        "feeds": feeds_payload(feeds),
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)
