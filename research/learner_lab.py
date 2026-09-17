@@ -300,12 +300,15 @@ def main() -> None:
     args = ap.parse_args()
 
     keys = list(LOADERS) if args.sport == "all" else [args.sport]
-    out = {}
+    OUT.mkdir(exist_ok=True)
+    path = OUT / f"{args.command}.json"
+    # Merge into whatever is already there, so `--sport nfl` does not
+    # erase yesterday's soccer run. Read-modify-write, so run one
+    # invocation at a time.
+    out = json.loads(path.read_text()) if path.exists() else {}
     for key in keys:
         sport = LOADERS[key]()
         out[key] = tune(sport) if args.command == "tune" else calibrate(sport, args.seeds)
-    OUT.mkdir(exist_ok=True)
-    path = OUT / f"{args.command}.json"
     path.write_text(json.dumps(out, indent=2, default=float) + "\n")
     print(f"\nwrote {path}")
 
