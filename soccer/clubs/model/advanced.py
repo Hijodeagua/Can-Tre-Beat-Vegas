@@ -265,7 +265,21 @@ def attach_advanced(history: pd.DataFrame, matches: pd.DataFrame | None = None,
     # shifted form has a row to land on.
     key = ["league", "date", "home_team", "away_team"]
     covered = set(map(tuple, matches[key].to_numpy())) if len(matches) else set()
-    extra = history[~history[key].apply(tuple, axis=1).isin(covered)][key].drop_duplicates()
+    # A club plays at most once a day, so a history row whose home or
+    # away side already has a metrics row that day is the same match under
+    # another spelling (an alias the fetcher missed), not an uncovered
+    # match: adding a virtual row for it would give that club two rows on
+    # one date and break the join. The side that matches keeps its form;
+    # the misspelt side reads NaN until the alias is added.
+    if len(matches):
+        seen = (set(map(tuple, matches[["league", "date", "home_team"]].to_numpy()))
+                | set(map(tuple, matches[["league", "date", "away_team"]].to_numpy())))
+    else:
+        seen = set()
+    uncovered = ~history[key].apply(tuple, axis=1).isin(covered)
+    side_seen = (history[["league", "date", "home_team"]].apply(tuple, axis=1).isin(seen)
+                 | history[["league", "date", "away_team"]].apply(tuple, axis=1).isin(seen))
+    extra = history[uncovered & ~side_seen][key].drop_duplicates()
     if len(extra):
         extra = extra.assign(season=history.get("season", pd.Series(index=extra.index)), match_id="")
         for c in understat.COLUMNS:
@@ -284,6 +298,8 @@ def attach_advanced(history: pd.DataFrame, matches: pd.DataFrame | None = None,
 
     def side(prefix: str, team_col: str, is_home: int) -> pd.DataFrame:
         f = form[form["is_home"] == is_home][["league", "date", "team"] + formcols]
+        # One row per club-date, whatever the source tables held.
+        f = f.drop_duplicates(["league", "date", "team"], keep="first")
         f = f.rename(columns={c: f"{prefix}_{c}" for c in formcols})
         return history[["league", "date", team_col]].merge(
             f, left_on=["league", "date", team_col], right_on=["league", "date", "team"],

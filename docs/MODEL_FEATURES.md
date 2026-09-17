@@ -27,36 +27,45 @@ Nothing in this file is an opinion about which feature matters.
 Ten league pools (five top flights + their second divisions) plus MLS.
 Pick and forecast: `soccer/clubs/daily/{predict,simulate}.py`.
 
-**Match outcome — multinomial logistic over {home win, draw, away win}**
-(`soccer/clubs/model/train.py`, fitted artifact
-`soccer/clubs/model/artifacts/outcome_model.pkl`). These seven features,
-in the artifact's own order:
+**Match outcome — random forest over {home win, draw, away win}**
+(`soccer/clubs/model/train.py`, `common/learners.py`; refit in-run daily —
+the forest pickle `train.py` writes is ~50 MB and is not committed).
+Every input the model sees, 31 columns:
 
-* **Home Elo** — club Elo, home side, plus the pool's home advantage
-* **Away Elo** — club Elo, away side
-* `elo_gap` — the venue-adjusted difference of the two above; the model
-  sees the gap, not the two ratings separately
-* `spend_diff_z` — gross transfer spend this season, home − away,
-  z-scored within league-season
-* `net_diff_z` — net spend (spend − sales), same normalisation
-* `value_diff_z` — squad market value differential
-* `wage_diff_z` — wage bill differential
-* `xg_net_diff` — rolling xG net (for − against, last 10 league matches),
-  home − away
-* `sot_net_diff` — rolling shots-on-target net, same shape
+* **Home Elo**, **Away Elo** — each club's Elo as its own column, so a
+  rating *level* can matter, not only the gap (a big favourite above
+  1625 Elo wins 77% of the time; the same gap below 1325 wins 56%)
+* `elo_gap` — the venue-adjusted difference, alongside the two above
+* `spend_diff_z`, `net_diff_z`, `value_diff_z`, `wage_diff_z` — squad
+  economics differentials, z-scored within league-season (wages still
+  unpopulated)
+* `xg_net_diff` — rolling xG net over 10 league matches, home − away
+  (Understat; live again since 2026-09-17)
+* `sot_net_diff` — rolling shots-on-target net (football-data.co.uk)
+* **Advanced Understat layer** (`soccer/clubs/model/advanced.py`):
+  `xg_for/against_ewm_diff`, `npxg_for/against_ewm_diff` (5-match
+  half-life) and the rolling-10 versions; `home_att_vs_away_def`,
+  `away_att_vs_home_def` and their npxG versions (home-only attack vs
+  away-only defence); `xg_per_shot_diff`; `deep_diff`, `deep_share_diff`
+  (field-tilt proxy — Understat publishes no possession), `ppda_diff`,
+  `xpts_ewm_diff`; `rest_diff`, `congestion14_home/away`,
+  `uefa7_home/away` from the whole calendar
 
-**Live weight, from the fitted artifact** (coefficient on the home-win
-class): `value_diff_z` +0.078 · `sot_net_diff` +0.061 · `spend_diff_z`
-+0.024 · `xg_net_diff` +0.020 · `net_diff_z` +0.007 · `elo_gap` +0.003
-(per Elo point, so ~+0.3 per 100) · `wage_diff_z` 0.000.
+A column whose feed has not landed is NaN and the learner handles it;
+nothing is dropped for being empty today. npxG, xPts, PPDA and deep
+completions are exactly that until the one-time Understat backfill
+(`soccer-daily` → Run workflow → "Backfill every Understat season") is
+on `main`.
 
-**Dormant right now, and why it matters:** `wage_diff_z` has a zero
-coefficient (no wage uploads in `soccer/clubs/data/market_values/`), and
-`xg_net_diff` is fed as 0 on every current slate because the Understat
-backfill stops at 2025-01-04 and the staleness guard voids form older than
-130 days. `sot_net_diff` (football-data.co.uk) is the chance-creation feed
-that is actually updating. Both degrade to 0 by design rather than
-poisoning the fit — see `soccer/clubs/model/form.py`.
+**Learner choice**, measured on 2024-25 onward (7,827 matches): the full
+set with a logistic 1.01676 vs the old seven-feature model 1.01755
+(+1.4 SE); random forest 1.01846, boosting 1.02019 — the forest is
+0.0017 behind the logistic, inside noise, and ships by decision: it can
+use the advanced columns non-linearly once they exist, and it can carry
+upset structure a linear fit averages away. Re-measure with
+`python -m soccer.clubs.model.eval_learners` after the backfill.
+Per-league sub-models vs one pooled model: see
+[ADVANCED_METRICS.md](ADVANCED_METRICS.md).
 
 **Scoreline** (`soccer/clubs/daily/scoring.py`): independent Poisson per
 side, λ from the league's own goal rates over the last two completed

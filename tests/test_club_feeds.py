@@ -10,10 +10,15 @@ from soccer.clubs.daily import export_site, state
 def test_feed_status_reads_the_committed_feeds():
     feeds = state.feed_status("2026-09-17")
     assert set(feeds) == {"xg", "shots", "understat_advanced"}
-    # The committed xG file ended on 2025-01-04: stale on any 2026 run date.
-    assert feeds["xg"].rows > 0 and not feeds["xg"].fresh
-    # The processed Understat table is not committed until Actions fetches it.
-    assert feeds["understat_advanced"].rows == 0 and not feeds["understat_advanced"].fresh
+    assert feeds["xg"].rows > 0 and feeds["xg"].newest is not None
+    # Whatever the committed files hold today, the verdict follows the
+    # guard: fresh iff the newest row is within the tolerance.
+    for r in feeds.values():
+        if r.rows:
+            assert r.fresh == (r.age_days <= r.tolerance_days)
+    # A run date far past every feed reads STALE across the board.
+    far = state.feed_status("2099-01-01")
+    assert not any(r.fresh for r in far.values())
 
 
 def test_feeds_payload_serialises_reports():

@@ -86,16 +86,22 @@ SPLITS = ["pass_epa_matchup_net", "rush_epa_matchup_net"]
 GROUPS = {"elo": ELO, "core": CORE, "success": SUCCESS, "early_explosive": EARLY_EXPLOSIVE,
           "drive": DRIVE, "situational": SITUATIONAL, "splits": SPLITS}
 
-# What the daily pipeline ships (verdict of `eval_advanced`, see
-# docs/ADVANCED_METRICS.md): Elo plus the publisher's opponent-adjusted
-# EPA per play, offence and defence, both sides, and the matchup net.
-# Clean 2024-2025 test: log loss 0.49768 -> 0.49285 overall (+1.87 SE),
-# 0.55358 -> 0.54598 on FBS-vs-FBS games (+2.60 SE). Adding success,
-# situational or split groups on top gains under 0.001 and the greedy
-# combined set chosen on 2023 is worse than core alone on the test
-# window, so the compact set ships.
-PRODUCTION_FEATURES: list[str] = ELO + CORE
-PRODUCTION_C = 1.0
+# What the daily pipeline ships: every pregame feature this module builds,
+# with the home and away Elo as their own inputs beside the Elo logit so
+# the learner can find a level effect or a threshold the gap alone hides.
+# The learner is the one `eval_advanced` measured best on the clean
+# 2024-2025 window with this full set (docs/ADVANCED_METRICS.md).
+RAW_ELO = ["elo_home_pre", "elo_away_pre"]
+PRODUCTION_FEATURES: list[str] = (ELO + RAW_ELO + CORE + SUCCESS + EARLY_EXPLOSIVE
+                                  + DRIVE + SITUATIONAL + SPLITS)
+PRODUCTION_LEARNER = "gbm"
+PRODUCTION_C = 1.0            # the logistic's C, when that is the learner
+
+
+def make_model(kind: str = PRODUCTION_LEARNER):
+    """The unfitted production learner (`common/learners.py`)."""
+    from common import learners
+    return learners.make(kind, C=PRODUCTION_C)
 
 
 def all_features() -> list[str]:
@@ -268,25 +274,27 @@ def coverage_report(tw: pd.DataFrame, games: pd.DataFrame):
 # production second stage
 # --------------------------------------------------------------------------
 class SecondStage:
-    """Elo + the production feature set -> home win probability, fit
+    """Elo + every pregame efficiency feature -> home win probability, fit
     in-run on the replay history joined to the weekly table (2005 onward,
-    ties excluded). `p_home` returns None when either side has no
-    strength row for the game's (season, week), and the caller falls
-    back to Elo."""
+    ties excluded) with the production learner. `p_home` returns None
+    when either side has no strength row for the game's (season, week),
+    and the caller falls back to Elo."""
 
     def __init__(self, tw: pd.DataFrame, history: pd.DataFrame,
-                 features: list[str] | None = None, C: float = PRODUCTION_C):
-        from common import evaluate
+                 features: list[str] | None = None, learner: str = PRODUCTION_LEARNER):
         self.tw = tw
         self.features = list(features or PRODUCTION_FEATURES)
+        self.learner = learner
         self._strength: dict[tuple, pd.DataFrame] = {}
         table = build_game_table(history, tw)
         train = table[(table["season"] >= 2005) & (table["home_win"] != 0.5)]
-        train = train[train[self.features].notna().all(axis=1)]
+        # Only the Elo inputs are required; the efficiency columns may be
+        # NaN (an FCS side, week 1 with no prior) and the learner handles it.
+        train = train[train[[f for f in self.features if f in ELO + RAW_ELO]].notna().all(axis=1)]
         self.n_train = int(len(train))
         self.seasons = (int(train["season"].min()), int(train["season"].max())) if self.n_train else None
-        self.model = evaluate.make_logistic(C).fit(train[self.features],
-                                                   (train["home_win"] == 1.0).astype(int))
+        self.model = make_model(learner).fit(train[self.features],
+                                             (train["home_win"] == 1.0).astype(int))
 
     def strength(self, season: int, week: int, postseason: bool) -> pd.DataFrame:
         key = (int(season), int(week), bool(postseason))
@@ -295,14 +303,18 @@ class SecondStage:
         return self._strength[key]
 
     def p_home(self, home_id, away_id, p_elo: float, season: int, week: int,
-               postseason: bool = False) -> float | None:
+               postseason: bool = False,
+               elo_home: float | None = None, elo_away: float | None = None) -> float | None:
         if home_id is None or away_id is None or pd.isna(home_id) or pd.isna(away_id):
             return None
         strength = self.strength(season, week, postseason)
+        if int(home_id) not in strength.index or int(away_id) not in strength.index:
+            return None
         row = _features_from(strength, int(home_id), int(away_id))
         p = min(max(p_elo, 1e-4), 1 - 1e-4)
         row["elo_logit"] = float(np.log(p / (1 - p)))
-        X = pd.DataFrame([row])[self.features]
-        if X.isna().any(axis=None):
+        row["elo_home_pre"], row["elo_away_pre"] = elo_home, elo_away
+        X = pd.DataFrame([row]).reindex(columns=self.features)
+        if X[[f for f in self.features if f in ELO + RAW_ELO]].isna().any(axis=None):
             return None
         return float(self.model.predict_proba(X)[0, 1])

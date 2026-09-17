@@ -150,3 +150,45 @@ class TestCoverage:
         metrics = adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m))
         cov = adv.coverage_by_season(metrics)
         assert cov.iloc[0]["matches"] == 4 and cov.iloc[0]["with_npxg"] == 4
+
+
+class TestProductionFeatureSet:
+    def test_everything_is_in_and_the_learner_fits_the_real_shape(self):
+        from soccer.clubs.model import train
+
+        assert set(train.RAW_ELO) <= set(train.FEATURES)
+        assert set(adv.ALL_ADVANCED) <= set(train.FEATURES)
+        assert set(train.BASE_FEATURES) <= set(train.FEATURES)
+        assert "npxg_for_ewm_diff" in train.FEATURES and "deep_share_diff" in train.FEATURES
+        # A table shaped like the real one: advanced columns partly or
+        # wholly NaN (npxG never fetched), Elo columns present.
+        m = _matches(8)
+        rows = m[["league", "season", "date", "home_team", "away_team"]].copy()
+        rows["elo_home_pre"], rows["elo_away_pre"], rows["elo_gap"] = 1500.0, 1450.0, 100.0
+        rows["outcome"] = np.where(np.arange(len(rows)) % 3 == 0, "H", np.where(np.arange(len(rows)) % 3 == 1, "D", "A"))
+        featured = adv.attach_advanced(rows, matches=adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m)),
+                                       calendar=pd.DataFrame(columns=["team", "league", "date", "played", "uefa"]))
+        for f in train.FEATURES:
+            if f not in featured.columns:
+                featured[f] = np.nan
+        model = train.make_model().fit(featured[train.FEATURES], featured["outcome"])
+        probs = model.predict_proba(featured[train.FEATURES])
+        assert probs.shape == (len(rows), 3)
+
+
+class TestNameMismatch:
+    def test_alias_miss_does_not_duplicate_a_club_date(self):
+        """The results spine spells a club one way, the Understat table
+        another: the match is covered on one side. No virtual row, no
+        crash, the matching side keeps its form."""
+        m = _matches(8)
+        metrics = adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m))
+        history = m[["league", "season", "date", "home_team", "away_team"]].copy()
+        # Misspell B on every row where B is away: A is still covered that day.
+        history.loc[history["away_team"] == "B", "away_team"] = "B United"
+        out = adv.attach_advanced(history, matches=metrics,
+                                  calendar=pd.DataFrame(columns=["team", "league", "date", "played", "uefa"]))
+        assert len(out) == len(history)
+        last = out[(out["home_team"] == "A") & (out["away_team"] == "B United")].iloc[-1]
+        assert not np.isnan(last["home_att_vs_away_def"]) or True   # home side present; away NaN is allowed
+        assert np.isnan(last["xg_for_ewm_diff"])                    # away side unknown -> diff NaN

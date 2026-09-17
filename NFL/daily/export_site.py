@@ -222,7 +222,8 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         # Which forecast the slate carries and how fresh its feed is.
         "second_stage": {
             "on": state.second_stage is not None,
-            "model": "elo+success" if state.second_stage is not None else "elo",
+            "model": (f"elo+efficiency:{state.second_stage.learner}"
+                      if state.second_stage is not None else "elo"),
             "features": list(state.second_stage.features) if state.second_stage is not None else ["elo_logit"],
             "n_train": state.second_stage.n_train if state.second_stage is not None else None,
         },

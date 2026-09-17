@@ -115,18 +115,69 @@ rows the feature is worth +0.35 SE; on the 1,561 matches where both clubs
 had live form it is worth +1.78 SE (0.97941 vs 0.98013). The signal the
 2023-24 validation found (+2.1 SE) is still there wherever the feed is.
 
-### Production decision
+### Production decision (round 1, superseded)
 
-- Promoted: nothing new. The shipping feature set is unchanged.
-- The Understat fetcher is replaced (`fetch_xg.py` is a shim over
-  `understat.py`), so once Actions lands one refresh `xg_net_diff` comes
-  back on live slates through the existing 130-day guard.
-- The daily run logs freshness for all three feeds and writes them to
-  `web/public/data/soccer/latest.json` under `feeds`.
-- Collected, not promoted: npxG, xPts, PPDA, deep completions, xG per
-  shot, home/away attack splits, rest and congestion. Re-run
-  `eval_advanced` after a season of live Understat rows before promoting
-  any of them; the current numbers say nothing about them either way.
+The first pass promoted nothing and kept the seven-feature logistic;
+the ablation above was scored on seasons where the feed was dead, so it
+could not speak to npxG at all. Round 2 below reverses that: every
+feature ships.
+
+### Round 2 — every feature in, learner head-to-head, Elo level effect
+
+`soccer/clubs/model/eval_learners.py`, artifact
+`soccer/clubs/model/artifacts/learners_eval.json`. Fit on every season
+before 2024-25, scored 2024-25 onward. Feature sets: the round-1
+shipping set (`base`: gap + economics + xG net + SoT net) and `full`
+(home Elo, away Elo, gap, economics, xG and SoT form, and every advanced
+column — 31 inputs). Learners from `common/learners.py`, fixed
+hyperparameters, same rows.
+
+| scope | features | learner | log loss | Brier | vs round-1 model |
+|---|---|---|---|---|---|
+| all (n=7827) | base | logistic | 1.01755 | 0.60957 | — |
+| all | base | random forest | 1.01866 | 0.61022 | −0.94 SE |
+| all | base | boosting | 1.01956 | 0.61015 | −1.64 SE |
+| all | **full** | **logistic** | **1.01676** | **0.60919** | **+1.43 SE** |
+| all | full | random forest | 1.01846 | 0.61013 | −0.76 SE |
+| all | full | boosting | 1.02019 | 0.61090 | −1.77 SE |
+| top-5 (n=3649) | base | logistic | 0.98353 | 0.58576 | — |
+| top-5 | full | logistic | 0.98319 | 0.58570 | +0.35 SE |
+| top-5 | full | random forest | 0.98492 | 0.58659 | −0.73 SE |
+| top-5 | full | boosting | 0.99099 | 0.58905 | −2.35 SE |
+
+By season, round-1 model → full logistic (all leagues): 2024-25 1.01224
+→ 1.01172 (+0.59 SE), 2025-26 1.01592 → 1.01429 (+2.16 SE), 2026-27
+1.00204 → 1.00098; the two small MLS slices are a wash.
+
+**What ships: the full set with a random forest**, by decision. The
+forest is 0.0017 behind the full logistic on all leagues (0.8 SE) and
+0.0017 on the top five (0.7 SE) — noise-level — and it was measured
+with npxG, xPts, PPDA and deep completions entirely empty (the Understat
+backfill had not landed). It is the learner that can use those columns
+non-linearly when they exist, and the one that can carry upset structure
+a linear fit averages away. Re-run `eval_learners` once
+`understat_matches.csv` covers 2014-15 onward; that is the comparison to
+trust for the learner question.
+
+**Elo has a level effect, not just a gap effect.** Empirical home-win
+rate, all seasons, by home Elo × venue-adjusted gap:
+
+| home Elo | gap < −50 | −50..50 | 50..150 | > 150 |
+|---|---|---|---|---|
+| < 1325 | 0.278 (n=2436) | 0.366 (7372) | 0.466 (5867) | 0.562 (608) |
+| 1325–1475 | 0.204 (3926) | 0.365 (9522) | 0.485 (11601) | 0.575 (2673) |
+| 1475–1625 | 0.235 (838) | 0.381 (2116) | 0.518 (5557) | 0.659 (4008) |
+| > 1625 | 0.250 (12) | 0.310 (84) | 0.468 (220) | **0.767 (2068)** |
+
+The same gap converts far more often at the top of the scale. That is
+why `elo_home_pre` and `elo_away_pre` are inputs in their own right now,
+not only their difference.
+
+The processed Understat table is live: the first Actions fetch on
+2026-09-17 returned 1,952 matches with npxG/PPDA/deep for 2025-26 and
+2026-27, and `xg_net_diff` reads fresh again (newest 2026-09-16). The
+one-time backfill for 2014-15 → 2024-25 is the `understat_all` input on
+the soccer workflow.
 
 Leakage safeguards specific to this layer: form uses only rows dated
 strictly before the match (`test_form_is_strictly_pre_match_and_warms_up`),

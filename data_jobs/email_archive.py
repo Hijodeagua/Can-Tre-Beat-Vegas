@@ -72,6 +72,20 @@ def load_index(index_file: Path = INDEX_FILE) -> dict:
     return {"generated_at": None, "emails": []}
 
 
+def merge_index(ours: dict, theirs: dict) -> dict:
+    """Union of two index files keyed on (league, type, date) — what two
+    daily jobs that each archived their own email should have written
+    had they not raced to push. The later `archived_at` wins a key both
+    sides carry."""
+    merged: dict[str, dict] = {}
+    for src in (ours, theirs):
+        for e in src.get("emails", []):
+            k = _key(e["league"], e["type"], e["date"])
+            if k not in merged or str(e.get("archived_at") or "") >= str(merged[k].get("archived_at") or ""):
+                merged[k] = e
+    return {"generated_at": None, "emails": list(merged.values())}
+
+
 def save_index(index: dict, index_file: Path = INDEX_FILE) -> None:
     emails = sorted(index["emails"], key=lambda e: (e["league"], e["date"], e["type"]),
                     reverse=True)
@@ -227,7 +241,18 @@ def main(argv=None) -> int:
     pub.add_argument("--league", required=True, choices=sorted(LEAGUES))
     pub.add_argument("--manifest", required=True, help="manifest path, relative to the repo root")
     sub.add_parser("backfill")
+    mrg = sub.add_parser("merge-index",
+                         help="resolve a rebase conflict on index.json by taking the union of both sides")
+    mrg.add_argument("--ours", required=True, help="path to one side's index.json")
+    mrg.add_argument("--theirs", required=True, help="path to the other side's index.json")
+    mrg.add_argument("--out", required=True)
     args = ap.parse_args(argv)
+    if args.cmd == "merge-index":
+        merged = merge_index(json.loads(Path(args.ours).read_text(encoding="utf-8")),
+                             json.loads(Path(args.theirs).read_text(encoding="utf-8")))
+        save_index(merged, Path(args.out))
+        print(f"email_archive: merged index -> {args.out} ({len(merged['emails'])} emails)")
+        return 0
     if args.cmd == "backfill":
         n = backfill()
         print(f"email_archive: backfilled {n} emails -> {INDEX_FILE}")
