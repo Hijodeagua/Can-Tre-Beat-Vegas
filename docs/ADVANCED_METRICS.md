@@ -130,7 +130,7 @@ before 2024-25, scored 2024-25 onward. Feature sets: the round-1
 shipping set (`base`: gap + economics + xG net + SoT net) and `full` =
 exactly `train.FEATURES`: home Elo, away Elo, gap, economics, xG and SoT
 form, every advanced Understat column, and the league / tier / season
-context (46 inputs). Learners from `common/learners.py`, fixed
+context (44 inputs). Learners from `common/learners.py`, fixed
 hyperparameters, same rows. Measured **after** the Understat backfill,
 so npxG, xPts, PPDA and deep completions are real numbers on every row
 2014-15 onward.
