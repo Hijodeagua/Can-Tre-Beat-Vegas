@@ -22,7 +22,7 @@ SLATE_COLUMNS = [
     "home_team", "away_team", "home_name", "away_name",
     "home_division", "away_division", "div_game", "neutral",
     "home_rest", "away_rest",
-    "elo_home_pre", "elo_away_pre", "p_home", "pick", "pick_prob",
+    "elo_home_pre", "elo_away_pre", "p_home", "p_home_elo", "model", "pick", "pick_prob",
     "elo_spread", "pred_home_score", "pred_away_score", "pred_total",
 ]
 
@@ -65,7 +65,8 @@ def build_slate(state: DailyState, run_date: str, weeks: int = 1) -> pd.DataFram
         neutral = bool(f.neutral)
         h_rest = None if f.home_rest != f.home_rest else float(f.home_rest)
         a_rest = None if f.away_rest != f.away_rest else float(f.away_rest)
-        feat = state.feature_row(f.home_team, f.away_team, neutral, h_rest, a_rest)
+        feat = state.feature_row(f.home_team, f.away_team, neutral, h_rest, a_rest,
+                                 season=int(f.season), week=int(f.week))
         pick_home = feat["p_home"] >= 0.5
         rows.append({
             "game_id": f.game_id,
@@ -82,6 +83,8 @@ def build_slate(state: DailyState, run_date: str, weeks: int = 1) -> pd.DataFram
             "elo_home_pre": round(feat["elo_home_pre"], 1),
             "elo_away_pre": round(feat["elo_away_pre"], 1),
             "p_home": round(feat["p_home"], 4),
+            "p_home_elo": round(feat["p_home_elo"], 4),
+            "model": feat["model"],
             "pick": f.home_team if pick_home else f.away_team,
             "pick_prob": round(feat["p_home"] if pick_home else 1 - feat["p_home"], 4),
             "elo_spread": feat["elo_spread"],

@@ -219,6 +219,16 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "graded_recent": _records(recent),
         "ledger": ledger,
         "futures": futures or {"season": state.season, "status": "no_games"},
+        # Which forecast the slate carries and how fresh its feed is.
+        "second_stage": {
+            "on": state.second_stage is not None,
+            "model": "elo+success" if state.second_stage is not None else "elo",
+            "features": list(state.second_stage.features) if state.second_stage is not None else ["elo_logit"],
+            "n_train": state.second_stage.n_train if state.second_stage is not None else None,
+        },
+        "feeds": {k: {"source": r.source, "newest": r.newest, "age_days": r.age_days,
+                      "tolerance_days": r.tolerance_days, "rows": r.rows, "fresh": r.fresh}
+                  for k, r in state.feeds.items()},
         "elo_history": elo_history_payload(state, run_date, pre),
         "elo_projection": elo_projection,
     }

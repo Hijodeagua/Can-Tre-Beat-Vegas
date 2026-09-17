@@ -12,9 +12,9 @@ the site JSON, and render the twice-weekly update email.
 |---|---|
 | `run.py` | Orchestrator CLI — `python -m NFL.daily.run [--date D] [--skip-fetch] [--season-sims N] [--force-email]` |
 | `config.py` | Paths, email weekdays, sim defaults, the frozen always-home baseline |
-| `state.py` | One full Elo replay + in-run score-model fits, shared by every step; `as_of()` masks results on/after the run date |
+| `state.py` | One full Elo replay + in-run score-model fits + the Elo + adjusted-success second stage (`NFL/model/advanced.py`, on only when `data/nfl/team_games.csv` is within 10 days of the spine's last final), shared by every step; `as_of()` masks results and aggregates on/after the run date |
 | `scoring.py` | Elo edge → expected margin (linear fit, refit each run) carved out of a matchup-specific total (EWMA points for/against); the mean margin multiplier for the sim |
-| `predict.py` | Slate = the next NFL week's unplayed games: win probability, pick, the model's own line, expected score; persisted as `slate_{D}.csv` |
+| `predict.py` | Slate = the next NFL week's unplayed games: win probability (`p_home`, with `p_home_elo` and `model` = `elo+success` or `elo` beside it), pick, the model's own line, expected score; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once finals land; running ledger at `data/nfl/predictions/grades.csv` with the paired Δlog-loss vs. always-pick-home and a per-week breakdown |
 | `simulate.py` | Vectorized rest-of-season Monte Carlo with live in-sim Elo, then the seven-team bracket: expected wins, division, playoffs, #1 seed, conference title, Super Bowl |
 | `export_site.py` | `web/public/data/nfl/latest.json` (all 32, divisions, slate, ledger, futures, `elo_history` + `elo_projection`) + per-day snapshots |

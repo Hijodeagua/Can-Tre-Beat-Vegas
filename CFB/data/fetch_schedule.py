@@ -72,6 +72,10 @@ COLUMNS = [
     "home_team", "away_team", "home_conference", "away_conference",
     "home_division", "away_division", "home_points", "away_points",
     "neutral_site", "conference_game", "completed", "notes",
+    # ESPN team ids (cfbfastR `home_id` / `away_id`): the stable key the
+    # SportsDataverse weekly summaries are joined on. Additive — every
+    # consumer that reads names still does; 2001-2003 rows carry none.
+    "home_id", "away_id",
 ]
 
 # ESPN scoreboard days to re-check for finals cfbfastR-data hasn't
@@ -92,6 +96,12 @@ def _et_date(start_utc: str) -> str:
     if ts.tzinfo is None:
         ts = ts.tz_localize("UTC")
     return ts.tz_convert(ET).date().isoformat()
+
+
+def _int_id(df: pd.DataFrame, col: str) -> pd.Series:
+    if col not in df.columns:
+        return pd.Series(pd.NA, index=df.index, dtype="Int64")
+    return pd.to_numeric(df[col], errors="coerce").astype("Int64")
 
 
 def normalize(raw: pd.DataFrame) -> pd.DataFrame:
@@ -124,6 +134,8 @@ def normalize(raw: pd.DataFrame) -> pd.DataFrame:
         "conference_game": df["conference_game"].map(_as_bool).fillna(False).astype(bool),
         "completed": df["completed"].map(_as_bool).fillna(False).astype(bool),
         "notes": df["notes"],
+        "home_id": _int_id(df, "home_id"),
+        "away_id": _int_id(df, "away_id"),
     })
     # A "completed" row with no score is a cancellation or a data hole;
     # treat it as unplayed rather than as a 0-0 tie.
@@ -161,7 +173,32 @@ def fetch_season(season: int, timeout: int = 60) -> pd.DataFrame | None:
 def load_games() -> pd.DataFrame:
     if not GAMES_CSV.exists():
         return pd.DataFrame(columns=COLUMNS)
-    return pd.read_csv(GAMES_CSV, low_memory=False)
+    games = pd.read_csv(GAMES_CSV, low_memory=False)
+    for col in ("home_id", "away_id"):          # a spine written before the ids existed
+        if col not in games.columns:
+            games[col] = pd.NA
+        games[col] = pd.to_numeric(games[col], errors="coerce").astype("Int64")
+    return games
+
+
+def backfill_ids(games: pd.DataFrame, raw_dir: Path) -> pd.DataFrame:
+    """Fill `home_id` / `away_id` on an existing spine from cached
+    cfbfastR season CSVs (`cfb_schedules_{season}.csv` under `raw_dir`),
+    keyed on game_id. Touches nothing else: a one-time additive backfill
+    for rows written before the ids were part of COLUMNS."""
+    ids = []
+    for path in sorted(raw_dir.glob("cfb_schedules_*.csv")):
+        raw = pd.read_csv(path, low_memory=False, usecols=["game_id", "home_id", "away_id"])
+        ids.append(raw)
+    if not ids:
+        return games
+    lookup = pd.concat(ids, ignore_index=True).drop_duplicates("game_id").set_index("game_id")
+    out = games.copy()
+    for col in ("home_id", "away_id"):
+        filled = out["game_id"].map(lookup[col])
+        out[col] = pd.to_numeric(out[col], errors="coerce").astype("Int64")
+        out[col] = out[col].fillna(pd.to_numeric(filled, errors="coerce").astype("Int64"))
+    return out
 
 
 def write_games(games: pd.DataFrame) -> None:
@@ -280,7 +317,15 @@ def main(argv=None) -> int:
                     help="rebuild every season from 2001, not just the current one")
     ap.add_argument("--no-espn", action="store_true",
                     help="skip the ESPN scoreboard fill-in pass")
+    ap.add_argument("--backfill-ids", action="store_true",
+                    help="only fill home_id/away_id on the committed spine from "
+                         "data/college_football/raw/schedules/, no upstream fetch")
     args = ap.parse_args(argv)
+    if args.backfill_ids:
+        games = backfill_ids(load_games(), DATA_DIR / "raw" / "schedules")
+        write_games(games)
+        print({"rows": int(len(games)), "with_ids": int(games["home_id"].notna().sum())})
+        return 0
     summary = refresh(all_seasons=args.all, use_espn=not args.no_espn)
     print(summary)
     return 0

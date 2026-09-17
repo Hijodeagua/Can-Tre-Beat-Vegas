@@ -13,6 +13,7 @@ from dataclasses import dataclass
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
+from common import freshness
 from soccer.clubs.daily import scoring
 from soccer.clubs.data.leagues import LEAGUES, pool_of
 from soccer.clubs.model.elo import ClubEloEngine
@@ -75,6 +76,32 @@ class DailyState:
         for i, c in enumerate(self.outcome_model.classes_):
             out[f"p_{c}"] = probs[:, i]
         return out
+
+
+def feed_status(run_date: str) -> dict[str, freshness.FreshnessReport]:
+    """Freshness of every form feed the slate features against, on the
+    run date. Tolerance is each feed's own staleness guard, so "STALE"
+    here means exactly "the guard is zeroing this feature on today's
+    slate and the model is running without it". The understat table is
+    the advanced-metrics feed (`soccer/clubs/model/advanced.py`): logged
+    so its revival is visible, not yet a production input."""
+    from soccer.clubs.data import understat
+    from soccer.clubs.model import advanced
+
+    def _load(exists, load):
+        return load() if exists() else None
+
+    return {
+        "xg": freshness.check("understat xG (xg_matches.csv)",
+                              _load(xg.xg_available, xg.load_xg), "date", run_date, xg.MAX_AGE_DAYS),
+        "shots": freshness.check("football-data shots (shots_matches.csv)",
+                                 _load(shots.shots_available, shots.load_shots), "date", run_date,
+                                 shots.MAX_AGE_DAYS),
+        "understat_advanced": freshness.check(
+            "understat advanced (understat_matches.csv)",
+            _load(understat.OUT_CSV.exists, understat.load_processed), "date", run_date,
+            advanced.MAX_AGE_DAYS),
+    }
 
 
 def build_state() -> DailyState:

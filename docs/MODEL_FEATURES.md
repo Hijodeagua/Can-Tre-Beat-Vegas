@@ -79,8 +79,28 @@ Title / UCL / UEL / relegation odds and expected points come out of that.
 
 Pick and forecast: `NFL/daily/{predict,simulate}.py`.
 
-**Win probability — Elo alone.** No regression on top; the rating carries
-every situational edge:
+**Win probability — Elo plus adjusted success rate.** A regularised
+logistic on top of the Elo (`NFL/model/advanced.py`, fit in-run on
+2002 → last completed week, ties excluded), with six inputs:
+
+* **Elo logit** — the Elo win probability below, as a logit
+* **Home offence success** — the home team's opponent-adjusted success
+  rate above league average (weighted ridge over every offence-vs-defence
+  game before this week; half-life 5 weeks, prior season at half weight)
+* **Away offence success**, **home defence success** (allowed, so lower is
+  better), **away defence success** — same fit
+* **Success matchup net** — (home offence + away defence) − (away offence
+  + home defence)
+
+Success rate is nflverse's `success` flag (EPA > 0) over pass and run
+plays. Walk-forward 2015–2025: log loss 0.63468 → 0.63007, +2.96 SE
+paired; the clean 2024–25 window 0.62411 → 0.61853. Falls back to Elo
+alone when `data/nfl/team_games.csv` is missing or more than 10 days
+behind the spine's last completed game; the slate's `model` column says
+which one each pick used. Full ablation and the metrics collected but not
+promoted: [ADVANCED_METRICS.md](ADVANCED_METRICS.md).
+
+**Elo** — the rating carries every situational edge:
 
 * **Home Elo** — team Elo, plus home advantage (+48, and **zero** at a
   neutral site)
@@ -111,8 +131,9 @@ seven-team bracket per conference.
 
 **Not in the live forecast:** `NFL/model/v2/` is a 45-feature LightGBM
 research model (rolling box-score rates, weather, roof, QB, and the
-closing line). It informs nothing on the site — the board is the Elo
-engine above.
+closing line). It informs nothing on the site. The rest-of-season
+simulation and the expected score still run on Elo alone; only the
+pick's win probability carries the success-rate stage.
 
 ---
 
@@ -120,6 +141,28 @@ engine above.
 
 Pick and forecast: `CFB/daily/{predict,simulate}.py`. Same skeleton as the
 NFL engine with the four things college needs.
+
+**Win probability — Elo plus adjusted EPA.** A regularised logistic on top
+of the Elo (`CFB/model/advanced.py`, fit in-run on 2005 → last completed
+week), with six inputs:
+
+* **Elo logit** — the Elo win probability below, as a logit
+* **Home / away offence adjusted EPA** — SportsDataverse's
+  opponent-adjusted EPA per play (`adj_off_epa`), from the snapshot
+  through the *previous* week, blended with the prior season's final
+  regressed halfway to the mean until the team has games
+* **Home / away defence adjusted EPA** — `adj_def_epa`, same treatment
+* **Matchup net** — (home offence + away defence) − (away offence + home
+  defence)
+
+Clean 2024–25 test: log loss 0.49768 → 0.49285 overall (+1.87 SE),
+0.55358 → 0.54599 on FBS-vs-FBS games (+2.60 SE). Games with an FCS side,
+and any run where `team_weeks.csv` is more than two weeks behind the
+spine, are Elo alone; the slate's `model` column says which. Full
+ablation and what was collected but not promoted:
+[ADVANCED_METRICS.md](ADVANCED_METRICS.md).
+
+**Elo:**
 
 * **Home Elo** — program Elo, plus home advantage (+50, zero at a neutral
   site)
