@@ -58,9 +58,15 @@ ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 RAW_ELO = ["elo_home_pre", "elo_away_pre"]
 BASE_FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
 FEATURES = RAW_ELO + BASE_FEATURES + adv.ALL_ADVANCED
-# The learner `eval_learners` measured best on the 2024-25+ holdout with
-# this feature set (common/learners.py; docs/ADVANCED_METRICS.md).
-LEARNER = "gbm"
+# Random forest, by decision rather than by the holdout number: on the
+# 2024-25+ test the full-set logistic scored 1.01676 to the forest's
+# 1.01846 (0.0017, ~0.8 SE — noise-level), and that comparison was run
+# with npxG/xPts/PPDA/deep still empty. The forest is the learner that can
+# use those columns non-linearly when they land, and the one that can
+# carry upset/outlier structure a linear model averages away. Revisit with
+# `eval_learners` once the Understat backfill is on main
+# (common/learners.py; docs/ADVANCED_METRICS.md).
+LEARNER = "random_forest"
 LOGISTIC_C = 0.1
 SPLIT_SEASON = "2024-25"
 # The economics features are sparse (a small, growing fraction of rows are

@@ -48,35 +48,45 @@ const ELO_PAIR = (side: string, home: string): ModelFeature[] => [
 export const SOCCER_FEATURES: ForecastModel = {
   title: 'Soccer model features',
   engine:
-    'Multinomial logistic over {home win, draw, away win} on the features below — the two ' +
-    'Elos reach it as one venue-adjusted gap — with scorelines from independent Poisson goal ' +
-    'rates, then the rest of the season replayed with live in-sim Elo.',
+    'Random forest over {home win, draw, away win} on every feature below — the two Elos as ' +
+    'their own inputs beside the venue-adjusted gap, so a rating level can matter on its own — ' +
+    'refit from the replay each run, with scorelines from independent Poisson goal rates, then ' +
+    'the rest of the season replayed with live in-sim Elo.',
   features: [
-    ...ELO_PAIR('Club', 'plus the pool’s home advantage'),
-    { name: 'Elo gap', detail: 'the venue-adjusted difference — what the model actually reads' },
+    ...ELO_PAIR('Club', 'each fed to the model on its own, not only as a gap'),
+    { name: 'Elo gap', detail: 'the venue-adjusted difference, alongside the two ratings' },
     { name: 'Transfer spend', detail: 'gross spend this season, home − away, z-scored in league-season' },
     { name: 'Net spend', detail: 'spend − sales, same normalisation' },
     { name: 'Squad value', detail: 'market-value differential' },
     {
       name: 'Wage bill',
       detail: 'wage-bill differential',
-      dormant: 'no wage uploads yet, so its fitted weight is 0.000',
+      dormant: 'no wage uploads yet, so the column is constant',
+    },
+    { name: 'xG form', detail: 'rolling xG net over 10 league matches, home − away — Understat, live again since 2026-09-17' },
+    { name: 'Shot form', detail: 'rolling shots-on-target net (football-data.co.uk)' },
+    {
+      name: 'xG / npxG form, both flavours',
+      detail: 'exponentially weighted (5-match half-life) and rolling-10 xG and non-penalty xG for and against, home − away',
     },
     {
-      name: 'xG form',
-      detail: 'rolling xG net over 10 league matches, home − away',
-      dormant: 'the Understat feed stops at 2025-01-04, so the staleness guard voids it',
+      name: 'Attack vs defence',
+      detail: 'the home side’s home-only xG attack against the away side’s away-only xG defence, and the reverse; npxG versions too; xG per shot',
     },
-    { name: 'Shot form', detail: 'rolling shots-on-target net — the chance-creation feed that is live' },
+    {
+      name: 'Territory',
+      detail: 'deep completions, deep share (a field-tilt proxy — Understat publishes no possession), PPDA (pressing), xPts form',
+    },
+    { name: 'Rest and congestion', detail: 'rest days, matches in the last 14 days, a European tie in the last 7 — from the whole calendar' },
   ],
   gaps:
-    'Measured on held-out seasons, the Elo gap is worth about four times the next feature ' +
-    'and squad value is the only economics feature doing any work — the two transfer-spend ' +
-    'features are constant on every recent row, so three of seven contribute nothing today. ' +
-    'Rolling goal form and form-as-surprise were both tested and neither cleared the bar — ' +
-    'the goals are already in the rating, and together the two fight each other — so the ' +
-    'candidates worth chasing carry what the score line does not: possession, chance ' +
-    'quality, and the corners, cards and fouls sitting unparsed in files already downloaded.',
+    'Measured on 2024-25 onward, the full set beats the old seven-feature model by about ' +
+    '0.0008 log loss (+1.4 SE) with a logistic; a random forest scores 0.0017 worse than that ' +
+    'logistic (noise-level) and ships anyway because it can use npxG, PPDA and deep completions ' +
+    'non-linearly once the Understat backfill lands — those columns were empty when this was ' +
+    'measured. Possession itself is in no free feed the site has; deep share stands in for it. ' +
+    'A rating level matters on its own: a big favourite above 1625 Elo wins 77% of the time, ' +
+    'the same gap below 1325 wins 56%.',
 };
 
 export const NFL_FEATURES: ForecastModel = {
