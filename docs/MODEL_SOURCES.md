@@ -24,7 +24,7 @@ Baseline log loss **1.01755** on 7,827 holdout matches.
 | `elo_gap` | derived from `results.csv` + `uefa_results.csv` | openfootball (football.json + country repos, public domain); openfootball/champions-league | `fetch_results.py`, `fetch_uefa.py` | **+0.048** |
 | `value_diff_z` | `soccer/clubs/data/market_values/values_*.csv` | Transfermarkt, **hand-uploaded** | none — manual | **+0.011** |
 | `sot_net_diff` | `soccer/clubs/data/shots_matches.csv` | football-data.co.uk (live), datasets/football-datasets GitHub mirror (fallback) | `fetch_shots.py` | **+0.006** |
-| `xg_net_diff` | `soccer/clubs/data/xg_matches.csv` (legacy shape of `understat_matches.csv`) | understat.com `getLeagueData/{league}/{season}` JSON, legacy HTML blob fallback | `understat.py` (`fetch_xg.py` is a shim) | +0.0001 on all rows; **+1.78 SE where both clubs had live form** — feed dead since 2025-01-04, fetcher replaced, first live refresh pending from Actions |
+| `xg_net_diff` and the advanced Understat columns (npxG, xPts, PPDA, deep, splits) | `soccer/clubs/data/understat_matches.csv` (+ `xg_matches.csv` in the legacy shape) | understat.com `getLeagueData/{league}/{season}` JSON, legacy HTML blob fallback | `understat.py` (`fetch_xg.py` is a shim); **live again from 2026-09-17**, backfilled 2014-15 → | xG form +0.0005 in the forest; the wider columns are measured after the backfill |
 | `spend_diff_z` | `soccer/clubs/data/club_season_transfers.csv` | ewenme/transfers (Transfermarkt fees) | `fetch_transfers.py` | **0.000 — upstream ends 2022-23** |
 | `net_diff_z` | same | same | same | **0.000 — same** |
 | `wage_diff_z` | `market_values/values_*.csv` (optional column) | Transfermarkt, hand-uploaded | none — manual | **0.000 — column never supplied** |
@@ -69,7 +69,7 @@ on 586 holdout games (always-pick-home is 0.691).
 | Postseason K multiplier | same (`game_type`) | same | same | 0.000 — tuned to 1.0, already off |
 | Rest / bye bonus (+20 at 10+ days) | same (`home_rest`, `away_rest`) | same | same | **−0.0006 — better without it** |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
-| Adjusted success rate (second stage: home/away offence + defence, matchup net) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0046 log loss** walk-forward 2015-2025 (+2.96 SE), +0.0056 on 2024-25 |
+| Second stage: random forest on Elo logit + home/away Elo + every adjusted rating and EWMA form column (41 inputs) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0072 log loss** on the clean 2024-25 window (0.62411 → 0.61687, +1.2 SE) |
 
 Training windows:
 
@@ -90,10 +90,10 @@ Elo only. Baseline log loss **0.48462** on 2,038 holdout games.
 | Season regression (30%) | same | same | same | **+0.028** |
 | Conference regression (0.75 blend) | same (`home_conference`, per season) | same | same | **+0.011** |
 | Home advantage (+50) | same (`neutral_site`) | same | same | **+0.011** |
-| Adjusted EPA (second stage: home/away offence + defence, matchup net) | `data/college_football/team_weeks.csv` | SportsDataverse weekly team summaries (`sportsdataverse-data` release Parquet), no key; joined on ESPN `team_id` (`home_id`/`away_id` now in the spine) | `CFB/data/fetch_weekly.py` (daily), raw cache under `data/college_football/raw/` | **+0.0048 log loss** on 2024-25 (+1.87 SE overall, +2.60 SE FBS-vs-FBS) |
+| Second stage: random forest on Elo logit + home/away Elo + every SportsDataverse efficiency column (33 inputs) | `data/college_football/team_weeks.csv` | SportsDataverse weekly team summaries (`sportsdataverse-data` release Parquet), no key; joined on ESPN `team_id` (`home_id`/`away_id` now in the spine) | `CFB/data/fetch_weekly.py` (daily), raw cache under `data/college_football/raw/` | **+0.0042 log loss** on 2024-25 (0.49768 → 0.49347, +1.1 SE overall; +1.6 SE FBS-vs-FBS) |
 | FBS entry rating (1250) | same | same | same | +0.001 |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
-| Adjusted success rate (second stage: home/away offence + defence, matchup net) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0046 log loss** walk-forward 2015-2025 (+2.96 SE), +0.0056 on 2024-25 |
+| Second stage: random forest on Elo logit + home/away Elo + every adjusted rating and EWMA form column (41 inputs) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0072 log loss** on the clean 2024-25 window (0.62411 → 0.61687, +1.2 SE) |
 
 Training windows:
 

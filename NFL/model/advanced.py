@@ -99,13 +99,15 @@ CORE_EWM = ["home_off_epa_ewm", "away_off_epa_ewm", "home_def_epa_ewm", "away_de
 # What the daily pipeline ships: every pregame feature this module builds,
 # with the home and away Elo as their own inputs beside the Elo logit so
 # the learner can find a level effect or a threshold the gap alone hides.
-# The learner is the one `eval_advanced` measured best on the clean
-# 2024-2025 window with this full set (docs/ADVANCED_METRICS.md).
+# Random forest: on the clean 2024-2025 window it scores 0.61687 to the
+# logistic's 0.61691 (Elo alone 0.62411, +1.16 SE) and boosting at the
+# shared hyperparameters is worse than Elo alone (0.63012) — see
+# `eval_advanced` and docs/ADVANCED_METRICS.md.
 RAW_ELO = ["elo_home_pre", "elo_away_pre"]
 PRODUCTION_FEATURES = (ELO + RAW_ELO + CORE_EPA + SUCCESS + SPLITS + DRIVE
                        + RED_ZONE_THIRD + PACE_ST + CORE_EWM)
 PRODUCTION_METRICS = ADJ_METRICS
-PRODUCTION_LEARNER = "gbm"
+PRODUCTION_LEARNER = "random_forest"
 PRODUCTION_C = 0.03            # the logistic's C, when that is the learner
 # The aggregates must reach within this many days of the newest completed
 # game in the spine, or the second stage is off for the run (Elo only).

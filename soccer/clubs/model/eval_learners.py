@@ -37,7 +37,9 @@ import pandas as pd
 
 from common import evaluate, learners
 from soccer.clubs.model import advanced as adv
-from soccer.clubs.model.eval_advanced import TOP5, build_table
+from soccer.clubs.model import eval_advanced
+from soccer.clubs.model import train
+from soccer.clubs.model.eval_advanced import TOP5
 from soccer.clubs.model.features import ALL_FEATURES
 from soccer.clubs.model.shots import SHOT_FEATURES
 from soccer.clubs.model.xg import XG_FEATURES
@@ -50,8 +52,14 @@ LOGISTIC_C = 0.1
 
 RAW_ELO = ["elo_home_pre", "elo_away_pre"]
 BASE = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
-FULL = RAW_ELO + BASE + adv.ALL_ADVANCED
+# `full` is exactly what ships (train.FEATURES): raw Elos, the base set,
+# every advanced column, and the league / tier / season context.
+FULL = list(train.FEATURES)
 SETS = {"base": BASE, "full": FULL}
+
+
+def build_table():
+    return train.attach_context(eval_advanced.build_table())
 
 
 def _fit_score(table, feats, train_mask, test_mask, kind):

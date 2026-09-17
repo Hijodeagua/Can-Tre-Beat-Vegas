@@ -173,6 +173,24 @@ The same gap converts far more often at the top of the scale. That is
 why `elo_home_pre` and `elo_away_pre` are inputs in their own right now,
 not only their difference.
 
+**One pooled model, not per-league sub-models.** Same split, full set,
+logistic (7,827 test matches):
+
+| model | log loss | vs pooled |
+|---|---|---|
+| pooled, full set | 1.01676 | — |
+| pooled + league one-hots | 1.01705 | −0.57 SE |
+| pooled + league + tier + season | **1.01651** | **+0.34 SE** |
+| one sub-model per league (11 fits, scored on their own rows) | 1.02006 | worse in 9 of 11 leagues |
+
+Per league, sub-model vs the pooled model on the same rows: only Serie B
+(+2.36 SE) and La Liga 2 (+0.74) prefer their own model; La Liga (−2.21),
+MLS (−1.94), EPL (−1.68), Ligue 1 (−1.58) and the rest are better served
+by the pooled fit, because each sub-model sees a tenth of the data. So the
+league, its tier and the season ride along as columns
+(`train.CONTEXT_FEATURES`: `lg_<league>` one-hots, `tier`, `season_idx`)
+that the forest can split on, and there is one model.
+
 The processed Understat table is live: the first Actions fetch on
 2026-09-17 returned 1,952 matches with npxG/PPDA/deep for 2025-26 and
 2026-27, and `xg_net_diff` reads fresh again (newest 2026-09-16). The
@@ -292,30 +310,49 @@ Standardised coefficients of the combined logistic (fit 2002-2023):
 `elo_logit` +0.49, `success_matchup_net` +0.14, `home_off_success_adj`
 +0.13, `away_off_success_adj` −0.11; everything else under 0.08.
 
-### Production decision
+### Production decision (round 1, superseded)
 
-- Promoted: **Elo + adjusted success rate** (`PRODUCTION_FEATURES`: `elo_logit`,
-  home/away `off_success_adj`, home/away `def_success_adj`,
-  `success_matchup_net`), C = 0.03. Smallest set that clears the bar
-  pooled and is best on the clean window. Success rate beats EPA per
-  play here because it is the less noisy of the two at 17 games.
-- Fit in-run (`NFL/daily/state.py::build_second_stage`) on the replay
-  history joined to the aggregates, 2002 → last completed week, ties
-  excluded; backdated runs only see aggregates dated before the run date.
-- Fallback: `data/nfl/team_games.csv` missing, or its newest row more
-  than 10 days behind the spine's newest final, turns the stage off for
-  the run and every forecast is Elo. A fixture whose side has no rating
-  for (season, week) is Elo too. The slate carries `p_home` (shipped),
-  `p_home_elo` and `model`; `latest.json` carries `second_stage` and
-  `feeds`.
-- The rest-of-season simulation and the expected score are still Elo
-  only.
-- Collected, not promoted: adjusted EPA, dropback/rush/early-down splits,
-  PROE, explosive rates, drive metrics, red-zone and third-down metrics,
-  pace, sack rates, special-teams EPA, the unadjusted EWMA twins. All are
-  in the processed table and in `build_game_table`; none beat Elo +
-  success on 2024-25. LightGBM on the same features loses to the
-  logistic at this sample size.
+Round 1 shipped Elo + adjusted success only. Round 2 below ships every
+feature.
+
+### Round 2 — every feature in, raw Elos, learner head-to-head
+
+`PRODUCTION_FEATURES` is now every group above plus `elo_home_pre` and
+`elo_away_pre` (41 inputs). Walk-forward as before, the three learners
+from `common/learners.py` at fixed hyperparameters:
+
+| window | model | log loss | Brier | vs Elo |
+|---|---|---|---|---|
+| clean 2024-25 (n=569) | Elo alone | 0.62411 | 0.21746 | — |
+| clean | full set, logistic | 0.61691 | 0.21433 | +1.17 SE |
+| clean | **full set, random forest** | **0.61687** | **0.21432** | **+1.16 SE** |
+| clean | full set, boosting | 0.63012 | 0.21960 | −0.60 SE |
+| clean | Elo + raw Elos + success, logistic | 0.61824 | 0.21491 | +1.54 SE |
+| selection 2015-23 (n=2449) | Elo alone | 0.63714 | 0.22316 | — |
+| selection | full set, logistic | 0.63600 | 0.22257 | +0.41 SE |
+| selection | full set, random forest | 0.63723 | 0.22325 | −0.03 SE |
+| selection | full set, boosting | 0.65656 | 0.23061 | −3.93 SE |
+| selection | Elo + raw Elos + success, logistic | 0.63297 | 0.22126 | +2.49 SE |
+
+**What ships: the full set with a random forest.** It ties the logistic
+on the clean window (0.61687 vs 0.61691) and beats Elo by +1.16 SE; the
+compact success-only set is still the best *pooled* number, but the
+brief is every feature in, and the forest gives that set away nothing on
+the honest window. Boosting at the shared hyperparameters overfits 6k
+rows badly (worse than Elo alone on 2015-23) and is not shipped.
+
+**Elo level effect, NFL.** Empirical home-win rate 2002-2025 by home Elo
+× rating difference:
+
+| home Elo | diff < −75 | −75..0 | 0..75 | diff > 75 |
+|---|---|---|---|---|
+| < 1425 | 0.334 (n=917) | 0.477 (277) | 0.612 (129) | 0.591 (22) |
+| 1425–1500 | 0.389 (578) | 0.512 (572) | 0.614 (422) | 0.721 (240) |
+| 1500–1575 | 0.396 (235) | 0.506 (427) | 0.611 (550) | 0.743 (553) |
+| > 1575 | 0.400 (35) | 0.584 (197) | 0.612 (366) | **0.789 (980)** |
+
+The same edge converts more often the better the favourite is; the Elo
+curve alone gives every row of a column the same number.
 
 ---
 
@@ -404,24 +441,49 @@ By season, Elo → core: 2024 0.51373 → 0.51247, 2025 0.48190 → 0.47355
 (FBS-vs-FBS 2025: 0.53803 → 0.52643, +1.95 SE for the combined set).
 Brier moves with log loss everywhere (0.16831 → 0.16580 overall).
 
-### Production decision
+### Production decision (round 1, superseded)
 
-- Promoted: **Elo + core adjusted EPA** (`PRODUCTION_FEATURES`: `elo_logit`,
-  home/away `adj_epa_off`, home/away `adj_epa_def`, `adj_epa_matchup_net`),
-  C = 1.0. It clears +2 SE where the feed actually covers both sides
-  (FBS-vs-FBS) and is within 0.001 of the best group overall; the
-  situational group's extra 0.0008 does not pay for six more columns, and
-  the greedy combined set picked on 2023 loses to core alone on the test
-  window (overfit).
-- Fit in-run (`CFB/daily/state.py::build_second_stage`) on 2005 → last
-  completed week; backdated runs only see snapshots through the last
-  week completed before the run date.
-- Fallback: the weekly table missing, or its last real snapshot more
-  than 2 weeks behind the spine's last completed regular-season week,
-  turns the stage off for the run; a game with an FCS side, or any side
-  without a strength row, is Elo. The slate carries `p_home`,
-  `p_home_elo`, `model` (`elo+adj_epa` or `elo`); `latest.json` carries
-  `second_stage` and `feeds`.
+Round 1 shipped Elo + core adjusted EPA only. Round 2 below ships every
+feature.
+
+### Round 2 — every feature in, raw Elos, learner head-to-head
+
+`PRODUCTION_FEATURES` is now every group above plus `elo_home_pre` and
+`elo_away_pre` (33 inputs). Same fixed split (fit 2005-2023, test
+2024-2025):
+
+| scope | model | log loss | Brier | vs Elo |
+|---|---|---|---|---|
+| overall (n=1853) | Elo alone | 0.49768 | 0.16831 | — |
+| overall | full set, logistic | 0.49426 | 0.16628 | +1.05 SE |
+| overall | **full set, random forest** | **0.49347** | **0.16523** | **+1.12 SE** |
+| overall | full set, boosting | 0.49595 | 0.16691 | +0.41 SE |
+| overall | Elo + raw Elos + core, random forest | 0.49159 | 0.16515 | +1.73 SE |
+| FBS-vs-FBS (n=1606) | Elo alone | 0.55358 | 0.18894 | — |
+| FBS-vs-FBS | full set, logistic | 0.54766 | 0.18639 | +1.59 SE |
+| FBS-vs-FBS | **full set, random forest** | **0.54657** | **0.18509** | **+1.62 SE** |
+| FBS-vs-FBS | full set, boosting | 0.54967 | 0.18708 | +0.82 SE |
+| FBS-vs-FBS | Elo + raw Elos + core, random forest | 0.54469 | 0.18519 | +2.22 SE |
+
+**What ships: the full set with a random forest** — the best of the three
+learners on the full set in both scopes. The compact core set is still a
+little better in absolute terms (its extra columns cost about 0.002), but
+the brief is every feature in, and the forest is the learner that loses
+least to them.
+
+**Elo level effect, CFB** (FBS-vs-FBS, empirical home-win rate by home
+Elo × rating difference):
+
+| home Elo | < −100 | −100..0 | 0..100 | 100..250 | > 250 |
+|---|---|---|---|---|---|
+| < 1350 | 0.242 (n=2767) | 0.532 (930) | 0.630 (776) | 0.751 (586) | 0.886 (114) |
+| 1350–1500 | 0.298 (1210) | 0.520 (793) | 0.629 (726) | 0.781 (904) | 0.909 (525) |
+| 1500–1650 | 0.326 (540) | 0.493 (635) | 0.663 (763) | 0.766 (1036) | 0.941 (922) |
+| > 1650 | 0.330 (106) | 0.488 (217) | 0.687 (355) | 0.779 (616) | **0.947 (1074)** |
+
+Smaller than the NFL and soccer effects but in the same direction at the
+top of the scale; the raw ratings are inputs so the forest can use it.
+
+- Fallback rules are unchanged: the weekly table stale by more than two
+  weeks, or an FCS side, or a side without a strength row, is Elo.
 - The rest-of-season simulation and the expected score are still Elo only.
-- Collected, not promoted: success, early-down EPA, explosive, havoc,
-  drive metrics, red zone, third down, pass rate, pass/rush EPA splits.

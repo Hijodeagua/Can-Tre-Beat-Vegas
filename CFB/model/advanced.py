@@ -89,12 +89,13 @@ GROUPS = {"elo": ELO, "core": CORE, "success": SUCCESS, "early_explosive": EARLY
 # What the daily pipeline ships: every pregame feature this module builds,
 # with the home and away Elo as their own inputs beside the Elo logit so
 # the learner can find a level effect or a threshold the gap alone hides.
-# The learner is the one `eval_advanced` measured best on the clean
-# 2024-2025 window with this full set (docs/ADVANCED_METRICS.md).
+# Random forest: best of the three learners on the full set on 2024-2025,
+# 0.49347 overall (Elo alone 0.49768, +1.12 SE) and 0.54657 on FBS-vs-FBS
+# (+1.62 SE) — see `eval_advanced` and docs/ADVANCED_METRICS.md.
 RAW_ELO = ["elo_home_pre", "elo_away_pre"]
 PRODUCTION_FEATURES: list[str] = (ELO + RAW_ELO + CORE + SUCCESS + EARLY_EXPLOSIVE
                                   + DRIVE + SITUATIONAL + SPLITS)
-PRODUCTION_LEARNER = "gbm"
+PRODUCTION_LEARNER = "random_forest"
 PRODUCTION_C = 1.0            # the logistic's C, when that is the learner
 
 

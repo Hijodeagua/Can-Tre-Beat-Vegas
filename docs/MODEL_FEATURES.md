@@ -88,26 +88,34 @@ Title / UCL / UEL / relegation odds and expected points come out of that.
 
 Pick and forecast: `NFL/daily/{predict,simulate}.py`.
 
-**Win probability — Elo plus adjusted success rate.** A regularised
-logistic on top of the Elo (`NFL/model/advanced.py`, fit in-run on
-2002 → last completed week, ties excluded), with six inputs:
+**Win probability — random forest over Elo plus every efficiency
+feature** (`NFL/model/advanced.py`, `common/learners.py`; refit in-run
+from the replay history joined to `data/nfl/team_games.csv`, 2002 → last
+completed week, ties excluded). 41 inputs:
 
-* **Elo logit** — the Elo win probability below, as a logit
-* **Home offence success** — the home team's opponent-adjusted success
-  rate above league average (weighted ridge over every offence-vs-defence
-  game before this week; half-life 5 weeks, prior season at half weight)
-* **Away offence success**, **home defence success** (allowed, so lower is
-  better), **away defence success** — same fit
-* **Success matchup net** — (home offence + away defence) − (away offence
-  + home defence)
+* **Elo logit**, **Home Elo**, **Away Elo** — the Elo probability and the
+  two ratings as their own columns (a favourite by 75+ Elo wins 79% of
+  the time above 1575 and 59% below 1425 — the forest can use that, the
+  gap alone cannot)
+* **Opponent-adjusted ratings**, offence and defence, both sides, plus the
+  cross-unit matchup net for each: EPA/play, success rate, dropback EPA
+  and success, rush EPA and success, early-down EPA and success,
+  explosive rate, points and EPA per drive, red-zone TD per trip,
+  third-down conversion (weighted ridge over every game before the week,
+  half-life 5 weeks, prior season at half weight)
+* **Form** (EWMA, 5-game half-life, shrunk by games played): PROE (all and
+  neutral), pass rate, neutral pace, drives, plays and yards per drive,
+  series success, red-zone trips / points per trip / EPA, third-down EPA /
+  distance / short and long conversion, sack rate for and against, net
+  special-teams EPA, raw EPA for and against
 
-Success rate is nflverse's `success` flag (EPA > 0) over pass and run
-plays. Walk-forward 2015–2025: log loss 0.63468 → 0.63007, +2.96 SE
-paired; the clean 2024–25 window 0.62411 → 0.61853. Falls back to Elo
-alone when `data/nfl/team_games.csv` is missing or more than 10 days
-behind the spine's last completed game; the slate's `model` column says
-which one each pick used. Full ablation and the metrics collected but not
-promoted: [ADVANCED_METRICS.md](ADVANCED_METRICS.md).
+Clean 2024–25 window: forest 0.61687, logistic on the same inputs
+0.61691, Elo alone 0.62411 (+1.2 SE); boosting at the shared
+hyperparameters is worse than Elo alone and is not shipped. Elo alone
+whenever `team_games.csv` is more than 10 days behind the spine or a side
+has no rating; the slate's `model` column says which
+(`elo+efficiency:random_forest` or `elo`). Full tables:
+[ADVANCED_METRICS.md](ADVANCED_METRICS.md).
 
 **Elo** — the rating carries every situational edge:
 
@@ -151,25 +159,27 @@ pick's win probability carries the success-rate stage.
 Pick and forecast: `CFB/daily/{predict,simulate}.py`. Same skeleton as the
 NFL engine with the four things college needs.
 
-**Win probability — Elo plus adjusted EPA.** A regularised logistic on top
-of the Elo (`CFB/model/advanced.py`, fit in-run on 2005 → last completed
-week), with six inputs:
+**Win probability — random forest over Elo plus every efficiency
+feature** (`CFB/model/advanced.py`, `common/learners.py`; refit in-run
+on 2005 → last completed week). 33 inputs:
 
-* **Elo logit** — the Elo win probability below, as a logit
-* **Home / away offence adjusted EPA** — SportsDataverse's
-  opponent-adjusted EPA per play (`adj_off_epa`), from the snapshot
-  through the *previous* week, blended with the prior season's final
-  regressed halfway to the mean until the team has games
-* **Home / away defence adjusted EPA** — `adj_def_epa`, same treatment
-* **Matchup net** — (home offence + away defence) − (away offence + home
-  defence)
+* **Elo logit**, **Home Elo**, **Away Elo** — the Elo probability and the
+  two ratings as their own columns (a favourite by 250+ Elo wins 95% of
+  the time above 1650 and 89% below 1350)
+* **Opponent-adjusted EPA** (`adj_off_epa`, `adj_def_epa`), both sides,
+  from the SportsDataverse snapshot through the *previous* week, blended
+  with the prior season's regressed final until a program has games,
+  plus the matchup net
+* **Efficiency, both sides, each with its matchup net**: success rate,
+  early-down EPA, explosive rate, havoc, EPA per drive, drives per game,
+  plays and yards per drive, red-zone success, third-down success and
+  distance, pass rate, pass and rush EPA
 
-Clean 2024–25 test: log loss 0.49768 → 0.49285 overall (+1.87 SE),
-0.55358 → 0.54599 on FBS-vs-FBS games (+2.60 SE). Games with an FCS side,
-and any run where `team_weeks.csv` is more than two weeks behind the
-spine, are Elo alone; the slate's `model` column says which. Full
-ablation and what was collected but not promoted:
-[ADVANCED_METRICS.md](ADVANCED_METRICS.md).
+2024–25 test: forest 0.49347 overall (Elo 0.49768, +1.1 SE), 0.54657 on
+FBS-vs-FBS (Elo 0.55358, +1.6 SE) — best of the three learners on the
+full set. Games with an FCS side, and any run where `team_weeks.csv` is
+more than two weeks behind, are Elo alone; the slate's `model` column
+says which. Full tables: [ADVANCED_METRICS.md](ADVANCED_METRICS.md).
 
 **Elo:**
 
