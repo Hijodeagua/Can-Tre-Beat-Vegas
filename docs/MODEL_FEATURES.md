@@ -142,6 +142,28 @@ pick's win probability carries the success-rate stage.
 Pick and forecast: `CFB/daily/{predict,simulate}.py`. Same skeleton as the
 NFL engine with the four things college needs.
 
+**Win probability — Elo plus adjusted EPA.** A regularised logistic on top
+of the Elo (`CFB/model/advanced.py`, fit in-run on 2005 → last completed
+week), with six inputs:
+
+* **Elo logit** — the Elo win probability below, as a logit
+* **Home / away offence adjusted EPA** — SportsDataverse's
+  opponent-adjusted EPA per play (`adj_off_epa`), from the snapshot
+  through the *previous* week, blended with the prior season's final
+  regressed halfway to the mean until the team has games
+* **Home / away defence adjusted EPA** — `adj_def_epa`, same treatment
+* **Matchup net** — (home offence + away defence) − (away offence + home
+  defence)
+
+Clean 2024–25 test: log loss 0.49768 → 0.49285 overall (+1.87 SE),
+0.55358 → 0.54599 on FBS-vs-FBS games (+2.60 SE). Games with an FCS side,
+and any run where `team_weeks.csv` is more than two weeks behind the
+spine, are Elo alone; the slate's `model` column says which. Full
+ablation and what was collected but not promoted:
+[ADVANCED_METRICS.md](ADVANCED_METRICS.md).
+
+**Elo:**
+
 * **Home Elo** — program Elo, plus home advantage (+50, zero at a neutral
   site)
 * **Away Elo** — program Elo

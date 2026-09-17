@@ -20,6 +20,8 @@ on:
     branches: [main]
     paths:
       - "CFB/daily/**"
+      - "CFB/data/**"
+      - "CFB/model/advanced.py"
       - ".github/workflows/cfb-daily.yml"
 
   workflow_dispatch:
@@ -72,6 +74,15 @@ jobs:
           set -euo pipefail
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      # SportsDataverse weekly team summaries -> data/college_football/team_weeks.csv
+      # (the committed table behind the Elo + efficiency second stage).
+      # Best-effort: a failed fetch leaves the committed file, and the
+      # pipeline's freshness gate decides whether it is still usable.
+      - name: Refresh weekly team summaries
+        continue-on-error: true
+        shell: bash
+        run: python -m CFB.data.fetch_weekly
 
       - name: Run daily pipeline
         id: pipeline

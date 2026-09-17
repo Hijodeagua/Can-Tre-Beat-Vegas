@@ -12,9 +12,9 @@ twice-weekly update email.
 |---|---|
 | `run.py` | Orchestrator CLI — `python -m CFB.daily.run [--date D] [--skip-fetch] [--season-sims N] [--force-email]` |
 | `config.py` | Paths, slate window, sim defaults, email weekdays, the frozen always-home baseline |
-| `state.py` | One full Elo replay + in-run score-model fits, shared by every step; `as_of()` masks results on/after the run date |
+| `state.py` | One full Elo replay + in-run score-model fits + the Elo + efficiency second stage (`CFB/model/advanced.py`, on only when `data/college_football/team_weeks.csv` is within 2 weeks of the spine's last completed week), shared by every step; `as_of()` masks results and snapshots on/after the run date |
 | `scoring.py` | Elo edge → expected margin (linear fit, refit each run) carved out of a matchup-specific total (EWMA points for/against) |
-| `predict.py` | Slate for [D, D+2): win probability, pick, expected score; persisted as `slate_{D}.csv` |
+| `predict.py` | Slate for [D, D+2): win probability (`p_home`, with `p_home_elo` and `model` beside it), pick, expected score; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once finals land; running ledger at `data/college_football/predictions/grades.csv` with the paired Δlog-loss vs. always-pick-home |
 | `simulate.py` | Vectorized rest-of-season Monte Carlo with live in-sim Elo: expected wins, bowl / undefeated odds, CCG berth, conference title |
 | `export_site.py` | `web/public/data/cfb/latest.json` (full FBS board, conference table, slate, ledger, futures, `elo_history` + `elo_projection`) + per-day snapshots |

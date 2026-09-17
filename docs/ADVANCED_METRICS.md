@@ -265,3 +265,112 @@ Standardised coefficients of the combined logistic (fit 2002-2023):
   in the processed table and in `build_game_table`; none beat Elo +
   success on 2024-25. LightGBM on the same features loses to the
   logistic at this sample size.
+
+---
+
+## College football
+
+### Sources
+
+| Feed | Endpoint | Refresh | Processed table | Raw cache |
+|---|---|---|---|---|
+| SportsDataverse weekly team summaries | `https://github.com/sportsdataverse/sportsdataverse-data/releases/download/cfb_team_summaries_weekly/cfb_team_summaries_weekly_{YEAR}.parquet` (no key) | daily Actions job, last + current season; upstream rebuilds in season | `data/college_football/team_weeks.csv` — one row per (season, team_id, through_week), 2004 → | `data/college_football/raw/weekly/` |
+| cfbfastR schedules | unchanged (`fetch_schedule.py`), now also carrying ESPN `home_id` / `away_id` | daily | `data/college_football/games.csv` (+2 columns, additive) | `data/college_football/raw/schedules/` (backfill only) |
+
+Team identity is the ESPN team id. The spine gained `home_id` / `away_id`
+(`fetch_schedule.normalize`, backfilled once from the cached season CSVs
+with `--backfill-ids`; every row 2001 → has them), and the weekly table's
+`team_id` is the same id. A name crosswalk (`advanced.team_ids`) is the
+fallback for a spine row without an id; both are tested.
+
+Commands:
+
+```
+python -m CFB.data.fetch_weekly                 # last + current season (Actions)
+python -m CFB.data.fetch_weekly --all           # backfill 2004 → current
+python -m CFB.data.fetch_schedule --backfill-ids  # one-time id backfill from the raw cache
+python -m CFB.model.eval_advanced               # fixed-split ablation
+```
+
+### The week rule
+
+The snapshot with `through_week == W` **includes** week W's games. A
+week-W game is featured from the W−1 snapshot (`snapshot_before`), falling
+back to the latest earlier week the table has; postseason games (the
+spine restarts `week` at 1 with `season_type == "postseason"`) use the
+season's final snapshot, which predates every bowl. Asserted in
+`tests/test_cfb_advanced.py::TestSnapshots`. The publisher's live-season
+file carries rows for every week with the totals frozen at the last
+played one; `real_weeks` detects those copies so they never count as
+coverage (still pre-game, so harmless for the join).
+
+### Pregame features (`CFB/model/advanced.py`)
+
+Every value is a shrunk blend of the current snapshot and the previous
+season's final snapshot regressed halfway to the league mean:
+`(n · current + 4 · prior) / (n + 4)`, `n` = games in the snapshot
+(`plays_off / 65`). Week 1 is the regressed prior alone; a team with
+neither reads NaN, which the imputer fills with the training median, and
+the logistic leans on `elo_logit` — the Elo fallback in practice. The
+opponent-adjusted columns are the publisher's own ridge (offence +
+defence + home effects) and are NaN for most teams until week 3, hence
+the prior blend.
+
+| Group | Features (SportsDataverse column in brackets) |
+|---|---|
+| Core | home/away `adj_epa_off` [`adj_off_epa`], home/away `adj_epa_def` [`adj_def_epa`], `adj_epa_matchup_net` = (home off + away def) − (away off + home def) |
+| Success | home/away `success_off/def` [`success_off/def`, share of plays with EPA > 0], matchup net |
+| Early / explosive / havoc | `early_epa_matchup_net` [`early_down_EPA`], `explosive_matchup_net` [`explosive`], home/away `havoc_off/def` [`havoc`, TFL + FF + INT + PBU per play] |
+| Drive | `epa_drive_matchup_net` [`EPAdrive`], home/away `drives_game_off` [`drivesgame`], `plays_drive_off` [`playsdrive`], `yards_drive_off` [`yardsdrive`] |
+| Situational | `rz_success_matchup_net` [`red_zone_success`], `third_success_matchup_net` [`third_down_success`], home/away `third_dist_off` [`third_down_distance`], home/away `passrate_off` |
+| Splits | `pass_epa_matchup_net`, `rush_epa_matchup_net` [`EPAplay_*_pass/_rush`] |
+
+Coverage (core features present on both sides): 86-89% of all rows every
+season 2005 →, 99-100% of FBS-vs-FBS rows; the gap is the pooled FCS side,
+which has no weekly data. By regular-season week (2019-2025): 50% in
+week 1, 58% week 2, 72% week 3, 87% week 4, ≥ 94% from week 5.
+
+### Evaluation
+
+Fixed split: train 2005-2022, validation 2023 (C and the compact set),
+test 2024-2025 reported once; 2026 excluded. Contamination, stated: the
+Elo parameters were tuned on 2005-2023, so the Elo-only baseline is
+in-sample on train and validation; only 2024-2025 is clean for it. Every
+candidate sits on the same Elo. Artifact: `CFB/model/artifacts/advanced_eval.json`.
+
+| model | overall 2024-25 (n=1853) | SE | FBS-vs-FBS (n=1606) | SE |
+|---|---|---|---|---|
+| 1. Elo | 0.49768 | — | 0.55358 | — |
+| 2. + core adjusted EPA | **0.49285** | **+1.87** | **0.54599** | **+2.59** |
+| 3. 2 + success | 0.49375 | +1.33 | 0.54618 | +2.23 |
+| 4. 2 + early-down / explosive / havoc | 0.49346 | +1.51 | 0.54620 | +2.34 |
+| 5. 2 + drive | 0.49295 | +1.73 | 0.54579 | +2.52 |
+| 6. 2 + red zone / third down / pass rate | 0.49206 | +2.07 | 0.54494 | +2.82 |
+| x. 2 + pass / rush splits | 0.49312 | +1.64 | 0.54579 | +2.49 |
+| 7. combined (greedy on 2023: success + core + situational + splits) | 0.49431 | +1.08 | 0.54726 | +1.79 |
+
+By season, Elo → core: 2024 0.51373 → 0.51247, 2025 0.48190 → 0.47355
+(FBS-vs-FBS 2025: 0.53803 → 0.52643, +1.95 SE for the combined set).
+Brier moves with log loss everywhere (0.16831 → 0.16580 overall).
+
+### Production decision
+
+- Promoted: **Elo + core adjusted EPA** (`PRODUCTION_FEATURES`: `elo_logit`,
+  home/away `adj_epa_off`, home/away `adj_epa_def`, `adj_epa_matchup_net`),
+  C = 1.0. It clears +2 SE where the feed actually covers both sides
+  (FBS-vs-FBS) and is within 0.001 of the best group overall; the
+  situational group's extra 0.0008 does not pay for six more columns, and
+  the greedy combined set picked on 2023 loses to core alone on the test
+  window (overfit).
+- Fit in-run (`CFB/daily/state.py::build_second_stage`) on 2005 → last
+  completed week; backdated runs only see snapshots through the last
+  week completed before the run date.
+- Fallback: the weekly table missing, or its last real snapshot more
+  than 2 weeks behind the spine's last completed regular-season week,
+  turns the stage off for the run; a game with an FCS side, or any side
+  without a strength row, is Elo. The slate carries `p_home`,
+  `p_home_elo`, `model` (`elo+adj_epa` or `elo`); `latest.json` carries
+  `second_stage` and `feeds`.
+- The rest-of-season simulation and the expected score are still Elo only.
+- Collected, not promoted: success, early-down EPA, explosive, havoc,
+  drive metrics, red zone, third down, pass rate, pass/rush EPA splits.

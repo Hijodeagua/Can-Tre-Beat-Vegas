@@ -113,11 +113,18 @@ export const NFL_FEATURES: ForecastModel = {
 export const CFB_FEATURES: ForecastModel = {
   title: 'Football model features',
   engine:
-    'Win probability from Elo alone — betting-blind, no closing line — with the score model ' +
-    'refit from the engine’s own replay each run, then the rest of the regular season replayed ' +
-    'with live in-sim Elo. The 12-team playoff field is deliberately not modelled.',
+    'Win probability from a betting-blind Elo plus one efficiency layer: each program’s ' +
+    'opponent-adjusted EPA per play on offence and defence from the SportsDataverse weekly ' +
+    'summaries, in a regularised logistic refit each run. The score model is refit from the ' +
+    'engine’s own replay, then the rest of the regular season is replayed with live in-sim ' +
+    'Elo. The 12-team playoff field is deliberately not modelled.',
   features: [
     ...ELO_PAIR('Program', 'plus +50 home advantage — zero at a neutral site'),
+    {
+      name: 'Adjusted EPA',
+      detail:
+        'home and away offence and defence, opponent-adjusted, from the snapshot through the previous week (never the current one), blended with the prior season’s regressed final until a program has games; games with an FCS side, and any week the feed is two weeks behind, fall back to Elo',
+    },
     {
       name: 'Conference regression',
       detail: '30% toward a 0.75/0.25 blend of the new conference’s mean and 1500, so realignment is handled by construction',
@@ -130,8 +137,10 @@ export const CFB_FEATURES: ForecastModel = {
     'Ablation on held-out seasons makes the pooled FCS rating the single most load-bearing ' +
     'component — one synthetic 950-rated team standing in for every non-FBS opponent, about ' +
     '13% of the schedule, is the crudest thing in the model and it matters more than home ' +
-    'advantage. No efficiency input: cfbFastR ships EPA per play from the same repo as the ' +
-    'schedule spine.',
+    'advantage. The adjusted-EPA layer is worth about 0.005 log loss over Elo alone on ' +
+    '2024–25 (+2.6 SE on FBS-vs-FBS games); success rate, early-down, explosive, havoc, drive, ' +
+    'red-zone, third-down and pass/rush splits were collected and tested and none beat it ' +
+    'by enough to ship. The season simulation still runs on Elo alone.',
 };
 
 export const MLB_FEATURES: ForecastModel = {

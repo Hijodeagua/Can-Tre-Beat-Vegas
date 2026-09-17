@@ -90,6 +90,7 @@ Elo only. Baseline log loss **0.48462** on 2,038 holdout games.
 | Season regression (30%) | same | same | same | **+0.028** |
 | Conference regression (0.75 blend) | same (`home_conference`, per season) | same | same | **+0.011** |
 | Home advantage (+50) | same (`neutral_site`) | same | same | **+0.011** |
+| Adjusted EPA (second stage: home/away offence + defence, matchup net) | `data/college_football/team_weeks.csv` | SportsDataverse weekly team summaries (`sportsdataverse-data` release Parquet), no key; joined on ESPN `team_id` (`home_id`/`away_id` now in the spine) | `CFB/data/fetch_weekly.py` (daily), raw cache under `data/college_football/raw/` | **+0.0048 log loss** on 2024-25 (+1.87 SE overall, +2.60 SE FBS-vs-FBS) |
 | FBS entry rating (1250) | same | same | same | +0.001 |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
 | Adjusted success rate (second stage: home/away offence + defence, matchup net) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0046 log loss** walk-forward 2015-2025 (+2.96 SE), +0.0056 on 2024-25 |
