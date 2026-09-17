@@ -37,9 +37,19 @@ every subsequent rating is different), which is why an Elo ablation can
 dwarf a permutation number; it is a measure of the component's
 contribution to the whole replay, not of one column in a design matrix.
 
+Six models share the file: `soccer`, `nfl`, `cfb`, `mlb` measure each
+sport's Elo (or the fitted outcome model, for soccer); `nfl_second_stage`
+and `cfb_second_stage` measure the Elo + adjusted-efficiency logistic
+layered on top (`NFL/model/advanced.py`, `CFB/model/advanced.py`) the
+same way `soccer()` measures its outcome model — permutation importance
+on the clean, never-trained-on seasons the second stage's own evaluation
+holds out. A sport with no second stage (soccer's advanced layer isn't
+shipped; MLB has none) has no `*_second_stage` key, and the page section
+just doesn't grow a second panel.
+
 Usage:
     python -m data_jobs.build_importance [--skip soccer]
-    python -m data_jobs.build_importance --only nfl
+    python -m data_jobs.build_importance --only nfl nfl_second_stage
 
 `--only` / `--skip` merge into whatever the web file already holds, so a
 single model can be recomputed without redoing the soccer replay. Merging
@@ -230,6 +240,109 @@ def cfb() -> dict:
     }
 
 
+# --------------------------------------------------------------------------
+# NFL / CFB second stage (Elo + adjusted efficiency) — permutation importance
+# --------------------------------------------------------------------------
+def _second_stage_permutation(*, name: str, features: list[str], baseline_model,
+                              X, y, window: str, caveat: str) -> dict:
+    """Shared body for the two second-stage permutation builders below:
+    same recipe as `soccer()` — shuffle each feature `REPEATS` times on
+    held-out rows the fit never trained on, report the mean increase in
+    log loss."""
+    p = np.clip(baseline_model.predict_proba(X)[:, 1], 1e-6, 1 - 1e-6)
+    y_arr = y.to_numpy()
+
+    def loss(frame) -> float:
+        pf = np.clip(baseline_model.predict_proba(frame)[:, 1], 1e-6, 1 - 1e-6)
+        return float(-(y_arr * np.log(pf) + (1 - y_arr) * np.log(1 - pf)).mean())
+
+    baseline = loss(X)
+    rng = np.random.default_rng(SEED)
+    rows = []
+    for col in features:
+        deltas = []
+        constant = X[col].nunique(dropna=False) <= 1
+        for _ in range(REPEATS):
+            shuffled = X.copy()
+            shuffled[col] = rng.permutation(shuffled[col].to_numpy())
+            deltas.append(loss(shuffled) - baseline)
+        rows.append({
+            "name": col,
+            "value": _round(np.mean(deltas)),
+            "sd": _round(np.std(deltas)),
+            "detail": (
+                f"no data over this window — the column is constant, so "
+                f"shuffling it cannot do damage"
+                if constant else f"column shuffled {REPEATS}x on the held-out window"
+            ),
+            "constant": bool(constant),
+        })
+    rows.sort(key=lambda r: -r["value"])
+    return {
+        "name": name,
+        "method": "permutation importance",
+        "metric": "increase in holdout log loss when the feature is shuffled",
+        "baseline": _round(baseline),
+        "n": int(len(X)),
+        "window": window,
+        "features": rows,
+        "caveat": caveat,
+    }
+
+
+def nfl_second_stage() -> dict:
+    from common import evaluate
+    from NFL.model import advanced as adv
+    from NFL.model.eval_advanced import CLEAN_FROM, LAST_TEST, build_table
+
+    table = build_table()
+    features = adv.PRODUCTION_FEATURES
+    train = table["season"] < CLEAN_FROM
+    test = (table["season"] >= CLEAN_FROM) & (table["season"] <= LAST_TEST)
+    model = evaluate.make_logistic(adv.PRODUCTION_C).fit(
+        table.loc[train, features], table.loc[train, "y"])
+    X = table.loc[test, features].astype(float)
+    return _second_stage_permutation(
+        name="NFL second stage (Elo + adjusted success)",
+        features=features, baseline_model=model, X=X, y=table.loc[test, "y"],
+        window=f"{CLEAN_FROM}-{LAST_TEST} (clean of the Elo's own 2005-2023 tuning window)",
+        caveat=(
+            "This is the logistic layered on top of Elo "
+            "(NFL/model/advanced.py), not the Elo engine itself — see the "
+            "'NFL Elo' section above for what the rating's own components "
+            "are worth. A game with no play-by-play rating for either side "
+            "falls back to Elo alone and is not in this window."
+        ),
+    )
+
+
+def cfb_second_stage() -> dict:
+    from common import evaluate
+    from CFB.model import advanced as adv
+    from CFB.model.eval_advanced import TEST, TRAIN_FROM, build_table
+
+    table = build_table()
+    features = adv.PRODUCTION_FEATURES
+    train = (table["season"] >= TRAIN_FROM) & (table["season"] < TEST[0])
+    test = (table["season"] >= TEST[0]) & (table["season"] <= TEST[1])
+    model = evaluate.make_logistic(adv.PRODUCTION_C).fit(
+        table.loc[train, features], table.loc[train, "y"])
+    X = table.loc[test, features].astype(float)
+    return _second_stage_permutation(
+        name="College football second stage (Elo + adjusted EPA)",
+        features=features, baseline_model=model, X=X, y=table.loc[test, "y"],
+        window=f"{TEST[0]}-{TEST[1]} (clean of the Elo's own 2005-2023 tuning window)",
+        caveat=(
+            "This is the logistic layered on top of Elo "
+            "(CFB/model/advanced.py), not the Elo engine itself — see the "
+            "'College football Elo' section above for what the rating's "
+            "own components are worth. A game with an FCS side, or no "
+            "weekly-summary rating for either side, falls back to Elo "
+            "alone and is not in this window."
+        ),
+    )
+
+
 def mlb() -> dict:
     from mlb.elo import CARRYOVER, HOME_ADVANTAGE, K, run_history
 
@@ -272,12 +385,15 @@ def mlb() -> dict:
     }
 
 
-BUILDERS = {"soccer": soccer, "nfl": nfl, "cfb": cfb, "mlb": mlb}
+BUILDERS = {"soccer": soccer, "nfl": nfl, "nfl_second_stage": nfl_second_stage,
+            "cfb": cfb, "cfb_second_stage": cfb_second_stage, "mlb": mlb}
 # Where each model's own copy lands, next to its tuned parameters.
 ARTIFACTS = {
     "soccer": REPO_ROOT / "soccer/clubs/model/artifacts/importance.json",
     "nfl": REPO_ROOT / "NFL/elo/artifacts/importance.json",
+    "nfl_second_stage": REPO_ROOT / "NFL/model/artifacts/importance.json",
     "cfb": REPO_ROOT / "CFB/model/artifacts/importance.json",
+    "cfb_second_stage": REPO_ROOT / "CFB/model/artifacts/importance_second_stage.json",
     "mlb": REPO_ROOT / "data/mlb/importance.json",
 }
 

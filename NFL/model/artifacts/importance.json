@@ -1,0 +1,53 @@
+{
+  "name": "NFL second stage (Elo + adjusted success)",
+  "method": "permutation importance",
+  "metric": "increase in holdout log loss when the feature is shuffled",
+  "baseline": 0.61852,
+  "n": 569,
+  "window": "2024-2025 (clean of the Elo's own 2005-2023 tuning window)",
+  "features": [
+    {
+      "name": "elo_logit",
+      "value": 0.07673,
+      "sd": 0.00781,
+      "detail": "column shuffled 10x on the held-out window",
+      "constant": false
+    },
+    {
+      "name": "success_matchup_net",
+      "value": 0.00625,
+      "sd": 0.00193,
+      "detail": "column shuffled 10x on the held-out window",
+      "constant": false
+    },
+    {
+      "name": "home_off_success_adj",
+      "value": 0.00455,
+      "sd": 0.00266,
+      "detail": "column shuffled 10x on the held-out window",
+      "constant": false
+    },
+    {
+      "name": "away_off_success_adj",
+      "value": 0.00138,
+      "sd": 0.00294,
+      "detail": "column shuffled 10x on the held-out window",
+      "constant": false
+    },
+    {
+      "name": "home_def_success_adj",
+      "value": 0.00039,
+      "sd": 0.00063,
+      "detail": "column shuffled 10x on the held-out window",
+      "constant": false
+    },
+    {
+      "name": "away_def_success_adj",
+      "value": -0.00034,
+      "sd": 0.00055,
+      "detail": "column shuffled 10x on the held-out window",
+      "constant": false
+    }
+  ],
+  "caveat": "This is the logistic layered on top of Elo (NFL/model/advanced.py), not the Elo engine itself \u2014 see the 'NFL Elo' section above for what the rating's own components are worth. A game with no play-by-play rating for either side falls back to Elo alone and is not in this window."
+}

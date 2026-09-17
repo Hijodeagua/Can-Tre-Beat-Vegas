@@ -147,11 +147,16 @@ export default function ModelsPage() {
               ))}
             </dl>
             <Steps steps={m.steps} />
-            {(() => {
-              const imp = importanceFor(m.key);
-              if (!imp) return null;
-              return (
+            {[
+              { imp: importanceFor(m.key), label: 'What its inputs are worth' },
+              {
+                imp: importanceFor(`${m.key}_second_stage`),
+                label: 'What the second-stage layer is worth',
+              },
+            ].map(({ imp, label }) =>
+              imp ? (
                 <details
+                  key={label}
                   className="mt-3 rounded-lg border"
                   style={{ borderColor: 'var(--th-border)', background: 'var(--th-card)' }}
                 >
@@ -159,7 +164,7 @@ export default function ModelsPage() {
                     className="cursor-pointer list-none px-4 py-3 text-[13px] font-semibold"
                     style={{ color: 'var(--th-ink)' }}
                   >
-                    What its inputs are worth
+                    {label}
                     <span className="ml-2 font-normal" style={{ color: 'var(--th-faint)' }}>
                       — {imp.method}
                     </span>
@@ -168,8 +173,8 @@ export default function ModelsPage() {
                     <ImportanceChart model={imp} />
                   </div>
                 </details>
-              );
-            })()}
+              ) : null,
+            )}
           </section>
         );
       })}
