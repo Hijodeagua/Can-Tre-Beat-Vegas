@@ -269,6 +269,9 @@ ALIASES: dict[str, dict[str, str]] = {
         "US Sassuolo": "US Sassuolo Calcio",
     },
     "ligue_1": {
+        # openfootball renamed the club for 2026-27; every earlier season,
+        # both xG feeds and ligue_2 use the old spelling.
+        "ES Troyes AC": "ESTAC Troyes",
         "AS Monaco": "AS Monaco FC",
         "AS Nancy-Lorraine": "AS Nancy Lorraine",
         "FC Girondins Bordeaux": "Girondins Bordeaux",
@@ -287,6 +290,7 @@ ALIASES: dict[str, dict[str, str]] = {
         "Stade Rennais FC": "Stade Rennais FC 1901",
     },
     "ligue_2": {
+        "ES Troyes AC": "ESTAC Troyes",
         "AS Monaco": "AS Monaco FC",
         "AS Nancy-Lorraine": "AS Nancy Lorraine",
         "Chamois Niortais FC": "Chamois Niortais",

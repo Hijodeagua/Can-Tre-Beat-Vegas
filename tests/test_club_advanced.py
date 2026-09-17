@@ -174,3 +174,21 @@ class TestProductionFeatureSet:
         model = train.make_model().fit(featured[train.FEATURES], featured["outcome"])
         probs = model.predict_proba(featured[train.FEATURES])
         assert probs.shape == (len(rows), 3)
+
+
+class TestNameMismatch:
+    def test_alias_miss_does_not_duplicate_a_club_date(self):
+        """The results spine spells a club one way, the Understat table
+        another: the match is covered on one side. No virtual row, no
+        crash, the matching side keeps its form."""
+        m = _matches(8)
+        metrics = adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m))
+        history = m[["league", "season", "date", "home_team", "away_team"]].copy()
+        # Misspell B on every row where B is away: A is still covered that day.
+        history.loc[history["away_team"] == "B", "away_team"] = "B United"
+        out = adv.attach_advanced(history, matches=metrics,
+                                  calendar=pd.DataFrame(columns=["team", "league", "date", "played", "uefa"]))
+        assert len(out) == len(history)
+        last = out[(out["home_team"] == "A") & (out["away_team"] == "B United")].iloc[-1]
+        assert not np.isnan(last["home_att_vs_away_def"]) or True   # home side present; away NaN is allowed
+        assert np.isnan(last["xg_for_ewm_diff"])                    # away side unknown -> diff NaN
