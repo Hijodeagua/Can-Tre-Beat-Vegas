@@ -16,7 +16,7 @@ publish the site JSON, and render the twice-weekly update email.
 | `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, likeliest scoreline consistent with that pick; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once results land; running ledger at `data/soccer_clubs/predictions/grades.csv` |
 | `simulate.py` | Per-league rest-of-season Monte Carlo with live in-sim Elo (title / UCL / UEL / relegation / expected points + position) |
-| `export_site.py` | `web/public/data/soccer/latest.json` (incl. `elo_history` for the site's daily-updating Elo chart) + per-day history snapshots |
+| `export_site.py` | `web/public/data/soccer/latest.json` (incl. `elo_history` + `elo_projection` for the site's daily-updating Elo chart and its projected half) + per-day history snapshots |
 | `emails.py` | The update email HTML: week's fixtures, past week + rolling tracker, Opta-style final-table forecasts |
 
 ## Data flow for a run dated D (UTC)

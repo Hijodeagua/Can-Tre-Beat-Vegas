@@ -6,7 +6,8 @@ elo_history under one roof with a generated_at stamp).
 `ratings` is the full 32-team board ranked by Elo with season-to-date
 record; `divisions` is the eight-division summary that powers the
 division-strength table; `elo_history` is every team's current-season
-Elo trajectory for the trend chart.
+Elo trajectory and `elo_projection` where the rest-of-season sim expects
+each to go — the two halves of the trend chart.
 """
 
 from __future__ import annotations
@@ -134,6 +135,47 @@ def elo_history_payload(state: DailyState, run_date: str,
     return {"season": season, "teams": series}
 
 
+def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
+    """Every team's *projected* Elo from the rest-of-season Monte Carlo:
+    its live rating at each checkpoint date read as a median simulated
+    season with the 10th/90th-percentile band around it, plus a
+    few whole simulated seasons — all anchored on today's actual rating so
+    the site's chart draws them as the continuation of the `elo_history`
+    line rather than a floating second series.
+
+    The headline value is a real simulated season, not an average of
+    them: the average is flat by construction (see `simulate.py`), so a
+    chart led by it would report that the board stops moving.
+
+    The block is moved out of `futures` (where the sim put it) and up to
+    the top level next to `elo_history`: it is chart data on the same
+    footing, and the futures table itself never reads it. Empty when there
+    is nothing left to simulate.
+    """
+    proj = (futures or {}).pop("projection", None)
+    if not proj or not proj["dates"]:
+        return {}
+    now = {t["team"]: t["elo"] for t in futures.get("teams", [])}
+    teams = {}
+    samples = {}
+    for team, median in proj["median"].items():
+        elo = now.get(team)
+        band = proj["band"][team]
+        rows = [[d, m, *b] for d, m, b in zip(proj["dates"], median, band)]
+        teams[team] = ([[run_date, elo, elo, elo]] if elo is not None else []) + rows
+        # Each sample season opens on the same actual rating, so a path
+        # lines up point-for-point with the median above it.
+        head = [elo] if elo is not None else []
+        samples[team] = [head + path for path in proj["samples"][team]]
+    return {
+        "season": futures.get("season"),
+        "sims": futures.get("sims"),
+        "from_date": run_date,
+        "teams": teams,
+        "samples": samples,
+    }
+
+
 def current_week(state: DailyState, run_date: str) -> tuple[int | None, str | None]:
     nw = next_week(state, run_date)
     if nw is None:
@@ -152,6 +194,8 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
            recent: pd.DataFrame) -> dict:
     pre = preseason_ratings(state)
     ratings = ratings_payload(state, pre)
+    # Before the futures block is serialized — this pops its projection.
+    elo_projection = elo_projection_payload(futures, run_date)
     week, label = current_week(state, run_date)
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -176,6 +220,7 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "ledger": ledger,
         "futures": futures or {"season": state.season, "status": "no_games"},
         "elo_history": elo_history_payload(state, run_date, pre),
+        "elo_projection": elo_projection,
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)

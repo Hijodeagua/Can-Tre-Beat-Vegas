@@ -1,0 +1,47 @@
+{
+  "name": "College football Elo",
+  "method": "component ablation",
+  "metric": "increase in holdout log loss when the component is neutralised",
+  "baseline": 0.48462,
+  "n": 2038,
+  "window": "2024 onward (never tuned on)",
+  "features": [
+    {
+      "name": "FCS opponent rating",
+      "value": 0.03772,
+      "sd": null,
+      "detail": "non-FBS opponents rated as average FBS"
+    },
+    {
+      "name": "Margin of victory",
+      "value": 0.0365,
+      "sd": null,
+      "detail": "every win counts the same, whatever the margin"
+    },
+    {
+      "name": "Season regression",
+      "value": 0.02754,
+      "sd": null,
+      "detail": "ratings carry over untouched"
+    },
+    {
+      "name": "Conference regression",
+      "value": 0.01125,
+      "sd": null,
+      "detail": "regress to 1500 alone, ignoring the new conference"
+    },
+    {
+      "name": "Home advantage",
+      "value": 0.01073,
+      "sd": null,
+      "detail": "home edge set to 0 Elo"
+    },
+    {
+      "name": "FBS entry rating",
+      "value": 0.00078,
+      "sd": null,
+      "detail": "a new FBS program starts at average"
+    }
+  ],
+  "caveat": "Neutralising a component changes every rating after it, so these are contributions to the whole replay, not to one game. 'Margin of victory' clamps the margin to a point rather than removing the multiplier, which also shrinks the update size."
+}

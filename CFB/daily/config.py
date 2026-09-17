@@ -38,6 +38,17 @@ ROLLING_WINDOWS = (7, 30)   # rolling performance windows, in days
 # Rest-of-season Monte Carlo. Vectorized across sims (like the MLB sim),
 # so 10k replays of ~800 remaining games take a few seconds.
 SEASON_SIMS = 10000
+# Checkpoint dates the sim reports projected Elo at, spread over the
+# remaining regular season — the projected half of the site's Elo trend
+# chart. Eight keeps the curve readable and the exported block small.
+PROJECTION_POINTS = 8
+# Individual simulated seasons exported alongside the mean, so the site's
+# projection reads as a fan of possible seasons rather than one flat line.
+# Every team's path with the same index comes from the same simulated
+# season, so the crossings on the chart are a coherent season, not three
+# unrelated draws. Three is enough to show the spread without turning the
+# chart into spaghetti.
+PROJECTION_SAMPLES = 3
 BOWL_ELIGIBLE_WINS = 6
 TOP_N = 25
 

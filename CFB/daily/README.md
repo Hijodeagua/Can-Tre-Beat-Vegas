@@ -17,7 +17,7 @@ twice-weekly update email.
 | `predict.py` | Slate for [D, D+2): win probability, pick, expected score; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once finals land; running ledger at `data/college_football/predictions/grades.csv` with the paired Δlog-loss vs. always-pick-home |
 | `simulate.py` | Vectorized rest-of-season Monte Carlo with live in-sim Elo: expected wins, bowl / undefeated odds, CCG berth, conference title |
-| `export_site.py` | `web/public/data/cfb/latest.json` (full FBS board, conference table, slate, ledger, futures, `elo_history`) + per-day snapshots |
+| `export_site.py` | `web/public/data/cfb/latest.json` (full FBS board, conference table, slate, ledger, futures, `elo_history` + `elo_projection`) + per-day snapshots |
 | `emails.py` | The update email: Elo top 25, the week's games, rolling tracker + past week, season forecasts |
 
 ## Data flow for a run dated D (ET)

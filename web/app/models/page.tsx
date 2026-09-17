@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import ImportanceChart from '@/app/components/ImportanceChart';
+import { importanceFor } from '@/app/lib/importance';
 import { fileUrl, MODEL_DOCS, REPO_URL, SHARED_DOCS, type DocStep } from '@/app/lib/modelDocs';
 import { accentVars, sportByKey } from '@/app/lib/sports';
 
@@ -80,7 +82,20 @@ export default function ModelsPage() {
           repository
         </a>{' '}
         that does it, so the code can be read in the order it runs. The README beside each
-        model explains the reasoning; this page is the map.
+        model explains the reasoning; this page is the map. Each model also carries a
+        measured breakdown of what its inputs are actually worth — open{' '}
+        <i>What its inputs are worth</i> under any of them — and the short version of
+        every feature list is the{' '}
+        <a
+          href={`${REPO_URL}/blob/main/docs/MODEL_FEATURES.md`}
+          target="_blank"
+          rel="noreferrer"
+          className="underline-offset-2 hover:underline"
+          style={{ color: 'var(--th-ink)' }}
+        >
+          feature sheet
+        </a>
+        .
       </p>
 
       <nav className="mt-5 flex flex-wrap gap-2">
@@ -132,6 +147,29 @@ export default function ModelsPage() {
               ))}
             </dl>
             <Steps steps={m.steps} />
+            {(() => {
+              const imp = importanceFor(m.key);
+              if (!imp) return null;
+              return (
+                <details
+                  className="mt-3 rounded-lg border"
+                  style={{ borderColor: 'var(--th-border)', background: 'var(--th-card)' }}
+                >
+                  <summary
+                    className="cursor-pointer list-none px-4 py-3 text-[13px] font-semibold"
+                    style={{ color: 'var(--th-ink)' }}
+                  >
+                    What its inputs are worth
+                    <span className="ml-2 font-normal" style={{ color: 'var(--th-faint)' }}>
+                      — {imp.method}
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4">
+                    <ImportanceChart model={imp} />
+                  </div>
+                </details>
+              );
+            })()}
           </section>
         );
       })}

@@ -1,0 +1,41 @@
+{
+  "name": "NFL Elo",
+  "method": "component ablation",
+  "metric": "increase in holdout log loss when the component is neutralised",
+  "baseline": 0.62424,
+  "n": 586,
+  "window": "2024 onward (never tuned on)",
+  "features": [
+    {
+      "name": "Margin of victory",
+      "value": 0.02504,
+      "sd": null,
+      "detail": "every win counts the same, whatever the margin"
+    },
+    {
+      "name": "Season regression",
+      "value": 0.01877,
+      "sd": null,
+      "detail": "ratings carry over untouched"
+    },
+    {
+      "name": "Home advantage",
+      "value": 0.00174,
+      "sd": null,
+      "detail": "home edge set to 0 Elo"
+    },
+    {
+      "name": "Postseason K weight",
+      "value": 0.0,
+      "sd": null,
+      "detail": "playoff games update like any other"
+    },
+    {
+      "name": "Rest (bye week)",
+      "value": -0.00065,
+      "sd": null,
+      "detail": "no bonus off a bye"
+    }
+  ],
+  "caveat": "Neutralising a component changes every rating after it, so these are contributions to the whole replay, not to one game. 'Margin of victory' clamps the margin to a point rather than removing the multiplier, which also shrinks the update size \u2014 read it as 'margin ignored', not as a clean K-preserving swap."
+}

@@ -150,6 +150,23 @@ export interface CfbEloHistory {
   teams: Record<string, [string, number][]>;
 }
 
+/** Where the rest-of-season sim expects each program's rating to go:
+ * [ISO date, median run, 10th pct, 90th pct] per checkpoint, opening on
+ * today's actual rating so the chart can continue the history line. The
+ * middle value is one real simulated season (the one that finished
+ * mid-distribution), not an average — averaging returns today's rating
+ * for everyone. Absent once there is nothing left to simulate. */
+export interface CfbEloProjection {
+  season: number;
+  sims: number;
+  from_date: string;
+  teams: Record<string, [string, number, number, number][]>;
+  /** A few whole simulated seasons per team, one rating per checkpoint.
+   * Unlike the median runs above, path `i` of every team comes from the
+   * same simulated season, so their crossings are one coherent board. */
+  samples: Record<string, number[][]>;
+}
+
 export interface CfbLatest {
   generated_at: string;
   run_date: string;
@@ -165,6 +182,7 @@ export interface CfbLatest {
   ledger: CfbLedger;
   futures: CfbFutures;
   elo_history?: CfbEloHistory;
+  elo_projection?: CfbEloProjection;
 }
 
 const data = latest as unknown as CfbLatest;

@@ -192,6 +192,38 @@ class TestSimulate:
         east = sorted(by_conf["East"], key=lambda t: -t["p_conf_title"])
         assert east[0]["team"] == "A"
 
+    def test_projection_checkpoints_and_payload(self):
+        from CFB.daily.export_site import elo_projection_payload
+        st = self._league()
+        futures = simulate.simulate_season(st, n_sims=400, seed=3)
+        proj = futures["projection"]
+        # Two remaining game dates in the fixture set, both checkpoints;
+        # the FCS opponent's date is one of them and never updates Podunk.
+        assert proj["dates"] == ["2026-10-01", "2026-11-20"]
+        assert set(proj["median"]) == set(st.fbs_teams())
+        for team, median in proj["median"].items():
+            assert len(median) == 2
+            for value, (lo, hi) in zip(median, proj["band"][team]):
+                assert lo <= value <= hi
+        payload = elo_projection_payload(futures, "2026-09-20")
+        assert futures.get("projection") is None
+        a = payload["teams"]["A"]
+        now = next(t for t in futures["teams"] if t["team"] == "A")["elo"]
+        assert a[0] == ["2026-09-20", now, now, now]
+        assert [p[0] for p in a[1:]] == proj["dates"]
+        # Sample seasons line up point-for-point with the median run and
+        # open on the same actual rating.
+        paths = payload["samples"]["A"]
+        assert len(paths) == 3
+        assert all(len(path) == len(a) and path[0] == now for path in paths)
+
+    def test_as_of_keeps_checkpoints_in_the_future(self):
+        st = self._league()
+        sim = simulate.simulate_season(st, n_sims=200, seed=3, as_of="2026-10-15")
+        # The October games are still simulated; they just fold into the
+        # first checkpoint after the run date instead of dating one.
+        assert sim["projection"]["dates"] == ["2026-11-20"]
+
     def test_played_ccg_is_final(self):
         st = self._league()
         extra = _games([_row(200, "2026-12-05", "C", "A", 30, 27, hconf="East",

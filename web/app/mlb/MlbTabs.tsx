@@ -11,8 +11,10 @@
  */
 import { useEffect, useState } from 'react';
 import MlbSlateTable from '@/app/components/MlbSlateTable';
+import ModelFeatures from '@/app/components/ModelFeatures';
 import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtNum, fmtPct, fmtPctPrecise, fmtSigned, fmtSimScore } from '@/app/lib/format';
+import { MLB_FEATURES } from '@/app/lib/modelFeatures';
 import {
   DIVISION_ORDER, getMlbLatest, gradedLedgerRow, playedGraded, teamName,
 } from '@/app/lib/mlb';
@@ -108,6 +110,7 @@ function FuturesTab() {
         12-team playoff format; ties broken at random. Run differential is season-to-date
         as of the last pull. Five teams shown per division.
       </p>
+      <ModelFeatures model={MLB_FEATURES} />
     </div>
   );
 }

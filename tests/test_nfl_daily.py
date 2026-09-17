@@ -222,6 +222,52 @@ class TestSimulate:
         assert west[0]["team"] == "KC"
         assert teams[0]["p_sb"] >= teams[-1]["p_sb"]
 
+    def test_projection_checkpoints_and_widening_band(self):
+        st = self._league()
+        sim = simulate.simulate_season(st, n_sims=500, seed=3)
+        proj = sim["projection"]
+        # Two remaining game dates in the fixture set, both checkpoints.
+        assert proj["dates"] == ["2026-10-01", "2026-11-01"]
+        assert set(proj["median"]) == set(TEAMS)
+        for team, median in proj["median"].items():
+            assert len(median) == 2
+            for value, (lo, hi) in zip(median, proj["band"][team]):
+                assert lo <= value <= hi
+        # Elo is a random walk from a known rating, so the spread across
+        # sims grows as more games are played.
+        width = [sum(b[i][1] - b[i][0] for b in proj["band"].values()) / 32
+                 for i in (0, 1)]
+        assert width[1] > width[0] > 0
+
+    def test_projection_payload_anchors_on_todays_rating(self):
+        from NFL.daily.export_site import elo_projection_payload
+        st = self._league()
+        futures = simulate.simulate_season(st, n_sims=200, seed=3)
+        payload = elo_projection_payload(futures, "2026-09-20")
+        # The block is moved out of futures, not copied.
+        assert futures.get("projection") is None
+        assert payload["from_date"] == "2026-09-20" and payload["sims"] == 200
+        kc = payload["teams"]["KC"]
+        now = next(t for t in futures["teams"] if t["team"] == "KC")["elo"]
+        assert kc[0] == ["2026-09-20", now, now, now]
+        assert [p[0] for p in kc[1:]] == ["2026-10-01", "2026-11-01"]
+        # Each row is [date, median run, p10, p90].
+        for _, value, lo, hi in kc:
+            assert lo <= value <= hi
+        # Sample seasons line up point-for-point with it and open on the
+        # same actual rating.
+        paths = payload["samples"]["KC"]
+        assert len(paths) == 3
+        assert all(len(path) == len(kc) and path[0] == now for path in paths)
+        assert len({path[-1] for path in paths}) > 1
+
+    def test_as_of_keeps_checkpoints_in_the_future(self):
+        st = self._league()
+        sim = simulate.simulate_season(st, n_sims=200, seed=3, as_of="2026-10-15")
+        # The October games are still simulated; they just fold into the
+        # first checkpoint after the run date instead of dating one.
+        assert sim["projection"]["dates"] == ["2026-11-01"]
+
     def test_played_playoff_game_is_honoured(self):
         st = self._league(played_playoffs=True)
         sim = simulate.simulate_season(st, n_sims=300, seed=1)

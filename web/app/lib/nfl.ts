@@ -155,6 +155,23 @@ export interface NflEloHistory {
   teams: Record<string, [string, number][]>;
 }
 
+/** Where the rest-of-season sim expects each team's rating to go:
+ * [ISO date, median run, 10th pct, 90th pct] per checkpoint, opening on
+ * today's actual rating so the chart can continue the history line. The
+ * middle value is one real simulated season (the one that finished
+ * mid-distribution), not an average — averaging returns today's rating
+ * for everyone. Absent once there is nothing left to simulate. */
+export interface NflEloProjection {
+  season: number;
+  sims: number;
+  from_date: string;
+  teams: Record<string, [string, number, number, number][]>;
+  /** A few whole simulated seasons per team, one rating per checkpoint.
+   * Unlike the median runs above, path `i` of every team comes from the
+   * same simulated season, so their crossings are one coherent board. */
+  samples: Record<string, number[][]>;
+}
+
 export interface NflLatest {
   generated_at: string;
   run_date: string;
@@ -170,6 +187,7 @@ export interface NflLatest {
   ledger: NflLedger;
   futures: NflFutures;
   elo_history?: NflEloHistory;
+  elo_projection?: NflEloProjection;
 }
 
 const data = latest as unknown as NflLatest;

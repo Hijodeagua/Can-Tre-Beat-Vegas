@@ -23,6 +23,20 @@ field. The NFL's is a rulebook, so it is played out here:
   survivor; Championship at the higher seed; Super Bowl neutral.
 - A playoff game already on the spine as final is honoured: whenever the
   simulated bracket produces that matchup, the real result is used.
+
+Alongside the odds the sim reports a `projection` block: every team's
+live in-sim Elo at a handful of checkpoint dates across the remaining
+regular season, read three ways — a median simulated season, the
+10th/90th percentile band, and a few whole simulated seasons
+(`_projection_block`).
+
+What is deliberately absent is the mean. An Elo update is
+K * (actual - expected) and the sim draws results at its own expected
+rate, so every team's *expected* rating change is about zero: averaging
+the sims returns today's rating for everybody, however far single seasons
+swing. A chart led by that average says the board never changes, which is
+the one thing the odds in this same payload rule out. The bracket is left
+out of the projection: the postseason is not every team's season.
 """
 
 from __future__ import annotations
@@ -30,7 +44,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from NFL.daily.config import SEASON_SIMS
+from NFL.daily.config import PROJECTION_POINTS, PROJECTION_SAMPLES, SEASON_SIMS
 from NFL.daily.state import DailyState
 from NFL.elo.engine import REST_BONUS_DAYS
 from NFL.elo.teams import (
@@ -68,13 +82,81 @@ def current_records(games: pd.DataFrame, season: int,
     return out.reset_index()
 
 
+def _checkpoints(dates: list[str], n: int = PROJECTION_POINTS) -> list[str]:
+    """Up to `n` evenly spaced dates out of the remaining game dates, the
+    last one always included — the x positions the projected Elo line is
+    drawn through. Fewer than `n` distinct dates left means every one of
+    them is a checkpoint."""
+    uniq = sorted(set(dates))
+    if len(uniq) <= n:
+        return uniq
+    last = len(uniq) - 1
+    return [uniq[i] for i in sorted({round(i * last / (n - 1)) for i in range(n)})]
+
+
+def _projection_block(snaps: np.ndarray, checkpoints: list[str],
+                      index: dict[str, int], n_samples: int) -> dict:
+    """The projection payload, out of a (checkpoints, sims, sides) array of
+    live in-sim ratings. Sibling of the same helper in the other two
+    daily pipelines.
+
+    Three readings of the same simulations, because none of them tells the
+    whole truth alone:
+
+    - `median` — for each side, the one simulated season whose final
+      rating is that side's median. A real season, so it moves the way a
+      season moves; picked per side, so two median lines are *not* the
+      same simulated season.
+    - `band` — the 10th/90th percentile at each checkpoint. Where a side
+      could plausibly be, and by the end of a season it is wider than the
+      gaps between the sides.
+    - `samples` — the first `n_samples` sims, whole. Path p of every side
+      comes from the same simulated season, so these crossings are a
+      coherent board rather than unrelated draws.
+
+    The mean is deliberately not here. A fair game's expected Elo change
+    is about zero, so averaging the sims returns today's rating for
+    everyone — the one season in which nothing happens, which is the one
+    thing the simulation does not predict.
+    """
+    if not checkpoints:
+        # Nothing left to project (every remaining fixture is already
+        # past the run date); the export drops the block on this.
+        return {"dates": [], "median": {}, "band": {}, "samples": {}}
+    n_sims = snaps.shape[1]
+    mid = n_sims // 2
+    # Median *run*, not the pointwise median: rank the sims by where each
+    # side ends up and keep the whole season of the one in the middle.
+    median_sim = np.argsort(snaps[-1], axis=0)[mid]
+    lo, hi = np.percentile(snaps, [10, 90], axis=1)
+    n_paths = min(n_samples, n_sims)
+    r1 = lambda x: round(float(x), 1)
+    return {
+        "dates": checkpoints,
+        "median": {
+            side: [r1(snaps[s, median_sim[j], j]) for s in range(len(checkpoints))]
+            for side, j in index.items()
+        },
+        "band": {
+            side: [[r1(lo[s, j]), r1(hi[s, j])] for s in range(len(checkpoints))]
+            for side, j in index.items()
+        },
+        "samples": {
+            side: [[r1(snaps[s, p, j]) for s in range(len(checkpoints))]
+                   for p in range(n_paths)]
+            for side, j in index.items()
+        },
+    }
+
+
 def _pct(w: np.ndarray, l: np.ndarray, t: np.ndarray) -> np.ndarray:
     g = w + l + t
     return np.where(g > 0, (w + 0.5 * t) / np.maximum(g, 1), 0.0)
 
 
 def simulate_season(state: DailyState, season: int | None = None,
-                    n_sims: int = SEASON_SIMS, seed: int | None = 0) -> dict | None:
+                    n_sims: int = SEASON_SIMS, seed: int | None = 0,
+                    as_of: str | None = None) -> dict | None:
     season = season or state.season
     games = state.games
     teams = list(TEAMS)
@@ -104,7 +186,24 @@ def simulate_season(state: DailyState, season: int | None = None,
     bye = engine.rest_bonus
     games_left = np.zeros(n)
 
-    for r in remaining.sort_values(["date", "gametime", "game_id"]).itertuples(index=False):
+    # Projection checkpoints. Each snapshot date's ratings are complete
+    # once the last remaining game on or before it has been played, so the
+    # snapshot is taken on the way into the *next* game (and after the loop
+    # for the final one) — a position the `continue` below can't skip.
+    ordered = remaining.sort_values(["date", "gametime", "game_id"])
+    dates = [str(d) for d in ordered["date"]]
+    # Only dates after the run date are checkpoints: today's own slate is
+    # unplayed, and a game still unplayed on an earlier date would draw
+    # the projected line backwards. Both fold into the first real
+    # checkpoint instead.
+    checkpoints = _checkpoints([d for d in dates if as_of is None or d > as_of])
+    snap_before = {max(i for i, d in enumerate(dates) if d <= cp) + 1: slot
+                   for slot, cp in enumerate(checkpoints)}
+    snaps = np.zeros((len(checkpoints), n_sims, n), dtype=np.float32)
+
+    for i, r in enumerate(ordered.itertuples(index=False)):
+        if i in snap_before:
+            snaps[snap_before[i]] = R
         h, a = idx.get(r.home_team), idx.get(r.away_team)
         if h is None or a is None:
             continue
@@ -126,6 +225,8 @@ def simulate_season(state: DailyState, season: int | None = None,
         if CONFERENCE_OF.get(r.home_team) == CONFERENCE_OF.get(r.away_team):
             cwins[:, h] += home_won; closs[:, h] += ~home_won
             cwins[:, a] += ~home_won; closs[:, a] += home_won
+    if len(dates) in snap_before:
+        snaps[snap_before[len(dates)]] = R
 
     # --- standings -> seeds ---------------------------------------------------
     pct = _pct(wins, losses, ties)
@@ -236,4 +337,6 @@ def simulate_season(state: DailyState, season: int | None = None,
         "sims": n_sims,
         "remaining_games": int(len(remaining)),
         "teams": table,
+        "projection": _projection_block(snaps, checkpoints, idx,
+                                        PROJECTION_SAMPLES) if checkpoints else None,
     }
