@@ -80,18 +80,18 @@ def _round(x) -> float:
 # club soccer — permutation importance on the fitted outcome model
 # --------------------------------------------------------------------------
 def soccer() -> dict:
-    import pickle
-
     import pandas as pd
     from sklearn.metrics import log_loss
 
-    from soccer.clubs.model.train import ARTIFACTS, build_table
+    from soccer.clubs.model.train import FEATURES, LEARNER, SPLIT_SEASON, build_table, make_model
 
-    artifact = pickle.loads((ARTIFACTS / "outcome_model.pkl").read_bytes())
-    model, features, split = artifact["model"], artifact["features"], artifact["split_season"]
-    learner = artifact.get("learner", "logistic")
-
+    # Fit here rather than unpickle: the production learner is refit
+    # in-run by the daily job and its pickle is too large to commit, so
+    # this measures exactly what train.py would produce today.
+    features, split, learner = FEATURES, SPLIT_SEASON, LEARNER
     table = build_table()
+    train = table[table["season"] < split]
+    model = make_model().fit(train[features], train["outcome"])
     test = table[table["season"] >= split]
     # Kept as a frame with the fitted feature names, so sklearn scores it
     # the way the pipeline does rather than warning about bare arrays.

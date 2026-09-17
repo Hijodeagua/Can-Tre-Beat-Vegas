@@ -28,9 +28,9 @@ Ten league pools (five top flights + their second divisions) plus MLS.
 Pick and forecast: `soccer/clubs/daily/{predict,simulate}.py`.
 
 **Match outcome — random forest over {home win, draw, away win}**
-(`soccer/clubs/model/train.py`, `common/learners.py`; fitted artifact
-`soccer/clubs/model/artifacts/outcome_model.pkl`, refit in-run daily).
-Every input the model sees, 33 columns:
+(`soccer/clubs/model/train.py`, `common/learners.py`; refit in-run daily —
+the forest pickle `train.py` writes is ~50 MB and is not committed).
+Every input the model sees, 31 columns:
 
 * **Home Elo**, **Away Elo** — each club's Elo as its own column, so a
   rating *level* can matter, not only the gap (a big favourite above

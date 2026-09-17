@@ -80,7 +80,7 @@ export const SOCCER_FEATURES: ForecastModel = {
     { name: 'Rest and congestion', detail: 'rest days, matches in the last 14 days, a European tie in the last 7 — from the whole calendar' },
   ],
   gaps:
-    'Measured on 2024-25 onward, the full set beats the old seven-feature model by about ' +
+    'Measured on 2024-25 onward, the full 31-feature set beats the old seven-feature model by about ' +
     '0.0008 log loss (+1.4 SE) with a logistic; a random forest scores 0.0017 worse than that ' +
     'logistic (noise-level) and ships anyway because it can use npxG, PPDA and deep completions ' +
     'non-linearly once the Understat backfill lands — those columns were empty when this was ' +
