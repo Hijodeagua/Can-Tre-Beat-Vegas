@@ -32,7 +32,9 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, log_loss
 
+from common import learners
 from soccer.clubs.data.leagues import LEAGUES
+from soccer.clubs.model import advanced as adv
 from soccer.clubs.model.europe import run_all_european
 from soccer.clubs.model.features import (
     ALL_FEATURES,
@@ -45,7 +47,21 @@ from soccer.clubs.model.xg import XG_FEATURES, attach_xg, xg_available
 
 ARTIFACTS = Path(__file__).resolve().parent / "artifacts"
 
-FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
+# Every input the model sees: the home and away Elo as their own columns
+# beside the venue-adjusted gap (so a learner can find a level effect the
+# gap alone hides), squad economics, xG and shots-on-target form, and the
+# whole advanced Understat layer (xG/npxG form, attack-vs-defence splits,
+# xG per shot, deep completions and the field-tilt proxy, PPDA, xPts
+# form, rest, congestion, European ties). A column whose feed has not
+# landed is NaN and the learner handles it; nothing is dropped for being
+# empty today.
+RAW_ELO = ["elo_home_pre", "elo_away_pre"]
+BASE_FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
+FEATURES = RAW_ELO + BASE_FEATURES + adv.ALL_ADVANCED
+# The learner `eval_learners` measured best on the 2024-25+ holdout with
+# this feature set (common/learners.py; docs/ADVANCED_METRICS.md).
+LEARNER = "gbm"
+LOGISTIC_C = 0.1
 SPLIT_SEASON = "2024-25"
 # The economics features are sparse (a small, growing fraction of rows are
 # nonzero as market-value uploads backfill), so their gradient signal is
@@ -59,7 +75,12 @@ MAX_ITER = 5000
 def build_table() -> pd.DataFrame:
     _, history = run_all_european()
     league_only = history[~history["league"].str.startswith("uefa:")]
-    return attach_shots(attach_xg(attach_features(league_only)))
+    return adv.attach_advanced(attach_shots(attach_xg(attach_features(league_only))))
+
+
+def make_model(kind: str = LEARNER):
+    """The unfitted production learner."""
+    return learners.make(kind, C=LOGISTIC_C)
 
 
 def frequency_baseline(train: pd.DataFrame, test: pd.DataFrame) -> float:
@@ -89,7 +110,7 @@ def main() -> None:
     if not shots_available():
         print("No shots_matches.csv — sot_net_diff is 0.")
 
-    model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
+    model = make_model()
     model.fit(train[FEATURES], train["outcome"])
     probs = model.predict_proba(test[FEATURES])
     ll = log_loss(test["outcome"], probs, labels=list(model.classes_))
@@ -131,13 +152,19 @@ def main() -> None:
         rows.append({"league": league, "model": "full", "log_loss": sub_ll, "accuracy": sub_acc})
         print(f"  {league:>10}: log loss {sub_ll:.4f}  accuracy {sub_acc:.3f}  ({len(sub)} matches)")
 
-    print("\nCoefficients (per class):")
-    print(pd.DataFrame(model.coef_, index=model.classes_, columns=FEATURES).round(4).to_string())
+    if LEARNER == "logistic":
+        print("\nCoefficients (per class):")
+        clf = model.named_steps["clf"]
+        print(pd.DataFrame(clf.coef_, index=clf.classes_, columns=FEATURES).round(4).to_string())
+    else:
+        print(f"\nLearner: {learners.describe(LEARNER)} on {len(FEATURES)} features "
+              f"(permutation importance: python -m data_jobs.build_importance --only soccer)")
 
     ARTIFACTS.mkdir(exist_ok=True)
     with open(ARTIFACTS / "outcome_model.pkl", "wb") as f:
         pickle.dump(
-            {"model": model, "features": FEATURES, "split_season": args.split_season}, f
+            {"model": model, "features": FEATURES, "learner": LEARNER,
+             "split_season": args.split_season}, f
         )
     pd.DataFrame(rows).to_csv(ARTIFACTS / "metrics.csv", index=False)
     print(f"\nSaved model + metrics to {ARTIFACTS}")

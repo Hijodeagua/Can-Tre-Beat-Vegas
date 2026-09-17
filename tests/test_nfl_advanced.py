@@ -242,6 +242,8 @@ class TestSecondStage:
             "game_id": games.game_id.to_numpy(), "season": games.season.to_numpy(),
             "week": games.week.to_numpy(), "home_team": games.team.to_numpy(),
             "away_team": games.opponent.to_numpy(), "p_home": 0.55,
+            "elo_home_pre": np.where(games.team.to_numpy() == "GOOD", 1600.0, 1500.0),
+            "elo_away_pre": np.where(games.opponent.to_numpy() == "GOOD", 1600.0, 1500.0),
             "home_win": np.where(games.team.to_numpy() == "GOOD", 1.0,
                                  (games.week.to_numpy() % 2).astype(float)),
         })
@@ -259,11 +261,17 @@ class TestSecondStage:
         tg = _team_games(seasons=(2022, 2023, 2024), weeks=8)
         stage = adv.SecondStage(tg, self._history(tg))
         assert stage.n_train > 0
-        p = stage.p_home("GOOD", "B", 0.55, 2024, 9)      # a week not yet played
+        p = stage.p_home("GOOD", "B", 0.55, 2024, 9, elo_home=1600.0, elo_away=1500.0)
         assert 0 < p < 1
+        # The stage sees every feature: current form for a week not yet played.
+        row = stage.feature_row("GOOD", "B", 0.55, 2024, 9, 1600.0, 1500.0)
+        assert all(f in row for f in adv.PRODUCTION_FEATURES)
+        assert row["elo_home_pre"] == 1600.0 and not np.isnan(row["home_off_proe_ewm"])
         # A team with no rating -> None, caller falls back to Elo.
-        assert stage.p_home("GOOD", "NOBODY", 0.55, 2024, 9) is None
-        assert stage.p_home("GOOD", "B", 0.55, 2030, 1) is None
+        assert stage.p_home("GOOD", "NOBODY", 0.55, 2024, 9, 1600.0, 1500.0) is None
+        assert stage.p_home("GOOD", "B", 0.55, 2030, 1, 1600.0, 1500.0) is None
+        # No raw Elo supplied -> None too: the Elo inputs are required.
+        assert stage.p_home("GOOD", "B", 0.55, 2024, 9) is None
 
     def test_freshness_reads_stale_when_the_spine_is_ahead(self):
         tg = _team_games(seasons=(2024,), weeks=4)
@@ -274,3 +282,15 @@ class TestSecondStage:
         # Off-season: nothing newer completed -> fresh; empty aggregates -> stale.
         assert adv.aggregates_freshness(tg, games.iloc[0:0]).fresh
         assert not adv.aggregates_freshness(tg.iloc[0:0], games).fresh
+
+
+class TestCurrentForm:
+    def test_next_game_form_matches_a_shifted_value(self):
+        tg = _team_games(seasons=(2024,), weeks=6)
+        form = adv.current_form(tg, 2024)
+        # GOOD's off_proe was 1..6; the next game's EWMA is the shifted value
+        # a 7th game would carry: below 6, above the league mean.
+        v = form.at["GOOD", "off_proe_ewm"]
+        assert tg["off_proe"].mean() < v < 6.0
+        # A new season: nothing played -> shrunk fully to the league mean.
+        assert adv.current_form(tg, 2025).at["GOOD", "off_proe_ewm"] == pytest.approx(tg["off_proe"].mean())

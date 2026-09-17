@@ -44,7 +44,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from common import evaluate, freshness, pregame
+from common import freshness, learners, pregame
 from NFL.data.pbp import load_team_games
 from NFL.elo.teams import canonical
 
@@ -96,15 +96,17 @@ PACE_ST = ["home_off_neutral_pace_ewm", "away_off_neutral_pace_ewm",
 # Unadjusted EWMA twin of CORE_EPA: shows what the opponent adjustment buys.
 CORE_EWM = ["home_off_epa_ewm", "away_off_epa_ewm", "home_def_epa_ewm", "away_def_epa_ewm"]
 
-# What the daily pipeline ships (verdict of `eval_advanced`, see
-# docs/ADVANCED_METRICS.md): Elo plus the five opponent-adjusted success
-# rate features. Walk-forward 2015-2025 log loss 0.63468 -> 0.63007,
-# +2.96 SE paired vs Elo alone; clean 2024-2025 window 0.62411 -> 0.61853,
-# +1.45 SE. Adding core EPA or pace/ST on top did not beat it on the
-# clean window, so the compact set is the one that ships.
-PRODUCTION_FEATURES = ELO + SUCCESS
-PRODUCTION_METRICS = ["success"]      # the only adjusted metric production needs
-PRODUCTION_C = 0.03
+# What the daily pipeline ships: every pregame feature this module builds,
+# with the home and away Elo as their own inputs beside the Elo logit so
+# the learner can find a level effect or a threshold the gap alone hides.
+# The learner is the one `eval_advanced` measured best on the clean
+# 2024-2025 window with this full set (docs/ADVANCED_METRICS.md).
+RAW_ELO = ["elo_home_pre", "elo_away_pre"]
+PRODUCTION_FEATURES = (ELO + RAW_ELO + CORE_EPA + SUCCESS + SPLITS + DRIVE
+                       + RED_ZONE_THIRD + PACE_ST + CORE_EWM)
+PRODUCTION_METRICS = ADJ_METRICS
+PRODUCTION_LEARNER = "gbm"
+PRODUCTION_C = 0.03            # the logistic's C, when that is the learner
 # The aggregates must reach within this many days of the newest completed
 # game in the spine, or the second stage is off for the run (Elo only).
 # nflverse rebuilds nightly; a Monday game lands by Tuesday morning.
@@ -233,6 +235,31 @@ def ewm_form(tg: pd.DataFrame, metrics: list[str] = FORM_METRICS,
     return df[["game_id", "team"] + [f"{m}_ewm" for m in metrics]]
 
 
+def current_form(tg: pd.DataFrame, season: int,
+                 metrics: list[str] = FORM_METRICS) -> pd.DataFrame:
+    """Per team: the EWMA form the team's *next* game would see — every
+    game played so far, shrunk by games played in `season` (zero for a
+    team that has not played in it yet). One virtual row per team is
+    appended at the end of its history and read back."""
+    teams = sorted(tg["team"].unique())
+    virtual = pd.DataFrame({
+        "game_id": [f"virtual_{t}" for t in teams], "team": teams,
+        "season": season, "week": 99, "date": "9999-12-31",
+    })
+    for m in metrics:
+        virtual[m] = np.nan
+    df = pd.concat([tg[["game_id", "team", "season", "week", "date"] + metrics], virtual],
+                   ignore_index=True)
+    form = ewm_form(df, metrics)
+    out = form[form["game_id"].str.startswith("virtual_")].drop(columns=["game_id"])
+    return out.set_index("team")
+
+
+def make_model(kind: str = PRODUCTION_LEARNER):
+    """The unfitted production learner (`common/learners.py`)."""
+    return learners.make(kind, C=PRODUCTION_C)
+
+
 # --------------------------------------------------------------------------
 # 3. game table
 # --------------------------------------------------------------------------
@@ -299,26 +326,32 @@ def aggregates_freshness(tg: pd.DataFrame, games: pd.DataFrame,
 
 
 class SecondStage:
-    """Elo + adjusted success rate -> home win probability, fit in-run on
-    the replay history joined to the aggregates (2002 onward, ties
-    excluded). `p_home` returns None when either side has no rating for
-    the requested week, and the caller falls back to Elo."""
+    """Elo + every pregame efficiency feature -> home win probability, fit
+    in-run on the replay history joined to the aggregates (2002 onward,
+    ties excluded) with the production learner. `p_home` returns None
+    when either side has no rating for the requested week, and the caller
+    falls back to Elo."""
 
     def __init__(self, tg: pd.DataFrame, history: pd.DataFrame,
-                 features: list[str] = PRODUCTION_FEATURES, C: float = PRODUCTION_C):
+                 features: list[str] | None = None, learner: str = PRODUCTION_LEARNER):
         self.tg = tg
-        self.features = list(features)
+        self.features = list(features or PRODUCTION_FEATURES)
+        self.learner = learner
         self._obs = _observations(tg)
         self._snapshots: dict[tuple[int, int], pd.DataFrame] = {}
+        self._form: dict[int, pd.DataFrame] = {}
         ratings = adjusted_ratings(tg, metrics=PRODUCTION_METRICS)
-        form = ewm_form(tg, metrics=["off_epa", "def_epa"])
+        form = ewm_form(tg)
         table = build_game_table(history, tg, ratings, form)
         train = table[(table["season"] >= 2002) & (table["home_win"] != 0.5)]
-        train = train[train[self.features].notna().all(axis=1)]
+        # Only the Elo inputs are required; a NaN efficiency column is a
+        # missing feed the learner handles (median for the logistic and
+        # forest, a learned direction for boosting).
+        train = train[train[[f for f in self.features if f in ELO + RAW_ELO]].notna().all(axis=1)]
         self.n_train = int(len(train))
         self.seasons = (int(train["season"].min()), int(train["season"].max())) if self.n_train else None
-        self.model = evaluate.make_logistic(C).fit(train[self.features],
-                                                   (train["home_win"] == 1.0).astype(int))
+        self.model = make_model(learner).fit(train[self.features],
+                                             (train["home_win"] == 1.0).astype(int))
 
     def snapshot(self, season: int, week: int) -> pd.DataFrame:
         key = (int(season), int(week))
@@ -327,27 +360,45 @@ class SecondStage:
             self._snapshots[key] = snap.set_index("team") if len(snap) else snap
         return self._snapshots[key]
 
+    def form(self, season: int) -> pd.DataFrame:
+        if int(season) not in self._form:
+            self._form[int(season)] = current_form(self.tg, int(season))
+        return self._form[int(season)]
+
     def feature_row(self, home: str, away: str, p_elo: float,
-                    season: int, week: int) -> dict | None:
+                    season: int, week: int,
+                    elo_home: float | None = None, elo_away: float | None = None) -> dict | None:
         snap = self.snapshot(season, week)
+        form = self.form(season)
         hk, ak = canonical(home), canonical(away)
         if snap.empty or hk not in snap.index or ak not in snap.index:
             return None
         p = min(max(p_elo, 1e-4), 1 - 1e-4)
-        row = {"elo_logit": float(np.log(p / (1 - p)))}
+        row = {"elo_logit": float(np.log(p / (1 - p))),
+               "elo_home_pre": elo_home, "elo_away_pre": elo_away}
         for side, key in (("home", hk), ("away", ak)):
             for m in PRODUCTION_METRICS:
                 row[f"{side}_off_{m}_adj"] = float(snap.at[key, f"off_{m}_adj"])
                 row[f"{side}_def_{m}_adj"] = float(snap.at[key, f"def_{m}_adj"])
+            for m in FORM_METRICS:
+                row[f"{side}_{m}_ewm"] = float(form.at[key, f"{m}_ewm"]) if key in form.index else np.nan
         for m in PRODUCTION_METRICS:
-            row[f"{m}_matchup_net"] = (row[f"home_off_{m}_adj"] + row[f"away_def_{m}_adj"]) \
-                - (row[f"away_off_{m}_adj"] + row[f"home_def_{m}_adj"])
+            row[f"{m}_home_vs_away"] = row[f"home_off_{m}_adj"] + row[f"away_def_{m}_adj"]
+            row[f"{m}_away_vs_home"] = row[f"away_off_{m}_adj"] + row[f"home_def_{m}_adj"]
+            row[f"{m}_matchup_net"] = row[f"{m}_home_vs_away"] - row[f"{m}_away_vs_home"]
+        if "rz_td_per_trip_matchup_net" in row:
+            row["rz_td_matchup_net"] = row["rz_td_per_trip_matchup_net"]
+        if "explosive_rate_matchup_net" in row:
+            row["explosive_matchup_net"] = row["explosive_rate_matchup_net"]
         return row
 
     def p_home(self, home: str, away: str, p_elo: float,
-               season: int, week: int) -> float | None:
-        row = self.feature_row(home, away, p_elo, season, week)
+               season: int, week: int,
+               elo_home: float | None = None, elo_away: float | None = None) -> float | None:
+        row = self.feature_row(home, away, p_elo, season, week, elo_home, elo_away)
         if row is None:
             return None
-        X = pd.DataFrame([row])[self.features]
+        X = pd.DataFrame([row]).reindex(columns=self.features)
+        if X[[f for f in self.features if f in ELO + RAW_ELO]].isna().any(axis=None):
+            return None
         return float(self.model.predict_proba(X)[0, 1])

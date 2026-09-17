@@ -47,9 +47,10 @@ class DailyState:
             home, away, neutral, home_rest, away_rest)
         p_home, model = p_elo, "elo"
         if self.second_stage is not None and season is not None and week is not None:
-            p2 = self.second_stage.p_home(home, away, p_elo, int(season), int(week))
+            p2 = self.second_stage.p_home(home, away, p_elo, int(season), int(week),
+                                          elo_home=r_home, elo_away=r_away)
             if p2 is not None:
-                p_home, model = p2, "elo+success"
+                p_home, model = p2, f"elo+efficiency:{self.second_stage.learner}"
         h_adj, a_adj = self.engine.edges(neutral, home_rest, away_rest)
         elo_diff = (r_home + h_adj) - (r_away + a_adj)
         total = self.rates.matchup_total(home, away)
@@ -126,6 +127,7 @@ def build_second_stage(games: pd.DataFrame, history: pd.DataFrame,
     except Exception as exc:          # a broken feed must not kill the run
         print(f"   second stage OFF ({exc!r}): forecasts are Elo only")
         return None, feeds
-    print(f"   second stage ON: Elo + adjusted success, fit on {stage.n_train} games "
+    print(f"   second stage ON: {stage.learner} on {len(stage.features)} features "
+          f"(Elo + raw Elos + every efficiency feature), fit on {stage.n_train} games "
           f"{stage.seasons[0]}-{stage.seasons[1]}")
     return stage, feeds

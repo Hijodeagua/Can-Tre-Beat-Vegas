@@ -150,3 +150,27 @@ class TestCoverage:
         metrics = adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m))
         cov = adv.coverage_by_season(metrics)
         assert cov.iloc[0]["matches"] == 4 and cov.iloc[0]["with_npxg"] == 4
+
+
+class TestProductionFeatureSet:
+    def test_everything_is_in_and_the_learner_fits_the_real_shape(self):
+        from soccer.clubs.model import train
+
+        assert set(train.RAW_ELO) <= set(train.FEATURES)
+        assert set(adv.ALL_ADVANCED) <= set(train.FEATURES)
+        assert set(train.BASE_FEATURES) <= set(train.FEATURES)
+        assert "npxg_for_ewm_diff" in train.FEATURES and "deep_share_diff" in train.FEATURES
+        # A table shaped like the real one: advanced columns partly or
+        # wholly NaN (npxG never fetched), Elo columns present.
+        m = _matches(8)
+        rows = m[["league", "season", "date", "home_team", "away_team"]].copy()
+        rows["elo_home_pre"], rows["elo_away_pre"], rows["elo_gap"] = 1500.0, 1450.0, 100.0
+        rows["outcome"] = np.where(np.arange(len(rows)) % 3 == 0, "H", np.where(np.arange(len(rows)) % 3 == 1, "D", "A"))
+        featured = adv.attach_advanced(rows, matches=adv.match_metrics(m, legacy_xg=m.iloc[0:0], shots=_shots(m)),
+                                       calendar=pd.DataFrame(columns=["team", "league", "date", "played", "uefa"]))
+        for f in train.FEATURES:
+            if f not in featured.columns:
+                featured[f] = np.nan
+        model = train.make_model().fit(featured[train.FEATURES], featured["outcome"])
+        probs = model.predict_proba(featured[train.FEATURES])
+        assert probs.shape == (len(rows), 3)

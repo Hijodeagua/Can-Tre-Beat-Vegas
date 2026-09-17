@@ -11,22 +11,17 @@ sklearn pickle drift in CI. Feature set and training rows match
 from dataclasses import dataclass
 
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
-
 from common import freshness
 from soccer.clubs.daily import scoring
 from soccer.clubs.data.leagues import LEAGUES, pool_of
+from soccer.clubs.model import advanced as adv
+from soccer.clubs.model import shots, xg
 from soccer.clubs.model.elo import ClubEloEngine
 from soccer.clubs.model.europe import run_all_european
-from soccer.clubs.model.features import ALL_FEATURES, attach_features
-from soccer.clubs.model import shots, xg
+from soccer.clubs.model.features import attach_features
+from soccer.clubs.model.train import FEATURES, LEARNER, make_model
 
-FEATURES = ["elo_gap"] + ALL_FEATURES + xg.XG_FEATURES + shots.SHOT_FEATURES
 CLASSES = ["A", "D", "H"]
-# Match train.py's convergence settings — the sparse economics features
-# need the extra iterations/tolerance or their coefficients silently land
-# near zero. See the comment in train.py.
-MAX_ITER = 5000
 
 
 @dataclass
@@ -34,10 +29,12 @@ class DailyState:
     engines: dict[str, ClubEloEngine]  # keyed by pool (tier-1 league key)
     history: pd.DataFrame          # league rows only, features attached
     results: pd.DataFrame          # raw results.csv incl. unplayed fixtures
-    outcome_model: LogisticRegression
+    outcome_model: object          # the fitted production learner (train.LEARNER)
     score_params: scoring.ScoreParams
     xg_form: "xg._Form"            # rolling xG state after all committed matches
     shot_form: "shots._Form"       # rolling shots-on-target state, same posture
+    adv_matches: pd.DataFrame = None   # match-metrics table the advanced form is built from
+    calendar: pd.DataFrame = None      # every dated club appearance, for rest/congestion
 
     def feature_row(self, league: str, home: str, away: str,
                     season: str, neutral: bool = False,
@@ -69,8 +66,12 @@ class DailyState:
         return row
 
     def outcome_probs(self, feature_rows: pd.DataFrame) -> pd.DataFrame:
-        """P(A), P(D), P(H) columns for a frame of feature rows."""
-        f = attach_features(feature_rows)
+        """P(A), P(D), P(H) columns for a frame of feature rows. The
+        advanced form columns are attached here from each club's earlier
+        matches (the fixture itself carries no metrics), with the same
+        staleness rule the training table used."""
+        f = adv.attach_advanced(attach_features(feature_rows), matches=self.adv_matches,
+                                calendar=self.calendar)
         probs = self.outcome_model.predict_proba(f[FEATURES])
         out = feature_rows.copy()
         for i, c in enumerate(self.outcome_model.classes_):
@@ -109,9 +110,12 @@ def build_state() -> DailyState:
 
     engines, history = run_all_european()
     league_hist = history[~history["league"].str.startswith("uefa:")].copy()
-    featured = shots.attach_shots(xg.attach_xg(attach_features(league_hist)))
+    adv_matches = adv.match_metrics()
+    calendar = adv._calendar()
+    featured = adv.attach_advanced(shots.attach_shots(xg.attach_xg(attach_features(league_hist))),
+                                   matches=adv_matches, calendar=calendar)
 
-    model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
+    model = make_model(LEARNER)
     model.fit(featured[FEATURES], featured["outcome"])
 
     results = pd.read_csv(DATA_DIR / "results.csv")
@@ -123,4 +127,6 @@ def build_state() -> DailyState:
         score_params=scoring.fit(league_hist),
         xg_form=xg.current_form(),
         shot_form=shots.current_form(),
+        adv_matches=adv_matches,
+        calendar=calendar,
     )

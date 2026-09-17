@@ -42,7 +42,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from common import evaluate
+from common import evaluate, learners
 from CFB.model import advanced as adv
 from CFB.model.elo import load_games, replay
 
@@ -167,6 +167,55 @@ def run(table: pd.DataFrame) -> dict:
     _, model = _fit_score(table, combined, fit_for_test, test, best_C)
     report["combined_coefficients_standardised"] = dict(zip(
         combined, model.named_steps["clf"].coef_[0].round(4).tolist()))
+
+    # --- full set, every learner: what actually ships ---------------------
+    full = adv.PRODUCTION_FEATURES
+    def _fit_kind(feats, kind, train_mask, test_mask):
+        m = learners.make(kind, C=adv.PRODUCTION_C).fit(table.loc[train_mask, feats], table.loc[train_mask, "y"])
+        p = m.predict_proba(table.loc[test_mask, feats])[:, 1]
+        return evaluate.score_binary(table.loc[test_mask, "y"].to_numpy(), p), m
+    learner_rows = {}
+    gbm_full = None
+    for label, scope in (("overall", test), ("fbs_vs_fbs", test & table["fbs_vs_fbs"])):
+        base, _ = _fit_score(table, adv.ELO, fit_for_test, scope, chosen["1_elo"])
+        out = []
+        for kind in learners.KINDS:
+            sc, m = _fit_kind(full, kind, fit_for_test, scope)
+            if kind == "gbm" and label == "overall":
+                gbm_full = m
+            v, _ = _fit_kind(full, kind, train, valid)
+            out.append({**sc.row(f"full_{kind}"),
+                        "paired_se_vs_elo": round(evaluate.paired_se(base, sc), 2),
+                        "validation_2023_log_loss": round(v.log_loss, 5)})
+        for kind in learners.KINDS:
+            sc, _ = _fit_kind(adv.ELO + adv.RAW_ELO + adv.CORE, kind, fit_for_test, scope)
+            out.append({**sc.row(f"elo_rawelo_core_{kind}"),
+                        "paired_se_vs_elo": round(evaluate.paired_se(base, sc), 2)})
+        learner_rows[label] = out
+    report["full_set"] = {"features": full, "results": learner_rows}
+
+    # --- Elo threshold ------------------------------------------------------
+    med = table.loc[fit_for_test, full].median(numeric_only=True)
+    grid = []
+    for home in (1200, 1400, 1600, 1800):
+        for diff in (-100, 0, 100, 250):
+            row = med.copy()
+            row["elo_home_pre"], row["elo_away_pre"] = home, home - diff
+            p = 1.0 / (1.0 + 10 ** (-(diff + 50.0) / 400.0))
+            row["elo_logit"] = float(np.log(p / (1 - p)))
+            pr = gbm_full.predict_proba(pd.DataFrame([row])[full])[0, 1]
+            grid.append({"home_elo": home, "diff": diff, "p_home_gbm": round(float(pr), 4),
+                         "p_home_elo": round(p, 4)})
+    t = table[table["fbs_vs_fbs"]].copy()
+    t["level"] = pd.cut(t["elo_home_pre"], [0, 1350, 1500, 1650, 9999],
+                        labels=["<1350", "1350-1500", "1500-1650", ">1650"])
+    t["diff_bin"] = pd.cut(t["elo_home_pre"] - t["elo_away_pre"], [-9999, -100, 0, 100, 250, 9999],
+                           labels=["<-100", "-100..0", "0..100", "100..250", ">250"])
+    emp = (t.groupby(["level", "diff_bin"], observed=True)
+            .agg(n=("y", "size"), home_win=("y", "mean")).reset_index())
+    emp["level"] = emp["level"].astype(str); emp["diff_bin"] = emp["diff_bin"].astype(str)
+    emp["home_win"] = emp["home_win"].round(3)
+    report["elo_threshold"] = {"model_grid": grid, "empirical": emp.to_dict("records")}
     return report
 
 
@@ -186,6 +235,17 @@ def print_report(r: dict) -> None:
         print(pd.DataFrame(res["table"]).to_string(index=False))
         if "by_season" in res:
             print(pd.DataFrame(res["by_season"]).to_string(index=False))
+    print("\nFull set (every feature + raw home/away Elo), every learner:")
+    for label, rows in r["full_set"]["results"].items():
+        print(f"  {label}:"); print(pd.DataFrame(rows).to_string(index=False))
+    g = pd.DataFrame(r["elo_threshold"]["model_grid"])
+    print("\nElo threshold — boosting model vs the Elo curve, P(home) on a (home Elo, diff) grid:")
+    print(g.pivot(index="home_elo", columns="diff", values="p_home_gbm").to_string())
+    print("  (Elo alone:)"); print(g.pivot(index="home_elo", columns="diff", values="p_home_elo").to_string())
+    e = pd.DataFrame(r["elo_threshold"]["empirical"])
+    print("\nEmpirical FBS-vs-FBS home-win rate by home Elo level × rating diff bin:")
+    print(e.pivot(index="level", columns="diff_bin", values="home_win").to_string())
+    print(e.pivot(index="level", columns="diff_bin", values="n").to_string())
     print("\nStandardised coefficients of the combined logistic (fit 2005-2023):")
     for k, v in sorted(r["combined_coefficients_standardised"].items(), key=lambda kv: -abs(kv[1])):
         print(f"  {k:28s} {v:+.4f}")

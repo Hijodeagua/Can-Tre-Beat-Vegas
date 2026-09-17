@@ -89,6 +89,7 @@ def soccer() -> dict:
 
     artifact = pickle.loads((ARTIFACTS / "outcome_model.pkl").read_bytes())
     model, features, split = artifact["model"], artifact["features"], artifact["split_season"]
+    learner = artifact.get("learner", "logistic")
 
     table = build_table()
     test = table[table["season"] >= split]
@@ -124,7 +125,7 @@ def soccer() -> dict:
         })
     rows.sort(key=lambda r: -r["value"])
     return {
-        "name": "Club soccer outcome model",
+        "name": f"Club soccer outcome model ({learner}: Elo pair + gap, economics, form, advanced Understat)",
         "method": "permutation importance",
         "metric": "increase in holdout log loss when the feature is shuffled",
         "baseline": _round(baseline),
@@ -291,7 +292,6 @@ def _second_stage_permutation(*, name: str, features: list[str], baseline_model,
 
 
 def nfl_second_stage() -> dict:
-    from common import evaluate
     from NFL.model import advanced as adv
     from NFL.model.eval_advanced import CLEAN_FROM, LAST_TEST, build_table
 
@@ -299,11 +299,10 @@ def nfl_second_stage() -> dict:
     features = adv.PRODUCTION_FEATURES
     train = table["season"] < CLEAN_FROM
     test = (table["season"] >= CLEAN_FROM) & (table["season"] <= LAST_TEST)
-    model = evaluate.make_logistic(adv.PRODUCTION_C).fit(
-        table.loc[train, features], table.loc[train, "y"])
+    model = adv.make_model().fit(table.loc[train, features], table.loc[train, "y"])
     X = table.loc[test, features].astype(float)
     return _second_stage_permutation(
-        name="NFL second stage (Elo + adjusted success)",
+        name=f"NFL second stage ({adv.PRODUCTION_LEARNER}: Elo + raw Elos + every efficiency feature)",
         features=features, baseline_model=model, X=X, y=table.loc[test, "y"],
         window=f"{CLEAN_FROM}-{LAST_TEST} (clean of the Elo's own 2005-2023 tuning window)",
         caveat=(
@@ -317,7 +316,6 @@ def nfl_second_stage() -> dict:
 
 
 def cfb_second_stage() -> dict:
-    from common import evaluate
     from CFB.model import advanced as adv
     from CFB.model.eval_advanced import TEST, TRAIN_FROM, build_table
 
@@ -325,11 +323,10 @@ def cfb_second_stage() -> dict:
     features = adv.PRODUCTION_FEATURES
     train = (table["season"] >= TRAIN_FROM) & (table["season"] < TEST[0])
     test = (table["season"] >= TEST[0]) & (table["season"] <= TEST[1])
-    model = evaluate.make_logistic(adv.PRODUCTION_C).fit(
-        table.loc[train, features], table.loc[train, "y"])
+    model = adv.make_model().fit(table.loc[train, features], table.loc[train, "y"])
     X = table.loc[test, features].astype(float)
     return _second_stage_permutation(
-        name="College football second stage (Elo + adjusted EPA)",
+        name=f"College football second stage ({adv.PRODUCTION_LEARNER}: Elo + raw Elos + every efficiency feature)",
         features=features, baseline_model=model, X=X, y=table.loc[test, "y"],
         window=f"{TEST[0]}-{TEST[1]} (clean of the Elo's own 2005-2023 tuning window)",
         caveat=(
