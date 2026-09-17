@@ -68,3 +68,6 @@ data/nfl/raw/
 data/college_football/raw/
 # The soccer outcome model is refit in-run daily; the forest pickle is ~50 MB.
 soccer/clubs/model/artifacts/outcome_model.pkl
+
+# Research harness caches (rebuilt on demand; the soccer one replays ~59k matches).
+research/.cache/

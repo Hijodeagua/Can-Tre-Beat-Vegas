@@ -497,3 +497,65 @@ top of the scale; the raw ratings are inputs so the forest can use it.
 - Fallback rules are unchanged: the weekly table stale by more than two
   weeks, or an FCS side, or a side without a strength row, is Elo.
 - The rest-of-season simulation and the expected score are still Elo only.
+
+---
+
+## Research harness: tuning, calibration, seed stability
+
+`research/learner_lab.py` answers two questions the development sandbox
+is too small to answer well. Both cache each sport's feature table under
+`research/.cache/` (gitignored).
+
+```
+python -m research.learner_lab tune      [--sport soccer|nfl|cfb|all]
+python -m research.learner_lab calibrate [--sport ...] [--seeds 20]
+```
+
+**tune** grid-searches each learner family on a validation window that
+ends before the test window (soccer 2023-24, CFB 2023, NFL 2020-2023),
+then scores only the per-family winners on the test window, once. Every
+published learner comparison above ran on one shared, unsearched set of
+hyperparameters, so "boosting overfits" is really "boosting at those
+defaults overfits" until this has run.
+
+**calibrate** reports, for the shipped learner: the spread of test log
+loss across seeds, a reliability table, and whether isotonic or sigmoid
+calibration fit on the validation window helps. The calibrated rows are
+compared against the *same* inner model (fit on the pre-validation
+window), not against the shipped one, so calibration is not charged for
+the season it has to hold out.
+
+### First results — CFB (5 seeds)
+
+**Seed spread is the scale to read learner gaps against.** Refitting the
+shipped CFB forest across seeds moves test log loss between 0.49321 and
+0.49435 (sd 0.0006). The forest-vs-logistic gap on the same window is
+0.49347 vs 0.49426 — about one seed standard deviation. So on CFB the
+two are indistinguishable, and the round-2 claim that the forest is
+"best of the three learners" holds only against boosting. The
+forest-vs-Elo gain (+1.1 SE overall, +1.6 FBS-vs-FBS) is a paired test
+over 1,853 games and is unaffected by this.
+
+**The CFB forest is under-confident on favourites.** Reliability on the
+test window:
+
+| predicted bucket | n | mean predicted | actual | gap |
+|---|---|---|---|---|
+| 0.0-0.1 | 18 | 0.074 | 0.222 | −0.148 |
+| 0.2-0.3 | 134 | 0.253 | 0.239 | +0.014 |
+| 0.4-0.5 | 176 | 0.451 | 0.449 | +0.002 |
+| 0.6-0.7 | 250 | 0.649 | 0.636 | +0.013 |
+| 0.8-0.9 | 263 | 0.850 | 0.901 | −0.051 |
+| 0.9-1.0 | 309 | 0.948 | 0.977 | −0.029 |
+
+It is well behaved through the middle and 3-5 points low at the top —
+leaf frequencies cannot reach 1.0, which is the usual forest pattern.
+The lowest bucket is 18 games and says nothing.
+
+**Post-hoc calibration does not fix it**, at least not fit on a single
+season: against the same inner model (0.49561), isotonic scores 0.53033
+(−2.31 SE) and sigmoid 0.50032 (−2.05 SE). Both make the published
+number worse. If the under-confidence is worth correcting, it needs a
+calibrator fit across several seasons by cross-validation, not one
+held-out year — or a learner whose probabilities are better in the tail
+to begin with, which is what `tune` may find.
