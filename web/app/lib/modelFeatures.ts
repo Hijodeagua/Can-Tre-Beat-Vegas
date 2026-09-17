@@ -78,15 +78,16 @@ export const SOCCER_FEATURES: ForecastModel = {
       detail: 'deep completions, deep share (a field-tilt proxy — Understat publishes no possession), PPDA (pressing), xPts form',
     },
     { name: 'Rest and congestion', detail: 'rest days, matches in the last 14 days, a European tie in the last 7 — from the whole calendar' },
+    { name: 'League, tier, season', detail: 'one pooled model with the context as inputs; per-league sub-models scored worse in 9 of 11 leagues' },
   ],
   gaps:
-    'Measured on 2024-25 onward, the full 31-feature set beats the old seven-feature model by about ' +
-    '0.0008 log loss (+1.4 SE) with a logistic; a random forest scores 0.0017 worse than that ' +
-    'logistic (noise-level) and ships anyway because it can use npxG, PPDA and deep completions ' +
-    'non-linearly once the Understat backfill lands — those columns were empty when this was ' +
-    'measured. Possession itself is in no free feed the site has; deep share stands in for it. ' +
-    'A rating level matters on its own: a big favourite above 1625 Elo wins 77% of the time, ' +
-    'the same gap below 1325 wins 56%.',
+    'Measured on 2024-25 onward with the Understat backfill in place, the full-set random ' +
+    'forest scores 1.01453 to the old seven-feature model’s 1.01749 (+2.4 SE) and beats a ' +
+    'logistic on the same inputs (1.01634); the gain is concentrated in 2025-26, the first full ' +
+    'season with npxG, PPDA and deep completions live on both sides (+3.2 SE). Possession ' +
+    'itself is in no free feed the site has; deep share stands in for it. A rating level ' +
+    'matters on its own: a big favourite above 1625 Elo wins 77% of the time, the same gap ' +
+    'below 1325 wins 56%.',
 };
 
 export const NFL_FEATURES: ForecastModel = {

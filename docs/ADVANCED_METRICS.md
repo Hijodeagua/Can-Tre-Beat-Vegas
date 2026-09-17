@@ -127,37 +127,39 @@ feature ships.
 `soccer/clubs/model/eval_learners.py`, artifact
 `soccer/clubs/model/artifacts/learners_eval.json`. Fit on every season
 before 2024-25, scored 2024-25 onward. Feature sets: the round-1
-shipping set (`base`: gap + economics + xG net + SoT net) and `full`
-(home Elo, away Elo, gap, economics, xG and SoT form, and every advanced
-column — 31 inputs). Learners from `common/learners.py`, fixed
-hyperparameters, same rows.
+shipping set (`base`: gap + economics + xG net + SoT net) and `full` =
+exactly `train.FEATURES`: home Elo, away Elo, gap, economics, xG and SoT
+form, every advanced Understat column, and the league / tier / season
+context (46 inputs). Learners from `common/learners.py`, fixed
+hyperparameters, same rows. Measured **after** the Understat backfill,
+so npxG, xPts, PPDA and deep completions are real numbers on every row
+2014-15 onward.
 
 | scope | features | learner | log loss | Brier | vs round-1 model |
 |---|---|---|---|---|---|
-| all (n=7827) | base | logistic | 1.01755 | 0.60957 | — |
-| all | base | random forest | 1.01866 | 0.61022 | −0.94 SE |
-| all | base | boosting | 1.01956 | 0.61015 | −1.64 SE |
-| all | **full** | **logistic** | **1.01676** | **0.60919** | **+1.43 SE** |
-| all | full | random forest | 1.01846 | 0.61013 | −0.76 SE |
-| all | full | boosting | 1.02019 | 0.61090 | −1.77 SE |
-| top-5 (n=3649) | base | logistic | 0.98353 | 0.58576 | — |
-| top-5 | full | logistic | 0.98319 | 0.58570 | +0.35 SE |
-| top-5 | full | random forest | 0.98492 | 0.58659 | −0.73 SE |
-| top-5 | full | boosting | 0.99099 | 0.58905 | −2.35 SE |
+| all (n=7827) | base | logistic | 1.01749 | 0.60949 | — |
+| all | base | random forest | 1.01744 | 0.60932 | +0.04 SE |
+| all | base | boosting | 1.01990 | 0.61021 | −1.83 SE |
+| all | full | logistic | 1.01634 | 0.60896 | +1.17 SE |
+| all | **full** | **random forest** | **1.01453** | **0.60747** | **+2.36 SE** |
+| all | full | boosting | 1.02764 | 0.61579 | −4.59 SE |
 
-By season, round-1 model → full logistic (all leagues): 2024-25 1.01224
-→ 1.01172 (+0.59 SE), 2025-26 1.01592 → 1.01429 (+2.16 SE), 2026-27
-1.00204 → 1.00098; the two small MLS slices are a wash.
+By season, round-1 model → full forest: 2024-25 1.01207 → 1.01111
+(+0.53 SE), **2025-26 1.01603 → 1.00924 (+3.20 SE)**, 2026-27 1.00132 →
+0.99497 (+0.93); the two small MLS slices are a wash. 2025-26 is the
+first full season with the whole advanced layer live on both sides, and
+it is where the gain is.
 
-**What ships: the full set with a random forest**, by decision. The
-forest is 0.0017 behind the full logistic on all leagues (0.8 SE) and
-0.0017 on the top five (0.7 SE) — noise-level — and it was measured
-with npxG, xPts, PPDA and deep completions entirely empty (the Understat
-backfill had not landed). It is the learner that can use those columns
-non-linearly when they exist, and the one that can carry upset structure
-a linear fit averages away. Re-run `eval_learners` once
-`understat_matches.csv` covers 2014-15 onward; that is the comparison to
-trust for the learner question.
+**What ships: the full set with a random forest** — now the measured
+winner, not only the chosen one. Before the backfill (advanced columns
+empty) the forest sat 0.0017 behind the logistic; with the columns
+filled it is 0.0018 ahead of the logistic and 0.0030 ahead of the old
+model. Boosting at the shared hyperparameters overfits and is not
+shipped. The forest's own permutation importance on this window
+(`/models`): `value_diff_z` +0.0137, `elo_gap` +0.0120, `elo_home_pre`
++0.0021, `elo_away_pre` +0.0016, `deep_share_diff` +0.0011,
+`xpts_ewm_diff` +0.0011, `sot_net_diff` +0.0008, `npxg_for_ewm_diff`
++0.0003.
 
 **Elo has a level effect, not just a gap effect.** Empirical home-win
 rate, all seasons, by home Elo × venue-adjusted gap:

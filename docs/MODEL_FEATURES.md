@@ -30,7 +30,7 @@ Pick and forecast: `soccer/clubs/daily/{predict,simulate}.py`.
 **Match outcome — random forest over {home win, draw, away win}**
 (`soccer/clubs/model/train.py`, `common/learners.py`; refit in-run daily —
 the forest pickle `train.py` writes is ~50 MB and is not committed).
-Every input the model sees, 31 columns:
+Every input the model sees, 46 columns:
 
 * **Home Elo**, **Away Elo** — each club's Elo as its own column, so a
   rating *level* can matter, not only the gap (a big favourite above
@@ -51,19 +51,20 @@ Every input the model sees, 31 columns:
   `xpts_ewm_diff`; `rest_diff`, `congestion14_home/away`,
   `uefa7_home/away` from the whole calendar
 
-A column whose feed has not landed is NaN and the learner handles it;
-nothing is dropped for being empty today. npxG, xPts, PPDA and deep
-completions are exactly that until the one-time Understat backfill
-(`soccer-daily` → Run workflow → "Backfill every Understat season") is
-on `main`.
+* **Context** — one-hot league, tier, season index: one pooled model,
+  not per-league sub-models (sub-models scored worse in 9 of 11 leagues)
 
-**Learner choice**, measured on 2024-25 onward (7,827 matches): the full
-set with a logistic 1.01676 vs the old seven-feature model 1.01755
-(+1.4 SE); random forest 1.01846, boosting 1.02019 — the forest is
-0.0017 behind the logistic, inside noise, and ships by decision: it can
-use the advanced columns non-linearly once they exist, and it can carry
-upset structure a linear fit averages away. Re-measure with
-`python -m soccer.clubs.model.eval_learners` after the backfill.
+A column whose feed has not landed is NaN and the learner handles it;
+nothing is dropped for being empty. The Understat backfill (2014-15 →)
+is on `main`, so the advanced columns are real on every row.
+
+**Learner choice**, measured on 2024-25 onward (7,827 matches) after
+the Understat backfill: the full-set random forest 1.01453 vs the old
+seven-feature model 1.01749 (+2.4 SE) and vs a logistic on the same
+inputs 1.01634; boosting 1.02764 (overfits). The gain is concentrated in
+2025-26, the first full season with the advanced layer live on both
+sides (1.01603 → 1.00924, +3.2 SE). Re-measure any time with
+`python -m soccer.clubs.model.eval_learners`.
 Per-league sub-models vs one pooled model: see
 [ADVANCED_METRICS.md](ADVANCED_METRICS.md).
 
