@@ -468,22 +468,27 @@ feature.
 |---|---|---|---|---|
 | overall (n=1853) | Elo alone | 0.49768 | 0.16831 | — |
 | overall | full set, logistic | 0.49426 | 0.16628 | +1.05 SE |
-| overall | **full set, random forest** | **0.49347** | **0.16523** | **+1.12 SE** |
+| overall | **full set, random forest** | **0.49214** | **0.16496** | **+1.85 SE** |
 | overall | full set, boosting | 0.49595 | 0.16691 | +0.41 SE |
-| overall | Elo + raw Elos + core, random forest | 0.49159 | 0.16515 | +1.73 SE |
+| overall | Elo + raw Elos + core, random forest | 0.49055 | 0.16495 | +2.36 SE |
 | FBS-vs-FBS (n=1606) | Elo alone | 0.55358 | 0.18894 | — |
 | FBS-vs-FBS | full set, logistic | 0.54766 | 0.18639 | +1.59 SE |
-| FBS-vs-FBS | **full set, random forest** | **0.54657** | **0.18509** | **+1.62 SE** |
+| FBS-vs-FBS | **full set, random forest** | **0.54503** | **0.18480** | **+2.49 SE** |
 | FBS-vs-FBS | full set, boosting | 0.54967 | 0.18708 | +0.82 SE |
-| FBS-vs-FBS | Elo + raw Elos + core, random forest | 0.54469 | 0.18519 | +2.22 SE |
+| FBS-vs-FBS | Elo + raw Elos + core, random forest | 0.54391 | 0.18497 | +2.81 SE |
 
-**What ships: the full set with a random forest** — the best of the three
-learners on the full set in both scopes, though its margin over the
-logistic (0.0008) is under two seed standard deviations, so only the win
-over boosting is a real separation; see the seed spread below. The compact core set is still a
-little better in absolute terms (its extra columns cost about 0.002), but
-the brief is every feature in, and the forest is the learner that loses
-least to them.
+The forest rows carry the tuned hyperparameters this sport adopted
+(leaf 100, 0.6 of the features per split — see the tuning results
+below); the other learners are at the shared defaults.
+
+**What ships: the full set with a random forest** — the best of the
+three learners on the full set in both scopes, and now by a margin that
+survives a paired refit across seeds: 0.00212 over the logistic overall,
+against a seed spread of 0.00028. Before tuning the forest's edge here
+was 0.0008 and did not clear that bar. The compact core set is still a
+little better in absolute terms (its extra columns cost about 0.0016),
+but the brief is every feature in, and the forest is the learner that
+loses least to them.
 
 **Elo level effect, CFB** (FBS-vs-FBS, empirical home-win rate by home
 Elo × rating difference):
@@ -519,8 +524,10 @@ python -m research.learner_lab calibrate [--sport ...] [--seeds 20]
 ends before the test window (soccer 2023-24, CFB 2023, NFL 2020-2023),
 then scores only the per-family winners on the test window, once. Every
 published learner comparison above ran on one shared, unsearched set of
-hyperparameters, so "boosting overfits" is really "boosting at those
-defaults overfits" until this has run.
+hyperparameters, so "boosting overfits" was really "boosting at those
+defaults overfits" until this had run. It has now; see the tuning
+results below, where soccer's searched boosting wins the validation
+window and then loses the test window by 3.4 SE.
 
 **calibrate** reports, for the shipped learner: the spread of test log
 loss across seeds, a reliability table, and whether isotonic or sigmoid
@@ -550,11 +557,16 @@ sport:
   0.00004, one twentieth of the noise floor. Report them as
   indistinguishable. The gain over Elo alone (0.62411 → 0.61687) is
   about eight seed sd and is real.
-- **CFB overstated it.** Forest 0.49347 vs logistic 0.49426 is 0.0008 —
-  under two seed sd. On CFB the two learners are indistinguishable and
-  only the win over boosting stands. The forest-vs-Elo gain (+1.1 SE
-  overall, +1.6 FBS-vs-FBS) is a paired test over 1,853 games and is
-  unaffected.
+- **CFB was overstated, and tuning fixed it.** At the shared defaults
+  the forest's 0.49347 against the logistic's 0.49426 was 0.0008, under
+  two seed sd, so the two were indistinguishable and only the win over
+  boosting stood. With the tuned hyperparameters the forest is at
+  0.49214 and the margin is 0.0021 against a seed sd of 0.00028. The
+  forest-vs-Elo gain is now +1.9 SE overall and +2.5 FBS-vs-FBS, a
+  paired test over 1,853 games.
+
+  The seed spread quoted in the table above (0.00050) is the *untuned*
+  forest's. The shipped model's is 0.00028.
 
 **Reliability.** Predicted vs actual by bucket, shipped model, test
 window:
@@ -591,6 +603,67 @@ model (so calibration is not charged for the season it holds out):
 Every cell is worse or neutral. One validation season is not enough to
 fit a calibrator. If CFB's tail is worth correcting it needs a
 calibrator fit across several seasons by cross-validation, or a learner
-with better tail probabilities — which is what `tune` may find.
+with better tail probabilities.
+
+### Results — tuning
+
+Nine grids, 128 configurations per sport, searched on the validation
+window and scored on the test window once. Validation winners:
+
+| sport | logistic | forest | boosting |
+|---|---|---|---|
+| soccer | 1.00733 (C 0.03) | 1.00482 (leaf 50, sqrt) | 1.00459 (lr 0.01, 15 leaves, leaf 20, L2 0) |
+| CFB | 0.48608 (C 0.03) | 0.48801 (leaf 100, 0.6) | 0.48675 (lr 0.03, 7 leaves, leaf 40, L2 1) |
+| NFL | 0.64137 (C 0.03) | 0.64004 (leaf 50, sqrt) | 0.64041 (lr 0.01, 7 leaves, leaf 100, L2 10) |
+
+Every forest search wanted a **larger minimum leaf than the shared
+default of 25**, in all three sports. That is the one consistent signal
+in the whole exercise. Then the test window, once:
+
+| sport | shipped | tuned logistic | tuned forest | tuned boosting |
+|---|---|---|---|---|
+| soccer | 1.01453 | 1.01629 (−1.43 SE) | 1.01443 (+0.28 SE) | 1.01862 (−3.43 SE) |
+| CFB | 0.49347 | 0.49406 (−0.21 SE) | **0.49214 (+0.75 SE)** | 0.49566 (−0.88 SE) |
+| NFL | 0.61727 | 0.61632 (+0.22 SE) | 0.61796 (−0.57 SE) | 0.61794 (−0.23 SE) |
+
+**Boosting stays beaten, and now for a better reason.** Soccer's grid
+picked a boosting configuration that won validation outright (1.00459,
+ahead of the tuned forest's 1.00482) and then lost the test window by
+3.43 SE, the largest miss in the table. "Boosting overfits here" was a
+statement about the shared defaults before this ran; it is a statement
+about the family now, searched over 108 configurations.
+
+**The single-seed test column cannot settle a forest comparison.** Two
+forests differing only in a hyperparameter share most of their variance,
+so the right test refits both across the same seeds and pairs the
+differences. Doing that on the tuned-vs-shipped forest:
+
+| sport | shipped (sd) | tuned (sd) | paired mean | t | seeds won |
+|---|---|---|---|---|---|
+| CFB | 0.49369 (0.00057) | **0.49200 (0.00028)** | **+0.00168** | **7.97** | **12/12** |
+| NFL | 0.61784 (0.00093) | 0.61735 (0.00055) | +0.00049 | 1.62 | 9/12 |
+| soccer | 1.01455 (0.00026) | 1.01447 (0.00020) | +0.00008 | 1.19 | 6/12 |
+
+Note how far this moves the reading. On the single seed in the test
+table, NFL's tuned forest looked 0.57 SE *worse* and CFB's only 0.75 SE
+better; across seeds NFL is a coin flip and CFB is decisive.
+
+**Shipped: CFB only** (`PRODUCTION_PARAMS` in `CFB/model/advanced.py`,
+leaf 100 and 0.6 of the features per split). It wins every seed, and it
+halves the seed-to-seed spread as well — worth having on its own, since
+these probabilities are the published pick confidence and not only a
+score. Soccer and NFL keep the shared defaults: their searches found
+nothing that survives a paired refit.
+
+Why college and not the other two: 14k training rows spread over ~130
+FBS teams plus a long tail of FCS opponents, where a 25-row leaf is
+mostly fitting one lopsided September result. A bigger leaf and a wider
+feature sample average that away. Soccer has 47k rows of far more
+uniform matches, and NFL's 4.8k rows are too few for the difference to
+show through the noise.
+
+This does not touch CFB's calibration problem above. A larger leaf makes
+the probabilities steadier, not less under-confident on favourites; that
+still wants a cross-validated calibrator.
 
 

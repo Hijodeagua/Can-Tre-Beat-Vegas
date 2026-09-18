@@ -98,11 +98,38 @@ PRODUCTION_FEATURES: list[str] = (ELO + RAW_ELO + CORE + SUCCESS + EARLY_EXPLOSI
 PRODUCTION_LEARNER = "random_forest"
 PRODUCTION_C = 1.0            # the logistic's C, when that is the learner
 
+# College is the one sport where searching the forest's hyperparameters
+# paid. `research/learner_lab.py tune` picked a much larger leaf and a
+# wider feature sample than the shared defaults, on a validation window
+# ending before the test window; refitting both configurations across 12
+# seeds on the same data, the tuned one won every seed:
+#
+#     shipped (leaf 25, sqrt)   0.49369  sd 0.00057
+#     tuned   (leaf 100, 0.6)   0.49200  sd 0.00028
+#     paired mean +0.00168, t = 7.97, 12/12 seeds
+#
+# It is also the steadier of the two, which matters because these
+# probabilities are the published pick confidence, not only a score. The
+# same search on NFL and soccer produced nothing that survived the same
+# test (t = 1.62 and 1.19), so those two keep the shared defaults.
+#
+# Why college and not the others: 14k training rows spread over ~130 FBS
+# teams and a long tail of FCS opponents, where a thin leaf is mostly
+# fitting one lopsided September result. A bigger leaf and more features
+# per split average that away.
+PRODUCTION_PARAMS = {"min_samples_leaf": 100, "max_features": 0.6}
+
 
 def make_model(kind: str = PRODUCTION_LEARNER):
-    """The unfitted production learner (`common/learners.py`)."""
+    """The unfitted production learner (`common/learners.py`).
+
+    `PRODUCTION_PARAMS` applies only to the production learner, so a
+    head-to-head that asks for another family still gets that family at
+    the shared defaults and the comparison stays a comparison.
+    """
     from common import learners
-    return learners.make(kind, C=PRODUCTION_C)
+    extra = PRODUCTION_PARAMS if kind == PRODUCTION_LEARNER else {}
+    return learners.make(kind, C=PRODUCTION_C, **extra)
 
 
 def all_features() -> list[str]:

@@ -192,10 +192,15 @@ def tune(sport: Sport) -> dict:
         print(pd.DataFrame(rows[:5]).to_string(index=False))
 
     # Test, once: the shipped configuration against each family's winner.
-    shipped = sport.fit_model(learners_default(sport.key), sport.fit_for_test)
+    # "Shipped" means what the sport actually runs, including any tuned
+    # hyperparameters it has adopted — otherwise a sport that already
+    # took a tuning win would be compared against a model it no longer
+    # uses, and the grid would look like it found the same gain twice.
+    kind, params = shipped_config(sport.key)
+    shipped = sport.fit_model(kind, sport.fit_for_test, **params)
     base = sport.score(shipped, sport.test)
-    report["test"].append({**base.row(f"shipped ({learners_default(sport.key)}, default params)"),
-                           "paired_se_vs_shipped": 0.0})
+    label = f"shipped ({kind}, {params or 'default params'})"
+    report["test"].append({**base.row(label), "paired_se_vs_shipped": 0.0})
     for kind, params in winners.items():
         model = sport.fit_model(kind, sport.fit_for_test, **params)
         sc = sport.score(model, sport.test)
@@ -206,16 +211,17 @@ def tune(sport: Sport) -> dict:
     return report
 
 
-def learners_default(sport_key: str) -> str:
-    """What the sport ships today, so the tuned numbers have a baseline."""
+def shipped_config(sport_key: str) -> tuple[str, dict]:
+    """What the sport ships today — learner and any hyperparameters it
+    overrides — so the tuned numbers have the right baseline."""
     if sport_key == "soccer":
-        from soccer.clubs.model.train import LEARNER
-        return LEARNER
+        from soccer.clubs.model import train
+        return train.LEARNER, dict(getattr(train, "PRODUCTION_PARAMS", {}))
     if sport_key == "nfl":
-        from NFL.model.advanced import PRODUCTION_LEARNER
-        return PRODUCTION_LEARNER
-    from CFB.model.advanced import PRODUCTION_LEARNER
-    return PRODUCTION_LEARNER
+        from NFL.model import advanced as nfl
+        return nfl.PRODUCTION_LEARNER, dict(getattr(nfl, "PRODUCTION_PARAMS", {}))
+    from CFB.model import advanced as cfb
+    return cfb.PRODUCTION_LEARNER, dict(getattr(cfb, "PRODUCTION_PARAMS", {}))
 
 
 # --------------------------------------------------------------------------

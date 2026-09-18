@@ -159,13 +159,17 @@ export const CFB_FEATURES: ForecastModel = {
     { name: 'Pooled FCS opponent', detail: 'every non-FBS side is one synthetic team at 950; only the FBS side updates' },
     { name: 'FBS entry rating', detail: 'a first FBS game starts a program at 1250, not at average' },
     { name: 'Margin of victory', detail: 'ln-damped, capped at 80 points' },
+    {
+      name: 'Tuned forest',
+      detail: 'minimum leaf 100 and 60% of the features per split, searched on a validation window that ends before the test window; the only sport where tuning beat the shared settings, winning all 12 seeds of a paired refit',
+    },
   ],
   gaps:
     'Ablation on held-out seasons makes the pooled FCS rating the single most load-bearing ' +
     'component — one synthetic 950-rated team standing in for every non-FBS opponent, about ' +
     '13% of the schedule, is the crudest thing in the model and it matters more than home ' +
-    'advantage. On 2024–25 the full 34-input forest scores 0.49347 to Elo’s 0.49768 overall ' +
-    '(+1.1 SE) and 0.54657 to 0.55358 on FBS-vs-FBS games (+1.6 SE), the best of the three ' +
+    'advantage. On 2024–25 the full 34-input forest scores 0.49214 to Elo’s 0.49768 overall ' +
+    '(+1.9 SE) and 0.54503 to 0.55358 on FBS-vs-FBS games (+2.5 SE), the best of the three ' +
     'learners tried. A favourite by 250+ Elo wins 95% of the time above 1650 and 89% below ' +
     '1350. The season simulation still runs on Elo alone.',
 };

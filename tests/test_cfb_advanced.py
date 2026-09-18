@@ -160,3 +160,28 @@ class TestSchema:
         (tmp_path / "cfb_schedules_2024.csv").write_text("game_id,home_id,away_id\n1,99,8\n2,5,6\n")
         out = fetch_schedule.backfill_ids(games, tmp_path)
         assert out["home_id"].tolist() == [7, 5] and out["away_id"].tolist() == [8, 6]
+
+
+def test_the_production_forest_uses_the_tuned_hyperparameters():
+    """College is the one sport where the hyperparameter search paid: a
+    leaf of 100 and 0.6 of the features per split beat the shared
+    defaults on all 12 seeds (+0.00168 mean, t = 7.97). If this drifts
+    back to the shared defaults the model silently gets worse and
+    noisier, which no other test would notice."""
+    from CFB.model import advanced as adv
+
+    clf = adv.make_model().named_steps["clf"]
+    assert clf.min_samples_leaf == 100
+    assert clf.max_features == 0.6
+
+
+def test_the_tuned_parameters_do_not_leak_into_other_learners():
+    """A head-to-head has to stay a head-to-head: asking for the
+    logistic or boosting must give that family at the shared defaults,
+    not the forest's tuned leaf."""
+    from common import learners
+    from CFB.model import advanced as adv
+
+    gbm = adv.make_model("gbm").named_steps["clf"]
+    assert gbm.min_samples_leaf == learners.GBM_MIN_LEAF
+    adv.make_model("logistic")  # would raise if forest params were passed on

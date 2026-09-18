@@ -171,7 +171,7 @@ def run(table: pd.DataFrame) -> dict:
     # --- full set, every learner: what actually ships ---------------------
     full = adv.PRODUCTION_FEATURES
     def _fit_kind(feats, kind, train_mask, test_mask):
-        m = learners.make(kind, C=adv.PRODUCTION_C).fit(table.loc[train_mask, feats], table.loc[train_mask, "y"])
+        m = adv.make_model(kind).fit(table.loc[train_mask, feats], table.loc[train_mask, "y"])
         p = m.predict_proba(table.loc[test_mask, feats])[:, 1]
         return evaluate.score_binary(table.loc[test_mask, "y"].to_numpy(), p), m
     learner_rows = {}

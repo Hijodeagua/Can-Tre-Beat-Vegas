@@ -176,9 +176,12 @@ on 2005 → last completed week). 34 inputs:
   plays and yards per drive, red-zone success, third-down success and
   distance, pass rate, pass and rush EPA
 
-2024–25 test: forest 0.49347 overall (Elo 0.49768, +1.1 SE), 0.54657 on
-FBS-vs-FBS (Elo 0.55358, +1.6 SE) — best of the three learners on the
-full set. Games with an FCS side, and any run where `team_weeks.csv` is
+2024–25 test: forest 0.49214 overall (Elo 0.49768, +1.9 SE), 0.54503 on
+FBS-vs-FBS (Elo 0.55358, +2.5 SE) — best of the three learners on the
+full set. College is the one sport whose forest runs tuned
+hyperparameters rather than the shared defaults (minimum leaf 100, 60%
+of the features per split): it won all 12 seeds of a paired refit and
+halved the seed-to-seed spread. Games with an FCS side, and any run where `team_weeks.csv` is
 more than two weeks behind, are Elo alone; the slate's `model` column
 says which. Full tables: [ADVANCED_METRICS.md](ADVANCED_METRICS.md).
 
