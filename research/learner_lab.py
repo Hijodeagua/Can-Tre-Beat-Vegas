@@ -33,10 +33,26 @@ Both subcommands cache each sport's feature table under
 from __future__ import annotations
 
 import argparse
+import contextlib
 import itertools
 import json
+import os
 import time
 from pathlib import Path
+
+# Set before numpy or scikit-learn load: OpenMP reads its thread policy
+# once, when libgomp initialises, and that happens on the first import of
+# a compiled extension.
+#
+# The default policy is an active spin-wait, which is right when a
+# process owns the machine and catastrophic when two do. Two tune runs
+# side by side on four cores turned a 2-second boosting fit into minutes
+# — not slower arithmetic, just threads burning cores waiting for each
+# other. A passive wait costs a little when uncontended and removes the
+# cliff entirely. `_single_run()` below stops the overlap happening in
+# the first place; this is the belt to that pair of braces, because
+# nothing stops a second run from another shell or another checkout.
+os.environ.setdefault("OMP_WAIT_POLICY", "PASSIVE")
 
 import numpy as np
 import pandas as pd
@@ -291,6 +307,38 @@ def calibrate(sport: Sport, seeds: int) -> dict:
 
 
 # --------------------------------------------------------------------------
+@contextlib.contextmanager
+def _single_run():
+    """Refuse to start while another run holds the lock.
+
+    Two reasons. The artifact write below is read-modify-write, so two
+    runs finishing together lose one of them. And two runs fighting over
+    the same cores is far worse than a queue: the grids are almost all
+    compiled, multi-threaded code, so overlapping them does not halve the
+    speed, it collapses it.
+
+    A stale lock (a run that was killed) is taken over rather than
+    honoured, so a crash never wedges the tool.
+    """
+    lock = OUT / ".run.lock"
+    OUT.mkdir(exist_ok=True)
+    if lock.exists():
+        pid = lock.read_text().strip()
+        alive = pid.isdigit() and Path(f"/proc/{pid}").exists()
+        if alive:
+            raise SystemExit(
+                f"another learner_lab run is going (pid {pid}). Wait for it, or "
+                f"stop it and delete {lock}. Running two at once loses one of "
+                f"their artifacts and makes both far slower than running them "
+                f"back to back.")
+        print(f"taking over a stale lock from pid {pid or '?'}")
+    lock.write_text(str(os.getpid()))
+    try:
+        yield
+    finally:
+        lock.unlink(missing_ok=True)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("command", choices=["tune", "calibrate"])
@@ -305,11 +353,12 @@ def main() -> None:
     # Merge into whatever is already there, so `--sport nfl` does not
     # erase yesterday's soccer run. Read-modify-write, so run one
     # invocation at a time.
-    out = json.loads(path.read_text()) if path.exists() else {}
-    for key in keys:
-        sport = LOADERS[key]()
-        out[key] = tune(sport) if args.command == "tune" else calibrate(sport, args.seeds)
-    path.write_text(json.dumps(out, indent=2, default=float) + "\n")
+    with _single_run():
+        out = json.loads(path.read_text()) if path.exists() else {}
+        for key in keys:
+            sport = LOADERS[key]()
+            out[key] = tune(sport) if args.command == "tune" else calibrate(sport, args.seeds)
+        path.write_text(json.dumps(out, indent=2, default=float) + "\n")
     print(f"\nwrote {path}")
 
 
