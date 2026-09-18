@@ -328,7 +328,7 @@ feature.
 ### Round 2 — every feature in, raw Elos, learner head-to-head
 
 `PRODUCTION_FEATURES` is now every group above plus `elo_home_pre` and
-`elo_away_pre` (41 inputs). Walk-forward as before, the three learners
+`elo_away_pre` (49 inputs). Walk-forward as before, the three learners
 from `common/learners.py` at fixed hyperparameters:
 
 | window | model | log loss | Brier | vs Elo |
@@ -461,7 +461,7 @@ feature.
 ### Round 2 — every feature in, raw Elos, learner head-to-head
 
 `PRODUCTION_FEATURES` is now every group above plus `elo_home_pre` and
-`elo_away_pre` (33 inputs). Same fixed split (fit 2005-2023, test
+`elo_away_pre` (34 inputs). Same fixed split (fit 2005-2023, test
 2024-2025):
 
 | scope | model | log loss | Brier | vs Elo |

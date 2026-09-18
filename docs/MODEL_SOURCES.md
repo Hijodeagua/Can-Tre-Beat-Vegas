@@ -69,7 +69,7 @@ on 586 holdout games (always-pick-home is 0.691).
 | Postseason K multiplier | same (`game_type`) | same | same | 0.000 — tuned to 1.0, already off |
 | Rest / bye bonus (+20 at 10+ days) | same (`home_rest`, `away_rest`) | same | same | **−0.0006 — better without it** |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
-| Second stage: random forest on Elo logit + home/away Elo + every adjusted rating and EWMA form column (41 inputs) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0072 log loss** on the clean 2024-25 window (0.62411 → 0.61687, +1.2 SE) |
+| Second stage: random forest on Elo logit + home/away Elo + every adjusted rating and EWMA form column (49 inputs) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0072 log loss** on the clean 2024-25 window (0.62411 → 0.61687, +1.2 SE) |
 
 Training windows:
 
@@ -90,10 +90,10 @@ Elo only. Baseline log loss **0.48462** on 2,038 holdout games.
 | Season regression (30%) | same | same | same | **+0.028** |
 | Conference regression (0.75 blend) | same (`home_conference`, per season) | same | same | **+0.011** |
 | Home advantage (+50) | same (`neutral_site`) | same | same | **+0.011** |
-| Second stage: random forest on Elo logit + home/away Elo + every SportsDataverse efficiency column (33 inputs) | `data/college_football/team_weeks.csv` | SportsDataverse weekly team summaries (`sportsdataverse-data` release Parquet), no key; joined on ESPN `team_id` (`home_id`/`away_id` now in the spine) | `CFB/data/fetch_weekly.py` (daily), raw cache under `data/college_football/raw/` | **+0.0042 log loss** on 2024-25 (0.49768 → 0.49347, +1.1 SE overall; +1.6 SE FBS-vs-FBS) |
+| Second stage: random forest on Elo logit + home/away Elo + every SportsDataverse efficiency column (34 inputs) | `data/college_football/team_weeks.csv` | SportsDataverse weekly team summaries (`sportsdataverse-data` release Parquet), no key; joined on ESPN `team_id` (`home_id`/`away_id` now in the spine) | `CFB/data/fetch_weekly.py` (daily), raw cache under `data/college_football/raw/` | **+0.0042 log loss** on 2024-25 (0.49768 → 0.49347, +1.1 SE overall; +1.6 SE FBS-vs-FBS) |
 | FBS entry rating (1250) | same | same | same | +0.001 |
 | Expected margin + total | derived from the replay | — | refit every run | not ablated |
-| Second stage: random forest on Elo logit + home/away Elo + every adjusted rating and EWMA form column (41 inputs) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0072 log loss** on the clean 2024-25 window (0.62411 → 0.61687, +1.2 SE) |
+| Second stage: random forest on Elo logit + home/away Elo + every adjusted rating and EWMA form column (49 inputs) | `data/nfl/team_games.csv` | nflverse play-by-play Parquet (`nflverse-data/releases/download/pbp/play_by_play_{season}.parquet`), no key | `NFL/data/pbp.py --current` (daily), raw cache under `data/nfl/raw/` | **+0.0072 log loss** on the clean 2024-25 window (0.62411 → 0.61687, +1.2 SE) |
 
 Training windows:
 

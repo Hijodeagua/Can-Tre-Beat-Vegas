@@ -92,7 +92,7 @@ Pick and forecast: `NFL/daily/{predict,simulate}.py`.
 **Win probability — random forest over Elo plus every efficiency
 feature** (`NFL/model/advanced.py`, `common/learners.py`; refit in-run
 from the replay history joined to `data/nfl/team_games.csv`, 2002 → last
-completed week, ties excluded). 41 inputs:
+completed week, ties excluded). 49 inputs:
 
 * **Elo logit**, **Home Elo**, **Away Elo** — the Elo probability and the
   two ratings as their own columns (a favourite by 75+ Elo wins 79% of
@@ -162,7 +162,7 @@ NFL engine with the four things college needs.
 
 **Win probability — random forest over Elo plus every efficiency
 feature** (`CFB/model/advanced.py`, `common/learners.py`; refit in-run
-on 2005 → last completed week). 33 inputs:
+on 2005 → last completed week). 34 inputs:
 
 * **Elo logit**, **Home Elo**, **Away Elo** — the Elo probability and the
   two ratings as their own columns (a favourite by 250+ Elo wins 95% of
