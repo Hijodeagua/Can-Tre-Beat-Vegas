@@ -102,6 +102,42 @@ export interface SoccerMlsClub {
   seed_distribution: number[];
 }
 
+/** One conference seed slot in the bracket: the clubs most likely to
+ * hold it, best first. A bracket is a picture of one season and the
+ * forecast is thousands, so a slot names candidates with probabilities
+ * rather than an occupant. */
+export interface SoccerMlsSeedSlot {
+  seed: number;
+  candidates: { team: string; p: number }[];
+}
+
+export interface SoccerMlsBracket {
+  conferences: Record<'East' | 'West', {
+    seeds: SoccerMlsSeedSlot[];
+    favorite: string;
+    p_favorite: number;
+  }>;
+  /** The MLS Cup matchups the sim produces most often. */
+  finals: { east: string; west: string; p: number }[];
+}
+
+/** MLS chart data. The x axis is matches played, not dates: MLS's
+ * upstream carries no fixture list, so the remaining matches have no
+ * dates to plot against — and clubs sit up to three games apart, which a
+ * date axis hides and this one shows. */
+export interface SoccerMlsChart {
+  x_axis: string;
+  season_matches: number;
+  /** [matches played, Elo] per club, closing on the live rating. */
+  history: Record<string, [number, number][]>;
+  /** [matches played, median run, 10th pct, 90th pct], opening on the
+   * live rating so it continues the history line. */
+  projection: Record<string, {
+    points: [number, number, number, number][];
+    samples: number[][];
+  }>;
+}
+
 export interface SoccerMlsForecast {
   season: string;
   sims: number;
@@ -117,6 +153,8 @@ export interface SoccerMlsForecast {
     note: string;
   };
   format: Record<string, string | number>;
+  bracket?: SoccerMlsBracket;
+  chart?: SoccerMlsChart;
   clubs?: SoccerMlsClub[];
 }
 

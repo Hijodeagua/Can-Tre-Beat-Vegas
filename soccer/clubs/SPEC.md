@@ -285,13 +285,39 @@ sim treats as a coin flip — the home side's real edge is already in the
 90 minutes through `home_advantage`, and giving it a second one in the
 shootout would be double-counting.
 
-Two things are deliberately missing. There is no Elo *projection* block
-(the European one plots ratings at checkpoint dates, and the
-reconstructed schedule has no dates — inventing a fixture calendar to
-draw a smooth line through would be publishing a guess as data), and the
-tiebreakers below goals for (disciplinary points, away/home goal splits)
-are not modeled, so clubs still level on points, wins, goal difference
-and goals for are separated at random.
+It also publishes the two things the site draws: a per-conference Elo
+chart and the playoff bracket.
+
+The chart's x axis is **matches played, not dates**. That started as the
+only honest option — the remaining fixtures have no dates, and estimating
+them from the season's own cadence is not good enough to plot against
+(run on 2025 at the three-quarter mark, that estimate puts the final
+matchday on 12 September against an actual 18 October, five weeks out) —
+but it is also the better axis for MLS: clubs sit up to three games
+apart, so a date axis shows a club level with one that has already spent
+its games in hand, and this one shows it behind with matches to come.
+History is one point per match played, closing on the live rating;
+the projection continues from that same point out to 34, as a median
+simulated season with a 10th/90th band and a few whole sample seasons —
+the same three readings as the European chart, and with the mean
+omitted for the same reason (a fair game's expected Elo change is zero,
+so averaging the sims returns today's rating for everyone).
+
+The bracket is drawn from the same sims: per conference, how often each
+club lands on each of seeds 1-9, plus the MLS Cup matchups that come up
+most often. The site fills the slots by **expected finishing position**
+rather than by each slot's most likely occupant, which matters more than
+it sounds: slot modes are marginals, and taken independently they put one
+club top of two different slots and leave another out of the bracket
+entirely — true of each marginal, nonsense as a bracket. Expected finish
+gives every club exactly one slot, and each slot still carries how often
+that club really finishes there (rarely above a third — a seed is a fine
+distinction) with the runners-up named underneath.
+
+One thing is deliberately missing: the tiebreakers below goals for
+(disciplinary points, away/home goal splits) are not modeled, so clubs
+still level on points, wins, goal difference and goals for are separated
+at random.
 
 `model/backtest_mls.py` scores the whole thing walk-forward against a
 completed season. On 2025 at three cutoffs (35%, 50%, 70% of the season

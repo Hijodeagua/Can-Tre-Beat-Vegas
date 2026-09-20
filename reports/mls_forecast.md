@@ -294,10 +294,14 @@ documented rather than fixed.
 - **No injuries, no transfers, no congestion.** The rating is the whole
   team model. A club whose form changes for a reason the results have
   not shown yet is not handled.
-- **No projected Elo chart.** The European forecast plots each club's
-  rating at checkpoint dates; the reconstructed schedule has no dates,
-  and inventing a fixture calendar to draw a smooth line through would
-  be publishing a guess as data.
+- **The Elo chart is drawn against matches played, not dates.** The
+  remaining fixtures have no dates, and estimating them from the
+  season's own cadence is not accurate enough to plot against: run on
+  2025 at the three-quarter mark, that estimate puts the final matchday
+  on 12 September against an actual 18 October. Matches played is also
+  the better axis here — MLS clubs are up to three games apart, and a
+  date axis would show Seattle level with clubs that have already spent
+  those games.
 - **The cross-conference draw is sampled, not known.** Twenty-five of
   the 153 remaining matches have opponents the model assigns itself,
   consistent with each club's true remaining home/away counts. This is
@@ -306,7 +310,39 @@ documented rather than fixed.
 
 ---
 
-## 7. Reproducing this
+## 7. The bracket, and why it is seeded the way it is
+
+The site draws the playoff bracket from these same simulations, and the
+one judgement call in it is worth stating. Each seed slot has a most
+likely occupant, but those are *marginals*: taken independently they put
+Portland Timbers top of both the 8 and the 9 slot in the West and leave
+another club out of the bracket altogether. Every one of those numbers is
+correct and the bracket they compose is nonsense.
+
+So the slots are filled by expected finishing position, which gives every
+club exactly one, and each slot carries how often that club really
+finishes on that exact seed. Those numbers are low on purpose — 87% for
+Nashville at the 1 seed, but 13-27% through most of the middle of both
+conferences — because a seed is a fine distinction and the model is
+saying so. The runners-up for each slot sit underneath.
+
+Read across rounds instead of down seeds and the format does the talking:
+
+| Club | Qualify | Conf Semi | Conf Final | MLS Cup | Champion |
+|---|---:|---:|---:|---:|---:|
+| Nashville SC | 100% | 67% | 45% | 27% | 17% |
+| Vancouver Whitecaps | 100% | 70% | 46% | 30% | 17% |
+| Inter Miami CF | 100% | 70% | 47% | 27% | 16% |
+| Los Angeles FC | 99% | 61% | 33% | 17% | 9% |
+| Houston Dynamo FC | 100% | 55% | 28% | 13% | 6% |
+
+A club that is certain to make the playoffs is a coin flip to survive
+Round One, and the single likeliest MLS Cup pairing in the league
+(Nashville v Vancouver) comes up in 8% of seasons.
+
+---
+
+## 8. Reproducing this
 
 ```bash
 python -m soccer.clubs.data.fetch_mls          # refresh MLS results
@@ -317,5 +353,7 @@ python -m soccer.clubs.daily.run               # the whole pipeline, incl. this 
 
 The daily pipeline publishes the same block to
 `web/public/data/soccer/latest.json` under `mls_forecast`, where the
-`/soccer` page's Forecasts tab renders it as a per-conference table, and
-into the twice-weekly update email.
+`/soccer` page's Forecasts tab renders it as a per-conference table, an
+Elo chart per conference (season to date, and the projection out to 34
+matches) and the playoff bracket. The tables also go into the
+twice-weekly update email.

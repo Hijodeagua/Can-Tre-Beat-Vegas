@@ -15,6 +15,7 @@
  */
 import { useEffect, useState } from 'react';
 import EloTrendChart from '@/app/components/EloTrendChart';
+import MlsBracket from '@/app/components/MlsBracket';
 import ModelFeatures from '@/app/components/ModelFeatures';
 import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
@@ -23,7 +24,7 @@ import { SOCCER_FEATURES } from '@/app/lib/modelFeatures';
 import {
   getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER, GLUED_LEAGUES,
   comparableElo, comparableEloBands,
-  type SoccerMlsForecast, type SoccerSlateRow,
+  type SoccerMlsChart, type SoccerMlsForecast, type SoccerSlateRow,
 } from '@/app/lib/soccer';
 
 const TABS = [
@@ -412,7 +413,61 @@ function MlsConferenceTable({
   );
 }
 
+/** MLS's x axis is matches played, not a date — see SoccerMlsChart. Both
+ * are module constants so they keep a stable identity across renders. */
+const mlsXLabel = (x: string | number) => `${x} GP`;
+const MLS_NOW_LABEL = 'played';
+
+function MlsEloChart({
+  chart, conference, clubs,
+}: {
+  chart: SoccerMlsChart;
+  conference: 'East' | 'West';
+  clubs: Set<string>;
+}) {
+  const series = Object.entries(chart.history)
+    .filter(([team]) => clubs.has(team))
+    .map(([team, points]) => ({ team, points: points as [number, number][] }));
+  if (series.length === 0) return null;
+  const projection = Object.entries(chart.projection)
+    .filter(([team]) => clubs.has(team))
+    .map(([team, p]) => ({
+      team,
+      points: p.points as [number, number, number, number][],
+      samples: p.samples,
+    }));
+
+  return (
+    <section className="mt-6">
+      <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        Elo Trend — {conference}ern Conference
+      </h3>
+      <div className="mt-3">
+        <EloTrendChart
+          series={series}
+          projection={projection}
+          highlight={4}
+          xLabel={mlsXLabel}
+          nowLabel={MLS_NOW_LABEL}
+        />
+      </div>
+      <p className="mt-2 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        Each point is a club&apos;s Elo going into that match of the season, closing on
+        its live rating as of the {data.run_date} run. The axis is matches played
+        rather than dates, for a reason that is also a fact about the table: MLS
+        clubs are up to three games apart, and the club sitting further left still
+        has those games to play. It is also the only axis the projection can use
+        honestly — MLS publishes no machine-readable fixture list, so the matches
+        still to come have no dates to plot against.
+      </p>
+    </section>
+  );
+}
+
 function MlsForecastView({ forecast }: { forecast: SoccerMlsForecast }) {
+  const clubs = forecast.clubs ?? [];
+  const east = new Set(clubs.filter((c) => c.conference === 'East').map((c) => c.team));
+  const west = new Set(clubs.filter((c) => c.conference === 'West').map((c) => c.team));
   return (
     <div>
       <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
@@ -439,6 +494,22 @@ function MlsForecastView({ forecast }: { forecast: SoccerMlsForecast }) {
         per-club home and away counts — so each simulation draws its own valid pairing of
         them rather than every run sharing one invented schedule.
       </p>
+
+      {forecast.chart && (
+        <>
+          <MlsEloChart chart={forecast.chart} conference="East" clubs={east} />
+          <MlsEloChart chart={forecast.chart} conference="West" clubs={west} />
+        </>
+      )}
+
+      {forecast.bracket && (
+        <section className="mt-8">
+          <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+            MLS Cup Playoffs bracket
+          </h3>
+          <MlsBracket bracket={forecast.bracket} clubs={clubs} />
+        </section>
+      )}
     </div>
   );
 }

@@ -158,7 +158,8 @@ def main() -> None:
     else:
         mls_forecast = mls_predict.forecast(
             state.results, mls_season, engine=state.engines["mls"],
-            score_params=state.score_params, n_sims=args.mls_sims)
+            score_params=state.score_params, history=state.history,
+            n_sims=args.mls_sims)
         top = mls_forecast["clubs"][0]
         shield = max(mls_forecast["clubs"], key=lambda c: c["p_shield"])
         print(f"   {mls_season}: {mls_forecast['remaining_matches']} matches left; "
