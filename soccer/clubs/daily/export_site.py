@@ -267,7 +267,8 @@ def feeds_payload(feeds: dict | None) -> dict:
 
 def export(state: DailyState, run_date: str, slate: pd.DataFrame,
            futures: dict, ledger: dict, graded_today: pd.DataFrame,
-           feeds: dict | None = None) -> None:
+           feeds: dict | None = None,
+           mls_forecast: dict | None = None) -> None:
     ratings = ratings_payload(state)
     # Before the futures block is serialized — this pops its projection.
     elo_projection = elo_projection_payload(futures, run_date)
@@ -280,6 +281,11 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "graded_today": graded_today.to_dict(orient="records"),
         "ledger": ledger,
         "futures": futures,
+        # MLS sits outside `futures` on purpose: no relegation, no
+        # European places, and a playoff bracket the other leagues do not
+        # have, so it answers a different set of questions and carries a
+        # different set of columns.
+        "mls_forecast": mls_forecast,
         "elo_history": elo_history_payload(state, run_date),
         "elo_projection": elo_projection,
         "feeds": feeds_payload(feeds),

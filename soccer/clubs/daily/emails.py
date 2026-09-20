@@ -165,6 +165,8 @@ def _forecast_section(futures: dict) -> str:
     parts = []
     for league, sim in futures.items():
         name = _league_name(league)
+        if sim.get("status") == "mls_forecast":
+            continue  # has its own section below, with its own questions
         if sim.get("status") == "no_fixtures" or not sim.get("clubs"):
             parts.append(
                 f"<h3 style='{STYLE_H3}'>{name}</h3>"
@@ -207,8 +209,76 @@ def _forecast_section(futures: dict) -> str:
     return "".join(parts)
 
 
+def _mls_section(forecast: dict | None) -> str:
+    """The MLS block: Supporters' Shield, playoff qualification and the
+    MLS Cup bracket, conference by conference.
+
+    Split East/West because that is how the league is actually read — a
+    single 30-row table would sort Nashville above a Western club it
+    cannot be seeded against. The Shield column is the one number that
+    genuinely spans both.
+    """
+    if not forecast:
+        return ""
+    if forecast.get("status") or not forecast.get("clubs"):
+        problems = forecast.get("problems") or []
+        detail = f" ({problems[0]})" if problems else ""
+        return (
+            f"<p style='color:#666;font-size:12px;'>No MLS forecast this run: "
+            f"the {forecast.get('season', '')} season no longer matches the "
+            f"format the schedule is reconstructed from{detail}.</p>"
+        )
+
+    parts = []
+    for conf in ("East", "West"):
+        clubs = [c for c in forecast["clubs"] if c["conference"] == conf]
+        clubs.sort(key=lambda c: c["exp_conf_seed"])
+        rows = []
+        for c in clubs:
+            # A club that can no longer be caught or can no longer catch
+            # up is still shown — the point of the table is the whole
+            # conference, not just the bubble.
+            rows.append(
+                f"<tr><td style='{STYLE_TD}'>{c['exp_conf_seed']:.1f}</td>"
+                f"<td style='{STYLE_TD}'><b>{c['team']}</b></td>"
+                f"<td style='{STYLE_TD}'>{c['points']}</td>"
+                f"<td style='{STYLE_TD}'>{c['exp_points']:.1f}</td>"
+                f"<td style='{STYLE_TD}'>{_pct(c['p_playoffs'])}</td>"
+                f"<td style='{STYLE_TD}'>{_pct(c['p_top_seed'])}</td>"
+                f"<td style='{STYLE_TD}'>{_pct(c['p_conf_title'])}</td>"
+                f"<td style='{STYLE_TD}'><b>{_pct(c['p_cup'])}</b></td>"
+                f"<td style='{STYLE_TD}'>{_pct(c['p_shield'])}</td></tr>"
+            )
+        leader = max(clubs, key=lambda c: c["p_conf_title"])
+        parts.append(
+            f"<h3 style='{STYLE_H3}'>{conf}ern Conference &mdash; "
+            f"{leader['team']} {_pct(leader['p_conf_title'])} to reach MLS Cup</h3>"
+            + _table(
+                ["Seed", "Team", "Pts", "xPts", "Playoffs", "1 seed",
+                 "Conf", "Cup", "Shield"],
+                rows,
+            )
+        )
+    sched = forecast["schedule"]
+    parts.append(
+        f"<p style='color:#666;font-size:12px;'>"
+        f"{forecast['remaining_matches']} regular-season matches left, "
+        f"replayed {forecast['sims']:,} times with live in-sim Elo, then the "
+        f"full playoff bracket each time. Seed = expected conference finish; "
+        f"1 seed = finishing top of the conference; Conf = reaching MLS Cup; "
+        f"Shield = best record in the league. MLS publishes no machine-readable "
+        f"fixture list, so the run-in is reconstructed from the league's format: "
+        f"{sched['intra_conference']} conference fixtures are exact, and the "
+        f"{sched['cross_conference']} cross-conference ones are known only as "
+        f"per-club home/away counts, so every replay draws its own pairing of "
+        f"them.</p>"
+    )
+    return "".join(parts)
+
+
 def update_html(run_date: str, fixtures: pd.DataFrame, recent: pd.DataFrame,
-                ledger: dict, futures: dict) -> str:
+                ledger: dict, futures: dict,
+                mls_forecast: dict | None = None) -> str:
     body = (
         "<h2 style='font-size:16px;margin:20px 0 0 0;'>&#128197; Games this week</h2>"
         + _fixtures_section(fixtures)
@@ -217,6 +287,11 @@ def update_html(run_date: str, fixtures: pd.DataFrame, recent: pd.DataFrame,
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128302; Final-table forecasts</h2>"
         + _forecast_section(futures)
     )
+    mls_block = _mls_section(mls_forecast)
+    if mls_block:
+        body += ("<h2 style='font-size:16px;margin:28px 0 0 0;'>"
+                 "&#127482;&#127480; MLS &mdash; Shield, playoffs and MLS Cup</h2>"
+                 + mls_block)
     return _wrap(
         "Soccer Update",
         f"Run date {run_date} &middot; fixtures for the next 7 days, the past "

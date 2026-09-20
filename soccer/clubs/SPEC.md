@@ -235,12 +235,74 @@ CSV, 1996 → present, already unified to each club's current name; we start
 replay at 2013 as a deliberate quality cutoff). Calendar-year seasons
 ("2020", not "2020-21") since an MLS season never crosses New Year's;
 `leagues.next_season`/`current_season_for` handle both formats. The source
-is a completed-match log with no upcoming fixtures, so MLS naturally has no
-daily slate or futures Monte Carlo — ratings, squad economics and the
-rankings page only. Because `fetch_results.py` owns `results.csv` outright
+is a completed-match log with no upcoming fixtures, so MLS has no daily
+slate and falls out of the European futures Monte Carlo — but it does get
+its own forecast, off a schedule reconstructed from the league's format
+rather than read from a fixture list (see **MLS forecast** below).
+Because `fetch_results.py` owns `results.csv` outright
 and rewrites it from the openfootball leagues alone, `fetch_mls.py` always
 runs *after* it in `daily/run.py`'s refresh step, merging in rather than
 overwriting.
+
+### MLS forecast
+
+MLS is the one league whose remaining fixtures have to be *derived* rather
+than read. Its upstream is an Elo-history log of played matches, so there
+are no unplayed rows for `daily/simulate.py` to replay — and for a long
+time that meant the league had ratings but no forecast at all.
+
+`data/mls.py` reconstructs the run-in from the format instead. MLS is 30
+clubs, 15 per conference, no promotion or relegation, and 34 matches each:
+28 against conference rivals (every rival once home and once away) and 6
+cross-conference, 3 at home and 3 away against 6 different opponents. The
+first half of that is an exact reconstruction — an intra-conference
+fixture is still owed if and only if that ordered (home, away) pair has
+not been played. The second half is not: which six cross-conference
+opponents a club draws is a scheduling decision the results log does not
+reveal, so only each club's remaining count of them, split home and away,
+is recoverable.
+
+So the two halves are treated differently, and the difference is the
+point. The conference fixtures go into every simulation unchanged; the
+cross-conference ones are drawn fresh in each simulation from the pairings
+consistent with the quotas, which puts the genuine uncertainty about those
+~25 matches into the spread of the odds rather than into one invented
+schedule every run shares. `mls.verify_structure()` re-checks the whole
+reconstruction each run — every club must land on exactly 34 matches and
+the two conferences' cross-conference quotas must clear against each
+other — and the pipeline publishes nothing rather than publishing odds
+built on a schedule that cannot happen. It correctly refuses 2023 and
+2024, which were 29-club seasons with a different shape.
+
+`model/mls_forecast.py` then runs the same machinery as every other
+league — live in-sim Elo with the MLS pool's tuned K and home advantage,
+scorelines from the independent-Poisson grid — and carries each simulated
+season through the playoff bracket: 9 qualifiers per conference, 8 hosts 9
+in a single Wild Card match, Round One is a best-of-3 with the higher seed
+hosting games 1 and 3, and every round after that is one match at the
+higher seed's ground. A drawn playoff match goes to a shootout, which the
+sim treats as a coin flip — the home side's real edge is already in the
+90 minutes through `home_advantage`, and giving it a second one in the
+shootout would be double-counting.
+
+Two things are deliberately missing. There is no Elo *projection* block
+(the European one plots ratings at checkpoint dates, and the
+reconstructed schedule has no dates — inventing a fixture calendar to
+draw a smooth line through would be publishing a guess as data), and the
+tiebreakers below goals for (disciplinary points, away/home goal splits)
+are not modeled, so clubs still level on points, wins, goal difference
+and goals for are separated at random.
+
+`model/backtest_mls.py` scores the whole thing walk-forward against a
+completed season. On 2025 at three cutoffs (35%, 50%, 70% of the season
+played), expected-points MAE tightens 5.96 → 4.81 → 3.12 with bias never
+worse than +0.32, and playoff-qualification Brier runs 0.09 / 0.11 / 0.04
+against the 0.240 you get from quoting the 18-in-30 base rate at
+everybody. The honest caveat is in the module and repeated here: 2025 is
+the only completed 30-club season, so those are three correlated views of
+one season, not three seasons. Enough to catch a broken model, not enough
+to call it calibrated — and the Shield and Cup lines in particular are
+single anecdotes.
 
 Wrinkles handled in the fetch, so nothing downstream sees them:
 
@@ -275,6 +337,7 @@ soccer/clubs/
 ├── SPEC.md                  # this file
 ├── data/
 │   ├── leagues.py           # league registry + canonical-name aliases (+ UEFA aliases)
+│   ├── mls.py               # MLS conferences, season shape, remaining-schedule rebuild
 │   ├── football_txt.py      # parser for the openfootball Football.TXT format
 │   ├── fetch_results.py     # football.json + country-repo txt → results.csv
 │   ├── fetch_uefa.py        # champions-league repo → uefa_results.csv
@@ -295,6 +358,8 @@ soccer/clubs/
 │   ├── xg.py                # rolling xG-form feature (xg_net_diff)
 │   ├── shots.py             # rolling shot-form feature (sot_net_diff)
 │   ├── features.py          # spend / value / wage differentials (z within league-season)
+│   ├── mls_forecast.py      # MLS Shield / conference seeding / MLS Cup bracket sim
+│   ├── backtest_mls.py      # walk-forward scoring of that forecast
 │   ├── tune.py              # per-league parameter grid search
 │   ├── train.py             # pooled multinomial outcome model + temporal validation
 │   ├── export_ratings.py    # → artifacts/club_elo_ratings.json (glued, all leagues)
@@ -312,6 +377,8 @@ python -m soccer.clubs.data.fetch_shots       # refresh per-match shots (--sourc
 python -m soccer.clubs.model.tune             # re-tune per-league parameters
 python -m soccer.clubs.model.train            # outcome model + holdout metrics
 python -m soccer.clubs.model.export_ratings   # -> artifacts/club_elo_ratings.json
+python -m soccer.clubs.model.mls_forecast     # MLS Shield / playoff / MLS Cup odds
+python -m soccer.clubs.model.backtest_mls     # score that forecast on a past season
 python -m soccer.clubs.daily.run              # the whole daily pipeline
 ```
 
@@ -343,7 +410,13 @@ site consumes.
   club ratings
 - [x] MLS: its own unglued Elo pool (`data/fetch_mls.py`,
   philo92/mls-elo), squad economics, ratings and the rankings page —
-  no daily slate/futures (the source has no upcoming-fixture data)
+  no daily slate (the source has no upcoming-fixture data)
+- [x] MLS forecast: Supporters' Shield, conference seeding and the MLS
+  Cup bracket (`model/mls_forecast.py`), run daily off a remaining
+  schedule reconstructed from the league's format. Walk-forward on 2025
+  (`model/backtest_mls.py`): expected-points MAE 3.1 with +0.1 bias at
+  the three-quarter mark, playoff-qualification Brier 0.044 against a
+  0.240 base-rate baseline
 - [x] xG layer: per-match xG committed + Actions-refreshed, rolling
   xG-net form as the strongest non-Elo model feature (validated +2.1 SE
   on the 2023-24 holdout)
