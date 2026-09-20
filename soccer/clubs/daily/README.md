@@ -71,8 +71,10 @@ publish the site JSON, and render the twice-weekly update email.
   home and away Elo, the venue-adjusted Elo gap, squad-economics
   differentials, rolling xG and shots-on-target form, the whole Understat
   advanced layer, and league/tier/season context — every one of them as a
-  home-minus-away difference. Holdout (2024-25 + 2025-26): log loss
-  0.9902 vs 1.0750 class-frequency baseline.
+  home-minus-away difference **and** as the two per-side levels it was
+  made from (see SPEC.md, "Levels as well as differences"). Holdout
+  (2024-25 + 2025-26, 7,906 matches): log loss 1.0134, against 1.0260
+  Elo-gap-only and 1.0763 class-frequency.
 - **Per-side stats** — the model trains on differences, but the site
   publishes both halves of every one: `state.outcome_probs` re-attaches
   the features with `keep_sides=True`, `predict.SIDE_METRICS` names and

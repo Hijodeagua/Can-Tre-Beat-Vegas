@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T21:27:18+00:00",
+  "generated_at": "2026-09-20T18:48:58+00:00",
   "models": {
     "nfl": {
       "name": "NFL Elo",
@@ -93,180 +93,320 @@
       "name": "Club soccer outcome model (random_forest: Elo pair + gap, economics, form, advanced Understat)",
       "method": "permutation importance",
       "metric": "increase in holdout log loss when the feature is shuffled",
-      "baseline": 1.01453,
-      "n": 7827,
+      "baseline": 1.01341,
+      "n": 7906,
       "window": "2024-25 onward (never fitted on)",
       "features": [
         {
-          "name": "value_diff_z",
-          "value": 0.01365,
-          "sd": 0.00145,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
           "name": "elo_gap",
-          "value": 0.01197,
-          "sd": 0.00168,
+          "value": 0.00948,
+          "sd": 0.00119,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "elo_home_pre",
-          "value": 0.00209,
-          "sd": 0.00051,
+          "name": "value_diff_z",
+          "value": 0.00681,
+          "sd": 0.00054,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_value_z",
+          "value": 0.00199,
+          "sd": 0.00033,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "elo_away_pre",
-          "value": 0.00159,
-          "sd": 0.00036,
+          "value": 0.00158,
+          "sd": 0.00038,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "deep_share_diff",
-          "value": 0.00108,
-          "sd": 0.00034,
+          "name": "elo_home_pre",
+          "value": 0.00144,
+          "sd": 0.00043,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "xpts_ewm_diff",
-          "value": 0.00105,
-          "sd": 0.00037,
+          "value": 0.00083,
+          "sd": 0.00017,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_squad_value_eur_m",
+          "value": 0.00079,
+          "sd": 0.00022,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_value_z",
+          "value": 0.00077,
+          "sd": 0.00036,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "sot_net_diff",
-          "value": 0.00076,
-          "sd": 0.00035,
+          "value": 0.00041,
+          "sd": 0.00016,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "npxg_for_ewm_diff",
-          "value": 0.00033,
-          "sd": 0.0002,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "deep_diff",
-          "value": 0.00033,
-          "sd": 0.00018,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "npxg_against_ewm_diff",
-          "value": 0.00022,
-          "sd": 0.00011,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "npxg_against_r10_diff",
-          "value": 0.00019,
-          "sd": 8e-05,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "lg_championship",
-          "value": 0.00014,
-          "sd": 0.0001,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "xg_for_ewm_diff",
-          "value": 0.0001,
-          "sd": 0.00014,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "home_att_vs_away_def",
-          "value": 8e-05,
-          "sd": 6e-05,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "tier",
-          "value": 8e-05,
-          "sd": 6e-05,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "xg_net_diff",
-          "value": 7e-05,
-          "sd": 0.00018,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "rest_diff",
-          "value": 5e-05,
+          "name": "deep_share_diff",
+          "value": 0.00039,
           "sd": 0.00015,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_la_liga",
-          "value": 4e-05,
-          "sd": 2e-05,
+          "name": "home_xg_for_split",
+          "value": 0.00022,
+          "sd": 4e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_serie_a",
-          "value": 4e-05,
-          "sd": 1e-05,
+          "name": "tier",
+          "value": 0.00013,
+          "sd": 0.0001,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "xg_against_ewm_diff",
-          "value": 3e-05,
+          "name": "npxg_against_ewm_diff",
+          "value": 0.00012,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_npxg_for_ewm",
+          "value": 0.00012,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_deep_share_ewm",
+          "value": 0.00012,
+          "sd": 0.00011,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_npxg_for_split",
+          "value": 0.00011,
+          "sd": 7e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "xg_net_diff",
+          "value": 9e-05,
           "sd": 0.00014,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "away_att_vs_home_def",
+          "name": "npxg_against_r10_diff",
+          "value": 9e-05,
+          "sd": 7e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_deep_for_r10",
+          "value": 9e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_deep_share_r10",
+          "value": 9e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "npxg_for_ewm_diff",
+          "value": 8e-05,
+          "sd": 0.00011,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xpts_for_ewm",
+          "value": 8e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_deep_for_ewm",
+          "value": 8e-05,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_deep_against_ewm",
+          "value": 8e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_ppda_for_ewm",
+          "value": 7e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "xg_for_ewm_diff",
+          "value": 6e-05,
+          "sd": 0.00013,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xpts_for_ewm",
+          "value": 6e-05,
+          "sd": 7e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_squad_value_eur_m",
+          "value": 6e-05,
+          "sd": 0.00018,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_att_vs_away_def",
+          "value": 5e-05,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "deep_diff",
+          "value": 5e-05,
+          "sd": 9e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_against_ewm",
+          "value": 5e-05,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_npxg_for_ewm",
+          "value": 5e-05,
+          "sd": 8e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_ppda_for_r10",
+          "value": 4e-05,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_per_shot_r10",
+          "value": 4e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_npxg_against_split",
+          "value": 4e-05,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "npxg_away_att_vs_home_def",
           "value": 3e-05,
           "sd": 4e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_serie_b",
+          "name": "away_ppda_for_r10",
           "value": 3e-05,
-          "sd": 7e-05,
+          "sd": 3e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "npxg_for_r10_diff",
+          "name": "home_npxg_against_ewm",
+          "value": 3e-05,
+          "sd": 2e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_ppda_for_ewm",
+          "value": 3e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "lg_la_liga",
           "value": 2e-05,
+          "sd": 2e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_deep_against_ewm",
+          "value": 2e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "xg_against_ewm_diff",
+          "value": 1e-05,
           "sd": 6e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "ppda_diff",
-          "value": 2e-05,
-          "sd": 0.00011,
+          "name": "npxg_for_r10_diff",
+          "value": 1e-05,
+          "sd": 9e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "uefa7_home",
+          "value": 1e-05,
+          "sd": 0.0,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "lg_epl",
           "value": 1e-05,
           "sd": 1e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
@@ -274,6 +414,34 @@
         },
         {
           "name": "lg_bundesliga_2",
+          "value": 1e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_for_r10",
+          "value": 1e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_against_r10",
+          "value": 1e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xpts_for_r10",
+          "value": 1e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xpts_for_r10",
           "value": 1e-05,
           "sd": 4e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
@@ -288,120 +456,358 @@
         },
         {
           "name": "net_diff_z",
-          "value": 0.0,
+          "value": -0.0,
           "sd": 0.0,
           "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
           "constant": true
         },
         {
           "name": "wage_diff_z",
+          "value": -0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "uefa7_away",
+          "value": 0.0,
+          "sd": 0.0,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "lg_ligue_1",
+          "value": -0.0,
+          "sd": 1e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "season_idx",
+          "value": -0.0,
+          "sd": 0.0,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_npxg_against_r10",
+          "value": 0.0,
+          "sd": 2e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_deep_against_r10",
+          "value": 0.0,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xg_against_ewm",
+          "value": 0.0,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_deep_for_ewm",
+          "value": -0.0,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_spend_z",
           "value": 0.0,
           "sd": 0.0,
           "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
           "constant": true
         },
         {
-          "name": "congestion14_away",
-          "value": 0.0,
-          "sd": 0.0001,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "season_idx",
+          "name": "away_spend_z",
           "value": 0.0,
           "sd": 0.0,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
         },
         {
-          "name": "uefa7_away",
+          "name": "home_net_z",
+          "value": 0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "away_net_z",
+          "value": 0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "home_wage_z",
+          "value": -0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "away_wage_z",
+          "value": -0.0,
+          "sd": 0.0,
+          "detail": "no data over this window \u2014 the column is constant, so shuffling it cannot do damage",
+          "constant": true
+        },
+        {
+          "name": "lg_bundesliga",
           "value": -1e-05,
           "sd": 1e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_epl",
+          "name": "lg_serie_a",
+          "value": -1e-05,
+          "sd": 1e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_npxg_against_r10",
           "value": -1e-05,
           "sd": 3e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_bundesliga",
+          "name": "away_deep_for_r10",
           "value": -1e-05,
-          "sd": 2e-05,
+          "sd": 7e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "npxg_away_att_vs_home_def",
+          "name": "home_xg_for_ewm",
+          "value": -1e-05,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_for_ewm",
+          "value": -1e-05,
+          "sd": 8e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xg_against_split",
+          "value": -1e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "xg_against_r10_diff",
+          "value": -2e-05,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_npxg_for_r10",
+          "value": -2e-05,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_deep_share_ewm",
           "value": -2e-05,
           "sd": 8e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_ligue_1",
-          "value": -4e-05,
-          "sd": 1e-05,
+          "name": "away_att_vs_home_def",
+          "value": -3e-05,
+          "sd": 5e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "lg_la_liga_2",
-          "value": -6e-05,
-          "sd": 0.0001,
+          "name": "lg_serie_b",
+          "value": -3e-05,
+          "sd": 6e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "lg_ligue_2",
-          "value": -9e-05,
+          "value": -3e-05,
+          "sd": 2e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "lg_mls",
+          "value": -3e-05,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xg_against_r10",
+          "value": -3e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_against_split",
+          "value": -3e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_npxg_against_split",
+          "value": -3e-05,
           "sd": 3e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "npxg_home_att_vs_away_def",
-          "value": -0.00011,
-          "sd": 8e-05,
+          "value": -4e-05,
+          "sd": 5e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
-          "name": "congestion14_home",
-          "value": -0.00012,
-          "sd": 0.00011,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "lg_mls",
-          "value": -0.00016,
-          "sd": 0.00018,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "xg_against_r10_diff",
-          "value": -0.00018,
-          "sd": 6e-05,
-          "detail": "column shuffled 10x on 2024-25+ holdout",
-          "constant": false
-        },
-        {
-          "name": "xg_for_r10_diff",
-          "value": -0.00026,
-          "sd": 7e-05,
+          "name": "away_npxg_against_ewm",
+          "value": -4e-05,
+          "sd": 2e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         },
         {
           "name": "xg_per_shot_diff",
-          "value": -0.0003,
-          "sd": 9e-05,
+          "value": -5e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "rest_diff",
+          "value": -5e-05,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "congestion14_away",
+          "value": -5e-05,
+          "sd": 8e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "lg_championship",
+          "value": -5e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_deep_against_r10",
+          "value": -5e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "lg_la_liga_2",
+          "value": -6e-05,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "ppda_diff",
+          "value": -7e-05,
+          "sd": 2e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xg_per_shot_ewm",
+          "value": -7e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xg_per_shot_r10",
+          "value": -8e-05,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_per_shot_ewm",
+          "value": -8e-05,
+          "sd": 3e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "xg_for_r10_diff",
+          "value": -9e-05,
+          "sd": 5e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_npxg_for_split",
+          "value": -9e-05,
+          "sd": 7e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_npxg_for_r10",
+          "value": -0.0001,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_deep_share_r10",
+          "value": -0.0001,
+          "sd": 4e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "home_xg_for_r10",
+          "value": -0.00011,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "away_xg_for_split",
+          "value": -0.00011,
+          "sd": 6e-05,
+          "detail": "column shuffled 10x on 2024-25+ holdout",
+          "constant": false
+        },
+        {
+          "name": "congestion14_home",
+          "value": -0.00014,
+          "sd": 7e-05,
           "detail": "column shuffled 10x on 2024-25+ holdout",
           "constant": false
         }

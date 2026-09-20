@@ -96,13 +96,50 @@ def load_market_values_raw() -> pd.DataFrame:
 
 
 def _load_value_z() -> pd.DataFrame:
+    """Squad economics per (league, season, club): the within-league-season
+    z-scores the differentials are built from, **and** the raw euro
+    figures they were computed from.
+
+    Both are kept because they answer different questions and neither
+    substitutes for the other. The z says where a club sits among the
+    clubs it actually plays — the only fair comparison, since a £900m
+    Premier League squad and a €900m Bundesliga squad buy very different
+    league positions. The raw euro figure says how big the club is in
+    absolute terms, which the z destroys by construction: the richest
+    club in every league scores about the same z whether it is Manchester
+    City or Feyenoord. With the league one-hots and `season_idx` also in
+    the feature set, a learner can use the raw number in context and use
+    the z where context is all that matters.
+    """
     v = _load_values_raw()
     v["value_z"] = _z_within(v, "squad_value_eur_m")
     if "wage_bill_eur_m" in v.columns and v["wage_bill_eur_m"].notna().any():
         v["wage_z"] = _z_within(v, "wage_bill_eur_m")
     else:
         v["wage_z"] = 0.0
-    return v[["league", "season", "club", "value_z", "wage_z"]]
+    cols = ["league", "season", "club", "value_z", "wage_z", "squad_value_eur_m"]
+    if "wage_bill_eur_m" in v.columns:
+        cols.append("wage_bill_eur_m")
+    return v[cols]
+
+
+def _attach_side(history: pd.DataFrame, table: pd.DataFrame,
+                 cols: list[str]) -> pd.DataFrame:
+    """Join per-side columns with no differential taken — for figures
+    where a missing side cannot honestly be filled with a zero (see
+    SIDE_RAW_FEATURES)."""
+    keep = [c for c in cols if c in table.columns]
+    if not keep:
+        return history
+    for side in ("home", "away"):
+        renames = {c: f"{side}_{c}" for c in keep}
+        history = history.merge(
+            table[["league", "season", "club"] + keep].rename(
+                columns={"club": f"{side}_team", **renames}),
+            on=["league", "season", f"{side}_team"],
+            how="left",
+        )
+    return history
 
 
 def _attach_diff(history: pd.DataFrame, table: pd.DataFrame,
@@ -114,10 +151,15 @@ def _attach_diff(history: pd.DataFrame, table: pd.DataFrame,
     instead of dropping them once the differential is written — a published
     match card wants to say which side is the expensive one, not only that
     one of them is."""
+    # Only the z columns this mapping names — the table also carries the
+    # raw euro figures now, and merging those here would suffix them into
+    # the frame as `*_x` / `*_y` on both sides of the join.
+    needed = ["league", "season", "club"] + list(mapping.values())
+    slim = table[[c for c in needed if c in table.columns]]
     for side in ("home", "away"):
         renames = {z: f"{side}_{z}" for z in mapping.values()}
         history = history.merge(
-            table.rename(columns={"club": f"{side}_team", **renames}),
+            slim.rename(columns={"club": f"{side}_team", **renames}),
             on=["league", "season", f"{side}_team"],
             how="left",
         )
@@ -133,6 +175,17 @@ def _attach_diff(history: pd.DataFrame, table: pd.DataFrame,
 # The per-side economics columns `keep_sides=True` leaves behind.
 SIDE_FEATURES = [f"{side}_{z}" for z in ("spend_z", "net_z", "value_z", "wage_z")
                  for side in ("home", "away")]
+
+# Raw euro figures carried per side only — never differenced.
+#
+# The z differentials fill a missing side with 0.0, which for a z means
+# "assume league-average", a defensible shrink. The same trick on a raw
+# euro figure would mean "assume this club is worth nothing", and the
+# resulting difference would be the other club's entire squad value
+# masquerading as a gap. So these stay per-side and stay NaN when absent,
+# and the learner's imputer handles them.
+SIDE_RAW_FEATURES = [f"{side}_{c}" for c in ("squad_value_eur_m",)
+                     for side in ("home", "away")]
 
 
 def attach_features(history: pd.DataFrame,
@@ -156,14 +209,21 @@ def attach_features(history: pd.DataFrame,
             history[["home_spend_z", "away_spend_z",
                      "home_net_z", "away_net_z"]] = float("nan")
     if values_available():
+        values = _load_value_z()
         history = _attach_diff(
-            history, _load_value_z(),
+            history, values,
             {"value_diff_z": "value_z", "wage_diff_z": "wage_z"},
             keep_sides=keep_sides,
         )
+        if keep_sides:
+            history = _attach_side(history, values, ["squad_value_eur_m"])
     else:
         history[["value_diff_z", "wage_diff_z"]] = 0.0
         if keep_sides:
             history[["home_value_z", "away_value_z",
                      "home_wage_z", "away_wage_z"]] = float("nan")
+    if keep_sides:
+        for col in SIDE_RAW_FEATURES:
+            if col not in history.columns:
+                history[col] = float("nan")
     return history

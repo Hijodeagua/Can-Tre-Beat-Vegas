@@ -85,11 +85,10 @@ class DailyState:
         earlier matches (the fixture itself carries no metrics), with the
         same staleness rule the training table used.
 
-        `keep_sides=True` is the difference from the training path: the
-        model is handed exactly `FEATURES` either way, so the prediction
-        is bit-identical, but the returned frame also carries each side's
-        own numbers for the site's match card. Training calls the same
-        functions without it and its frame is unchanged.
+        `keep_sides=True` matches the training frame — `FEATURES` names
+        the per-side columns as well as the differentials, so a slate
+        frame without them cannot be scored at all. The returned frame
+        also keeps the columns the site's match card reads.
         """
         f = attach_context(adv.attach_advanced(
             attach_features(feature_rows, keep_sides=True),
@@ -134,9 +133,13 @@ def build_state() -> DailyState:
     league_hist = history[~history["league"].str.startswith("uefa:")].copy()
     adv_matches = adv.match_metrics()
     calendar = adv._calendar()
+    # keep_sides=True on the training frame too: FEATURES now names the
+    # per-side columns as well as the differentials, and this in-run refit
+    # has to produce the same frame `model/train.py` fits offline.
     featured = attach_context(adv.attach_advanced(
-        shots.attach_shots(xg.attach_xg(attach_features(league_hist))),
-        matches=adv_matches, calendar=calendar))
+        shots.attach_shots(xg.attach_xg(
+            attach_features(league_hist, keep_sides=True))),
+        matches=adv_matches, calendar=calendar, keep_sides=True))
 
     model = make_model(LEARNER)
     model.fit(featured[FEATURES], featured["outcome"])

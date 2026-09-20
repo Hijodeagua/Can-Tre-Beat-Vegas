@@ -84,7 +84,8 @@ SIDE_METRICS: list[tuple[str, str, str, str, str, bool | None]] = [
     ("congestion14", "congestion14_home", "congestion14_away", "Matches in 14 days", "Fatigue", None),
     ("uefa7", "uefa7_home", "uefa7_away", "European ties in 7 days", "Fatigue", None),
 
-    ("value_z", "home_value_z", "away_value_z", "Squad value (z)", "Squad economics", None),
+    ("value_eur", "home_squad_value_eur_m", "away_squad_value_eur_m", "Squad value (€m)", "Squad economics", None),
+    ("value_z", "home_value_z", "away_value_z", "Squad value (z, within league)", "Squad economics", None),
     ("wage_z", "home_wage_z", "away_wage_z", "Wage bill (z)", "Squad economics", None),
     ("spend_z", "home_spend_z", "away_spend_z", "Transfer spend (z)", "Squad economics", None),
     ("net_z", "home_net_z", "away_net_z", "Net transfer spend (z)", "Squad economics", None),

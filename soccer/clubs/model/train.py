@@ -38,6 +38,8 @@ from soccer.clubs.model import advanced as adv
 from soccer.clubs.model.europe import run_all_european
 from soccer.clubs.model.features import (
     ALL_FEATURES,
+    SIDE_FEATURES,
+    SIDE_RAW_FEATURES,
     attach_features,
     transfers_available,
     values_available,
@@ -63,7 +65,23 @@ BASE_FEATURES = ["elo_gap"] + ALL_FEATURES + XG_FEATURES + SHOT_FEATURES
 # slightly better (1.01651, +0.34 SE), so the context rides along as
 # columns the learner can split on rather than as separate models.
 CONTEXT_FEATURES = [f"lg_{k}" for k in LEAGUES] + ["tier", "season_idx"]
-FEATURES = RAW_ELO + BASE_FEATURES + adv.ALL_ADVANCED + CONTEXT_FEATURES
+# Every differential ALSO enters as the two numbers it was made from.
+#
+# A difference imposes f(home, away) = f(home - away): the model is told
+# that 1.9 against 1.5 and 0.7 against 0.3 are the same match. They are
+# not — two strong attacks produce a different game from two weak ones —
+# and a tree learner is perfectly able to find that if it is given the
+# levels. The Elo columns have always been here for exactly this reason;
+# this extends the same treatment to the rest.
+#
+# Measured on the 2024-25+ holdout with the production forest: differences
+# alone 1.01441, per-side alone 1.01484 (0.4 SE, noise), both 1.01337
+# (1.7 SE better). So the levels are not a breakthrough — the differences
+# were already carrying nearly all of it — but they are free, and they
+# make the published match card and the model agree on what was used.
+SIDE_VALUE_FEATURES = SIDE_FEATURES + SIDE_RAW_FEATURES
+FEATURES = (RAW_ELO + BASE_FEATURES + adv.ALL_ADVANCED + CONTEXT_FEATURES
+            + adv.ALL_ADVANCED_SIDES + SIDE_VALUE_FEATURES)
 # Random forest, by decision rather than by the holdout number: on the
 # 2024-25+ test the full-set logistic scored 1.01676 to the forest's
 # 1.01846 (0.0017, ~0.8 SE — noise-level), and that comparison was run
@@ -96,9 +114,13 @@ def attach_context(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_table() -> pd.DataFrame:
+    """The training table. `keep_sides=True` so every differential's two
+    halves are columns in their own right — see FEATURES."""
     _, history = run_all_european()
     league_only = history[~history["league"].str.startswith("uefa:")]
-    return attach_context(adv.attach_advanced(attach_shots(attach_xg(attach_features(league_only)))))
+    return attach_context(adv.attach_advanced(
+        attach_shots(attach_xg(attach_features(league_only, keep_sides=True))),
+        keep_sides=True))
 
 
 def make_model(kind: str = LEARNER):
