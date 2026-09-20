@@ -52,7 +52,10 @@ publish the site JSON, and render the twice-weekly update email.
    reconstruction is re-verified every run and the block is skipped (not
    guessed at) if the season stops matching the format. It lands under
    `mls_forecast` in the site JSON rather than in `futures`, since it
-   answers different questions and carries different columns.
+   answers different questions and carries different columns — and it
+   carries its own chart data (`chart`: Elo by matches played, history
+   plus projection) and `bracket` block, because MLS's chart cannot use
+   the shared dated `elo_history`/`elo_projection` pair.
 7. Site JSON + history snapshot + the portable ratings artifact.
 8. The update email (`reports/soccer/{D}/update.html`) is rendered every
    run; the manifest marks it sendable only on Mondays and Thursdays

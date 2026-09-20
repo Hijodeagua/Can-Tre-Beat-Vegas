@@ -45,18 +45,23 @@ import { useId, useMemo, useState } from 'react';
  * sits on the same page.
  */
 
+/** The x value of a point. An ISO date for the European leagues, whose
+ * fixtures are published with dates; a match count for MLS, whose
+ * remaining fixtures have none (see `xScale`). */
+export type EloX = string | number;
+
 export interface EloSeries {
   team: string;
-  points: [string, number][]; // [ISO date, elo]
+  points: [EloX, number][]; // [ISO date or match count, elo]
 }
 
-/** One team's projected Elo: [ISO date, median run, 10th pct, 90th pct].
+/** One team's projected Elo: [x, median run, 10th pct, 90th pct].
  * The first point is today's actual rating, so the line joins the
  * history. The middle value is a real simulated season, not an average —
  * see the sim's `_projection_block`. */
 export interface EloProjectionSeries {
   team: string;
-  points: [string, number, number, number][];
+  points: [EloX, number, number, number][];
   /** A few whole simulated seasons, each one rating per `points` entry.
    * Path `i` of every team comes from the same simulated season. */
   samples?: number[][];
@@ -87,26 +92,37 @@ interface Hover {
   x: number;
   y: number;
   team: string;
-  date: string;
+  date: EloX;
   elo: number;
   /** Set on a projected point: the 10th–90th-percentile band there. */
   band?: [number, number];
 }
 
-interface Pt { d: string; e: number; px: number; py: number; band?: [number, number] }
+interface Pt { d: EloX; e: number; px: number; py: number; band?: [number, number] }
 
-function ms(date: string): number {
-  return new Date(`${date}T00:00:00Z`).getTime();
+/** Default x scale: ISO dates to epoch milliseconds. A numeric x (MLS's
+ * match count) is already its own scale and passes straight through. */
+function ms(x: EloX): number {
+  return typeof x === 'number' ? x : new Date(`${x}T00:00:00Z`).getTime();
 }
 
 export default function EloTrendChart({
   series,
   projection,
   highlight = 5,
+  xLabel = String,
+  nowLabel = 'today',
 }: {
   series: EloSeries[];
   projection?: EloProjectionSeries[];
   highlight?: number;
+  /** How an x value reads on the axis and in the tooltip. Dates print
+   * themselves; MLS passes a formatter that turns 28 into "28 GP". */
+  xLabel?: (x: EloX) => string;
+  /** What the divider between record and simulation is called. "today"
+   * for a date axis; MLS says "played" because its divider is a match
+   * count, not a moment. */
+  nowLabel?: string;
 }) {
   const [hover, setHover] = useState<Hover | null>(null);
   const [mode, setMode] = useState<Mode>('actual');
@@ -174,7 +190,7 @@ export default function EloTrendChart({
     const e0 = Math.min(...elos) - pad;
     const e1 = Math.max(...elos) + pad;
 
-    const x = (d: string) =>
+    const x = (d: EloX) =>
       t1 === t0
         ? M.left + (W - M.left - M.right) / 2
         : M.left + ((ms(d) - t0) / (t1 - t0)) * (W - M.left - M.right);
@@ -231,9 +247,10 @@ export default function EloTrendChart({
     const grid: number[] = [];
     for (let v = gridStart; v < e1; v += step) grid.push(v);
 
-    const actualDates = series.flatMap((s) => s.points.map(([d]) => d)).sort();
+    const byX = (a: EloX, b: EloX) => ms(a) - ms(b);
+    const actualDates = series.flatMap((s) => s.points.map(([d]) => d)).sort(byX);
     const today = actualDates[actualDates.length - 1];
-    const projDates = drawn.flatMap((s) => s.projPts.map((p) => p.d)).sort();
+    const projDates = drawn.flatMap((s) => s.projPts.map((p) => p.d)).sort(byX);
     return {
       drawn,
       labels,
@@ -345,7 +362,7 @@ export default function EloTrendChart({
 
         {(!showProjection || model.x(model.today) - M.left > 110) && (
           <text x={M.left} y={H - 8} fontSize={10} fill="var(--th-faint)">
-            {model.firstDate}
+            {xLabel(model.firstDate)}
           </text>
         )}
         {showProjection && (
@@ -366,12 +383,12 @@ export default function EloTrendChart({
               fontSize={10}
               fill="var(--th-faint)"
             >
-              {model.today} · today
+              {xLabel(model.today)} · {nowLabel}
             </text>
           </>
         )}
         <text x={W - M.right} y={H - 8} textAnchor="end" fontSize={10} fill="var(--th-faint)">
-          {model.lastDate}
+          {xLabel(model.lastDate)}
         </text>
 
         {/* Muted pack first, then the highlighted bands, then their lines. */}
@@ -523,7 +540,7 @@ export default function EloTrendChart({
             whiteSpace: 'nowrap',
           }}
         >
-          <b>{hover.team}</b> · {hover.date} ·{' '}
+          <b>{hover.team}</b> · {xLabel(hover.date)} ·{' '}
           {hover.band ? 'median run ' : 'Elo '}
           {Math.round(hover.elo)}
           {hover.band && ` (${Math.round(hover.band[0])}–${Math.round(hover.band[1])})`}

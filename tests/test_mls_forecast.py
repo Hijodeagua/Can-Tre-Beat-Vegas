@@ -305,6 +305,115 @@ class TestForecast:
             F.forecast(results, "2024", n_sims=10)
 
 
+class TestChart:
+    """The chart payload: Elo by matches played, history then projection."""
+
+    def test_history_covers_every_club_and_counts_matches(self, out, results,
+                                                          season):
+        hist = out["chart"]["history"]
+        table = mls.standings(results, season)
+        assert set(hist) == set(mls.CONFERENCE)
+        for club, points in hist.items():
+            # One point per match played, plus the live rating on the end.
+            assert len(points) == table[club].played + 1
+            assert [x for x, _ in points] == list(range(len(points)))
+
+    def test_projection_continues_the_history_line(self, out):
+        """The first projected point must be exactly where the history
+        ends — same match count, same rating — or the site draws a
+        floating second series instead of a continuation."""
+        hist = out["chart"]["history"]
+        proj = out["chart"]["projection"]
+        for club, p in proj.items():
+            first = p["points"][0]
+            assert [first[0], first[1]] == hist[club][-1]
+            # The band is degenerate at the anchor: it is today's rating.
+            assert first[1] == first[2] == first[3]
+
+    def test_projection_ends_on_a_full_season(self, out):
+        for club, p in out["chart"]["projection"].items():
+            xs = [x for x, *_ in p["points"]]
+            assert xs[-1] == mls.MATCHES_PER_CLUB, club
+            assert xs == sorted(xs)
+            assert len(set(xs)) == len(xs)  # strictly increasing
+
+    def test_band_is_oriented_and_tracks_the_median_run(self, out):
+        """The median run is picked by where a season *ends*, so at an
+        intermediate checkpoint it can sit just outside its own 10-90
+        band. On the committed 20k-sim artifact the worst excursion is
+        7 Elo; the allowance here is wider only because the fixture runs
+        far fewer sims."""
+        for club, p in out["chart"]["projection"].items():
+            for x, median, lo, hi in p["points"]:
+                assert lo <= hi
+                assert lo - 25 <= median <= hi + 25, (club, x)
+
+    def test_the_band_widens_as_the_season_runs_out(self, out):
+        """Uncertainty about a club's rating grows with every match left
+        to play. If this ever inverted, the percentiles would be being
+        computed across the wrong axis."""
+        widths = [
+            [hi - lo for _, _, lo, hi in p["points"]]
+            for p in out["chart"]["projection"].values()
+        ]
+        n = min(len(w) for w in widths)
+        mean = [sum(w[i] for w in widths) / len(widths) for i in range(n)]
+        assert mean[1] < mean[n - 1]
+        assert mean[0] == 0.0  # the anchor is today's rating, not a range
+
+    def test_samples_are_whole_seasons(self, out):
+        for club, p in out["chart"]["projection"].items():
+            for path in p["samples"]:
+                assert len(path) == len(p["points"])
+
+    def test_x_axis_is_matches_not_dates(self, out):
+        assert out["chart"]["x_axis"] == "matches_played"
+        assert out["chart"]["season_matches"] == mls.MATCHES_PER_CLUB
+
+
+class TestBracketPayload:
+    def test_every_conference_has_nine_seed_slots(self, out):
+        for conf in ("East", "West"):
+            slots = out["bracket"]["conferences"][conf]["seeds"]
+            assert [s["seed"] for s in slots] == list(
+                range(1, mls.PLAYOFF_SPOTS + 1))
+
+    def test_candidates_are_ranked_and_in_conference(self, out):
+        for conf, members in (("East", EAST), ("West", WEST)):
+            for slot in out["bracket"]["conferences"][conf]["seeds"]:
+                ps = [c["p"] for c in slot["candidates"]]
+                assert ps == sorted(ps, reverse=True)
+                assert all(c["team"] in members for c in slot["candidates"])
+
+    def test_conference_favorite_matches_the_club_rows(self, out):
+        rows = {c["team"]: c for c in out["clubs"]}
+        for conf in ("East", "West"):
+            side = out["bracket"]["conferences"][conf]
+            best = max((c for c in out["clubs"] if c["conference"] == conf),
+                       key=lambda c: c["p_conf_title"])
+            assert side["favorite"] == best["team"]
+            assert side["p_favorite"] == rows[side["favorite"]]["p_conf_title"]
+
+    def test_finals_pair_one_club_from_each_conference(self, out):
+        finals = out["bracket"]["finals"]
+        assert finals, "no MLS Cup matchups reported"
+        ps = [f["p"] for f in finals]
+        assert ps == sorted(ps, reverse=True)
+        for f in finals:
+            assert f["east"] in EAST
+            assert f["west"] in WEST
+        assert sum(ps) <= 1.0 + 1e-9
+
+    def test_seeding_by_expected_finish_is_a_permutation(self, out):
+        """The site fills bracket slots by expected conference finish, so
+        that ordering has to give each club exactly one slot — which per-slot
+        modes do not (one club can lead two slots at once)."""
+        for conf in ("East", "West"):
+            order = sorted((c for c in out["clubs"] if c["conference"] == conf),
+                           key=lambda c: c["exp_conf_seed"])
+            assert len({c["team"] for c in order}) == len(order) == 15
+
+
 class TestBacktest:
     def test_as_of_hides_the_future(self, results):
         from soccer.clubs.model import backtest_mls as B

@@ -90,6 +90,18 @@ SHOOTOUT_HOME_EDGE = 0.5
 # (each club has at most 3 slots against 15 candidates), so this almost
 # never has to give up; the cap only guarantees the sim terminates.
 INTER_DRAW_ATTEMPTS = 50
+# Projection checkpoints across the remaining schedule, and how many whole
+# simulated seasons to export alongside the median run and the band. Same
+# three readings as the European projection (`daily/simulate.py`), for the
+# same reason: no mean appears, because a fair game's expected Elo change
+# is zero and averaging the sims hands back today's rating for everyone.
+PROJECTION_POINTS = 8
+PROJECTION_SAMPLES = 3
+# How many candidate clubs to name per bracket seed slot. Three covers the
+# realistic occupants of a slot without turning a bracket into a table.
+SEED_CANDIDATES = 3
+# How many distinct MLS Cup matchups to report.
+FINAL_MATCHUPS = 5
 
 
 # --------------------------------------------------------------------------
@@ -158,6 +170,155 @@ def _sample_inter(rng: np.random.Generator,
     return fixtures
 
 
+def _history_by_matches(history: pd.DataFrame, season: str,
+                        engine) -> dict[str, list]:
+    """Each club's Elo through the season so far, indexed by matches
+    played rather than by date.
+
+    Matches played is the right x axis for MLS, and not merely a
+    workaround for the missing fixture calendar: clubs sit up to three
+    matches apart at any moment, and a date axis hides exactly that — a
+    club with games in hand looks level with one that has spent them. It
+    is also the only axis the projection can honestly use, since the
+    remaining fixtures have no dates (see `_projection_block`).
+
+    Point i is the club's rating going into its (i+1)-th match of the
+    season; the series closes on its current live rating at its current
+    match count.
+    """
+    sub = history[(history["league"] == mls.LEAGUE_KEY)
+                  & (history["season"] == season)].sort_values("date",
+                                                               kind="stable")
+    ratings: dict[str, list[float]] = {}
+    for r in sub.itertuples():
+        ratings.setdefault(r.home_team, []).append(float(r.elo_home_pre))
+        ratings.setdefault(r.away_team, []).append(float(r.elo_away_pre))
+    return {
+        team: [[i, round(e, 1)] for i, e in enumerate(pre)]
+        + [[len(pre), round(float(engine.rating_for(team, mls.LEAGUE_KEY)), 1)]]
+        for team, pre in ratings.items()
+    }
+
+
+def _checkpoint_matches(played: int, remaining: int,
+                        n: int = PROJECTION_POINTS) -> list[int]:
+    """The match counts a club is projected at: its current total, then
+    `n` steps spread evenly over its remaining fixtures, ending on the
+    full season.
+
+    Every club ends on MATCHES_PER_CLUB but they start from different
+    totals, so each club gets its own x positions. That is the honest
+    picture — a club with games in hand really does have further to
+    travel — and the chart draws each series on its own points anyway.
+    """
+    if remaining <= 0:
+        return [played]
+    steps = min(n, remaining)
+    return [played] + [played + round(remaining * (i + 1) / steps)
+                       for i in range(steps)]
+
+
+def _projection_block(snaps: np.ndarray, clubs: list[str], index: dict,
+                      checkpoints: dict[str, list[int]],
+                      start: np.ndarray) -> dict:
+    """The projected-Elo payload: per club, the median simulated season
+    with a 10th/90th-percentile band, plus a few whole simulated seasons.
+
+    Three readings of the same simulations, because no one of them tells
+    the whole truth:
+
+    - **median** — for each club, the single simulated season whose final
+      rating is that club's median. A real season, so it moves the way a
+      season moves; chosen per club, so two median lines are not the same
+      simulated season.
+    - **band** — the 10th and 90th percentile at each checkpoint. By the
+      end of a run-in this is wider than the gaps between clubs, which is
+      the point.
+    - **samples** — the first few sims, whole. Path p of every club comes
+      from the same simulated season, so the crossings are a coherent
+      league rather than unrelated draws.
+
+    The mean is deliberately absent. An Elo update is K x (actual -
+    expected) and the sim draws results at its own expected rate, so
+    every club's expected rating change is about zero: averaging 20,000
+    seasons returns today's rating for everybody, however far single
+    seasons swing. A chart led by that average says the table never
+    changes, which is the one thing these odds rule out.
+
+    Each series opens on the club's live rating so the projection joins
+    the history line instead of floating beside it.
+    """
+    n_sims = snaps.shape[1]
+    mid = n_sims // 2
+    median_sim = np.argsort(snaps[-1], axis=0)[mid]
+    lo, hi = np.percentile(snaps, [10, 90], axis=1)
+    n_paths = min(PROJECTION_SAMPLES, n_sims)
+    r1 = lambda x: round(float(x), 1)
+
+    out = {}
+    for club in clubs:
+        j = index[club]
+        xs = checkpoints[club]
+        if len(xs) < 2:
+            continue  # nothing left to project for this club
+        steps = len(xs) - 1
+        out[club] = {
+            "points": [[xs[0], r1(start[j]), r1(start[j]), r1(start[j])]] + [
+                [xs[s + 1], r1(snaps[s, median_sim[j], j]),
+                 r1(lo[s, j]), r1(hi[s, j])]
+                for s in range(steps)
+            ],
+            "samples": [
+                [r1(start[j])] + [r1(snaps[s, p, j]) for s in range(steps)]
+                for p in range(n_paths)
+            ],
+        }
+    return out
+
+
+def _bracket_block(seed_hist: np.ndarray, clubs: list[str], index: dict,
+                   counters: dict, finals: dict, n_sims: int) -> dict:
+    """Who is likely to occupy each playoff seed, and which MLS Cup
+    matchups the sim keeps producing.
+
+    A bracket is a picture of one season, but the forecast is 20,000 of
+    them, so this reports the *distribution* over each slot rather than
+    pretending to know the bracket: for each conference seed 1-9, the
+    clubs most likely to hold it and how often. Drawing the modal
+    occupant of every slot gives a readable bracket; the probabilities
+    beside it are what stop it being read as a prediction.
+    """
+    conferences = {}
+    for conf, members in (("East", EAST), ("West", WEST)):
+        slots = []
+        for pos in range(mls.PLAYOFF_SPOTS):
+            ranked = sorted(
+                ((float(seed_hist[index[c], pos]) / n_sims, c) for c in members),
+                reverse=True,
+            )[:SEED_CANDIDATES]
+            slots.append({
+                "seed": pos + 1,
+                "candidates": [{"team": c, "p": round(p, 4)}
+                               for p, c in ranked if p > 0],
+            })
+        champ = max(members, key=lambda c: counters["conf_title"][index[c]])
+        conferences[conf] = {
+            "seeds": slots,
+            "favorite": champ,
+            "p_favorite": round(
+                float(counters["conf_title"][index[champ]]) / n_sims, 4),
+        }
+
+    top = sorted(finals.items(), key=lambda kv: -kv[1])[:FINAL_MATCHUPS]
+    return {
+        "conferences": conferences,
+        "finals": [
+            {"east": e, "west": w, "p": round(count / n_sims, 4)}
+            for (e, w), count in top
+        ],
+    }
+
+
 # --------------------------------------------------------------------------
 # The simulation
 # --------------------------------------------------------------------------
@@ -181,13 +342,15 @@ def _seed_order(idx: list[int], pts, wins, gf, ga,
 
 def forecast(results: pd.DataFrame, season: str, *, engine=None,
              score_params: scoring.ScoreParams | None = None,
+             history: pd.DataFrame | None = None,
              n_sims: int = DEFAULT_SIMS, seed: int | None = 0) -> dict:
     """Rest-of-season + playoff Monte Carlo for one MLS season.
 
-    `engine` and `score_params` default to a standalone replay of the MLS
-    Elo pool and a score calibration fit on that pool's own history — the
-    daily pipeline passes its already-built `DailyState` pieces instead so
-    the published odds come from the same ratings as the published slate.
+    `engine`, `score_params` and `history` default to a standalone replay
+    of the MLS Elo pool and a score calibration fit on that pool's own
+    history — the daily pipeline passes its already-built `DailyState`
+    pieces instead so the published odds, the published chart and the
+    published slate all come from one set of ratings.
     """
     problems = mls.verify_structure(results, season)
     if problems:
@@ -195,10 +358,11 @@ def forecast(results: pd.DataFrame, season: str, *, engine=None,
             "MLS season structure does not match the format in "
             "soccer/clubs/data/mls.py:\n  - " + "\n  - ".join(problems))
 
-    if engine is None or score_params is None:
-        built_engine, history = run_pool(mls.LEAGUE_KEY, df=results)
+    if engine is None or score_params is None or history is None:
+        built_engine, built_history = run_pool(mls.LEAGUE_KEY, df=results)
         engine = engine or built_engine
-        score_params = score_params or scoring.fit(history)
+        history = built_history if history is None else history
+        score_params = score_params or scoring.fit(built_history)
 
     table = mls.standings(results, season)
     rem = mls.remaining_fixtures(results, season)
@@ -230,6 +394,28 @@ def forecast(results: pd.DataFrame, season: str, *, engine=None,
     pts_sum = np.zeros(n, dtype=np.float64)
     seed_sum = np.zeros(n, dtype=np.float64)
     seed_hist = np.zeros((n, mls.PLAYOFF_SPOTS + 1), dtype=np.int64)
+    finals: dict[tuple[str, str], int] = {}
+
+    # Projection checkpoints. Each club is projected at its own match
+    # counts (they are not level on games played), but the snapshots are
+    # taken at shared *league* fixture indices, so a checkpoint is "this
+    # share of the run-in is done" for everyone at once. A club's match
+    # count at that moment varies between sims around the expected value
+    # used for the x position; the gap is under a match and does not move
+    # a rating line visibly.
+    n_fixtures = len(rem)
+    checkpoints = {
+        c: _checkpoint_matches(table[c].played,
+                               mls.MATCHES_PER_CLUB - table[c].played)
+        for c in clubs
+    }
+    steps = max((len(v) - 1 for v in checkpoints.values()), default=0)
+    snap_at = {}
+    for step in range(steps):
+        idx = min(n_fixtures - 1,
+                  int(round(n_fixtures * (step + 1) / steps)) - 1)
+        snap_at[idx] = step
+    snaps = np.zeros((steps, n_sims, n), dtype=np.float32)
 
     def play(h: int, a: int, ratings, u: float) -> tuple[int, int, float]:
         """One match: sampled scoreline plus the Elo delta it implies."""
@@ -244,7 +430,7 @@ def forecast(results: pd.DataFrame, season: str, *, engine=None,
         ratings[a] -= delta
         return hs, as_, delta
 
-    for _ in range(n_sims):
+    for sim in range(n_sims):
         fixtures = intra + [(index[h], index[a])
                             for h, a in _sample_inter(rng, rem)]
         # Match order barely moves final standings, but it does change
@@ -259,8 +445,14 @@ def forecast(results: pd.DataFrame, season: str, *, engine=None,
         ga = base_ga.copy()
 
         draws = rng.random(len(fixtures))
-        for (h, a), u in zip(fixtures, draws):
+        for i, ((h, a), u) in enumerate(zip(fixtures, draws)):
             hs, as_, _ = play(h, a, ratings, float(u))
+            step = snap_at.get(i)
+            if step is not None:
+                # One row assignment per checkpoint rather than one per
+                # club: 20k sims x 8 checkpoints x 30 clubs of scalar
+                # numpy writes would cost more than the rest of the sim.
+                snaps[step, sim] = ratings
             gf[h] += hs
             ga[h] += as_
             gf[a] += as_
@@ -308,9 +500,16 @@ def forecast(results: pd.DataFrame, season: str, *, engine=None,
         else:
             winner = home if rng.random() < SHOOTOUT_HOME_EDGE else away
         counters["cup"][winner] += 1
+        pair = (clubs[champions[0]], clubs[champions[1]])
+        finals[pair] = finals.get(pair, 0) + 1
 
     return _payload(clubs, table, rem, start, counters, pts_sum, seed_sum,
-                    seed_hist, n_sims, season, engine)
+                    seed_hist, n_sims, season, engine,
+                    elo_history=_history_by_matches(history, season, engine),
+                    projection=_projection_block(snaps, clubs, index,
+                                                 checkpoints, start),
+                    bracket=_bracket_block(seed_hist, clubs, index, counters,
+                                           finals, n_sims))
 
 
 def _knockout(high: int, low: int, ratings, rng, play) -> int:
@@ -381,7 +580,8 @@ def _run_bracket(qualified: list[int], ratings, rng, play, counters) -> int:
 
 
 def _payload(clubs, table, rem, start, counters, pts_sum, seed_sum,
-             seed_hist, n_sims, season, engine) -> dict:
+             seed_hist, n_sims, season, engine, *, elo_history, projection,
+             bracket) -> dict:
     rows = []
     for i, c in enumerate(clubs):
         s: Standing = table[c]
@@ -439,6 +639,18 @@ def _payload(clubs, table, rem, start, counters, pts_sum, seed_sum,
             "round_one": "best-of-3, higher seed hosts games 1 and 3",
             "later_rounds": "single match, higher seed hosts",
             "mls_cup": "single match, hosted by the finalist with the better regular-season record",
+        },
+        "bracket": bracket,
+        # Chart data for the site, on a matches-played x axis rather than
+        # a date one: MLS publishes no machine-readable fixture list, so
+        # the remaining matches have no dates to plot against, and clubs
+        # are up to three games apart anyway — which a date axis hides
+        # and this one shows.
+        "chart": {
+            "x_axis": "matches_played",
+            "season_matches": mls.MATCHES_PER_CLUB,
+            "history": elo_history,
+            "projection": projection,
         },
         "clubs": rows,
     }
