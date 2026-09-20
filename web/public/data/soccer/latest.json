@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T07:01:03+00:00",
+  "generated_at": "2026-09-20T14:07:00+00:00",
   "run_date": "2026-09-20",
   "ratings": {
     "epl": {
@@ -1868,9 +1868,9 @@
       "away_team": "SSC Napoli",
       "elo_home_pre": 1481.5,
       "elo_away_pre": 1614.6,
-      "p_H": 0.2627,
-      "p_D": 0.2922,
-      "p_A": 0.445,
+      "p_H": 0.2638,
+      "p_D": 0.2905,
+      "p_A": 0.4457,
       "pick": "A",
       "lambda_home": 0.97,
       "lambda_away": 1.51,
@@ -3082,7 +3082,7 @@
   },
   "mls_forecast": {
     "season": "2026",
-    "generatedAt": "2026-09-20T07:01:03+00:00",
+    "generatedAt": "2026-09-20T14:07:00+00:00",
     "sims": 20000,
     "remaining_matches": 153,
     "schedule": {
@@ -18112,10 +18112,10 @@
   "feeds": {
     "xg": {
       "source": "understat xG (xg_matches.csv)",
-      "newest": "2026-09-19",
-      "age_days": 1,
+      "newest": "2026-09-20",
+      "age_days": 0,
       "tolerance_days": 130,
-      "rows": 21820,
+      "rows": 21821,
       "fresh": true
     },
     "shots": {
@@ -18128,10 +18128,10 @@
     },
     "understat_advanced": {
       "source": "understat advanced (understat_matches.csv)",
-      "newest": "2026-09-19",
-      "age_days": 1,
+      "newest": "2026-09-20",
+      "age_days": 0,
       "tolerance_days": 130,
-      "rows": 21819,
+      "rows": 21820,
       "fresh": true
     }
   }
