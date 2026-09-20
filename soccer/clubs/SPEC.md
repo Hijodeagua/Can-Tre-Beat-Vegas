@@ -244,6 +244,44 @@ and rewrites it from the openfootball leagues alone, `fetch_mls.py` always
 runs *after* it in `daily/run.py`'s refresh step, merging in rather than
 overwriting.
 
+### Publishing both halves of a differential
+
+Every feature the outcome model sees is a home-minus-away difference —
+Elo gap, squad economics, xG and shots form, the whole advanced layer.
+That is the right shape for training and the wrong shape for reading: a
+published "+0.4 xG created" is a different match when it is 1.9 against
+1.5 than when it is 0.7 against 0.3, and the differential cannot tell
+them apart.
+
+So each of the three feature layers grew a `keep_sides` switch
+(`model/features.py`, `model/advanced.py`, and the per-club `net()` the
+rolling-form layer already had). It is **off by default**: the training
+path calls them exactly as it always did and its frame is unchanged,
+while `daily/state.py`'s `outcome_probs` turns it on for the slate. The
+learner is handed exactly `FEATURES` in both cases, so the prediction is
+bit-identical; the slate frame simply carries more columns alongside it.
+
+`daily/predict.py` owns the catalogue (`SIDE_METRICS`): for each of ~33
+per-side numbers, its two source columns, a label, a group and whether
+up is good — which the site reads from the published
+`slate_metrics` block rather than keeping a second copy that can drift.
+Two rules keep it honest: a metric with no reading for a side is
+**absent, not zero** (a club short of the rolling window's warm-up has
+not been measured, and 0 would claim it is average), and `wage_z` is
+withheld entirely while no source fills it, since it is 0.0 on all 2,207
+rows and would otherwise read as "average wage bill".
+
+The persisted `slate_{D}.csv` deliberately keeps its original columns:
+`grade.py` reads it back and every past prediction lives in it, so the
+per-side numbers ride the in-memory frame to the site JSON instead.
+
+`daily/trends.py` is the other half — the weekly email's answer to why a
+slate looks the way it does. Every club playing this week is measured
+against **its own** mean in completed prior seasons rather than a league
+average (a league baseline only ever reports that good clubs are good),
+and the gaps are scaled by how much clubs differ on that metric so an xG
+swing and a PPDA swing can be ranked against each other.
+
 ### MLS forecast
 
 MLS is the one league whose remaining fixtures have to be *derived* rather

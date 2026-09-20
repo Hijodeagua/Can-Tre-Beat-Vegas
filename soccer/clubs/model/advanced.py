@@ -250,13 +250,30 @@ def rest_and_congestion(rows: pd.DataFrame, calendar: pd.DataFrame | None = None
     return pd.DataFrame(out, columns=["rest", "congestion14", "uefa7"], index=rows.index)
 
 
+# Prefixes the per-side form columns carry when `keep_sides` is on.
+SIDE_PREFIX = {"home": "h", "away": "a"}
+
+
+def side_columns(formcols: list[str]) -> list[str]:
+    """The `home_*` / `away_*` names `keep_sides=True` adds, in order."""
+    return [f"{side}_{c}" for c in formcols for side in ("home", "away")]
+
+
 def attach_advanced(history: pd.DataFrame, matches: pd.DataFrame | None = None,
-                    calendar: pd.DataFrame | None = None) -> pd.DataFrame:
+                    calendar: pd.DataFrame | None = None,
+                    keep_sides: bool = False) -> pd.DataFrame:
     """Add every advanced pregame column to a table of matches to predict
     (league, date, home_team, away_team). Rows not in the match-metrics
     table (unplayed fixtures, uncovered leagues) still get features from
     the sides' earlier matches; a side with too little or too stale
     coverage gets NaN.
+
+    The model trains on differentials, so by default the per-side values
+    are subtracted and thrown away. `keep_sides=True` also keeps them as
+    `home_<col>` / `away_<col>` — what a published match card needs, since
+    "xG for form +0.4" says nothing about whether that is two good attacks
+    or two bad ones. It is off by default so the training frame keeps
+    exactly the columns it always had.
     """
     history = history.copy()
     matches = match_metrics() if matches is None else matches
@@ -330,6 +347,11 @@ def attach_advanced(history: pd.DataFrame, matches: pd.DataFrame | None = None,
     out["congestion14_away"] = ar["congestion14"].to_numpy()
     out["uefa7_home"] = hr["uefa7"].to_numpy()
     out["uefa7_away"] = ar["uefa7"].to_numpy()
+
+    if keep_sides:
+        for c in formcols:
+            out[f"home_{c}"] = h[f"h_{c}"].to_numpy()
+            out[f"away_{c}"] = a[f"a_{c}"].to_numpy()
     return out
 
 

@@ -41,6 +41,22 @@ def values_available() -> bool:
     return VALUES_DIR.exists() and any(VALUES_DIR.glob("values_*.csv"))
 
 
+def wages_available() -> bool:
+    """Whether any club anywhere has a real wage bill.
+
+    The market-value uploads carry a wage column that no source has
+    filled yet, so `wage_z` is 0.0 on every row. For the model that is
+    harmless — a constant column a learner ignores, and the differential
+    it trains on is genuinely 0 — but published next to a club it would
+    read as "average wage bill" when it means "nobody knows". The match
+    card asks this and omits the metric while it is False; it lights up on
+    its own when a wage upload lands.
+    """
+    if not values_available():
+        return False
+    return bool((_load_value_z()["wage_z"] != 0).any())
+
+
 def _z_within(df: pd.DataFrame, col: str) -> pd.Series:
     g = df.groupby(["league", "season"])[col]
     std = g.transform("std").replace(0.0, np.nan)
@@ -90,9 +106,14 @@ def _load_value_z() -> pd.DataFrame:
 
 
 def _attach_diff(history: pd.DataFrame, table: pd.DataFrame,
-                 mapping: dict[str, str]) -> pd.DataFrame:
+                 mapping: dict[str, str], keep_sides: bool = False) -> pd.DataFrame:
     """Join a (league, season, club) -> z table on both sides of each match
-    and write home-minus-away differentials. `mapping` is {out_col: z_col}."""
+    and write home-minus-away differentials. `mapping` is {out_col: z_col}.
+
+    `keep_sides` leaves the joined `home_<z>` / `away_<z>` columns in place
+    instead of dropping them once the differential is written — a published
+    match card wants to say which side is the expensive one, not only that
+    one of them is."""
     for side in ("home", "away"):
         renames = {z: f"{side}_{z}" for z in mapping.values()}
         history = history.merge(
@@ -104,26 +125,45 @@ def _attach_diff(history: pd.DataFrame, table: pd.DataFrame,
         history[out_col] = (
             history[f"home_{z}"].fillna(0.0) - history[f"away_{z}"].fillna(0.0)
         )
-        history = history.drop(columns=[f"home_{z}", f"away_{z}"])
+        if not keep_sides:
+            history = history.drop(columns=[f"home_{z}", f"away_{z}"])
     return history
 
 
-def attach_features(history: pd.DataFrame) -> pd.DataFrame:
+# The per-side economics columns `keep_sides=True` leaves behind.
+SIDE_FEATURES = [f"{side}_{z}" for z in ("spend_z", "net_z", "value_z", "wage_z")
+                 for side in ("home", "away")]
+
+
+def attach_features(history: pd.DataFrame,
+                    keep_sides: bool = False) -> pd.DataFrame:
     """Add all squad-economics differentials to an Elo history table.
-    UEFA rows (league "uefa:…") get zeros — the z-tables are league-keyed."""
+    UEFA rows (league "uefa:…") get zeros — the z-tables are league-keyed.
+
+    `keep_sides` additionally leaves each side's own z-scores on the frame
+    (see `_attach_diff`); it is off by default so the training frame keeps
+    exactly the columns it always had."""
     history = history.copy()
     if transfers_available():
         history = _attach_diff(
             history, _load_transfer_z(),
             {"spend_diff_z": "spend_z", "net_diff_z": "net_z"},
+            keep_sides=keep_sides,
         )
     else:
         history[["spend_diff_z", "net_diff_z"]] = 0.0
+        if keep_sides:
+            history[["home_spend_z", "away_spend_z",
+                     "home_net_z", "away_net_z"]] = float("nan")
     if values_available():
         history = _attach_diff(
             history, _load_value_z(),
             {"value_diff_z": "value_z", "wage_diff_z": "wage_z"},
+            keep_sides=keep_sides,
         )
     else:
         history[["value_diff_z", "wage_diff_z"]] = 0.0
+        if keep_sides:
+            history[["home_value_z", "away_value_z",
+                     "home_wage_z", "away_wage_z"]] = float("nan")
     return history

@@ -42,6 +42,25 @@ export interface SoccerSlateRow {
   score_away: number;
   /** Unconditional probability of exactly that scoreline. */
   score_prob?: number;
+  /** Every per-side number the prediction was built from, keyed by the
+   * `key` of a SoccerSlateMetric. A metric with no reading for a side —
+   * a club short of the rolling window's warm-up, or whose feed has gone
+   * stale — is absent rather than zero. The model itself only ever sees
+   * the home-minus-away differences; these are the two halves each
+   * difference was made from. */
+  sides?: { home: Record<string, number>; away: Record<string, number> };
+}
+
+/** What a per-side key means, published by the pipeline so the site does
+ * not keep a second copy of the definitions that can drift. */
+export interface SoccerSlateMetric {
+  key: string;
+  label: string;
+  group: string;
+  /** true when up is good, false when down is good (goals conceded,
+   * PPDA), null where the direction carries no judgement (rest days,
+   * squad value). */
+  higherIsBetter: boolean | null;
 }
 
 export interface SoccerFuturesClub {
@@ -247,6 +266,8 @@ export interface SoccerLatest {
   ratings: Record<string, SoccerLeagueRatings>;
   league_rankings: Record<string, SoccerLeagueRanking>;
   slate: SoccerSlateRow[];
+  /** Labels and grouping for the per-side stats on each slate row. */
+  slate_metrics?: SoccerSlateMetric[];
   graded_today: unknown[];
   ledger: { graded: number };
   futures: Record<string, SoccerFuturesLeague>;

@@ -16,6 +16,7 @@
 import { useEffect, useState } from 'react';
 import EloTrendChart from '@/app/components/EloTrendChart';
 import MlsBracket from '@/app/components/MlsBracket';
+import SlateMatchCard from '@/app/components/SlateMatchCard';
 import ModelFeatures from '@/app/components/ModelFeatures';
 import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
@@ -24,7 +25,8 @@ import { SOCCER_FEATURES } from '@/app/lib/modelFeatures';
 import {
   getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER, GLUED_LEAGUES,
   comparableElo, comparableEloBands,
-  type SoccerMlsChart, type SoccerMlsForecast, type SoccerSlateRow,
+  type SoccerMlsChart, type SoccerMlsForecast, type SoccerSlateMetric,
+  type SoccerSlateRow,
 } from '@/app/lib/soccer';
 
 const TABS = [
@@ -630,14 +632,6 @@ function ForecastTab() {
   );
 }
 
-const SLATE_COLUMNS = [
-  { header: 'Date' },
-  { header: 'Match', strong: true },
-  { header: 'P(H) / P(D) / P(A)', numeric: true },
-  { header: 'Pick', strong: true },
-  { header: 'Sim score' },
-];
-
 function leagueLabel(key: string): string {
   return data.ratings[key]?.name ?? key;
 }
@@ -653,6 +647,7 @@ function SlateTab() {
     byLeague.set(row.league, list);
   }
   const orderedKeys = LEAGUE_ORDER.filter((k) => byLeague.has(k));
+  const slateMetrics: SoccerSlateMetric[] = data.slate_metrics ?? [];
 
   return (
     <div>
@@ -663,34 +658,26 @@ function SlateTab() {
             <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
               {leagueLabel(key)}
             </h3>
-            <div className="mt-2">
-              <SortableThemedTable
-                columns={SLATE_COLUMNS}
-                rows={rows.map((r) => ({
-                  key: `${r.home_team}-${r.away_team}-${r.date}`,
-                  cells: [
-                    r.date,
-                    `${r.home_team} v ${r.away_team}`,
-                    `${fmtPct(r.p_H)} / ${fmtPct(r.p_D)} / ${fmtPct(r.p_A)}`,
-                    r.pick,
-                    `${r.score_home}–${r.score_away}`,
-                  ],
-                  values: [
-                    r.date,
-                    `${r.home_team} v ${r.away_team}`,
-                    r.p_H,
-                    r.pick,
-                    r.score_home + r.score_away,
-                  ],
-                }))}
-              />
+            <div className="mt-2 grid gap-2">
+              {rows.map((r) => (
+                <SlateMatchCard
+                  key={`${r.home_team}-${r.away_team}-${r.date}`}
+                  row={r}
+                  metrics={slateMetrics}
+                />
+              ))}
             </div>
           </section>
         );
       })}
       <p className="mt-4 text-[12px]" style={{ color: 'var(--th-faint)' }}>
-        W/D/L outcome model on the Elo gap plus squad-economics differentials (transfer
-        spend, squad value, wage bill); simulated score from independent Poisson goal rates.
+        W/D/L comes from a random forest over the venue-adjusted Elo gap, squad-economics
+        differentials, rolling xG and shots-on-target form, and the Understat advanced
+        layer (xG/npxG for and against, attack-vs-defence splits, xG per shot, deep
+        completions, PPDA, xPts, rest and congestion) — every one of them as a
+        home-minus-away difference. The simulated score is a separate model: independent
+        Poisson goal rates off the Elo expectancy, showing the likeliest scoreline that
+        agrees with the pick. Open a match to see both sides of every difference.
       </p>
     </div>
   );

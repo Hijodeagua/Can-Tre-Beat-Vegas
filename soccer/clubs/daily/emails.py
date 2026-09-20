@@ -209,6 +209,82 @@ def _forecast_section(futures: dict) -> str:
     return "".join(parts)
 
 
+def _trend_block(trend: dict | None) -> str:
+    body = _trend_section(trend)
+    if not body:
+        return ""
+    return ("<h2 style='font-size:16px;margin:28px 0 0 0;'>"
+            "&#128202; This week against trend</h2>" + body)
+
+
+def _trend_arrow(row: dict) -> str:
+    """An arrow for the direction the number moved, plus a word for
+    whether that is good — the two are not the same thing (conceding more
+    xG is a bigger number and a worse side), and the word carries the
+    meaning for anyone who cannot see the arrow.
+
+    A move too small to show at the metric's own precision reads "level"
+    rather than being handed an arrow: "+0.00 better" is a rounding
+    artifact dressed up as a finding."""
+    if row.get("level"):
+        return "level"
+    arrow = "&uarr;" if row["delta"] > 0 else "&darr;"
+    return f"{arrow} {'better' if row['better'] else 'worse'}"
+
+
+def _trend_num(value: float, row: dict, signed: bool = False) -> str:
+    d = int(row.get("decimals", 2))
+    return f"{value:+.{d}f}" if signed else f"{value:.{d}f}"
+
+
+def _trend_section(trend: dict | None) -> str:
+    """This week's fixtures measured against the same clubs' own history.
+
+    Two tables: the slate as a whole per metric, then the individual
+    club-metric pairs running furthest from their own norm. Both compare
+    a club with itself — a league average would only ever report that
+    good clubs are good.
+    """
+    if not trend or not trend.get("aggregate"):
+        return ""
+    agg_rows = []
+    for a in trend["aggregate"]:
+        agg_rows.append(
+            f"<tr><td style='{STYLE_TD}'><b>{a['metric']}</b></td>"
+            f"<td style='{STYLE_TD}'>{_trend_num(a['current'], a)}</td>"
+            f"<td style='{STYLE_TD}'>{_trend_num(a['baseline'], a)}</td>"
+            f"<td style='{STYLE_TD}'>{_trend_num(a['delta'], a, signed=True)}</td>"
+            f"<td style='{STYLE_TD}'>{_trend_arrow(a)}</td></tr>"
+        )
+    mover_rows = []
+    for m in trend["movers"]:
+        mover_rows.append(
+            f"<tr><td style='{STYLE_TD}'><b>{m['team']}</b></td>"
+            f"<td style='{STYLE_TD}'>{m['metric']}</td>"
+            f"<td style='{STYLE_TD}'>{_trend_num(m['current'], m)}</td>"
+            f"<td style='{STYLE_TD}'>{_trend_num(m['baseline'], m)}</td>"
+            f"<td style='{STYLE_TD}'>{_trend_arrow(m)}</td>"
+            f"<td style='{STYLE_TD}'>{m['match']}</td></tr>"
+        )
+    return (
+        f"<p style='color:#666;font-size:12px;'>"
+        f"{trend['fixtures']} fixtures &middot; {trend['clubs']} clubs with enough "
+        f"history to compare. Each club is measured against <b>its own</b> mean in "
+        f"completed seasons before {trend['season']}, not against a league average.</p>"
+        f"<h3 style='{STYLE_H3}'>The slate as a whole</h3>"
+        + _table(["Metric", "This week", "Club norm", "Diff", "Direction"], agg_rows)
+        + f"<h3 style='{STYLE_H3}'>Furthest from their own norm</h3>"
+        + _table(["Club", "Metric", "Now", "Norm", "Direction", "Fixture"], mover_rows)
+        + f"<p style='color:#666;font-size:12px;'>"
+        f"&quot;Now&quot; is the exponentially weighted form the model actually used, "
+        f"which early in a season still carries the back end of the last one. Rows are "
+        f"ranked by how large the gap is relative to how much clubs differ on that "
+        f"metric at all, so an xG swing and a PPDA swing are comparable. A club with "
+        f"fewer than {trend['baseline']['min_matches']} prior-season matches has no "
+        f"norm and is left out rather than compared against someone else&apos;s.</p>"
+    )
+
+
 def _mls_section(forecast: dict | None) -> str:
     """The MLS block: Supporters' Shield, playoff qualification and the
     MLS Cup bracket, conference by conference.
@@ -278,10 +354,12 @@ def _mls_section(forecast: dict | None) -> str:
 
 def update_html(run_date: str, fixtures: pd.DataFrame, recent: pd.DataFrame,
                 ledger: dict, futures: dict,
-                mls_forecast: dict | None = None) -> str:
+                mls_forecast: dict | None = None,
+                trend: dict | None = None) -> str:
     body = (
         "<h2 style='font-size:16px;margin:20px 0 0 0;'>&#128197; Games this week</h2>"
         + _fixtures_section(fixtures)
+        + _trend_block(trend)
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128200; Model performance</h2>"
         + _performance_section(recent, ledger)
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128302; Final-table forecasts</h2>"

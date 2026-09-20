@@ -33,7 +33,7 @@ import subprocess
 import sys
 from datetime import date
 
-from soccer.clubs.daily import emails, export_site, grade, predict, simulate
+from soccer.clubs.daily import emails, export_site, grade, predict, simulate, trends
 from soccer.clubs.daily.config import (
     EMAIL_FIXTURE_DAYS,
     EMAIL_REPORTS_DIR,
@@ -176,8 +176,12 @@ def main() -> None:
     week_slate = predict.build_slate(state, run_date,
                                      window_days=EMAIL_FIXTURE_DAYS)
     recent = grade.recent_grades(run_date, days=7)
+    # The week's fixtures measured against the same clubs' own history —
+    # the email's answer to "why does the slate look like this".
+    week_season = current_season_for("epl", run_date)
+    trend = trends.week_trends(week_slate, week_season, matches=state.adv_matches)
     html = emails.update_html(run_date, week_slate, recent, ledger, futures,
-                              mls_forecast=mls_forecast)
+                              mls_forecast=mls_forecast, trend=trend)
     out = EMAIL_REPORTS_DIR / run_date
     out.mkdir(parents=True, exist_ok=True)
     (out / "update.html").write_text(html, encoding="utf-8")
