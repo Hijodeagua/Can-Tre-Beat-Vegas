@@ -250,13 +250,21 @@ def rest_and_congestion(rows: pd.DataFrame, calendar: pd.DataFrame | None = None
     return pd.DataFrame(out, columns=["rest", "congestion14", "uefa7"], index=rows.index)
 
 
-# Prefixes the per-side form columns carry when `keep_sides` is on.
-SIDE_PREFIX = {"home": "h", "away": "a"}
-
-
-def side_columns(formcols: list[str]) -> list[str]:
-    """The `home_*` / `away_*` names `keep_sides=True` adds, in order."""
-    return [f"{side}_{c}" for c in formcols for side in ("home", "away")]
+# The per-side form columns `keep_sides=True` leaves on the frame. Listed
+# explicitly rather than derived from a prefix scan: the replay history
+# also carries `home_score` / `away_score`, and a prefix match would sweep
+# the match result itself into the feature set.
+SIDE_FORM_COLS = [
+    "xg_for_r10", "xg_against_r10", "npxg_for_r10", "npxg_against_r10",
+    "xpts_for_r10", "ppda_for_r10", "deep_for_r10", "deep_against_r10",
+    "deep_share_r10", "xg_per_shot_r10",
+    "xg_for_ewm", "xg_against_ewm", "npxg_for_ewm", "npxg_against_ewm",
+    "xpts_for_ewm", "ppda_for_ewm", "deep_for_ewm", "deep_against_ewm",
+    "deep_share_ewm", "xg_per_shot_ewm",
+    "xg_for_split", "xg_against_split", "npxg_for_split", "npxg_against_split",
+]
+ALL_ADVANCED_SIDES = [f"{side}_{c}" for c in SIDE_FORM_COLS
+                      for side in ("home", "away")]
 
 
 def attach_advanced(history: pd.DataFrame, matches: pd.DataFrame | None = None,

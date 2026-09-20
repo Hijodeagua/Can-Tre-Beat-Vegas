@@ -182,15 +182,92 @@ tuning or training):
 
 | | log loss |
 |---|---|
-| Top-flight holdout (3,503 matches) | **0.9901** |
-| Second-division holdout (3,221 matches) | 1.0600 |
-| All divisions | 1.0236 |
-| class-frequency baseline (all) | 1.0766 |
+| Top-flight holdout (4,602 matches) | **0.9928** |
+| Second-division holdout (3,304 matches) | 1.0422 |
+| All divisions (7,906 matches) | 1.0134 |
+| Elo-gap only | 1.0260 |
+| class-frequency baseline | 1.0763 |
 
 Second divisions are genuinely harder to predict — flatter, draw-heavier —
 which the numbers say plainly. Per-league top-flight holdout log loss runs
-0.975 (La Liga) to 1.010 (EPL), beating the frequency baseline everywhere.
-Artifacts: `model/artifacts/outcome_model.pkl`, `metrics.csv`.
+0.967 (La Liga, Serie A) to 1.008 (EPL), beating the frequency baseline
+everywhere. Artifacts: `model/artifacts/outcome_model.pkl`, `metrics.csv`.
+
+### Levels as well as differences
+
+Every feature is a home-minus-away difference, and every one of them now
+*also* enters as the two numbers it was made from (`keep_sides=True` on
+both attach chains; `adv.ALL_ADVANCED_SIDES`, `features.SIDE_FEATURES`,
+`features.SIDE_RAW_FEATURES`). A difference imposes
+f(home, away) = f(home − away) — it tells the model that 1.9 against 1.5
+and 0.7 against 0.3 are the same match, when two strong attacks produce a
+different game from two weak ones. The Elo columns had carried their own
+levels for exactly this reason; this extends it to the rest.
+
+Measured on the 2024-25+ holdout with the production forest, before
+committing to it:
+
+| Feature set | n | log loss |
+|---|---:|---:|
+| differences only | 44 | 1.01441 |
+| per-side levels only | 77 | 1.01484 (0.4 SE — noise) |
+| **both** | 102 | **1.01337** (1.7 SE better) |
+
+So the levels are not a breakthrough: the differences were already
+carrying almost all of it, and dropping them entirely would cost nothing
+measurable either. Keeping both is the best measured configuration, it is
+free, and it makes the model and the published match card agree on what
+was used.
+
+A caution learned the hard way while measuring this: the per-side column
+lists are **enumerated**, never collected by scanning for a
+`home_`/`away_` prefix. The replay history carries `home_score` and
+`away_score` beside the features, and a prefix scan sweeps the match
+result into the model — which shows up as a holdout log loss of 0.39 at
+95% accuracy, a number no football model can reach and therefore a
+leak. `tests/test_slate_sides.py` asserts the lists cannot drift into it.
+
+### Squad value: the z *and* the euros
+
+`value_z` is the club's squad value as a z-score within its own
+league-season, and it stays the primary feature — it is the only fair
+comparison, since a £900m Premier League squad and a €900m Bundesliga
+squad buy very different league positions. But the z destroys absolute
+scale by construction: the richest club in every league scores about the
+same z whether it is Manchester City or Feyenoord. So the raw
+`squad_value_eur_m` now rides along per side as well (on one recent slate
+that is PSG at €1,480m against Bolton at €24.65m — a distinction the z
+cannot express), and with the league one-hots and `season_idx` in the
+feature set the learner can use whichever it needs.
+
+The raw euro figures are carried per side only and never differenced.
+The z differentials fill a missing side with 0.0, which for a z means
+"assume league-average"; the same fill on a euro figure would mean
+"assume this club is worth nothing", and the resulting difference would
+be the other club's entire squad value masquerading as a gap.
+
+Permutation importance over the 102-feature model says the levels are
+genuinely being used, which the aggregate holdout number was too blunt
+to show:
+
+| Rank | Feature | Δ log loss |
+|---:|---|---:|
+| 1 | `elo_gap` | +0.00948 |
+| 2 | `value_diff_z` | +0.00681 |
+| **3** | **`home_value_z`** | **+0.00199** |
+| 4 | `elo_away_pre` | +0.00158 |
+| 5 | `elo_home_pre` | +0.00144 |
+| 6 | `xpts_ewm_diff` | +0.00083 |
+| **7** | **`away_squad_value_eur_m`** | **+0.00079** |
+| 8 | `away_value_z` | +0.00077 |
+
+The differences still lead — `elo_gap` is far and away the most
+important single column — but a per-side level ranks third, above both
+raw Elo columns, and the raw euro figure outranks the z it was computed
+from. Nine of the 102 columns are constant (the per-side wage and
+transfer-spend z-scores, whose feeds are empty) and contribute nothing.
+Artifact: `model/artifacts/importance.json`, rebuilt with
+`python -m data_jobs.build_importance --only soccer`.
 
 Features tested and *rejected* (they made holdout log loss worse): last-5
 form differential, rest-day differential — Elo already carries that

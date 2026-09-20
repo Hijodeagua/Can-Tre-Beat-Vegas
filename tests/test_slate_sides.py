@@ -105,32 +105,87 @@ class TestKeepSides:
             assert plain[col].fillna(0).tolist() == wide[col].fillna(0).tolist()
         assert set(plain.columns) <= set(wide.columns)
 
-    def test_training_frame_is_untouched(self, two_matches):
-        """The training path never passes keep_sides, so it must still get
-        every model feature and none of the per-side columns.
+    def test_keep_sides_never_admits_an_outcome_column(self, two_matches):
+        """The columns `keep_sides=True` adds are enumerated, not matched
+        on a `home_`/`away_` prefix, and this is why.
 
-        Note the check names the per-side columns explicitly rather than
-        matching on a `home_`/`away_` prefix: two genuine *differential*
-        features (`home_att_vs_away_def`, `away_att_vs_home_def`) are
-        named that way and have always been in the training frame.
+        The replay history carries `home_score` / `away_score` beside the
+        features. A prefix scan sweeps them into the model and the holdout
+        comes back at log loss 0.39 with 95% accuracy — which is not a
+        good model, it is the final score being handed to the classifier.
+        This asserts the enumerated lists cannot drift into that.
         """
         metrics = adv.match_metrics()
-        plain = adv.attach_advanced(feat.attach_features(two_matches), metrics)
         wide = adv.attach_advanced(
             feat.attach_features(two_matches, keep_sides=True),
             metrics, keep_sides=True)
-
-        # Every feature the model consumes is still there.
-        for col in adv.ALL_ADVANCED + feat.ALL_FEATURES:
-            assert col in plain.columns, col
-
-        # And nothing keep_sides adds has leaked into it.
-        per_side = set(wide.columns) - set(plain.columns)
-        assert per_side, "keep_sides added no columns at all"
-        assert not (per_side & set(plain.columns))
-        for col in ("home_xg_for_ewm", "away_xpts_for_ewm", "home_value_z"):
+        added = set(adv.ALL_ADVANCED_SIDES) | set(feat.SIDE_FEATURES) \
+            | set(feat.SIDE_RAW_FEATURES)
+        for col in added:
+            assert "score" not in col, col
+        assert not (added & {"home_score", "away_score", "outcome"})
+        for col in ("home_xg_for_ewm", "away_xpts_for_ewm", "home_value_z",
+                    "home_squad_value_eur_m"):
             assert col in wide.columns, col
+
+    def test_the_plain_path_still_has_no_side_columns(self, two_matches):
+        """`keep_sides` defaults to off, and off must stay clean — the
+        raw euro columns joined for the per-side path must not leak in as
+        `*_x` / `*_y` suffixes from the differential's own merge."""
+        plain = adv.attach_advanced(feat.attach_features(two_matches),
+                                    adv.match_metrics())
+        for col in plain.columns:
+            assert not col.endswith(("_x", "_y")), col
+            assert "eur_m" not in col, col
+        for col in ("home_xg_for_ewm", "home_value_z", "home_squad_value_eur_m"):
             assert col not in plain.columns, col
+
+
+class TestJoinSafety:
+    def test_attaching_features_never_multiplies_rows(self):
+        """Both economics joins are left merges on (league, season, club).
+        A duplicate key in the source table would silently fan one match
+        out into several training rows — the kind of corruption that
+        shows up as a suspiciously good holdout rather than an error."""
+        h = pd.DataFrame([{
+            "league": "epl", "season": "2025-26", "date": "2025-09-01",
+            "home_team": "Manchester City FC", "away_team": "Luton Town FC",
+        }] * 5)
+        assert len(feat.attach_features(h)) == 5
+        assert len(feat.attach_features(h, keep_sides=True)) == 5
+
+    def test_the_economics_tables_have_unique_keys(self):
+        for table in (feat._load_value_z(), feat._load_transfer_z()):
+            assert not table.duplicated(["league", "season", "club"]).any()
+
+
+class TestFrameParity:
+    def test_the_feature_set_is_buildable_from_the_attach_chain(self, two_matches):
+        """Every column in FEATURES has to come out of the same attach
+        chain both `model/train.py` and `daily/state.py` run.
+
+        These two build the training frame separately — one offline, one
+        refit in-run every day — and they drifted apart the moment
+        FEATURES grew per-side columns: the offline builder was updated,
+        the daily one was not, and the pipeline died on a 58-column
+        KeyError at `model.fit`. Non-feature columns are exempt; the point
+        is that nothing in FEATURES can be missing.
+        """
+        from soccer.clubs.model.train import FEATURES, attach_context
+        frame = attach_context(adv.attach_advanced(
+            feat.attach_features(two_matches, keep_sides=True),
+            adv.match_metrics(), keep_sides=True))
+        # Exempt the columns that enter from elsewhere: the Elo ratings
+        # come off the replay itself, upstream of this chain, and the
+        # xg/shots form columns from their own attach step. Everything
+        # else has to be here.
+        from soccer.clubs.model.shots import SHOT_FEATURES
+        from soccer.clubs.model.train import RAW_ELO
+        from soccer.clubs.model.xg import XG_FEATURES
+        elsewhere = set(XG_FEATURES) | set(SHOT_FEATURES) | set(RAW_ELO) | {"elo_gap"}
+        expected = [c for c in FEATURES if c not in elsewhere]
+        missing = [c for c in expected if c not in frame.columns]
+        assert missing == [], missing
 
 
 class TestPersistedSchema:

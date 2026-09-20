@@ -32,7 +32,7 @@ import type { SoccerSlateMetric, SoccerSlateRow } from '@/app/lib/soccer';
 /** Decimals per metric. Elo and the counting metrics are whole numbers;
  * rates that live between 0 and 1 need three to be readable at all. */
 function decimalsFor(key: string): number {
-  if (key === 'elo') return 0;
+  if (key === 'elo' || key === 'value_eur') return 0;
   if (key === 'rest' || key === 'congestion14' || key === 'uefa7') return 0;
   if (key === 'xg_per_shot_ewm' || key === 'xg_per_shot_r10') return 3;
   if (key.startsWith('deep_share')) return 3;
