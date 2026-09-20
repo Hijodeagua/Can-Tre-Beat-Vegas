@@ -63,17 +63,39 @@ class DailyState:
             "xg_net_diff": xg.slate_diff(self.xg_form, league, home, away, asof),
             "sot_net_diff": shots.slate_diff(self.shot_form, league, home, away, asof),
         }
+        # Each side's own rolling form, not just the gap between them. The
+        # model only ever sees the differential, but a published match
+        # card has to be able to say whether "+0.4 xG" is two good attacks
+        # or two bad ones. None (short of the warm-up minimum, or stale)
+        # becomes NaN rather than 0: "no reading" and "level" are
+        # different claims, and only the differential is entitled to
+        # collapse them.
+        for side, team in (("home", home), ("away", away)):
+            for name, form in (("xg_net", self.xg_form),
+                               ("sot_net", self.shot_form)):
+                v = form.net(league, team, asof)
+                row[f"{side}_{name}"] = float("nan") if v is None else v
         return row
 
     def outcome_probs(self, feature_rows: pd.DataFrame) -> pd.DataFrame:
-        """P(A), P(D), P(H) columns for a frame of feature rows. The
-        advanced form columns are attached here from each club's earlier
-        matches (the fixture itself carries no metrics), with the same
-        staleness rule the training table used."""
-        f = attach_context(adv.attach_advanced(attach_features(feature_rows), matches=self.adv_matches,
-                                               calendar=self.calendar))
+        """P(A), P(D), P(H) columns for a frame of feature rows, plus every
+        per-side value the features were built from.
+
+        The advanced form columns are attached here from each club's
+        earlier matches (the fixture itself carries no metrics), with the
+        same staleness rule the training table used.
+
+        `keep_sides=True` is the difference from the training path: the
+        model is handed exactly `FEATURES` either way, so the prediction
+        is bit-identical, but the returned frame also carries each side's
+        own numbers for the site's match card. Training calls the same
+        functions without it and its frame is unchanged.
+        """
+        f = attach_context(adv.attach_advanced(
+            attach_features(feature_rows, keep_sides=True),
+            matches=self.adv_matches, calendar=self.calendar, keep_sides=True))
         probs = self.outcome_model.predict_proba(f[FEATURES])
-        out = feature_rows.copy()
+        out = f.copy()
         for i, c in enumerate(self.outcome_model.classes_):
             out[f"p_{c}"] = probs[:, i]
         return out

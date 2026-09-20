@@ -13,7 +13,8 @@ publish the site JSON, and render the twice-weekly update email.
 | `config.py` | Paths, slate window, sim defaults, email weekdays |
 | `state.py` | One glued Elo replay + in-run outcome/score model fits, shared by every step |
 | `scoring.py` | Elo expectation → Poisson goal rates (margin map refit each run; league totals from the last 2 seasons) |
-| `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, likeliest scoreline consistent with that pick; persisted as `slate_{D}.csv` |
+| `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, likeliest scoreline consistent with that pick, and every per-side number behind them (`SIDE_METRICS`); persisted as `slate_{D}.csv`, which keeps its original columns |
+| `trends.py` | The week's fixtures against the same clubs' own history — the email's aggregate and biggest-movers tables |
 | `grade.py` | Grade persisted slates once results land; running ledger at `data/soccer_clubs/predictions/grades.csv` |
 | `simulate.py` | Per-league rest-of-season Monte Carlo with live in-sim Elo (title / UCL / UEL / relegation / expected points + position) |
 | `../model/mls_forecast.py` | MLS's equivalent, run from `run.py`: Supporters' Shield, conference seeding and the MLS Cup bracket, off a schedule reconstructed from the league's format |
@@ -65,10 +66,27 @@ publish the site JSON, and render the twice-weekly update email.
 
 ## Modeling notes
 
-- **W/D/L** — the multinomial logistic layer from `model/train.py`
-  (Elo gap + squad-economics differentials), refit in-run on identical
-  training rows. Holdout (2024-25 + 2025-26): log loss 0.9902 vs 1.0750
-  class-frequency baseline.
+- **W/D/L** — the learner from `model/train.py` (`LEARNER`, a random
+  forest today), refit in-run on identical training rows. Inputs are the
+  home and away Elo, the venue-adjusted Elo gap, squad-economics
+  differentials, rolling xG and shots-on-target form, the whole Understat
+  advanced layer, and league/tier/season context — every one of them as a
+  home-minus-away difference. Holdout (2024-25 + 2025-26): log loss
+  0.9902 vs 1.0750 class-frequency baseline.
+- **Per-side stats** — the model trains on differences, but the site
+  publishes both halves of every one: `state.outcome_probs` re-attaches
+  the features with `keep_sides=True`, `predict.SIDE_METRICS` names and
+  groups them, and each slate row carries a nested `sides` block. The
+  prediction is bit-identical either way — the learner is handed exactly
+  `FEATURES` — and the training frame never passes `keep_sides`, so it
+  keeps precisely the columns it always had. A metric with no reading is
+  absent rather than zero, and `wage_z` is withheld entirely while no
+  wage source fills it.
+- **Week against trend** (`trends.py`) — the email's answer to "why does
+  this slate look like this": every club playing this week measured
+  against **its own** mean in completed prior seasons, never a league
+  average, with the gaps scaled by how much clubs differ on that metric
+  so an xG swing and a PPDA swing can be ranked together.
 - **Scores** — independent Poisson per side; expected margin is linear in
   the Elo home expectancy, totals are league-specific. Independent is
   deliberate: observed 1-1 (11.7%) ≈ independent-Poisson 1-1 (11.8%) on

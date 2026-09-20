@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
+from soccer.clubs.daily import predict
 from soccer.clubs.daily.config import SITE_DIR, SITE_HISTORY, SITE_LATEST
 from soccer.clubs.data.leagues import LEAGUES, TIER1, pool_of
 from soccer.clubs.daily.state import DailyState
@@ -265,6 +266,34 @@ def feeds_payload(feeds: dict | None) -> dict:
             for key, r in feeds.items()}
 
 
+def slate_payload(slate: pd.DataFrame) -> list[dict]:
+    """Slate rows for the site: the published columns plus a nested
+    `sides` block with every per-side number behind the prediction.
+
+    Nested rather than 70 flat columns because the two sides are the
+    same metrics twice — the site reads them as a head-to-head table, and
+    a flat `home_xg_for_ewm` / `away_xg_for_ewm` pair would make it
+    rebuild that pairing on every render.
+    """
+    rows = []
+    for r in slate.to_dict(orient="records"):
+        row = {k: v for k, v in r.items() if k in predict.SLATE_COLUMNS}
+        row["sides"] = predict.side_stats(r)
+        rows.append(row)
+    return rows
+
+
+def metric_catalogue() -> list[dict]:
+    """What each per-side key means, so the site labels and groups the
+    match card from the pipeline's own definition rather than a second
+    copy that can drift out of step."""
+    return [
+        {"key": key, "label": label, "group": group,
+         "higherIsBetter": higher}
+        for key, _h, _a, label, group, higher in predict.published_metrics()
+    ]
+
+
 def export(state: DailyState, run_date: str, slate: pd.DataFrame,
            futures: dict, ledger: dict, graded_today: pd.DataFrame,
            feeds: dict | None = None,
@@ -277,7 +306,8 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "run_date": run_date,
         "ratings": ratings,
         "league_rankings": league_rankings_payload(ratings),
-        "slate": slate.to_dict(orient="records"),
+        "slate": slate_payload(slate),
+        "slate_metrics": metric_catalogue(),
         "graded_today": graded_today.to_dict(orient="records"),
         "ledger": ledger,
         "futures": futures,
