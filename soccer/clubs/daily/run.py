@@ -14,7 +14,9 @@ evening's European slate in full):
    append to the running ledger.
 4. Predict the slate for [D, D+2) and persist it for future grading.
 5. Monte Carlo the rest of each league season (title / UCL / UEL /
-   relegation / expected finish).
+   relegation / expected finish), then the MLS forecast (Supporters'
+   Shield, conference seeding, the MLS Cup bracket) off a schedule
+   reconstructed from the league's format.
 6. Write the site JSON (latest + history snapshot) and refresh the
    portable ratings artifact.
 7. Render the update email HTML + manifest. The email is written every
@@ -38,8 +40,11 @@ from soccer.clubs.daily.config import (
     EMAIL_WEEKDAYS,
     SEASON_SIMS,
 )
+from soccer.clubs.daily.config import MLS_SIMS
 from soccer.clubs.daily.state import build_state, feed_status
+from soccer.clubs.data import mls as mls_struct
 from soccer.clubs.data.leagues import TIER1, current_season_for
+from soccer.clubs.model import mls_forecast as mls_predict
 
 
 def refresh_data() -> None:
@@ -65,6 +70,7 @@ def main() -> None:
     parser.add_argument("--date", default=date.today().isoformat())
     parser.add_argument("--skip-fetch", action="store_true")
     parser.add_argument("--season-sims", type=int, default=SEASON_SIMS)
+    parser.add_argument("--mls-sims", type=int, default=MLS_SIMS)
     parser.add_argument("--force-email", action="store_true",
                         help="mark the update email sendable regardless of weekday")
     args = parser.parse_args()
@@ -106,10 +112,11 @@ def main() -> None:
 
     # Futures cover the top flights; second divisions are ratings + slate
     # only for now (Championship promotion odds are one config flip away).
-    # MLS naturally opts itself out here rather than needing a special case:
-    # its source is a completed-match log with no upcoming-fixture rows, so
-    # simulate_league() always finds nothing to simulate and reports the
-    # same "no fixtures" skip a season that hasn't published yet would.
+    # MLS falls out of this loop on its own — its source is a
+    # completed-match log with no upcoming-fixture rows, so
+    # simulate_league() finds nothing to simulate — and is picked up
+    # below by its own forecast, which reconstructs the remaining
+    # schedule from the league's format instead of reading fixtures.
     print("== Futures Monte Carlo")
     futures = {}
     for league in TIER1:
@@ -117,16 +124,50 @@ def main() -> None:
         sim = simulate.simulate_league(state, league, season,
                                        n_sims=args.season_sims, as_of=run_date)
         if sim is None:
-            print(f"   {league}: no {season} fixtures upstream yet — skipped")
-            futures[league] = {"season": season, "status": "no_fixtures"}
+            status = "mls_forecast" if league == "mls" else "no_fixtures"
+            note = ("simulated separately — see the mls_forecast block"
+                    if status == "mls_forecast"
+                    else f"no {season} fixtures upstream yet")
+            print(f"   {league}: {note} — skipped here")
+            futures[league] = {"season": season, "status": status}
             continue
         futures[league] = sim
         top = sim["clubs"][0]
         print(f"   {league}: {sim['remaining_matches']} matches left; "
               f"title favorite {top['team']} {top['p_title']:.0%}")
 
+    # MLS: Supporters' Shield, conference seeding and the MLS Cup bracket.
+    # Its own block rather than a `futures` entry because the questions
+    # are different ones — there is no relegation, "top 4" is not a
+    # European place, and most of the interest is in a playoff bracket the
+    # European leagues do not have.
+    print("== MLS forecast (Shield / playoffs / MLS Cup)")
+    mls_forecast = None
+    mls_season = current_season_for("mls", run_date)
+    problems = mls_struct.verify_structure(state.results, mls_season)
+    if problems:
+        # A format change (an expansion club, a longer season) makes the
+        # reconstructed schedule wrong rather than merely stale, so the
+        # run reports it and publishes nothing instead of publishing odds
+        # built on a schedule that cannot happen.
+        print(f"   {mls_season}: season structure check failed — no forecast published")
+        for p in problems:
+            print(f"     - {p}")
+        mls_forecast = {"season": mls_season, "status": "structure_mismatch",
+                        "problems": problems}
+    else:
+        mls_forecast = mls_predict.forecast(
+            state.results, mls_season, engine=state.engines["mls"],
+            score_params=state.score_params, n_sims=args.mls_sims)
+        top = mls_forecast["clubs"][0]
+        shield = max(mls_forecast["clubs"], key=lambda c: c["p_shield"])
+        print(f"   {mls_season}: {mls_forecast['remaining_matches']} matches left; "
+              f"Shield favorite {shield['team']} {shield['p_shield']:.0%}; "
+              f"MLS Cup favorite {top['team']} {top['p_cup']:.0%}")
+
     print("== Exporting site JSON + ratings artifact")
-    export_site.export(state, run_date, slate, futures, ledger, graded, feeds=feeds)
+    export_site.export(state, run_date, slate, futures, ledger, graded,
+                       feeds=feeds, mls_forecast=mls_forecast)
     from soccer.clubs.model import export_ratings
     export_ratings.export()
 
@@ -134,7 +175,8 @@ def main() -> None:
     week_slate = predict.build_slate(state, run_date,
                                      window_days=EMAIL_FIXTURE_DAYS)
     recent = grade.recent_grades(run_date, days=7)
-    html = emails.update_html(run_date, week_slate, recent, ledger, futures)
+    html = emails.update_html(run_date, week_slate, recent, ledger, futures,
+                              mls_forecast=mls_forecast)
     out = EMAIL_REPORTS_DIR / run_date
     out.mkdir(parents=True, exist_ok=True)
     (out / "update.html").write_text(html, encoding="utf-8")

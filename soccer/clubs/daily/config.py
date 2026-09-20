@@ -39,6 +39,13 @@ PROJECTION_POINTS = 8
 # unrelated draws. Three is enough to show the spread without turning the
 # chart into spaghetti.
 PROJECTION_SAMPLES = 3
+# MLS forecast sims (`soccer/clubs/model/mls_forecast.py`). Lower than
+# SEASON_SIMS because each MLS replay costs more than a European one — it
+# draws its own cross-conference pairing and then plays a 33-match
+# playoff bracket on top of the run-in — and because the headline numbers
+# it publishes are coarser: a Cup probability quoted to the nearest point
+# is already finer than a six-match bracket can support.
+MLS_SIMS = 20000
 MIN_LAMBDA = 0.2
 RELEGATION_SPOTS = 3     # bottom-3 = drop zone (incl. any playoff spot)
 UCL_SPOTS = 4

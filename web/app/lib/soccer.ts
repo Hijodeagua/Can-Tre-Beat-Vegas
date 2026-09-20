@@ -68,6 +68,58 @@ export interface SoccerFuturesLeague {
   clubs?: SoccerFuturesClub[];
 }
 
+/** One club's row in the MLS forecast. MLS asks different questions
+ * from the European leagues — there is no relegation and no European
+ * place, but there is a conference, a seed that decides who hosts every
+ * playoff round, and a bracket — so it gets its own shape rather than
+ * being bent into SoccerFuturesClub. */
+export interface SoccerMlsClub {
+  team: string;
+  conference: 'East' | 'West';
+  elo: number;
+  played: number;
+  points: number;
+  wins: number;
+  goal_diff: number;
+  remaining: number;
+  exp_points: number;
+  /** Expected finishing position within the club's own conference (1-15). */
+  exp_conf_seed: number;
+  /** Best regular-season record in the whole league. */
+  p_shield: number;
+  /** Top 9 in the conference. */
+  p_playoffs: number;
+  /** Finishing 8th or 9th, i.e. having to win a Wild Card match first. */
+  p_wild_card: number;
+  p_top_seed: number;
+  p_conf_semi: number;
+  p_conf_final: number;
+  /** Winning the conference = reaching MLS Cup. */
+  p_conf_title: number;
+  p_cup: number;
+  /** Probability of each conference seed 1-9, with a final bucket for
+   * missing the playoffs; sums to 1. */
+  seed_distribution: number[];
+}
+
+export interface SoccerMlsForecast {
+  season: string;
+  sims: number;
+  remaining_matches: number;
+  /** Set (with no clubs) when the season stopped matching the format the
+   * remaining schedule is reconstructed from — an expansion club, a
+   * longer season — so no odds were published. */
+  status?: string;
+  problems?: string[];
+  schedule: {
+    intra_conference: number;
+    cross_conference: number;
+    note: string;
+  };
+  format: Record<string, string | number>;
+  clubs?: SoccerMlsClub[];
+}
+
 /** One club's current-season Elo trajectory: pre-match rating at each
  * match date, closed with the live rating on the run date — so the last
  * point moves every day the pipeline runs. */
@@ -160,6 +212,9 @@ export interface SoccerLatest {
   graded_today: unknown[];
   ledger: { graded: number };
   futures: Record<string, SoccerFuturesLeague>;
+  /** MLS lives outside `futures`: see SoccerMlsForecast. Null on a run
+   * that published no MLS forecast. */
+  mls_forecast?: SoccerMlsForecast | null;
   elo_history?: Record<string, SoccerEloHistoryLeague>;
   elo_projection?: Record<string, SoccerEloProjectionLeague>;
 }

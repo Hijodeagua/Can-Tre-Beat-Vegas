@@ -9,7 +9,9 @@
  * ten sharing one Elo scale via the UEFA glue. Forecasts is the
  * Opta-style rest-of-season view: projected final table per top flight
  * with Title / UCL / UEL / Relegation odds, plus the daily-updating Elo
- * trend chart.
+ * trend chart. MLS is a pill on that same tab but a different table —
+ * no relegation and no European places, but a conference, a seed and a
+ * playoff bracket instead.
  */
 import { useEffect, useState } from 'react';
 import EloTrendChart from '@/app/components/EloTrendChart';
@@ -20,7 +22,8 @@ import { DASH, fmtPct, missing } from '@/app/lib/format';
 import { SOCCER_FEATURES } from '@/app/lib/modelFeatures';
 import {
   getSoccerLatest, orderedLeagueRankings, LEAGUE_ORDER, GLUED_LEAGUES,
-  comparableElo, comparableEloBands, type SoccerSlateRow,
+  comparableElo, comparableEloBands,
+  type SoccerMlsForecast, type SoccerSlateRow,
 } from '@/app/lib/soccer';
 
 const TABS = [
@@ -343,11 +346,123 @@ const FORECAST_COLUMNS = [
   { header: 'Rel', numeric: true },
 ];
 
+/**
+ * MLS's own forecast table. Split East/West because a conference is the
+ * unit everything in MLS is decided in: seeding, who hosts every playoff
+ * round, and which half of the bracket a club lands in. Shield is the one
+ * column that spans both conferences, so it sits at the end of each.
+ */
+const MLS_COLUMNS = [
+  { header: 'Seed', numeric: true },
+  { header: 'Team', strong: true },
+  { header: 'Pts', numeric: true },
+  { header: 'xPts', numeric: true },
+  { header: 'Playoffs', numeric: true },
+  { header: '1 seed', numeric: true },
+  { header: 'Conf', numeric: true },
+  { header: 'Cup', strong: true, numeric: true },
+  { header: 'Shield', numeric: true },
+];
+
+function MlsConferenceTable({
+  forecast, conference,
+}: {
+  forecast: SoccerMlsForecast;
+  conference: 'East' | 'West';
+}) {
+  const clubs = (forecast.clubs ?? [])
+    .filter((c) => c.conference === conference)
+    .sort((a, b) => a.exp_conf_seed - b.exp_conf_seed);
+  return (
+    <section className="mt-5">
+      <h3 className="pixel m-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
+        {conference}ern Conference
+      </h3>
+      <div className="mt-2">
+        <SortableThemedTable
+          columns={MLS_COLUMNS}
+          rows={clubs.map((c) => ({
+            key: c.team,
+            cells: [
+              c.exp_conf_seed.toFixed(1),
+              c.team,
+              c.points,
+              c.exp_points.toFixed(1),
+              fmtPct(c.p_playoffs),
+              fmtPct(c.p_top_seed),
+              fmtPct(c.p_conf_title),
+              fmtPct(c.p_cup),
+              fmtPct(c.p_shield),
+            ],
+            values: [
+              c.exp_conf_seed,
+              c.team,
+              c.points,
+              c.exp_points,
+              c.p_playoffs,
+              c.p_top_seed,
+              c.p_conf_title,
+              c.p_cup,
+              c.p_shield,
+            ],
+          }))}
+        />
+      </div>
+    </section>
+  );
+}
+
+function MlsForecastView({ forecast }: { forecast: SoccerMlsForecast }) {
+  return (
+    <div>
+      <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        {forecast.season} · {forecast.remaining_matches} regular-season matches left ·{' '}
+        {forecast.sims.toLocaleString()} season simulations, each one carried through the
+        full playoff bracket, rerun every day.
+      </p>
+      <MlsConferenceTable forecast={forecast} conference="East" />
+      <MlsConferenceTable forecast={forecast} conference="West" />
+      <p className="mt-3 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        Seed is the expected finish within the conference; Playoffs = top 9; 1 seed =
+        finishing top of the conference; Conf = winning the conference and reaching MLS
+        Cup; Shield = the best regular-season record in the league. The bracket is
+        simulated match by match — 8 hosts 9 in a single Wild Card match, Round One is a
+        best-of-3 with the higher seed hosting games 1 and 3, and every round after that
+        is one match at the higher seed&apos;s ground, with a drawn match going to a
+        shootout. Click any header to re-sort.
+      </p>
+      <p className="mt-2 text-[12px]" style={{ color: 'var(--th-faint)' }}>
+        MLS publishes no machine-readable fixture list, so the run-in is rebuilt from the
+        league&apos;s format: the {forecast.schedule.intra_conference} conference fixtures
+        left are exact (every club plays each rival home and away), while the{' '}
+        {forecast.schedule.cross_conference} cross-conference ones are known only as
+        per-club home and away counts — so each simulation draws its own valid pairing of
+        them rather than every run sharing one invented schedule.
+      </p>
+    </div>
+  );
+}
+
 function ForecastTab() {
-  const keys = LEAGUE_ORDER.filter((k) => data.futures[k]?.clubs?.length);
+  // MLS is a pill here like any other league, but its forecast comes
+  // from its own block rather than `futures` — different questions, and
+  // so a different table (see MlsForecastView).
+  const mls = data.mls_forecast?.clubs?.length ? data.mls_forecast : null;
+  const keys = LEAGUE_ORDER.filter(
+    (k) => (k === 'mls' ? mls !== null : Boolean(data.futures[k]?.clubs?.length)),
+  );
   const [league, setLeague] = useState<string>(keys[0] ?? '');
   if (keys.length === 0) {
     return <Empty>No league has published fixtures to simulate yet.</Empty>;
+  }
+
+  if (league === 'mls' && mls) {
+    return (
+      <div>
+        <LeaguePills keys={keys} active={league} onSelect={setLeague} labelFor={leagueLabel} />
+        <MlsForecastView forecast={mls} />
+      </div>
+    );
   }
 
   const sim = data.futures[league];

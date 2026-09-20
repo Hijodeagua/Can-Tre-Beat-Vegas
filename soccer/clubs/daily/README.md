@@ -16,6 +16,7 @@ publish the site JSON, and render the twice-weekly update email.
 | `predict.py` | Slate for [D, D+2): W/D/L probabilities, pick, likeliest scoreline consistent with that pick; persisted as `slate_{D}.csv` |
 | `grade.py` | Grade persisted slates once results land; running ledger at `data/soccer_clubs/predictions/grades.csv` |
 | `simulate.py` | Per-league rest-of-season Monte Carlo with live in-sim Elo (title / UCL / UEL / relegation / expected points + position) |
+| `../model/mls_forecast.py` | MLS's equivalent, run from `run.py`: Supporters' Shield, conference seeding and the MLS Cup bracket, off a schedule reconstructed from the league's format |
 | `export_site.py` | `web/public/data/soccer/latest.json` (incl. `elo_history` + `elo_projection` for the site's daily-updating Elo chart and its projected half) + per-day history snapshots |
 | `emails.py` | The update email HTML: week's fixtures, past week + rolling tracker, Opta-style final-table forecasts |
 
@@ -42,8 +43,18 @@ publish the site JSON, and render the twice-weekly update email.
    uniform (goal difference is not modeled as a tiebreaker). Per club:
    expected points and finishing position plus P(title), P(top 4 = UCL),
    P(5th–6th = UEL), P(bottom 3 = relegation).
-6. Site JSON + history snapshot + the portable ratings artifact.
-7. The update email (`reports/soccer/{D}/update.html`) is rendered every
+6. The MLS forecast (`MLS_SIMS` replays, default 20000): Supporters'
+   Shield, conference seeding, playoff qualification and the MLS Cup
+   bracket. MLS has no upcoming-fixture rows to replay, so the remaining
+   regular season is reconstructed from the league's format first — exact
+   for the conference round robin, per-club home/away quotas for the
+   cross-conference matches, which each replay pairs up its own way. The
+   reconstruction is re-verified every run and the block is skipped (not
+   guessed at) if the season stops matching the format. It lands under
+   `mls_forecast` in the site JSON rather than in `futures`, since it
+   answers different questions and carries different columns.
+7. Site JSON + history snapshot + the portable ratings artifact.
+8. The update email (`reports/soccer/{D}/update.html`) is rendered every
    run; the manifest marks it sendable only on Mondays and Thursdays
    (`EMAIL_WEEKDAYS`), the workflow delivers it over the same SMTP
    secrets as the MLB emails, and `data_jobs/email_ledger.py` keeps
