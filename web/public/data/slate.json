@@ -1,22 +1,133 @@
 {
-  "generated_at": "2026-09-23T00:01:19Z",
+  "generated_at": "2026-09-23T14:38:12Z",
   "window_hours": 48,
   "sports": [
     {
       "key": "nfl",
       "name": "NFL",
       "snapshot": {
-        "file": "odds_api_data_2026-09-23-0001.csv",
-        "pulled_at_et": "2026-09-22 20:01:19"
+        "file": "odds_api_data_2026-09-23-1438.csv",
+        "pulled_at_et": "2026-09-23 10:38:11"
       },
-      "games": []
+      "games": [
+        {
+          "game_id": "e5fbd3b3953b896b1bf897ddadb3cc4b",
+          "commence_et": "2026-09-24 20:15",
+          "home_team": "Green Bay Packers",
+          "away_team": "Atlanta Falcons",
+          "consensus": {
+            "home_ml": -265.33,
+            "away_ml": 215.67,
+            "home_spread": -5.39,
+            "home_spread_odds": -85.44,
+            "away_spread_odds": -111.11,
+            "total": 43.17,
+            "over_odds": -108.0,
+            "under_odds": -111.22,
+            "home_win_prob": 0.6962915894565159
+          },
+          "books": [
+            {
+              "book": "DraftKings",
+              "home_ml": -265.0,
+              "away_ml": 215.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -102.0,
+              "under_odds": -118.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": -270.0,
+              "away_ml": 225.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "FanDuel",
+              "home_ml": -250.0,
+              "away_ml": 205.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -108.0,
+              "under_odds": -112.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -278.0,
+              "away_ml": 220.0,
+              "home_spread_odds": -109.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -113.0,
+              "under_odds": -108.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": -270.0,
+              "away_ml": 222.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": -270.0,
+              "away_ml": 222.0,
+              "home_spread_odds": 100.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -102.0,
+              "under_odds": -113.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -255.0,
+              "away_ml": 202.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": -250.0,
+              "away_ml": 200.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -112.0,
+              "under_odds": -105.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -280.0,
+              "away_ml": 230.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-05-15 07:52:11",
+            "spread": -7.5,
+            "total": 46.5,
+            "home_ml": -360.0,
+            "away_ml": 285.0,
+            "spread_delta": 2.11,
+            "total_delta": -3.33
+          },
+          "model": null
+        }
+      ]
     },
     {
       "key": "nba",
       "name": "NBA",
       "snapshot": {
-        "file": "nba_odds_api_data_2026-09-23-0001.csv",
-        "pulled_at_et": "2026-09-22 20:01:19"
+        "file": "nba_odds_api_data_2026-09-23-1438.csv",
+        "pulled_at_et": "2026-09-23 10:38:11"
       },
       "games": []
     }
