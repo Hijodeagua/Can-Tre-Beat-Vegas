@@ -1,0 +1,7 @@
+game_id,date,season,week,season_type,home_team,away_team,home_conference,away_conference,neutral,home_fcs,away_fcs,elo_home_pre,elo_away_pre,p_home,p_home_elo,model,pick,pick_prob,pred_home_score,pred_away_score,pred_total,notes
+401869941,2026-09-24,2026,4,regular,Coastal Carolina,Liberty,Sun Belt,Conference USA,False,False,False,1309.9,1302.7,0.5421,0.5816,elo+efficiency:random_forest,Coastal Carolina,0.5421,29.1,25.8,54.9,
+401858234,2026-09-25,2026,4,regular,California,Clemson,ACC,ACC,False,False,False,1418.8,1594.1,0.3606,0.3271,elo+efficiency:random_forest,Clemson,0.6394,22.2,29.1,51.4,
+401858461,2026-09-25,2026,4,regular,Indiana,Northwestern,Big Ten,Big Ten,False,False,False,1942.9,1586.4,0.9452,0.9121,elo+efficiency:random_forest,Indiana,0.9452,35.6,12.8,48.4,
+401858468,2026-09-25,2026,4,regular,Rutgers,Howard,Big Ten,MEAC,False,False,True,1391.9,950.0,0.9444,0.9444,elo,Rutgers,0.9444,42.5,15.1,57.6,
+401862779,2026-09-25,2026,4,regular,Temple,Army,American Athletic,American Athletic,False,False,False,1310.4,1477.4,0.445,0.3376,elo+efficiency:random_forest,Army,0.555,22.9,29.3,52.2,
+401862778,2026-09-25,2026,4,regular,UAB,Navy,American Athletic,American Athletic,False,False,False,1278.4,1515.2,0.2818,0.2544,elo+efficiency:random_forest,Navy,0.7182,23.5,33.8,57.2,
