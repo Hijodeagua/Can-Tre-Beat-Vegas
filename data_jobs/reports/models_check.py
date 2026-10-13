@@ -158,9 +158,10 @@ def soccer_importances() -> str:
     """Refit on a date split and measure held-out permutation + linear-SHAP
     importance for the club outcome model."""
     from sklearn.inspection import permutation_importance
-    from sklearn.linear_model import LogisticRegression
 
-    from soccer.clubs.daily.state import FEATURES, MAX_ITER, build_state
+    from common import learners
+    from soccer.clubs.daily.state import FEATURES, build_state
+    from soccer.clubs.model.train import LOGISTIC_C
 
     state = build_state()
     hist = state.history.sort_values("date")
@@ -168,8 +169,13 @@ def soccer_importances() -> str:
     train = hist[hist["date"] < cut]
     hold = hist[hist["date"] >= cut]
 
-    model = LogisticRegression(max_iter=MAX_ITER, tol=1e-10)
+    # The repo's logistic learner: median-impute (sparse feeds leave NaNs a
+    # bare LogisticRegression rejects) -> standardise -> L2 logistic.
+    # Production soccer picks use LEARNER (random forest); this linear
+    # stand-in exists so SHAP and coefficient direction are exact.
+    model = learners.make("logistic", C=LOGISTIC_C)
     model.fit(train[FEATURES], train["outcome"])
+    prep, clf = model[:-1], model[-1]
 
     perm = permutation_importance(
         model, hold[FEATURES], hold["outcome"], scoring="neg_log_loss",
@@ -177,13 +183,14 @@ def soccer_importances() -> str:
 
     # Exact SHAP for a linear model: phi_ij = coef_j * (x_ij - mean(x_j)),
     # per class; report the mean |phi| over holdout rows and classes.
-    X = hold[FEATURES].to_numpy()
-    centered = X - train[FEATURES].to_numpy().mean(axis=0)
-    phi = np.abs(centered[None, :, :] * model.coef_[:, None, :])  # class,row,feat
+    # In the standardised space the classifier actually sees.
+    X = prep.transform(hold[FEATURES])
+    centered = X - prep.transform(train[FEATURES]).mean(axis=0)
+    phi = np.abs(centered[None, :, :] * clf.coef_[:, None, :])  # class,row,feat
     shap_mean = phi.mean(axis=(0, 1))
 
-    home_idx = list(model.classes_).index("H")
-    home_coef = model.coef_[home_idx]
+    home_idx = list(clf.classes_).index("H")
+    home_coef = clf.coef_[home_idx]
 
     order = np.argsort(-perm.importances_mean)
     perm_rows = [(FEATURES[i], float(perm.importances_mean[i]),
