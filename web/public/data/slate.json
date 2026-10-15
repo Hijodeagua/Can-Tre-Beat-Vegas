@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-14T14:51:20Z",
+  "generated_at": "2026-10-15T00:18:19Z",
   "window_hours": 48,
   "sports": [
     {
       "key": "nfl",
       "name": "NFL",
       "snapshot": {
-        "file": "odds_api_data_2026-10-14-1451.csv",
-        "pulled_at_et": "2026-10-14 10:51:19"
+        "file": "odds_api_data_2026-10-15-0018.csv",
+        "pulled_at_et": "2026-10-14 20:18:18"
       },
       "games": [
         {
@@ -16,30 +16,30 @@
           "home_team": "Denver Broncos",
           "away_team": "Seattle Seahawks",
           "consensus": {
-            "home_ml": 122.67,
-            "away_ml": -145.44,
+            "home_ml": 121.89,
+            "away_ml": -144.22,
             "home_spread": 2.44,
-            "home_spread_odds": -82.56,
-            "away_spread_odds": -114.44,
+            "home_spread_odds": -84.44,
+            "away_spread_odds": -112.33,
             "total": 40.56,
-            "over_odds": -109.78,
-            "under_odds": -109.44,
-            "home_win_prob": 0.43113257205738736
+            "over_odds": -109.67,
+            "under_odds": -109.56,
+            "home_win_prob": 0.4328378582258329
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": 124.0,
-              "away_ml": -148.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_ml": 120.0,
+              "away_ml": -142.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
               "over_odds": -112.0,
               "under_odds": -108.0
             },
             {
               "book": "BetUS",
-              "home_ml": 120.0,
-              "away_ml": -140.0,
+              "home_ml": 125.0,
+              "away_ml": -145.0,
               "home_spread_odds": 100.0,
               "away_spread_odds": -120.0,
               "over_odds": -110.0,
@@ -47,8 +47,8 @@
             },
             {
               "book": "FanDuel",
-              "home_ml": 128.0,
-              "away_ml": -152.0,
+              "home_ml": 126.0,
+              "away_ml": -148.0,
               "home_spread_odds": -104.0,
               "away_spread_odds": -118.0,
               "over_odds": -115.0,
@@ -56,19 +56,19 @@
             },
             {
               "book": "LowVig.ag",
-              "home_ml": 121.0,
-              "away_ml": -141.0,
-              "home_spread_odds": -101.0,
-              "away_spread_odds": -109.0,
+              "home_ml": 120.0,
+              "away_ml": -140.0,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -104.0,
               "over_odds": -107.0,
               "under_odds": -107.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": 121.0,
-              "away_ml": -141.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
+              "home_ml": 120.0,
+              "away_ml": -140.0,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -114.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
@@ -78,15 +78,15 @@
               "away_ml": -150.0,
               "home_spread_odds": -108.0,
               "away_spread_odds": -113.0,
-              "over_odds": -109.0,
-              "under_odds": -112.0
+              "over_odds": -108.0,
+              "under_odds": -113.0
             },
             {
               "book": "MyBookie.ag",
-              "home_ml": 120.0,
-              "away_ml": -147.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_ml": 121.0,
+              "away_ml": -148.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
@@ -94,17 +94,17 @@
               "book": "BetMGM",
               "home_ml": 120.0,
               "away_ml": -145.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -108.0
             },
             {
               "book": "Bovada",
-              "home_ml": 125.0,
-              "away_ml": -145.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_ml": 120.0,
+              "away_ml": -140.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
               "over_odds": -105.0,
               "under_odds": -115.0
             }
@@ -126,8 +126,8 @@
       "key": "nba",
       "name": "NBA",
       "snapshot": {
-        "file": "nba_odds_api_data_2026-10-14-1451.csv",
-        "pulled_at_et": "2026-10-14 10:51:19"
+        "file": "nba_odds_api_data_2026-10-15-0018.csv",
+        "pulled_at_et": "2026-10-14 20:18:18"
       },
       "games": []
     }
