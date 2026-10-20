@@ -1,0 +1,5 @@
+game_id,date,season,week,season_type,home_team,away_team,home_conference,away_conference,neutral,home_fcs,away_fcs,elo_home_pre,elo_away_pre,p_home,p_home_elo,model,pick,pick_prob,pred_home_score,pred_away_score,pred_total,notes
+401871069,2026-10-20,2026,8,regular,Delaware,Missouri State,Conference USA,Conference USA,False,False,False,1250.2,1225.9,0.6532,0.6054,elo+efficiency:random_forest,Delaware,0.6532,29.4,25.2,54.6,
+401871055,2026-10-20,2026,8,regular,Florida International,Middle Tennessee,Conference USA,Conference USA,False,False,False,1327.6,1206.4,0.815,0.7283,elo+efficiency:random_forest,Florida International,0.815,30.4,20.8,51.2,
+401871092,2026-10-20,2026,8,regular,Marshall,South Alabama,Sun Belt,Sun Belt,False,False,False,1360.5,1412.6,0.4879,0.497,elo+efficiency:random_forest,South Alabama,0.5121,30.4,30.5,60.9,
+401871070,2026-10-21,2026,8,regular,Sam Houston,New Mexico State,Conference USA,Conference USA,False,False,False,1104.1,1191.9,0.4398,0.4458,elo+efficiency:random_forest,New Mexico State,0.5602,23.6,25.6,49.2,
