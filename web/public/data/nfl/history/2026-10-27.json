@@ -1,0 +1,6446 @@
+{
+ "generated_at": "2026-10-27T15:40:24+00:00",
+ "run_date": "2026-10-27",
+ "season": 2026,
+ "week": 8,
+ "week_label": "Week 8",
+ "params": {
+  "k": 20.0,
+  "home_advantage": 48.0,
+  "season_regression": 0.4,
+  "playoff_k_mult": 1.0,
+  "margin_cap": 45.0,
+  "rest_bonus": 20.0,
+  "elo_per_point": 24.6
+ },
+ "ratings": [
+  {
+   "team": "SEA",
+   "name": "Seattle Seahawks",
+   "conference": "NFC",
+   "division": "NFC West",
+   "elo": 1651.9,
+   "wins": 4,
+   "losses": 3,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": 43,
+   "games": 476,
+   "preseason_elo": 1652.0,
+   "preseason_rank": 1,
+   "rank": 1
+  },
+  {
+   "team": "BUF",
+   "name": "Buffalo Bills",
+   "conference": "AFC",
+   "division": "AFC East",
+   "elo": 1639.6,
+   "wins": 5,
+   "losses": 1,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 1,
+   "pts_diff": 26,
+   "games": 459,
+   "preseason_elo": 1592.6,
+   "preseason_rank": 4,
+   "rank": 2
+  },
+  {
+   "team": "MIN",
+   "name": "Minnesota Vikings",
+   "conference": "NFC",
+   "division": "NFC North",
+   "elo": 1627.0,
+   "wins": 6,
+   "losses": 0,
+   "ties": 0,
+   "div_wins": 2,
+   "div_losses": 0,
+   "pts_diff": 51,
+   "games": 460,
+   "preseason_elo": 1542.5,
+   "preseason_rank": 11,
+   "rank": 3
+  },
+  {
+   "team": "SF",
+   "name": "San Francisco 49ers",
+   "conference": "NFC",
+   "division": "NFC West",
+   "elo": 1614.9,
+   "wins": 6,
+   "losses": 1,
+   "ties": 0,
+   "div_wins": 3,
+   "div_losses": 0,
+   "pts_diff": 58,
+   "games": 469,
+   "preseason_elo": 1550.5,
+   "preseason_rank": 9,
+   "rank": 4
+  },
+  {
+   "team": "DEN",
+   "name": "Denver Broncos",
+   "conference": "AFC",
+   "division": "AFC West",
+   "elo": 1612.7,
+   "wins": 5,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": 3,
+   "games": 462,
+   "preseason_elo": 1593.6,
+   "preseason_rank": 3,
+   "rank": 5
+  },
+  {
+   "team": "JAX",
+   "name": "Jacksonville Jaguars",
+   "conference": "AFC",
+   "division": "AFC South",
+   "elo": 1596.7,
+   "wins": 4,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 1,
+   "pts_diff": 50,
+   "games": 454,
+   "preseason_elo": 1560.3,
+   "preseason_rank": 7,
+   "rank": 6
+  },
+  {
+   "team": "NE",
+   "name": "New England Patriots",
+   "conference": "AFC",
+   "division": "AFC East",
+   "elo": 1583.4,
+   "wins": 4,
+   "losses": 3,
+   "ties": 0,
+   "div_wins": 2,
+   "div_losses": 0,
+   "pts_diff": 17,
+   "games": 490,
+   "preseason_elo": 1584.0,
+   "preseason_rank": 6,
+   "rank": 7
+  },
+  {
+   "team": "CHI",
+   "name": "Chicago Bears",
+   "conference": "NFC",
+   "division": "NFC North",
+   "elo": 1574.5,
+   "wins": 5,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 2,
+   "pts_diff": 37,
+   "games": 455,
+   "preseason_elo": 1525.3,
+   "preseason_rank": 13,
+   "rank": 8
+  },
+  {
+   "team": "LA",
+   "name": "Los Angeles Rams",
+   "conference": "NFC",
+   "division": "NFC West",
+   "elo": 1568.9,
+   "wins": 3,
+   "losses": 4,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 2,
+   "pts_diff": 11,
+   "games": 470,
+   "preseason_elo": 1595.9,
+   "preseason_rank": 2,
+   "rank": 9
+  },
+  {
+   "team": "KC",
+   "name": "Kansas City Chiefs",
+   "conference": "AFC",
+   "division": "AFC West",
+   "elo": 1561.1,
+   "wins": 5,
+   "losses": 1,
+   "ties": 0,
+   "div_wins": 3,
+   "div_losses": 0,
+   "pts_diff": 40,
+   "games": 472,
+   "preseason_elo": 1490.7,
+   "preseason_rank": 17,
+   "rank": 10
+  },
+  {
+   "team": "DET",
+   "name": "Detroit Lions",
+   "conference": "NFC",
+   "division": "NFC North",
+   "elo": 1554.4,
+   "wins": 4,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 0,
+   "pts_diff": 19,
+   "games": 451,
+   "preseason_elo": 1544.6,
+   "preseason_rank": 10,
+   "rank": 11
+  },
+  {
+   "team": "PIT",
+   "name": "Pittsburgh Steelers",
+   "conference": "AFC",
+   "division": "AFC North",
+   "elo": 1554.0,
+   "wins": 5,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": 15,
+   "games": 474,
+   "preseason_elo": 1508.3,
+   "preseason_rank": 16,
+   "rank": 12
+  },
+  {
+   "team": "CIN",
+   "name": "Cincinnati Bengals",
+   "conference": "AFC",
+   "division": "AFC North",
+   "elo": 1553.9,
+   "wins": 4,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": 41,
+   "games": 456,
+   "preseason_elo": 1476.4,
+   "preseason_rank": 19,
+   "rank": 13
+  },
+  {
+   "team": "GB",
+   "name": "Green Bay Packers",
+   "conference": "NFC",
+   "division": "NFC North",
+   "elo": 1523.9,
+   "wins": 4,
+   "losses": 3,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 2,
+   "pts_diff": -1,
+   "games": 477,
+   "preseason_elo": 1522.6,
+   "preseason_rank": 15,
+   "rank": 14
+  },
+  {
+   "team": "BAL",
+   "name": "Baltimore Ravens",
+   "conference": "AFC",
+   "division": "AFC North",
+   "elo": 1515.5,
+   "wins": 4,
+   "losses": 3,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 2,
+   "pts_diff": 2,
+   "games": 476,
+   "preseason_elo": 1535.1,
+   "preseason_rank": 12,
+   "rank": 15
+  },
+  {
+   "team": "HOU",
+   "name": "Houston Texans",
+   "conference": "AFC",
+   "division": "AFC South",
+   "elo": 1509.5,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 2,
+   "div_losses": 1,
+   "pts_diff": -5,
+   "games": 412,
+   "preseason_elo": 1591.0,
+   "preseason_rank": 5,
+   "rank": 16
+  },
+  {
+   "team": "ATL",
+   "name": "Atlanta Falcons",
+   "conference": "NFC",
+   "division": "NFC South",
+   "elo": 1481.4,
+   "wins": 3,
+   "losses": 4,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -2,
+   "games": 458,
+   "preseason_elo": 1473.8,
+   "preseason_rank": 20,
+   "rank": 17
+  },
+  {
+   "team": "TB",
+   "name": "Tampa Bay Buccaneers",
+   "conference": "NFC",
+   "division": "NFC South",
+   "elo": 1469.7,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 0,
+   "pts_diff": 11,
+   "games": 463,
+   "preseason_elo": 1480.9,
+   "preseason_rank": 18,
+   "rank": 18
+  },
+  {
+   "team": "CLE",
+   "name": "Cleveland Browns",
+   "conference": "AFC",
+   "division": "AFC North",
+   "elo": 1467.8,
+   "wins": 5,
+   "losses": 2,
+   "ties": 0,
+   "div_wins": 2,
+   "div_losses": 0,
+   "pts_diff": -13,
+   "games": 448,
+   "preseason_elo": 1429.0,
+   "preseason_rank": 28,
+   "rank": 19
+  },
+  {
+   "team": "DAL",
+   "name": "Dallas Cowboys",
+   "conference": "NFC",
+   "division": "NFC East",
+   "elo": 1466.7,
+   "wins": 3,
+   "losses": 4,
+   "ties": 0,
+   "div_wins": 2,
+   "div_losses": 1,
+   "pts_diff": 9,
+   "games": 459,
+   "preseason_elo": 1459.1,
+   "preseason_rank": 23,
+   "rank": 20
+  },
+  {
+   "team": "NYG",
+   "name": "New York Giants",
+   "conference": "NFC",
+   "division": "NFC East",
+   "elo": 1464.4,
+   "wins": 4,
+   "losses": 2,
+   "ties": 1,
+   "div_wins": 1,
+   "div_losses": 0,
+   "pts_diff": 2,
+   "games": 462,
+   "preseason_elo": 1429.8,
+   "preseason_rank": 27,
+   "rank": 21
+  },
+  {
+   "team": "CAR",
+   "name": "Carolina Panthers",
+   "conference": "NFC",
+   "division": "NFC South",
+   "elo": 1449.3,
+   "wins": 3,
+   "losses": 3,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -7,
+   "games": 459,
+   "preseason_elo": 1438.5,
+   "preseason_rank": 26,
+   "rank": 22
+  },
+  {
+   "team": "PHI",
+   "name": "Philadelphia Eagles",
+   "conference": "NFC",
+   "division": "NFC East",
+   "elo": 1445.7,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -48,
+   "games": 480,
+   "preseason_elo": 1553.0,
+   "preseason_rank": 8,
+   "rank": 23
+  },
+  {
+   "team": "IND",
+   "name": "Indianapolis Colts",
+   "conference": "AFC",
+   "division": "AFC South",
+   "elo": 1421.7,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -26,
+   "games": 472,
+   "preseason_elo": 1471.0,
+   "preseason_rank": 21,
+   "rank": 24
+  },
+  {
+   "team": "NO",
+   "name": "New Orleans Saints",
+   "conference": "NFC",
+   "division": "NFC South",
+   "elo": 1412.4,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 1,
+   "pts_diff": -32,
+   "games": 463,
+   "preseason_elo": 1443.9,
+   "preseason_rank": 25,
+   "rank": 25
+  },
+  {
+   "team": "LAC",
+   "name": "Los Angeles Chargers",
+   "conference": "AFC",
+   "division": "AFC West",
+   "elo": 1410.3,
+   "wins": 0,
+   "losses": 6,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 3,
+   "pts_diff": -61,
+   "games": 458,
+   "preseason_elo": 1522.9,
+   "preseason_rank": 14,
+   "rank": 26
+  },
+  {
+   "team": "WAS",
+   "name": "Washington Commanders",
+   "conference": "NFC",
+   "division": "NFC East",
+   "elo": 1409.5,
+   "wins": 1,
+   "losses": 4,
+   "ties": 1,
+   "div_wins": 0,
+   "div_losses": 2,
+   "pts_diff": -40,
+   "games": 454,
+   "preseason_elo": 1459.3,
+   "preseason_rank": 22,
+   "rank": 27
+  },
+  {
+   "team": "LV",
+   "name": "Las Vegas Raiders",
+   "conference": "AFC",
+   "division": "AFC West",
+   "elo": 1403.5,
+   "wins": 3,
+   "losses": 4,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -14,
+   "games": 453,
+   "preseason_elo": 1366.7,
+   "preseason_rank": 32,
+   "rank": 28
+  },
+  {
+   "team": "MIA",
+   "name": "Miami Dolphins",
+   "conference": "AFC",
+   "division": "AFC East",
+   "elo": 1387.8,
+   "wins": 1,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 0,
+   "pts_diff": -59,
+   "games": 452,
+   "preseason_elo": 1458.5,
+   "preseason_rank": 24,
+   "rank": 29
+  },
+  {
+   "team": "ARI",
+   "name": "Arizona Cardinals",
+   "conference": "NFC",
+   "division": "NFC West",
+   "elo": 1378.0,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 2,
+   "pts_diff": -66,
+   "games": 454,
+   "preseason_elo": 1402.9,
+   "preseason_rank": 29,
+   "rank": 30
+  },
+  {
+   "team": "NYJ",
+   "name": "New York Jets",
+   "conference": "AFC",
+   "division": "AFC East",
+   "elo": 1372.3,
+   "wins": 2,
+   "losses": 5,
+   "ties": 0,
+   "div_wins": 0,
+   "div_losses": 2,
+   "pts_diff": -13,
+   "games": 456,
+   "preseason_elo": 1374.7,
+   "preseason_rank": 30,
+   "rank": 31
+  },
+  {
+   "team": "TEN",
+   "name": "Tennessee Titans",
+   "conference": "AFC",
+   "division": "AFC South",
+   "elo": 1317.5,
+   "wins": 1,
+   "losses": 6,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -48,
+   "games": 462,
+   "preseason_elo": 1370.6,
+   "preseason_rank": 31,
+   "rank": 32
+  }
+ ],
+ "divisions": {
+  "AFC East": {
+   "name": "AFC East",
+   "conference": "AFC",
+   "teams": 4,
+   "avgElo": 1495.8,
+   "preseasonAvgElo": 1502.5,
+   "top10": 2,
+   "bestTeam": "BUF",
+   "bestElo": 1639.6,
+   "worstTeam": "NYJ",
+   "worstElo": 1372.3
+  },
+  "AFC North": {
+   "name": "AFC North",
+   "conference": "AFC",
+   "teams": 4,
+   "avgElo": 1522.8,
+   "preseasonAvgElo": 1487.2,
+   "top10": 0,
+   "bestTeam": "PIT",
+   "bestElo": 1554.0,
+   "worstTeam": "CLE",
+   "worstElo": 1467.8
+  },
+  "AFC South": {
+   "name": "AFC South",
+   "conference": "AFC",
+   "teams": 4,
+   "avgElo": 1461.3,
+   "preseasonAvgElo": 1498.2,
+   "top10": 1,
+   "bestTeam": "JAX",
+   "bestElo": 1596.7,
+   "worstTeam": "TEN",
+   "worstElo": 1317.5
+  },
+  "AFC West": {
+   "name": "AFC West",
+   "conference": "AFC",
+   "teams": 4,
+   "avgElo": 1496.9,
+   "preseasonAvgElo": 1493.5,
+   "top10": 2,
+   "bestTeam": "DEN",
+   "bestElo": 1612.7,
+   "worstTeam": "LV",
+   "worstElo": 1403.5
+  },
+  "NFC East": {
+   "name": "NFC East",
+   "conference": "NFC",
+   "teams": 4,
+   "avgElo": 1446.6,
+   "preseasonAvgElo": 1475.3,
+   "top10": 0,
+   "bestTeam": "DAL",
+   "bestElo": 1466.7,
+   "worstTeam": "WAS",
+   "worstElo": 1409.5
+  },
+  "NFC North": {
+   "name": "NFC North",
+   "conference": "NFC",
+   "teams": 4,
+   "avgElo": 1569.9,
+   "preseasonAvgElo": 1533.8,
+   "top10": 2,
+   "bestTeam": "MIN",
+   "bestElo": 1627.0,
+   "worstTeam": "GB",
+   "worstElo": 1523.9
+  },
+  "NFC South": {
+   "name": "NFC South",
+   "conference": "NFC",
+   "teams": 4,
+   "avgElo": 1453.2,
+   "preseasonAvgElo": 1459.3,
+   "top10": 0,
+   "bestTeam": "ATL",
+   "bestElo": 1481.4,
+   "worstTeam": "NO",
+   "worstElo": 1412.4
+  },
+  "NFC West": {
+   "name": "NFC West",
+   "conference": "NFC",
+   "teams": 4,
+   "avgElo": 1553.4,
+   "preseasonAvgElo": 1550.3,
+   "top10": 3,
+   "bestTeam": "SEA",
+   "bestElo": 1651.9,
+   "worstTeam": "ARI",
+   "worstElo": 1378.0
+  }
+ },
+ "slate": [
+  {
+   "game_id": "2026_08_CAR_GB",
+   "date": "2026-10-29",
+   "weekday": "Thursday",
+   "gametime": "20:15",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "GB",
+   "away_team": "CAR",
+   "home_name": "Green Bay Packers",
+   "away_name": "Carolina Panthers",
+   "home_division": "NFC North",
+   "away_division": "NFC South",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 4.0,
+   "away_rest": 4.0,
+   "elo_home_pre": 1523.9,
+   "elo_away_pre": 1449.3,
+   "p_home": 0.6397,
+   "p_home_elo": 0.6695,
+   "model": "elo+efficiency:random_forest",
+   "pick": "GB",
+   "pick_prob": 0.6397,
+   "elo_spread": 4.7,
+   "pred_home_score": 25.0,
+   "pred_away_score": 20.3,
+   "pred_total": 45.3
+  },
+  {
+   "game_id": "2026_08_BAL_BUF",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "BUF",
+   "away_team": "BAL",
+   "home_name": "Buffalo Bills",
+   "away_name": "Baltimore Ravens",
+   "home_division": "AFC East",
+   "away_division": "AFC North",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 14.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1639.6,
+   "elo_away_pre": 1515.5,
+   "p_home": 0.6918,
+   "p_home_elo": 0.7513,
+   "model": "elo+efficiency:random_forest",
+   "pick": "BUF",
+   "pick_prob": 0.6918,
+   "elo_spread": 7.5,
+   "pred_home_score": 29.8,
+   "pred_away_score": 22.3,
+   "pred_total": 52.1
+  },
+  {
+   "game_id": "2026_08_TEN_CIN",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "CIN",
+   "away_team": "TEN",
+   "home_name": "Cincinnati Bengals",
+   "away_name": "Tennessee Titans",
+   "home_division": "AFC North",
+   "away_division": "AFC South",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1553.9,
+   "elo_away_pre": 1317.5,
+   "p_home": 0.846,
+   "p_home_elo": 0.8371,
+   "model": "elo+efficiency:random_forest",
+   "pick": "CIN",
+   "pick_prob": 0.846,
+   "elo_spread": 11.3,
+   "pred_home_score": 29.0,
+   "pred_away_score": 17.7,
+   "pred_total": 46.7
+  },
+  {
+   "game_id": "2026_08_ARI_DAL",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "DAL",
+   "away_team": "ARI",
+   "home_name": "Dallas Cowboys",
+   "away_name": "Arizona Cardinals",
+   "home_division": "NFC East",
+   "away_division": "NFC West",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 6.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1466.7,
+   "elo_away_pre": 1378.0,
+   "p_home": 0.6818,
+   "p_home_elo": 0.6873,
+   "model": "elo+efficiency:random_forest",
+   "pick": "DAL",
+   "pick_prob": 0.6818,
+   "elo_spread": 5.2,
+   "pred_home_score": 29.3,
+   "pred_away_score": 24.1,
+   "pred_total": 53.4
+  },
+  {
+   "game_id": "2026_08_MIN_DET",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "DET",
+   "away_team": "MIN",
+   "home_name": "Detroit Lions",
+   "away_name": "Minnesota Vikings",
+   "home_division": "NFC North",
+   "away_division": "NFC North",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1554.4,
+   "elo_away_pre": 1627.0,
+   "p_home": 0.5265,
+   "p_home_elo": 0.4647,
+   "model": "elo+efficiency:random_forest",
+   "pick": "DET",
+   "pick_prob": 0.5265,
+   "elo_spread": -1.3,
+   "pred_home_score": 21.6,
+   "pred_away_score": 22.9,
+   "pred_total": 44.6
+  },
+  {
+   "game_id": "2026_08_IND_JAX",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "JAX",
+   "away_team": "IND",
+   "home_name": "Jacksonville Jaguars",
+   "away_name": "Indianapolis Colts",
+   "home_division": "AFC South",
+   "away_division": "AFC South",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 14.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1596.7,
+   "elo_away_pre": 1421.7,
+   "p_home": 0.8007,
+   "p_home_elo": 0.802,
+   "model": "elo+efficiency:random_forest",
+   "pick": "JAX",
+   "pick_prob": 0.8007,
+   "elo_spread": 9.6,
+   "pred_home_score": 28.8,
+   "pred_away_score": 19.2,
+   "pred_total": 48.1
+  },
+  {
+   "game_id": "2026_08_LV_NYJ",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "NYJ",
+   "away_team": "LV",
+   "home_name": "New York Jets",
+   "away_name": "Las Vegas Raiders",
+   "home_division": "AFC East",
+   "away_division": "AFC West",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1372.3,
+   "elo_away_pre": 1403.5,
+   "p_home": 0.5466,
+   "p_home_elo": 0.5242,
+   "model": "elo+efficiency:random_forest",
+   "pick": "NYJ",
+   "pick_prob": 0.5466,
+   "elo_spread": 0.4,
+   "pred_home_score": 22.6,
+   "pred_away_score": 22.3,
+   "pred_total": 44.9
+  },
+  {
+   "game_id": "2026_08_CLE_PIT",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "PIT",
+   "away_team": "CLE",
+   "home_name": "Pittsburgh Steelers",
+   "away_name": "Cleveland Browns",
+   "home_division": "AFC North",
+   "away_division": "AFC North",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1554.0,
+   "elo_away_pre": 1467.8,
+   "p_home": 0.6769,
+   "p_home_elo": 0.6841,
+   "model": "elo+efficiency:random_forest",
+   "pick": "PIT",
+   "pick_prob": 0.6769,
+   "elo_spread": 5.1,
+   "pred_home_score": 22.7,
+   "pred_away_score": 17.5,
+   "pred_total": 40.2
+  },
+  {
+   "game_id": "2026_08_ATL_TB",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "13:00",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "TB",
+   "away_team": "ATL",
+   "home_name": "Tampa Bay Buccaneers",
+   "away_name": "Atlanta Falcons",
+   "home_division": "NFC South",
+   "away_division": "NFC South",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1469.7,
+   "elo_away_pre": 1481.4,
+   "p_home": 0.5344,
+   "p_home_elo": 0.5521,
+   "model": "elo+efficiency:random_forest",
+   "pick": "TB",
+   "pick_prob": 0.5344,
+   "elo_spread": 1.2,
+   "pred_home_score": 24.0,
+   "pred_away_score": 22.8,
+   "pred_total": 46.8
+  },
+  {
+   "game_id": "2026_08_LAC_LA",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "16:05",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "LA",
+   "away_team": "LAC",
+   "home_name": "Los Angeles Rams",
+   "away_name": "Los Angeles Chargers",
+   "home_division": "NFC West",
+   "away_division": "AFC West",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 14.0,
+   "elo_home_pre": 1568.9,
+   "elo_away_pre": 1410.3,
+   "p_home": 0.8241,
+   "p_home_elo": 0.7455,
+   "model": "elo+efficiency:random_forest",
+   "pick": "LA",
+   "pick_prob": 0.8241,
+   "elo_spread": 7.3,
+   "pred_home_score": 25.9,
+   "pred_away_score": 18.7,
+   "pred_total": 44.6
+  },
+  {
+   "game_id": "2026_08_KC_DEN",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "16:25",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "DEN",
+   "away_team": "KC",
+   "home_name": "Denver Broncos",
+   "away_name": "Kansas City Chiefs",
+   "home_division": "AFC West",
+   "away_division": "AFC West",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 7.0,
+   "elo_home_pre": 1612.7,
+   "elo_away_pre": 1561.1,
+   "p_home": 0.5484,
+   "p_home_elo": 0.6395,
+   "model": "elo+efficiency:random_forest",
+   "pick": "DEN",
+   "pick_prob": 0.5484,
+   "elo_spread": 3.7,
+   "pred_home_score": 21.7,
+   "pred_away_score": 17.9,
+   "pred_total": 39.6
+  },
+  {
+   "game_id": "2026_08_NE_MIA",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "16:25",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "MIA",
+   "away_team": "NE",
+   "home_name": "Miami Dolphins",
+   "away_name": "New England Patriots",
+   "home_division": "AFC East",
+   "away_division": "AFC East",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 7.0,
+   "away_rest": 10.0,
+   "elo_home_pre": 1387.8,
+   "elo_away_pre": 1583.4,
+   "p_home": 0.2686,
+   "p_home_elo": 0.2759,
+   "model": "elo+efficiency:random_forest",
+   "pick": "NE",
+   "pick_prob": 0.7314,
+   "elo_spread": -7.1,
+   "pred_home_score": 18.3,
+   "pred_away_score": 25.4,
+   "pred_total": 43.7
+  },
+  {
+   "game_id": "2026_08_PHI_WAS",
+   "date": "2026-11-01",
+   "weekday": "Sunday",
+   "gametime": "20:20",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "WAS",
+   "away_team": "PHI",
+   "home_name": "Washington Commanders",
+   "away_name": "Philadelphia Eagles",
+   "home_division": "NFC East",
+   "away_division": "NFC East",
+   "div_game": true,
+   "neutral": false,
+   "home_rest": 13.0,
+   "away_rest": 6.0,
+   "elo_home_pre": 1409.5,
+   "elo_away_pre": 1445.7,
+   "p_home": 0.6088,
+   "p_home_elo": 0.5456,
+   "model": "elo+efficiency:random_forest",
+   "pick": "WAS",
+   "pick_prob": 0.6088,
+   "elo_spread": 1.0,
+   "pred_home_score": 23.4,
+   "pred_away_score": 22.5,
+   "pred_total": 45.9
+  },
+  {
+   "game_id": "2026_08_CHI_SEA",
+   "date": "2026-11-02",
+   "weekday": "Monday",
+   "gametime": "20:15",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "SEA",
+   "away_team": "CHI",
+   "home_name": "Seattle Seahawks",
+   "away_name": "Chicago Bears",
+   "home_division": "NFC West",
+   "away_division": "NFC North",
+   "div_game": false,
+   "neutral": false,
+   "home_rest": 8.0,
+   "away_rest": 11.0,
+   "elo_home_pre": 1651.9,
+   "elo_away_pre": 1574.5,
+   "p_home": 0.5417,
+   "p_home_elo": 0.6471,
+   "model": "elo+efficiency:random_forest",
+   "pick": "SEA",
+   "pick_prob": 0.5417,
+   "elo_spread": 4.0,
+   "pred_home_score": 24.3,
+   "pred_away_score": 20.3,
+   "pred_total": 44.7
+  }
+ ],
+ "graded_today": [
+  {
+   "game_id": "2026_07_DAL_PHI",
+   "date": "2026-10-26",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "PHI",
+   "away_team": "DAL",
+   "neutral": false,
+   "pick": "DAL",
+   "p_home": 0.4423,
+   "pick_prob": 0.5577,
+   "elo_spread": 3.8,
+   "pred_home_score": 25.5,
+   "pred_away_score": 21.7,
+   "home_score": 21.0,
+   "away_score": 38.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.5839,
+   "brier": 0.1956,
+   "home_log_loss": 0.7985,
+   "d_ll": -0.2146,
+   "margin_err": 20.8,
+   "total_err": 11.8,
+   "graded_on": "2026-10-27"
+  }
+ ],
+ "graded_recent": [
+  {
+   "game_id": "2026_07_NE_CHI",
+   "date": "2026-10-22",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "CHI",
+   "away_team": "NE",
+   "neutral": false,
+   "pick": "CHI",
+   "p_home": 0.5008,
+   "pick_prob": 0.5008,
+   "elo_spread": -0.3,
+   "pred_home_score": 21.8,
+   "pred_away_score": 22.1,
+   "home_score": 30.0,
+   "away_score": 24.0,
+   "home_win": 1.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.6915,
+   "brier": 0.2492,
+   "home_log_loss": 0.5978,
+   "d_ll": 0.0937,
+   "margin_err": 6.3,
+   "total_err": 10.1,
+   "graded_on": "2026-10-23"
+  },
+  {
+   "game_id": "2026_07_DEN_ARI",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "ARI",
+   "away_team": "DEN",
+   "neutral": false,
+   "pick": "DEN",
+   "p_home": 0.3541,
+   "pick_prob": 0.6459,
+   "elo_spread": -7.7,
+   "pred_home_score": 18.9,
+   "pred_away_score": 26.6,
+   "home_score": 16.0,
+   "away_score": 30.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.4371,
+   "brier": 0.1254,
+   "home_log_loss": 0.7985,
+   "d_ll": -0.3614,
+   "margin_err": 6.3,
+   "total_err": 0.5,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_SF_ATL",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "ATL",
+   "away_team": "SF",
+   "neutral": false,
+   "pick": "SF",
+   "p_home": 0.2436,
+   "pick_prob": 0.7564,
+   "elo_spread": -6.4,
+   "pred_home_score": 21.1,
+   "pred_away_score": 27.5,
+   "home_score": 29.0,
+   "away_score": 20.0,
+   "home_win": 1.0,
+   "tie": false,
+   "pick_correct": false,
+   "log_loss": 1.4122,
+   "brier": 0.5721,
+   "home_log_loss": 0.5978,
+   "d_ll": 0.8144,
+   "margin_err": 15.4,
+   "total_err": 0.4,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_CIN_BAL",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "BAL",
+   "away_team": "CIN",
+   "neutral": false,
+   "pick": "BAL",
+   "p_home": 0.5151,
+   "pick_prob": 0.5151,
+   "elo_spread": 2.3,
+   "pred_home_score": 25.9,
+   "pred_away_score": 23.6,
+   "home_score": 13.0,
+   "away_score": 35.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": false,
+   "log_loss": 0.7238,
+   "brier": 0.2653,
+   "home_log_loss": 0.7985,
+   "d_ll": -0.0747,
+   "margin_err": 24.3,
+   "total_err": 1.5,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_TB_CAR",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "CAR",
+   "away_team": "TB",
+   "neutral": false,
+   "pick": "CAR",
+   "p_home": 0.7022,
+   "pick_prob": 0.7022,
+   "elo_spread": 4.6,
+   "pred_home_score": 25.1,
+   "pred_away_score": 20.5,
+   "home_score": 13.0,
+   "away_score": 43.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": false,
+   "log_loss": 1.2113,
+   "brier": 0.4931,
+   "home_log_loss": 0.7985,
+   "d_ll": 0.4128,
+   "margin_err": 34.6,
+   "total_err": 10.4,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_GB_DET",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "DET",
+   "away_team": "GB",
+   "neutral": false,
+   "pick": "DET",
+   "p_home": 0.5848,
+   "pick_prob": 0.5848,
+   "elo_spread": 2.9,
+   "pred_home_score": 26.7,
+   "pred_away_score": 23.8,
+   "home_score": 20.0,
+   "away_score": 17.0,
+   "home_win": 1.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.5365,
+   "brier": 0.1724,
+   "home_log_loss": 0.5978,
+   "d_ll": -0.0614,
+   "margin_err": 0.1,
+   "total_err": 13.5,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_NYG_HOU",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "HOU",
+   "away_team": "NYG",
+   "neutral": false,
+   "pick": "HOU",
+   "p_home": 0.7475,
+   "pick_prob": 0.7475,
+   "elo_spread": 5.7,
+   "pred_home_score": 25.9,
+   "pred_away_score": 20.1,
+   "home_score": 21.0,
+   "away_score": 27.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": false,
+   "log_loss": 1.3763,
+   "brier": 0.5588,
+   "home_log_loss": 0.7985,
+   "d_ll": 0.5778,
+   "margin_err": 11.8,
+   "total_err": 2.0,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_LA_LV",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "LV",
+   "away_team": "LA",
+   "neutral": false,
+   "pick": "LA",
+   "p_home": 0.2832,
+   "pick_prob": 0.7168,
+   "elo_spread": -3.4,
+   "pred_home_score": 22.5,
+   "pred_away_score": 25.9,
+   "home_score": 21.0,
+   "away_score": 35.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.333,
+   "brier": 0.0802,
+   "home_log_loss": 0.7985,
+   "d_ll": -0.4655,
+   "margin_err": 10.6,
+   "total_err": 7.6,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_IND_MIN",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "MIN",
+   "away_team": "IND",
+   "neutral": false,
+   "pick": "MIN",
+   "p_home": 0.7586,
+   "pick_prob": 0.7586,
+   "elo_spread": 10.3,
+   "pred_home_score": 26.9,
+   "pred_away_score": 16.6,
+   "home_score": 16.0,
+   "away_score": 10.0,
+   "home_win": 1.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.2763,
+   "brier": 0.0583,
+   "home_log_loss": 0.5978,
+   "d_ll": -0.3216,
+   "margin_err": 4.3,
+   "total_err": 17.5,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_PIT_NO",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "NO",
+   "away_team": "PIT",
+   "neutral": true,
+   "pick": "PIT",
+   "p_home": 0.3592,
+   "pick_prob": 0.6408,
+   "elo_spread": -5.1,
+   "pred_home_score": 20.1,
+   "pred_away_score": 25.2,
+   "home_score": 10.0,
+   "away_score": 16.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.445,
+   "brier": 0.129,
+   "home_log_loss": 0.6931,
+   "d_ll": -0.2481,
+   "margin_err": 0.9,
+   "total_err": 19.3,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_MIA_NYJ",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "NYJ",
+   "away_team": "MIA",
+   "neutral": false,
+   "pick": "NYJ",
+   "p_home": 0.6203,
+   "pick_prob": 0.6203,
+   "elo_spread": 1.5,
+   "pred_home_score": 21.9,
+   "pred_away_score": 20.4,
+   "home_score": 25.0,
+   "away_score": 28.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": false,
+   "log_loss": 0.9684,
+   "brier": 0.3848,
+   "home_log_loss": 0.7985,
+   "d_ll": 0.1699,
+   "margin_err": 4.5,
+   "total_err": 10.7,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_KC_SEA",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "SEA",
+   "away_team": "KC",
+   "neutral": false,
+   "pick": "SEA",
+   "p_home": 0.5528,
+   "pick_prob": 0.5528,
+   "elo_spread": 4.7,
+   "pred_home_score": 23.6,
+   "pred_away_score": 18.9,
+   "home_score": 20.0,
+   "away_score": 3.0,
+   "home_win": 1.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.5928,
+   "brier": 0.2,
+   "home_log_loss": 0.5978,
+   "d_ll": -0.0051,
+   "margin_err": 12.3,
+   "total_err": 19.5,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_CLE_TEN",
+   "date": "2026-10-25",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "TEN",
+   "away_team": "CLE",
+   "neutral": false,
+   "pick": "CLE",
+   "p_home": 0.3777,
+   "pick_prob": 0.6223,
+   "elo_spread": -3.6,
+   "pred_home_score": 17.5,
+   "pred_away_score": 21.2,
+   "home_score": 24.0,
+   "away_score": 27.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.4743,
+   "brier": 0.1427,
+   "home_log_loss": 0.7985,
+   "d_ll": -0.3242,
+   "margin_err": 0.7,
+   "total_err": 12.3,
+   "graded_on": "2026-10-26"
+  },
+  {
+   "game_id": "2026_07_DAL_PHI",
+   "date": "2026-10-26",
+   "season": 2026,
+   "week": 7,
+   "game_type": "REG",
+   "week_label": "Week 7",
+   "home_team": "PHI",
+   "away_team": "DAL",
+   "neutral": false,
+   "pick": "DAL",
+   "p_home": 0.4423,
+   "pick_prob": 0.5577,
+   "elo_spread": 3.8,
+   "pred_home_score": 25.5,
+   "pred_away_score": 21.7,
+   "home_score": 21.0,
+   "away_score": 38.0,
+   "home_win": 0.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.5839,
+   "brier": 0.1956,
+   "home_log_loss": 0.7985,
+   "d_ll": -0.2146,
+   "margin_err": 20.8,
+   "total_err": 11.8,
+   "graded_on": "2026-10-27"
+  }
+ ],
+ "ledger": {
+  "graded": 107,
+  "correct": 69,
+  "ties": 1,
+  "accuracy": 0.6449,
+  "log_loss": 0.6445,
+  "brier": 0.2253,
+  "home_log_loss": 0.6951,
+  "avg_margin_err": 9.6,
+  "avg_total_err": 11.0,
+  "d_ll_mean": -0.05061,
+  "d_ll_se": 0.02991,
+  "first_date": "2026-09-09",
+  "last_date": "2026-10-26",
+  "by_week": {
+   "Week 1": {
+    "graded": 16,
+    "correct": 10,
+    "ties": 0,
+    "accuracy": 0.625,
+    "log_loss": 0.6479,
+    "brier": 0.2281,
+    "home_log_loss": 0.6665,
+    "avg_margin_err": 12.2,
+    "avg_total_err": 12.6,
+    "d_ll_mean": -0.01859,
+    "d_ll_se": 0.05406
+   },
+   "Week 2": {
+    "graded": 16,
+    "correct": 10,
+    "ties": 0,
+    "accuracy": 0.625,
+    "log_loss": 0.6591,
+    "brier": 0.2344,
+    "home_log_loss": 0.7107,
+    "avg_margin_err": 11.8,
+    "avg_total_err": 11.1,
+    "d_ll_mean": -0.05161,
+    "d_ll_se": 0.07662
+   },
+   "Week 3": {
+    "graded": 16,
+    "correct": 10,
+    "ties": 0,
+    "accuracy": 0.625,
+    "log_loss": 0.6381,
+    "brier": 0.2262,
+    "home_log_loss": 0.6539,
+    "avg_margin_err": 8.1,
+    "avg_total_err": 10.8,
+    "d_ll_mean": -0.01591,
+    "d_ll_se": 0.08276
+   },
+   "Week 4": {
+    "graded": 16,
+    "correct": 12,
+    "ties": 0,
+    "accuracy": 0.75,
+    "log_loss": 0.5272,
+    "brier": 0.1755,
+    "home_log_loss": 0.6916,
+    "avg_margin_err": 6.9,
+    "avg_total_err": 11.4,
+    "d_ll_mean": -0.16436,
+    "d_ll_se": 0.05758
+   },
+   "Week 5": {
+    "graded": 15,
+    "correct": 9,
+    "ties": 1,
+    "accuracy": 0.6,
+    "log_loss": 0.6035,
+    "brier": 0.1915,
+    "home_log_loss": 0.7249,
+    "avg_margin_err": 9.5,
+    "avg_total_err": 10.1,
+    "d_ll_mean": -0.12143,
+    "d_ll_se": 0.06019
+   },
+   "Week 6": {
+    "graded": 14,
+    "correct": 9,
+    "ties": 0,
+    "accuracy": 0.6429,
+    "log_loss": 0.7351,
+    "brier": 0.2698,
+    "home_log_loss": 0.705,
+    "avg_margin_err": 7.6,
+    "avg_total_err": 11.2,
+    "d_ll_mean": 0.03009,
+    "d_ll_se": 0.11748
+   },
+   "Week 7": {
+    "graded": 14,
+    "correct": 9,
+    "ties": 0,
+    "accuracy": 0.6429,
+    "log_loss": 0.7187,
+    "brier": 0.2591,
+    "home_log_loss": 0.7193,
+    "avg_margin_err": 10.9,
+    "avg_total_err": 9.8,
+    "d_ll_mean": -0.00057,
+    "d_ll_se": 0.10158
+   }
+  },
+  "rolling": {
+   "7d": {
+    "graded": 14,
+    "correct": 9,
+    "ties": 0,
+    "accuracy": 0.6429,
+    "log_loss": 0.7187,
+    "brier": 0.2591,
+    "home_log_loss": 0.7193,
+    "avg_margin_err": 10.9,
+    "avg_total_err": 9.8,
+    "d_ll_mean": -0.00057,
+    "d_ll_se": 0.10158
+   },
+   "30d": {
+    "graded": 74,
+    "correct": 49,
+    "ties": 1,
+    "accuracy": 0.6622,
+    "log_loss": 0.6339,
+    "brier": 0.2195,
+    "home_log_loss": 0.6965,
+    "avg_margin_err": 8.3,
+    "avg_total_err": 10.8,
+    "d_ll_mean": -0.0626,
+    "d_ll_se": 0.03813
+   }
+  }
+ },
+ "futures": {
+  "season": 2026,
+  "sims": 10000,
+  "remaining_games": 165,
+  "teams": [
+   {
+    "team": "MIN",
+    "name": "Minnesota Vikings",
+    "conference": "NFC",
+    "division": "NFC North",
+    "elo": 1627.0,
+    "wins": 6,
+    "losses": 0,
+    "ties": 0,
+    "pts_diff": 51,
+    "games_left": 11,
+    "exp_wins": 13.1,
+    "exp_losses": 3.9,
+    "p_division": 0.7016,
+    "p_playoffs": 0.9537,
+    "p_top_seed": 0.4872,
+    "p_conf": 0.2459,
+    "p_sb": 0.1297
+   },
+   {
+    "team": "BUF",
+    "name": "Buffalo Bills",
+    "conference": "AFC",
+    "division": "AFC East",
+    "elo": 1639.6,
+    "wins": 5,
+    "losses": 1,
+    "ties": 0,
+    "pts_diff": 26,
+    "games_left": 11,
+    "exp_wins": 12.3,
+    "exp_losses": 4.7,
+    "p_division": 0.732,
+    "p_playoffs": 0.9264,
+    "p_top_seed": 0.3044,
+    "p_conf": 0.2371,
+    "p_sb": 0.1273
+   },
+   {
+    "team": "SF",
+    "name": "San Francisco 49ers",
+    "conference": "NFC",
+    "division": "NFC West",
+    "elo": 1614.9,
+    "wins": 6,
+    "losses": 1,
+    "ties": 0,
+    "pts_diff": 58,
+    "games_left": 10,
+    "exp_wins": 12.4,
+    "exp_losses": 4.6,
+    "p_division": 0.6873,
+    "p_playoffs": 0.9331,
+    "p_top_seed": 0.2886,
+    "p_conf": 0.2159,
+    "p_sb": 0.1118
+   },
+   {
+    "team": "SEA",
+    "name": "Seattle Seahawks",
+    "conference": "NFC",
+    "division": "NFC West",
+    "elo": 1651.9,
+    "wins": 4,
+    "losses": 3,
+    "ties": 0,
+    "pts_diff": 43,
+    "games_left": 10,
+    "exp_wins": 11.0,
+    "exp_losses": 6.0,
+    "p_division": 0.2666,
+    "p_playoffs": 0.7694,
+    "p_top_seed": 0.0687,
+    "p_conf": 0.1684,
+    "p_sb": 0.0921
+   },
+   {
+    "team": "DEN",
+    "name": "Denver Broncos",
+    "conference": "AFC",
+    "division": "AFC West",
+    "elo": 1612.7,
+    "wins": 5,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 3,
+    "games_left": 10,
+    "exp_wins": 11.7,
+    "exp_losses": 5.3,
+    "p_division": 0.5483,
+    "p_playoffs": 0.8779,
+    "p_top_seed": 0.1932,
+    "p_conf": 0.1653,
+    "p_sb": 0.0832
+   },
+   {
+    "team": "JAX",
+    "name": "Jacksonville Jaguars",
+    "conference": "AFC",
+    "division": "AFC South",
+    "elo": 1596.7,
+    "wins": 4,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 50,
+    "games_left": 11,
+    "exp_wins": 11.3,
+    "exp_losses": 5.7,
+    "p_division": 0.8387,
+    "p_playoffs": 0.8808,
+    "p_top_seed": 0.1016,
+    "p_conf": 0.1391,
+    "p_sb": 0.0719
+   },
+   {
+    "team": "KC",
+    "name": "Kansas City Chiefs",
+    "conference": "AFC",
+    "division": "AFC West",
+    "elo": 1561.1,
+    "wins": 5,
+    "losses": 1,
+    "ties": 0,
+    "pts_diff": 40,
+    "games_left": 11,
+    "exp_wins": 11.1,
+    "exp_losses": 5.9,
+    "p_division": 0.4364,
+    "p_playoffs": 0.8358,
+    "p_top_seed": 0.1579,
+    "p_conf": 0.1119,
+    "p_sb": 0.0521
+   },
+   {
+    "team": "NE",
+    "name": "New England Patriots",
+    "conference": "AFC",
+    "division": "AFC East",
+    "elo": 1583.4,
+    "wins": 4,
+    "losses": 3,
+    "ties": 0,
+    "pts_diff": 17,
+    "games_left": 10,
+    "exp_wins": 10.1,
+    "exp_losses": 6.9,
+    "p_division": 0.2603,
+    "p_playoffs": 0.718,
+    "p_top_seed": 0.0621,
+    "p_conf": 0.0965,
+    "p_sb": 0.0446
+   },
+   {
+    "team": "CIN",
+    "name": "Cincinnati Bengals",
+    "conference": "AFC",
+    "division": "AFC North",
+    "elo": 1553.9,
+    "wins": 4,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 41,
+    "games_left": 11,
+    "exp_wins": 10.9,
+    "exp_losses": 6.1,
+    "p_division": 0.3872,
+    "p_playoffs": 0.7556,
+    "p_top_seed": 0.0849,
+    "p_conf": 0.0907,
+    "p_sb": 0.0427
+   },
+   {
+    "team": "CHI",
+    "name": "Chicago Bears",
+    "conference": "NFC",
+    "division": "NFC North",
+    "elo": 1574.5,
+    "wins": 5,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 37,
+    "games_left": 10,
+    "exp_wins": 10.5,
+    "exp_losses": 6.5,
+    "p_division": 0.1159,
+    "p_playoffs": 0.6911,
+    "p_top_seed": 0.0511,
+    "p_conf": 0.0833,
+    "p_sb": 0.041
+   },
+   {
+    "team": "DET",
+    "name": "Detroit Lions",
+    "conference": "NFC",
+    "division": "NFC North",
+    "elo": 1554.4,
+    "wins": 4,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 19,
+    "games_left": 11,
+    "exp_wins": 10.0,
+    "exp_losses": 7.0,
+    "p_division": 0.1471,
+    "p_playoffs": 0.6188,
+    "p_top_seed": 0.0677,
+    "p_conf": 0.0766,
+    "p_sb": 0.0392
+   },
+   {
+    "team": "PIT",
+    "name": "Pittsburgh Steelers",
+    "conference": "AFC",
+    "division": "AFC North",
+    "elo": 1554.0,
+    "wins": 5,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 15,
+    "games_left": 10,
+    "exp_wins": 10.7,
+    "exp_losses": 6.3,
+    "p_division": 0.3275,
+    "p_playoffs": 0.6969,
+    "p_top_seed": 0.0611,
+    "p_conf": 0.0782,
+    "p_sb": 0.0355
+   },
+   {
+    "team": "LA",
+    "name": "Los Angeles Rams",
+    "conference": "NFC",
+    "division": "NFC West",
+    "elo": 1568.9,
+    "wins": 3,
+    "losses": 4,
+    "ties": 0,
+    "pts_diff": 11,
+    "games_left": 10,
+    "exp_wins": 8.7,
+    "exp_losses": 8.3,
+    "p_division": 0.0447,
+    "p_playoffs": 0.3915,
+    "p_top_seed": 0.0046,
+    "p_conf": 0.0488,
+    "p_sb": 0.0269
+   },
+   {
+    "team": "GB",
+    "name": "Green Bay Packers",
+    "conference": "NFC",
+    "division": "NFC North",
+    "elo": 1523.9,
+    "wins": 4,
+    "losses": 3,
+    "ties": 0,
+    "pts_diff": -1,
+    "games_left": 10,
+    "exp_wins": 9.1,
+    "exp_losses": 7.9,
+    "p_division": 0.0354,
+    "p_playoffs": 0.4057,
+    "p_top_seed": 0.0118,
+    "p_conf": 0.0316,
+    "p_sb": 0.0176
+   },
+   {
+    "team": "CLE",
+    "name": "Cleveland Browns",
+    "conference": "AFC",
+    "division": "AFC North",
+    "elo": 1467.8,
+    "wins": 5,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": -13,
+    "games_left": 10,
+    "exp_wins": 9.7,
+    "exp_losses": 7.3,
+    "p_division": 0.1934,
+    "p_playoffs": 0.5187,
+    "p_top_seed": 0.0225,
+    "p_conf": 0.029,
+    "p_sb": 0.011
+   },
+   {
+    "team": "BAL",
+    "name": "Baltimore Ravens",
+    "conference": "AFC",
+    "division": "AFC North",
+    "elo": 1515.5,
+    "wins": 4,
+    "losses": 3,
+    "ties": 0,
+    "pts_diff": 2,
+    "games_left": 10,
+    "exp_wins": 8.9,
+    "exp_losses": 8.1,
+    "p_division": 0.0919,
+    "p_playoffs": 0.3796,
+    "p_top_seed": 0.0112,
+    "p_conf": 0.0267,
+    "p_sb": 0.0109
+   },
+   {
+    "team": "NYG",
+    "name": "New York Giants",
+    "conference": "NFC",
+    "division": "NFC East",
+    "elo": 1464.4,
+    "wins": 4,
+    "losses": 2,
+    "ties": 1,
+    "pts_diff": 2,
+    "games_left": 10,
+    "exp_wins": 8.5,
+    "exp_losses": 7.5,
+    "p_division": 0.5364,
+    "p_playoffs": 0.5737,
+    "p_top_seed": 0.0103,
+    "p_conf": 0.0296,
+    "p_sb": 0.0109
+   },
+   {
+    "team": "ATL",
+    "name": "Atlanta Falcons",
+    "conference": "NFC",
+    "division": "NFC South",
+    "elo": 1481.4,
+    "wins": 3,
+    "losses": 4,
+    "ties": 0,
+    "pts_diff": -2,
+    "games_left": 10,
+    "exp_wins": 7.7,
+    "exp_losses": 9.3,
+    "p_division": 0.3465,
+    "p_playoffs": 0.3806,
+    "p_top_seed": 0.0031,
+    "p_conf": 0.023,
+    "p_sb": 0.0098
+   },
+   {
+    "team": "DAL",
+    "name": "Dallas Cowboys",
+    "conference": "NFC",
+    "division": "NFC East",
+    "elo": 1466.7,
+    "wins": 3,
+    "losses": 4,
+    "ties": 0,
+    "pts_diff": 9,
+    "games_left": 10,
+    "exp_wins": 7.9,
+    "exp_losses": 9.1,
+    "p_division": 0.2808,
+    "p_playoffs": 0.3271,
+    "p_top_seed": 0.0022,
+    "p_conf": 0.0198,
+    "p_sb": 0.0094
+   },
+   {
+    "team": "HOU",
+    "name": "Houston Texans",
+    "conference": "AFC",
+    "division": "AFC South",
+    "elo": 1509.5,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -5,
+    "games_left": 10,
+    "exp_wins": 7.5,
+    "exp_losses": 9.5,
+    "p_division": 0.1091,
+    "p_playoffs": 0.2219,
+    "p_top_seed": 0.0009,
+    "p_conf": 0.0167,
+    "p_sb": 0.0076
+   },
+   {
+    "team": "CAR",
+    "name": "Carolina Panthers",
+    "conference": "NFC",
+    "division": "NFC South",
+    "elo": 1449.3,
+    "wins": 3,
+    "losses": 3,
+    "ties": 0,
+    "pts_diff": -7,
+    "games_left": 11,
+    "exp_wins": 7.4,
+    "exp_losses": 9.6,
+    "p_division": 0.2896,
+    "p_playoffs": 0.3233,
+    "p_top_seed": 0.0039,
+    "p_conf": 0.0188,
+    "p_sb": 0.0069
+   },
+   {
+    "team": "TB",
+    "name": "Tampa Bay Buccaneers",
+    "conference": "NFC",
+    "division": "NFC South",
+    "elo": 1469.7,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": 11,
+    "games_left": 10,
+    "exp_wins": 6.8,
+    "exp_losses": 10.2,
+    "p_division": 0.2523,
+    "p_playoffs": 0.273,
+    "p_top_seed": 0.0004,
+    "p_conf": 0.0177,
+    "p_sb": 0.0062
+   },
+   {
+    "team": "PHI",
+    "name": "Philadelphia Eagles",
+    "conference": "NFC",
+    "division": "NFC East",
+    "elo": 1445.7,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -48,
+    "games_left": 10,
+    "exp_wins": 6.4,
+    "exp_losses": 10.6,
+    "p_division": 0.1082,
+    "p_playoffs": 0.1223,
+    "p_top_seed": 0.0001,
+    "p_conf": 0.0078,
+    "p_sb": 0.0037
+   },
+   {
+    "team": "NO",
+    "name": "New Orleans Saints",
+    "conference": "NFC",
+    "division": "NFC South",
+    "elo": 1412.4,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -32,
+    "games_left": 10,
+    "exp_wins": 6.1,
+    "exp_losses": 10.9,
+    "p_division": 0.1116,
+    "p_playoffs": 0.1262,
+    "p_top_seed": 0.0001,
+    "p_conf": 0.0065,
+    "p_sb": 0.0023
+   },
+   {
+    "team": "WAS",
+    "name": "Washington Commanders",
+    "conference": "NFC",
+    "division": "NFC East",
+    "elo": 1409.5,
+    "wins": 1,
+    "losses": 4,
+    "ties": 1,
+    "pts_diff": -40,
+    "games_left": 11,
+    "exp_wins": 5.5,
+    "exp_losses": 10.5,
+    "p_division": 0.0746,
+    "p_playoffs": 0.0891,
+    "p_top_seed": 0.0002,
+    "p_conf": 0.0052,
+    "p_sb": 0.0021
+   },
+   {
+    "team": "IND",
+    "name": "Indianapolis Colts",
+    "conference": "AFC",
+    "division": "AFC South",
+    "elo": 1421.7,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -26,
+    "games_left": 10,
+    "exp_wins": 6.3,
+    "exp_losses": 10.7,
+    "p_division": 0.0491,
+    "p_playoffs": 0.0742,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0042,
+    "p_sb": 0.0013
+   },
+   {
+    "team": "LV",
+    "name": "Las Vegas Raiders",
+    "conference": "AFC",
+    "division": "AFC West",
+    "elo": 1403.5,
+    "wins": 3,
+    "losses": 4,
+    "ties": 0,
+    "pts_diff": -14,
+    "games_left": 10,
+    "exp_wins": 6.6,
+    "exp_losses": 10.4,
+    "p_division": 0.015,
+    "p_playoffs": 0.0712,
+    "p_top_seed": 0.0002,
+    "p_conf": 0.0025,
+    "p_sb": 0.0011
+   },
+   {
+    "team": "ARI",
+    "name": "Arizona Cardinals",
+    "conference": "NFC",
+    "division": "NFC West",
+    "elo": 1378.0,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -66,
+    "games_left": 10,
+    "exp_wins": 5.7,
+    "exp_losses": 11.3,
+    "p_division": 0.0014,
+    "p_playoffs": 0.0214,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0011,
+    "p_sb": 0.0005
+   },
+   {
+    "team": "NYJ",
+    "name": "New York Jets",
+    "conference": "AFC",
+    "division": "AFC East",
+    "elo": 1372.3,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -13,
+    "games_left": 10,
+    "exp_wins": 5.1,
+    "exp_losses": 11.9,
+    "p_division": 0.0035,
+    "p_playoffs": 0.0188,
+    "p_top_seed": 0.0,
+    "p_conf": 0.001,
+    "p_sb": 0.0004
+   },
+   {
+    "team": "MIA",
+    "name": "Miami Dolphins",
+    "conference": "AFC",
+    "division": "AFC East",
+    "elo": 1387.8,
+    "wins": 1,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -59,
+    "games_left": 11,
+    "exp_wins": 4.4,
+    "exp_losses": 12.6,
+    "p_division": 0.0042,
+    "p_playoffs": 0.0137,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0008,
+    "p_sb": 0.0002
+   },
+   {
+    "team": "TEN",
+    "name": "Tennessee Titans",
+    "conference": "AFC",
+    "division": "AFC South",
+    "elo": 1317.5,
+    "wins": 1,
+    "losses": 6,
+    "ties": 0,
+    "pts_diff": -48,
+    "games_left": 10,
+    "exp_wins": 3.6,
+    "exp_losses": 13.4,
+    "p_division": 0.0031,
+    "p_playoffs": 0.0042,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0003,
+    "p_sb": 0.0001
+   },
+   {
+    "team": "LAC",
+    "name": "Los Angeles Chargers",
+    "conference": "AFC",
+    "division": "AFC West",
+    "elo": 1410.3,
+    "wins": 0,
+    "losses": 6,
+    "ties": 0,
+    "pts_diff": -61,
+    "games_left": 11,
+    "exp_wins": 4.0,
+    "exp_losses": 13.0,
+    "p_division": 0.0003,
+    "p_playoffs": 0.0063,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0,
+    "p_sb": 0.0
+   }
+  ]
+ },
+ "second_stage": {
+  "on": true,
+  "model": "elo+efficiency:random_forest",
+  "features": [
+   "elo_logit",
+   "elo_home_pre",
+   "elo_away_pre",
+   "home_off_epa_adj",
+   "away_off_epa_adj",
+   "home_def_epa_adj",
+   "away_def_epa_adj",
+   "epa_matchup_net",
+   "home_off_success_adj",
+   "away_off_success_adj",
+   "home_def_success_adj",
+   "away_def_success_adj",
+   "success_matchup_net",
+   "db_epa_matchup_net",
+   "rush_epa_matchup_net",
+   "early_epa_matchup_net",
+   "home_off_proe_ewm",
+   "away_off_proe_ewm",
+   "explosive_matchup_net",
+   "points_per_drive_matchup_net",
+   "epa_per_drive_matchup_net",
+   "home_off_drives_ewm",
+   "away_off_drives_ewm",
+   "home_off_plays_per_drive_ewm",
+   "away_off_plays_per_drive_ewm",
+   "home_off_yards_per_drive_ewm",
+   "away_off_yards_per_drive_ewm",
+   "home_off_series_success_ewm",
+   "away_off_series_success_ewm",
+   "rz_td_matchup_net",
+   "third_conv_matchup_net",
+   "home_off_rz_epa_ewm",
+   "away_off_rz_epa_ewm",
+   "home_off_third_epa_ewm",
+   "away_off_third_epa_ewm",
+   "home_off_third_dist_ewm",
+   "away_off_third_dist_ewm",
+   "home_off_neutral_pace_ewm",
+   "away_off_neutral_pace_ewm",
+   "home_st_epa_net_ewm",
+   "away_st_epa_net_ewm",
+   "home_off_sack_rate_ewm",
+   "away_off_sack_rate_ewm",
+   "home_def_sack_rate_ewm",
+   "away_def_sack_rate_ewm",
+   "home_off_epa_ewm",
+   "away_off_epa_ewm",
+   "home_def_epa_ewm",
+   "away_def_epa_ewm"
+  ],
+  "n_train": 6590
+ },
+ "feeds": {
+  "pbp_aggregates": {
+   "source": "nflverse pbp aggregates (data/nfl/team_games.csv)",
+   "newest": "2026-10-26",
+   "age_days": 0,
+   "tolerance_days": 10,
+   "rows": 13212,
+   "fresh": true
+  }
+ },
+ "elo_history": {
+  "season": 2026,
+  "teams": {
+   "ARI": [
+    [
+     "2026-09-09",
+     1402.9
+    ],
+    [
+     "2026-09-13",
+     1402.9
+    ],
+    [
+     "2026-09-20",
+     1440.1
+    ],
+    [
+     "2026-09-27",
+     1425.4
+    ],
+    [
+     "2026-10-04",
+     1417.6
+    ],
+    [
+     "2026-10-11",
+     1398.1
+    ],
+    [
+     "2026-10-18",
+     1373.5
+    ],
+    [
+     "2026-10-25",
+     1391.0
+    ],
+    [
+     "2026-10-27",
+     1378.0
+    ]
+   ],
+   "ATL": [
+    [
+     "2026-09-09",
+     1473.8
+    ],
+    [
+     "2026-09-13",
+     1473.8
+    ],
+    [
+     "2026-09-20",
+     1458.4
+    ],
+    [
+     "2026-09-24",
+     1414.5
+    ],
+    [
+     "2026-10-05",
+     1457.6
+    ],
+    [
+     "2026-10-11",
+     1489.7
+    ],
+    [
+     "2026-10-18",
+     1469.7
+    ],
+    [
+     "2026-10-25",
+     1449.0
+    ],
+    [
+     "2026-10-27",
+     1481.4
+    ]
+   ],
+   "BAL": [
+    [
+     "2026-09-09",
+     1535.1
+    ],
+    [
+     "2026-09-13",
+     1535.1
+    ],
+    [
+     "2026-09-20",
+     1563.0
+    ],
+    [
+     "2026-09-27",
+     1532.7
+    ],
+    [
+     "2026-10-04",
+     1543.6
+    ],
+    [
+     "2026-10-11",
+     1549.6
+    ],
+    [
+     "2026-10-18",
+     1569.6
+    ],
+    [
+     "2026-10-25",
+     1552.6
+    ],
+    [
+     "2026-10-27",
+     1515.5
+    ]
+   ],
+   "BUF": [
+    [
+     "2026-09-09",
+     1592.6
+    ],
+    [
+     "2026-09-13",
+     1592.6
+    ],
+    [
+     "2026-09-17",
+     1612.9
+    ],
+    [
+     "2026-09-27",
+     1628.5
+    ],
+    [
+     "2026-10-04",
+     1636.3
+    ],
+    [
+     "2026-10-12",
+     1617.7
+    ],
+    [
+     "2026-10-18",
+     1631.9
+    ],
+    [
+     "2026-10-27",
+     1639.6
+    ]
+   ],
+   "CAR": [
+    [
+     "2026-09-09",
+     1438.5
+    ],
+    [
+     "2026-09-13",
+     1438.5
+    ],
+    [
+     "2026-09-20",
+     1411.1
+    ],
+    [
+     "2026-09-27",
+     1455.0
+    ],
+    [
+     "2026-10-04",
+     1442.4
+    ],
+    [
+     "2026-10-18",
+     1464.7
+    ],
+    [
+     "2026-10-25",
+     1494.9
+    ],
+    [
+     "2026-10-27",
+     1449.3
+    ]
+   ],
+   "CHI": [
+    [
+     "2026-09-09",
+     1525.3
+    ],
+    [
+     "2026-09-13",
+     1525.3
+    ],
+    [
+     "2026-09-20",
+     1552.7
+    ],
+    [
+     "2026-09-28",
+     1531.3
+    ],
+    [
+     "2026-10-04",
+     1560.5
+    ],
+    [
+     "2026-10-11",
+     1570.2
+    ],
+    [
+     "2026-10-18",
+     1534.3
+    ],
+    [
+     "2026-10-22",
+     1555.1
+    ],
+    [
+     "2026-10-27",
+     1574.5
+    ]
+   ],
+   "CIN": [
+    [
+     "2026-09-09",
+     1476.4
+    ],
+    [
+     "2026-09-13",
+     1476.4
+    ],
+    [
+     "2026-09-20",
+     1493.1
+    ],
+    [
+     "2026-09-27",
+     1529.6
+    ],
+    [
+     "2026-10-04",
+     1516.8
+    ],
+    [
+     "2026-10-11",
+     1500.4
+    ],
+    [
+     "2026-10-25",
+     1516.9
+    ],
+    [
+     "2026-10-27",
+     1553.9
+    ]
+   ],
+   "CLE": [
+    [
+     "2026-09-09",
+     1429.0
+    ],
+    [
+     "2026-09-13",
+     1429.0
+    ],
+    [
+     "2026-09-20",
+     1413.4
+    ],
+    [
+     "2026-09-27",
+     1433.9
+    ],
+    [
+     "2026-10-01",
+     1446.6
+    ],
+    [
+     "2026-10-11",
+     1461.4
+    ],
+    [
+     "2026-10-18",
+     1440.4
+    ],
+    [
+     "2026-10-25",
+     1457.5
+    ],
+    [
+     "2026-10-27",
+     1467.8
+    ]
+   ],
+   "DAL": [
+    [
+     "2026-09-09",
+     1459.1
+    ],
+    [
+     "2026-09-13",
+     1459.1
+    ],
+    [
+     "2026-09-20",
+     1438.5
+    ],
+    [
+     "2026-09-27",
+     1464.3
+    ],
+    [
+     "2026-10-04",
+     1453.4
+    ],
+    [
+     "2026-10-08",
+     1474.7
+    ],
+    [
+     "2026-10-18",
+     1446.2
+    ],
+    [
+     "2026-10-26",
+     1429.6
+    ],
+    [
+     "2026-10-27",
+     1466.7
+    ]
+   ],
+   "DEN": [
+    [
+     "2026-09-09",
+     1593.6
+    ],
+    [
+     "2026-09-14",
+     1593.6
+    ],
+    [
+     "2026-09-20",
+     1557.8
+    ],
+    [
+     "2026-09-27",
+     1576.6
+    ],
+    [
+     "2026-10-04",
+     1590.2
+    ],
+    [
+     "2026-10-11",
+     1571.0
+    ],
+    [
+     "2026-10-15",
+     1585.2
+    ],
+    [
+     "2026-10-25",
+     1599.6
+    ],
+    [
+     "2026-10-27",
+     1612.7
+    ]
+   ],
+   "DET": [
+    [
+     "2026-09-09",
+     1544.6
+    ],
+    [
+     "2026-09-13",
+     1544.6
+    ],
+    [
+     "2026-09-17",
+     1548.4
+    ],
+    [
+     "2026-09-27",
+     1532.8
+    ],
+    [
+     "2026-10-04",
+     1541.6
+    ],
+    [
+     "2026-10-11",
+     1519.3
+    ],
+    [
+     "2026-10-25",
+     1544.0
+    ],
+    [
+     "2026-10-27",
+     1554.4
+    ]
+   ],
+   "GB": [
+    [
+     "2026-09-09",
+     1522.6
+    ],
+    [
+     "2026-09-13",
+     1522.6
+    ],
+    [
+     "2026-09-20",
+     1500.0
+    ],
+    [
+     "2026-09-24",
+     1511.7
+    ],
+    [
+     "2026-10-04",
+     1468.6
+    ],
+    [
+     "2026-10-11",
+     1481.9
+    ],
+    [
+     "2026-10-18",
+     1517.8
+    ],
+    [
+     "2026-10-25",
+     1534.4
+    ],
+    [
+     "2026-10-27",
+     1523.9
+    ]
+   ],
+   "HOU": [
+    [
+     "2026-09-09",
+     1591.0
+    ],
+    [
+     "2026-09-13",
+     1591.0
+    ],
+    [
+     "2026-09-20",
+     1570.7
+    ],
+    [
+     "2026-09-27",
+     1534.3
+    ],
+    [
+     "2026-10-04",
+     1521.7
+    ],
+    [
+     "2026-10-11",
+     1500.4
+    ],
+    [
+     "2026-10-18",
+     1519.2
+    ],
+    [
+     "2026-10-25",
+     1536.7
+    ],
+    [
+     "2026-10-27",
+     1509.5
+    ]
+   ],
+   "IND": [
+    [
+     "2026-09-09",
+     1471.0
+    ],
+    [
+     "2026-09-13",
+     1471.0
+    ],
+    [
+     "2026-09-20",
+     1443.1
+    ],
+    [
+     "2026-09-27",
+     1434.8
+    ],
+    [
+     "2026-10-04",
+     1447.4
+    ],
+    [
+     "2026-10-11",
+     1475.9
+    ],
+    [
+     "2026-10-18",
+     1457.9
+    ],
+    [
+     "2026-10-25",
+     1428.1
+    ],
+    [
+     "2026-10-27",
+     1421.7
+    ]
+   ],
+   "JAX": [
+    [
+     "2026-09-09",
+     1560.3
+    ],
+    [
+     "2026-09-13",
+     1560.3
+    ],
+    [
+     "2026-09-20",
+     1575.9
+    ],
+    [
+     "2026-09-27",
+     1557.1
+    ],
+    [
+     "2026-10-04",
+     1589.8
+    ],
+    [
+     "2026-10-11",
+     1606.3
+    ],
+    [
+     "2026-10-18",
+     1614.3
+    ],
+    [
+     "2026-10-27",
+     1596.7
+    ]
+   ],
+   "KC": [
+    [
+     "2026-09-09",
+     1490.7
+    ],
+    [
+     "2026-09-14",
+     1490.7
+    ],
+    [
+     "2026-09-20",
+     1526.5
+    ],
+    [
+     "2026-09-27",
+     1534.9
+    ],
+    [
+     "2026-10-04",
+     1555.8
+    ],
+    [
+     "2026-10-18",
+     1567.5
+    ],
+    [
+     "2026-10-25",
+     1579.2
+    ],
+    [
+     "2026-10-27",
+     1561.1
+    ]
+   ],
+   "LA": [
+    [
+     "2026-09-09",
+     1595.9
+    ],
+    [
+     "2026-09-10",
+     1595.9
+    ],
+    [
+     "2026-09-21",
+     1561.5
+    ],
+    [
+     "2026-09-27",
+     1576.7
+    ],
+    [
+     "2026-10-04",
+     1563.1
+    ],
+    [
+     "2026-10-12",
+     1580.3
+    ],
+    [
+     "2026-10-18",
+     1566.0
+    ],
+    [
+     "2026-10-25",
+     1548.4
+    ],
+    [
+     "2026-10-27",
+     1568.9
+    ]
+   ],
+   "LAC": [
+    [
+     "2026-09-09",
+     1522.9
+    ],
+    [
+     "2026-09-13",
+     1522.9
+    ],
+    [
+     "2026-09-20",
+     1485.7
+    ],
+    [
+     "2026-09-27",
+     1450.5
+    ],
+    [
+     "2026-10-04",
+     1442.7
+    ],
+    [
+     "2026-10-11",
+     1436.1
+    ],
+    [
+     "2026-10-18",
+     1422.0
+    ],
+    [
+     "2026-10-27",
+     1410.3
+    ]
+   ],
+   "LV": [
+    [
+     "2026-09-09",
+     1366.7
+    ],
+    [
+     "2026-09-13",
+     1366.7
+    ],
+    [
+     "2026-09-20",
+     1397.2
+    ],
+    [
+     "2026-09-27",
+     1432.4
+    ],
+    [
+     "2026-10-04",
+     1459.7
+    ],
+    [
+     "2026-10-11",
+     1448.0
+    ],
+    [
+     "2026-10-18",
+     1431.7
+    ],
+    [
+     "2026-10-25",
+     1424.0
+    ],
+    [
+     "2026-10-27",
+     1403.5
+    ]
+   ],
+   "MIA": [
+    [
+     "2026-09-09",
+     1458.5
+    ],
+    [
+     "2026-09-13",
+     1458.5
+    ],
+    [
+     "2026-09-20",
+     1428.0
+    ],
+    [
+     "2026-09-27",
+     1415.8
+    ],
+    [
+     "2026-10-04",
+     1394.8
+    ],
+    [
+     "2026-10-11",
+     1388.8
+    ],
+    [
+     "2026-10-25",
+     1372.2
+    ],
+    [
+     "2026-10-27",
+     1387.8
+    ]
+   ],
+   "MIN": [
+    [
+     "2026-09-09",
+     1542.5
+    ],
+    [
+     "2026-09-13",
+     1542.5
+    ],
+    [
+     "2026-09-20",
+     1565.1
+    ],
+    [
+     "2026-09-27",
+     1586.6
+    ],
+    [
+     "2026-10-04",
+     1601.2
+    ],
+    [
+     "2026-10-11",
+     1607.2
+    ],
+    [
+     "2026-10-25",
+     1620.7
+    ],
+    [
+     "2026-10-27",
+     1627.0
+    ]
+   ],
+   "NE": [
+    [
+     "2026-09-09",
+     1584.0
+    ],
+    [
+     "2026-09-20",
+     1575.1
+    ],
+    [
+     "2026-09-27",
+     1593.4
+    ],
+    [
+     "2026-10-04",
+     1560.7
+    ],
+    [
+     "2026-10-11",
+     1579.3
+    ],
+    [
+     "2026-10-18",
+     1595.7
+    ],
+    [
+     "2026-10-22",
+     1602.9
+    ],
+    [
+     "2026-10-27",
+     1583.4
+    ]
+   ],
+   "NO": [
+    [
+     "2026-09-09",
+     1443.9
+    ],
+    [
+     "2026-09-13",
+     1443.9
+    ],
+    [
+     "2026-09-20",
+     1440.1
+    ],
+    [
+     "2026-09-27",
+     1470.3
+    ],
+    [
+     "2026-10-05",
+     1443.0
+    ],
+    [
+     "2026-10-11",
+     1410.9
+    ],
+    [
+     "2026-10-18",
+     1397.5
+    ],
+    [
+     "2026-10-25",
+     1425.0
+    ],
+    [
+     "2026-10-27",
+     1412.4
+    ]
+   ],
+   "NYG": [
+    [
+     "2026-09-09",
+     1429.8
+    ],
+    [
+     "2026-09-13",
+     1429.8
+    ],
+    [
+     "2026-09-21",
+     1450.4
+    ],
+    [
+     "2026-09-27",
+     1435.2
+    ],
+    [
+     "2026-10-04",
+     1445.1
+    ],
+    [
+     "2026-10-11",
+     1464.6
+    ],
+    [
+     "2026-10-18",
+     1464.6
+    ],
+    [
+     "2026-10-25",
+     1437.1
+    ],
+    [
+     "2026-10-27",
+     1464.4
+    ]
+   ],
+   "NYJ": [
+    [
+     "2026-09-09",
+     1374.7
+    ],
+    [
+     "2026-09-13",
+     1374.7
+    ],
+    [
+     "2026-09-20",
+     1404.4
+    ],
+    [
+     "2026-09-27",
+     1392.7
+    ],
+    [
+     "2026-10-04",
+     1383.9
+    ],
+    [
+     "2026-10-11",
+     1374.2
+    ],
+    [
+     "2026-10-18",
+     1395.1
+    ],
+    [
+     "2026-10-25",
+     1387.9
+    ],
+    [
+     "2026-10-27",
+     1372.3
+    ]
+   ],
+   "PHI": [
+    [
+     "2026-09-09",
+     1553.0
+    ],
+    [
+     "2026-09-13",
+     1553.0
+    ],
+    [
+     "2026-09-20",
+     1559.3
+    ],
+    [
+     "2026-09-28",
+     1567.5
+    ],
+    [
+     "2026-10-04",
+     1538.2
+    ],
+    [
+     "2026-10-11",
+     1521.1
+    ],
+    [
+     "2026-10-18",
+     1513.0
+    ],
+    [
+     "2026-10-26",
+     1482.8
+    ],
+    [
+     "2026-10-27",
+     1445.7
+    ]
+   ],
+   "PIT": [
+    [
+     "2026-09-09",
+     1508.3
+    ],
+    [
+     "2026-09-13",
+     1508.3
+    ],
+    [
+     "2026-09-20",
+     1523.6
+    ],
+    [
+     "2026-09-27",
+     1505.3
+    ],
+    [
+     "2026-10-01",
+     1518.1
+    ],
+    [
+     "2026-10-11",
+     1503.3
+    ],
+    [
+     "2026-10-18",
+     1521.3
+    ],
+    [
+     "2026-10-25",
+     1541.4
+    ],
+    [
+     "2026-10-27",
+     1554.0
+    ]
+   ],
+   "SEA": [
+    [
+     "2026-09-09",
+     1652.0
+    ],
+    [
+     "2026-09-20",
+     1661.0
+    ],
+    [
+     "2026-09-27",
+     1675.6
+    ],
+    [
+     "2026-10-04",
+     1658.9
+    ],
+    [
+     "2026-10-11",
+     1665.6
+    ],
+    [
+     "2026-10-15",
+     1648.2
+    ],
+    [
+     "2026-10-25",
+     1633.8
+    ],
+    [
+     "2026-10-27",
+     1651.9
+    ]
+   ],
+   "SF": [
+    [
+     "2026-09-09",
+     1550.5
+    ],
+    [
+     "2026-09-10",
+     1550.5
+    ],
+    [
+     "2026-09-20",
+     1584.9
+    ],
+    [
+     "2026-09-27",
+     1597.1
+    ],
+    [
+     "2026-10-04",
+     1604.9
+    ],
+    [
+     "2026-10-11",
+     1624.0
+    ],
+    [
+     "2026-10-19",
+     1641.4
+    ],
+    [
+     "2026-10-25",
+     1647.3
+    ],
+    [
+     "2026-10-27",
+     1614.9
+    ]
+   ],
+   "TB": [
+    [
+     "2026-09-09",
+     1480.9
+    ],
+    [
+     "2026-09-13",
+     1480.9
+    ],
+    [
+     "2026-09-20",
+     1464.2
+    ],
+    [
+     "2026-09-27",
+     1443.6
+    ],
+    [
+     "2026-10-04",
+     1429.0
+    ],
+    [
+     "2026-10-08",
+     1415.7
+    ],
+    [
+     "2026-10-18",
+     1444.2
+    ],
+    [
+     "2026-10-25",
+     1424.0
+    ],
+    [
+     "2026-10-27",
+     1469.7
+    ]
+   ],
+   "TEN": [
+    [
+     "2026-09-09",
+     1370.6
+    ],
+    [
+     "2026-09-13",
+     1370.6
+    ],
+    [
+     "2026-09-20",
+     1340.9
+    ],
+    [
+     "2026-09-27",
+     1332.8
+    ],
+    [
+     "2026-10-04",
+     1322.8
+    ],
+    [
+     "2026-10-11",
+     1316.7
+    ],
+    [
+     "2026-10-18",
+     1297.9
+    ],
+    [
+     "2026-10-25",
+     1327.8
+    ],
+    [
+     "2026-10-27",
+     1317.5
+    ]
+   ],
+   "WAS": [
+    [
+     "2026-09-09",
+     1459.3
+    ],
+    [
+     "2026-09-13",
+     1459.3
+    ],
+    [
+     "2026-09-20",
+     1453.0
+    ],
+    [
+     "2026-09-27",
+     1427.3
+    ],
+    [
+     "2026-10-04",
+     1444.0
+    ],
+    [
+     "2026-10-11",
+     1415.4
+    ],
+    [
+     "2026-10-19",
+     1415.4
+    ],
+    [
+     "2026-10-27",
+     1409.5
+    ]
+   ]
+  }
+ },
+ "elo_projection": {
+  "season": 2026,
+  "sims": 10000,
+  "from_date": "2026-10-27",
+  "teams": {
+   "ARI": [
+    [
+     "2026-10-27",
+     1378.0,
+     1378.0,
+     1378.0
+    ],
+    [
+     "2026-10-29",
+     1378.0,
+     1378.0,
+     1378.0
+    ],
+    [
+     "2026-11-09",
+     1358.3,
+     1358.3,
+     1401.2
+    ],
+    [
+     "2026-11-22",
+     1420.4,
+     1338.1,
+     1421.8
+    ],
+    [
+     "2026-11-29",
+     1396.1,
+     1319.7,
+     1436.6
+    ],
+    [
+     "2026-12-07",
+     1417.1,
+     1306.7,
+     1448.6
+    ],
+    [
+     "2026-12-19",
+     1417.1,
+     1306.7,
+     1448.6
+    ],
+    [
+     "2026-12-27",
+     1411.1,
+     1306.7,
+     1452.9
+    ],
+    [
+     "2027-01-10",
+     1377.4,
+     1295.0,
+     1458.7
+    ]
+   ],
+   "ATL": [
+    [
+     "2026-10-27",
+     1481.4,
+     1481.4,
+     1481.4
+    ],
+    [
+     "2026-10-29",
+     1481.4,
+     1481.4,
+     1481.4
+    ],
+    [
+     "2026-11-09",
+     1489.5,
+     1446.7,
+     1529.9
+    ],
+    [
+     "2026-11-22",
+     1512.0,
+     1429.0,
+     1544.9
+    ],
+    [
+     "2026-11-29",
+     1541.3,
+     1420.8,
+     1538.4
+    ],
+    [
+     "2026-12-07",
+     1519.5,
+     1409.3,
+     1552.9
+    ],
+    [
+     "2026-12-19",
+     1496.9,
+     1422.0,
+     1544.5
+    ],
+    [
+     "2026-12-27",
+     1492.5,
+     1399.8,
+     1561.2
+    ],
+    [
+     "2027-01-10",
+     1482.4,
+     1394.2,
+     1566.9
+    ]
+   ],
+   "BAL": [
+    [
+     "2026-10-27",
+     1515.5,
+     1515.5,
+     1515.5
+    ],
+    [
+     "2026-10-29",
+     1515.5,
+     1515.5,
+     1515.5
+    ],
+    [
+     "2026-11-09",
+     1486.6,
+     1486.6,
+     1567.1
+    ],
+    [
+     "2026-11-22",
+     1521.4,
+     1473.8,
+     1560.0
+    ],
+    [
+     "2026-11-29",
+     1544.4,
+     1461.1,
+     1578.5
+    ],
+    [
+     "2026-12-07",
+     1544.4,
+     1461.1,
+     1578.5
+    ],
+    [
+     "2026-12-19",
+     1556.3,
+     1442.5,
+     1586.3
+    ],
+    [
+     "2026-12-27",
+     1509.8,
+     1439.8,
+     1589.4
+    ],
+    [
+     "2027-01-10",
+     1515.2,
+     1427.9,
+     1600.7
+    ]
+   ],
+   "BUF": [
+    [
+     "2026-10-27",
+     1639.6,
+     1639.6,
+     1639.6
+    ],
+    [
+     "2026-10-29",
+     1639.6,
+     1639.6,
+     1639.6
+    ],
+    [
+     "2026-11-09",
+     1628.9,
+     1591.2,
+     1674.4
+    ],
+    [
+     "2026-11-22",
+     1601.8,
+     1602.4,
+     1687.0
+    ],
+    [
+     "2026-11-29",
+     1619.5,
+     1580.5,
+     1697.7
+    ],
+    [
+     "2026-12-07",
+     1596.5,
+     1567.8,
+     1709.8
+    ],
+    [
+     "2026-12-19",
+     1600.9,
+     1560.4,
+     1705.0
+    ],
+    [
+     "2026-12-27",
+     1625.5,
+     1558.2,
+     1717.6
+    ],
+    [
+     "2027-01-10",
+     1641.8,
+     1552.0,
+     1724.0
+    ]
+   ],
+   "CAR": [
+    [
+     "2026-10-27",
+     1449.3,
+     1449.3,
+     1449.3
+    ],
+    [
+     "2026-10-29",
+     1435.1,
+     1435.1,
+     1478.0
+    ],
+    [
+     "2026-11-09",
+     1421.1,
+     1418.6,
+     1501.8
+    ],
+    [
+     "2026-11-22",
+     1422.6,
+     1384.8,
+     1503.5
+    ],
+    [
+     "2026-11-29",
+     1422.6,
+     1384.8,
+     1503.5
+    ],
+    [
+     "2026-12-07",
+     1440.1,
+     1394.5,
+     1515.2
+    ],
+    [
+     "2026-12-19",
+     1412.2,
+     1379.3,
+     1523.9
+    ],
+    [
+     "2026-12-27",
+     1431.1,
+     1365.6,
+     1531.6
+    ],
+    [
+     "2027-01-10",
+     1445.6,
+     1364.4,
+     1537.6
+    ]
+   ],
+   "CHI": [
+    [
+     "2026-10-27",
+     1574.5,
+     1574.5,
+     1574.5
+    ],
+    [
+     "2026-10-29",
+     1574.5,
+     1574.5,
+     1574.5
+    ],
+    [
+     "2026-11-09",
+     1571.5,
+     1530.9,
+     1614.4
+    ],
+    [
+     "2026-11-22",
+     1582.6,
+     1537.8,
+     1621.5
+    ],
+    [
+     "2026-11-29",
+     1604.7,
+     1521.9,
+     1637.4
+    ],
+    [
+     "2026-12-07",
+     1619.8,
+     1506.2,
+     1624.1
+    ],
+    [
+     "2026-12-19",
+     1616.5,
+     1504.4,
+     1648.1
+    ],
+    [
+     "2026-12-27",
+     1625.3,
+     1496.9,
+     1652.0
+    ],
+    [
+     "2027-01-10",
+     1577.4,
+     1490.5,
+     1660.0
+    ]
+   ],
+   "CIN": [
+    [
+     "2026-10-27",
+     1553.9,
+     1553.9,
+     1553.9
+    ],
+    [
+     "2026-10-29",
+     1553.9,
+     1553.9,
+     1553.9
+    ],
+    [
+     "2026-11-09",
+     1533.6,
+     1533.6,
+     1578.9
+    ],
+    [
+     "2026-11-22",
+     1555.4,
+     1512.5,
+     1595.6
+    ],
+    [
+     "2026-11-29",
+     1580.9,
+     1499.3,
+     1617.4
+    ],
+    [
+     "2026-12-07",
+     1593.9,
+     1484.0,
+     1627.3
+    ],
+    [
+     "2026-12-19",
+     1573.3,
+     1479.8,
+     1616.4
+    ],
+    [
+     "2026-12-27",
+     1525.5,
+     1469.2,
+     1634.5
+    ],
+    [
+     "2027-01-10",
+     1555.3,
+     1465.1,
+     1636.2
+    ]
+   ],
+   "CLE": [
+    [
+     "2026-10-27",
+     1467.8,
+     1467.8,
+     1467.8
+    ],
+    [
+     "2026-10-29",
+     1467.8,
+     1467.8,
+     1467.8
+    ],
+    [
+     "2026-11-09",
+     1477.3,
+     1434.4,
+     1517.5
+    ],
+    [
+     "2026-11-22",
+     1496.3,
+     1415.6,
+     1498.9
+    ],
+    [
+     "2026-11-29",
+     1506.4,
+     1424.8,
+     1510.8
+    ],
+    [
+     "2026-12-07",
+     1529.1,
+     1410.3,
+     1528.7
+    ],
+    [
+     "2026-12-19",
+     1498.0,
+     1396.2,
+     1539.9
+    ],
+    [
+     "2026-12-27",
+     1461.9,
+     1397.0,
+     1546.0
+    ],
+    [
+     "2027-01-10",
+     1469.7,
+     1381.6,
+     1552.3
+    ]
+   ],
+   "DAL": [
+    [
+     "2026-10-27",
+     1466.7,
+     1466.7,
+     1466.7
+    ],
+    [
+     "2026-10-29",
+     1466.7,
+     1466.7,
+     1466.7
+    ],
+    [
+     "2026-11-09",
+     1460.2,
+     1417.3,
+     1500.4
+    ],
+    [
+     "2026-11-22",
+     1499.1,
+     1413.3,
+     1532.8
+    ],
+    [
+     "2026-11-29",
+     1470.8,
+     1397.1,
+     1513.8
+    ],
+    [
+     "2026-12-07",
+     1461.2,
+     1393.4,
+     1535.1
+    ],
+    [
+     "2026-12-19",
+     1461.2,
+     1393.4,
+     1535.1
+    ],
+    [
+     "2026-12-27",
+     1469.7,
+     1396.9,
+     1543.6
+    ],
+    [
+     "2027-01-10",
+     1466.9,
+     1382.9,
+     1546.3
+    ]
+   ],
+   "DEN": [
+    [
+     "2026-10-27",
+     1612.7,
+     1612.7,
+     1612.7
+    ],
+    [
+     "2026-10-29",
+     1612.7,
+     1612.7,
+     1612.7
+    ],
+    [
+     "2026-11-09",
+     1599.3,
+     1561.4,
+     1644.6
+    ],
+    [
+     "2026-11-22",
+     1607.3,
+     1566.8,
+     1650.0
+    ],
+    [
+     "2026-11-29",
+     1629.1,
+     1550.6,
+     1667.6
+    ],
+    [
+     "2026-12-07",
+     1635.2,
+     1555.8,
+     1672.8
+    ],
+    [
+     "2026-12-19",
+     1648.0,
+     1557.9,
+     1680.5
+    ],
+    [
+     "2026-12-27",
+     1680.3,
+     1534.9,
+     1676.5
+    ],
+    [
+     "2027-01-10",
+     1618.1,
+     1530.1,
+     1692.6
+    ]
+   ],
+   "DET": [
+    [
+     "2026-10-27",
+     1554.4,
+     1554.4,
+     1554.4
+    ],
+    [
+     "2026-10-29",
+     1554.4,
+     1554.4,
+     1554.4
+    ],
+    [
+     "2026-11-09",
+     1549.3,
+     1506.5,
+     1589.9
+    ],
+    [
+     "2026-11-22",
+     1550.4,
+     1502.9,
+     1621.9
+    ],
+    [
+     "2026-11-29",
+     1568.3,
+     1487.5,
+     1606.3
+    ],
+    [
+     "2026-12-07",
+     1539.7,
+     1493.6,
+     1618.8
+    ],
+    [
+     "2026-12-19",
+     1548.6,
+     1477.7,
+     1622.7
+    ],
+    [
+     "2026-12-27",
+     1538.9,
+     1473.4,
+     1635.0
+    ],
+    [
+     "2027-01-10",
+     1553.9,
+     1464.8,
+     1643.7
+    ]
+   ],
+   "GB": [
+    [
+     "2026-10-27",
+     1523.9,
+     1523.9,
+     1523.9
+    ],
+    [
+     "2026-10-29",
+     1495.2,
+     1495.2,
+     1538.1
+    ],
+    [
+     "2026-11-09",
+     1524.2,
+     1481.3,
+     1564.7
+    ],
+    [
+     "2026-11-22",
+     1508.4,
+     1465.7,
+     1584.2
+    ],
+    [
+     "2026-11-29",
+     1538.2,
+     1457.0,
+     1572.1
+    ],
+    [
+     "2026-12-07",
+     1552.7,
+     1465.4,
+     1584.4
+    ],
+    [
+     "2026-12-19",
+     1533.2,
+     1455.0,
+     1597.9
+    ],
+    [
+     "2026-12-27",
+     1523.2,
+     1450.9,
+     1599.2
+    ],
+    [
+     "2027-01-10",
+     1523.8,
+     1441.0,
+     1610.2
+    ]
+   ],
+   "HOU": [
+    [
+     "2026-10-27",
+     1509.5,
+     1509.5,
+     1509.5
+    ],
+    [
+     "2026-10-29",
+     1509.5,
+     1509.5,
+     1509.5
+    ],
+    [
+     "2026-11-09",
+     1485.6,
+     1483.1,
+     1528.5
+    ],
+    [
+     "2026-11-22",
+     1481.5,
+     1472.8,
+     1558.4
+    ],
+    [
+     "2026-11-29",
+     1460.8,
+     1454.2,
+     1571.5
+    ],
+    [
+     "2026-12-07",
+     1491.9,
+     1444.7,
+     1562.3
+    ],
+    [
+     "2026-12-19",
+     1513.9,
+     1448.7,
+     1573.9
+    ],
+    [
+     "2026-12-27",
+     1473.3,
+     1431.3,
+     1581.6
+    ],
+    [
+     "2027-01-10",
+     1509.7,
+     1425.4,
+     1593.4
+    ]
+   ],
+   "IND": [
+    [
+     "2026-10-27",
+     1421.7,
+     1421.7,
+     1421.7
+    ],
+    [
+     "2026-10-29",
+     1421.7,
+     1421.7,
+     1421.7
+    ],
+    [
+     "2026-11-09",
+     1433.2,
+     1390.3,
+     1473.5
+    ],
+    [
+     "2026-11-22",
+     1396.7,
+     1358.7,
+     1477.5
+    ],
+    [
+     "2026-11-29",
+     1378.8,
+     1371.8,
+     1488.6
+    ],
+    [
+     "2026-12-07",
+     1378.8,
+     1371.8,
+     1488.6
+    ],
+    [
+     "2026-12-19",
+     1407.8,
+     1359.6,
+     1480.7
+    ],
+    [
+     "2026-12-27",
+     1411.0,
+     1352.2,
+     1503.1
+    ],
+    [
+     "2027-01-10",
+     1418.8,
+     1341.7,
+     1510.7
+    ]
+   ],
+   "JAX": [
+    [
+     "2026-10-27",
+     1596.7,
+     1596.7,
+     1596.7
+    ],
+    [
+     "2026-10-29",
+     1596.7,
+     1596.7,
+     1596.7
+    ],
+    [
+     "2026-11-09",
+     1580.6,
+     1543.0,
+     1623.5
+    ],
+    [
+     "2026-11-22",
+     1567.3,
+     1531.3,
+     1648.0
+    ],
+    [
+     "2026-11-29",
+     1574.4,
+     1535.5,
+     1652.3
+    ],
+    [
+     "2026-12-07",
+     1555.9,
+     1526.1,
+     1667.9
+    ],
+    [
+     "2026-12-19",
+     1579.7,
+     1531.2,
+     1653.4
+    ],
+    [
+     "2026-12-27",
+     1582.7,
+     1520.2,
+     1673.7
+    ],
+    [
+     "2027-01-10",
+     1598.9,
+     1510.9,
+     1682.5
+    ]
+   ],
+   "KC": [
+    [
+     "2026-10-27",
+     1561.1,
+     1561.1,
+     1561.1
+    ],
+    [
+     "2026-10-29",
+     1561.1,
+     1561.1,
+     1561.1
+    ],
+    [
+     "2026-11-09",
+     1554.1,
+     1513.0,
+     1597.0
+    ],
+    [
+     "2026-11-22",
+     1583.2,
+     1502.1,
+     1619.3
+    ],
+    [
+     "2026-11-29",
+     1611.2,
+     1494.1,
+     1611.1
+    ],
+    [
+     "2026-12-07",
+     1593.1,
+     1507.9,
+     1627.8
+    ],
+    [
+     "2026-12-19",
+     1576.1,
+     1495.4,
+     1638.2
+    ],
+    [
+     "2026-12-27",
+     1532.2,
+     1479.6,
+     1641.5
+    ],
+    [
+     "2027-01-10",
+     1563.4,
+     1473.7,
+     1648.0
+    ]
+   ],
+   "LA": [
+    [
+     "2026-10-27",
+     1568.9,
+     1568.9,
+     1568.9
+    ],
+    [
+     "2026-10-29",
+     1568.9,
+     1568.9,
+     1568.9
+    ],
+    [
+     "2026-11-09",
+     1595.1,
+     1549.9,
+     1595.1
+    ],
+    [
+     "2026-11-22",
+     1606.0,
+     1522.4,
+     1606.0
+    ],
+    [
+     "2026-11-29",
+     1618.5,
+     1504.2,
+     1620.6
+    ],
+    [
+     "2026-12-07",
+     1593.2,
+     1514.9,
+     1633.8
+    ],
+    [
+     "2026-12-19",
+     1572.1,
+     1504.4,
+     1624.1
+    ],
+    [
+     "2026-12-27",
+     1568.4,
+     1499.1,
+     1648.2
+    ],
+    [
+     "2027-01-10",
+     1571.9,
+     1483.5,
+     1650.9
+    ]
+   ],
+   "LAC": [
+    [
+     "2026-10-27",
+     1410.3,
+     1410.3,
+     1410.3
+    ],
+    [
+     "2026-10-29",
+     1410.3,
+     1410.3,
+     1410.3
+    ],
+    [
+     "2026-11-09",
+     1425.8,
+     1382.9,
+     1466.1
+    ],
+    [
+     "2026-11-22",
+     1385.1,
+     1349.1,
+     1466.7
+    ],
+    [
+     "2026-11-29",
+     1416.5,
+     1341.4,
+     1459.7
+    ],
+    [
+     "2026-12-07",
+     1439.5,
+     1358.7,
+     1478.0
+    ],
+    [
+     "2026-12-19",
+     1450.7,
+     1339.7,
+     1486.2
+    ],
+    [
+     "2026-12-27",
+     1433.0,
+     1329.1,
+     1494.0
+    ],
+    [
+     "2027-01-10",
+     1407.4,
+     1328.6,
+     1500.6
+    ]
+   ],
+   "LV": [
+    [
+     "2026-10-27",
+     1403.5,
+     1403.5,
+     1403.5
+    ],
+    [
+     "2026-10-29",
+     1403.5,
+     1403.5,
+     1403.5
+    ],
+    [
+     "2026-11-09",
+     1376.7,
+     1376.7,
+     1419.5
+    ],
+    [
+     "2026-11-22",
+     1362.0,
+     1360.6,
+     1443.9
+    ],
+    [
+     "2026-11-29",
+     1353.4,
+     1349.7,
+     1466.2
+    ],
+    [
+     "2026-12-07",
+     1353.4,
+     1349.7,
+     1466.2
+    ],
+    [
+     "2026-12-19",
+     1336.0,
+     1333.2,
+     1473.8
+    ],
+    [
+     "2026-12-27",
+     1383.9,
+     1333.3,
+     1476.9
+    ],
+    [
+     "2027-01-10",
+     1400.7,
+     1321.9,
+     1483.3
+    ]
+   ],
+   "MIA": [
+    [
+     "2026-10-27",
+     1387.8,
+     1387.8,
+     1387.8
+    ],
+    [
+     "2026-10-29",
+     1387.8,
+     1387.8,
+     1387.8
+    ],
+    [
+     "2026-11-09",
+     1363.5,
+     1361.2,
+     1444.4
+    ],
+    [
+     "2026-11-22",
+     1341.5,
+     1341.4,
+     1427.3
+    ],
+    [
+     "2026-11-29",
+     1315.8,
+     1321.6,
+     1439.8
+    ],
+    [
+     "2026-12-07",
+     1310.0,
+     1317.7,
+     1456.5
+    ],
+    [
+     "2026-12-19",
+     1343.5,
+     1335.2,
+     1455.3
+    ],
+    [
+     "2026-12-27",
+     1393.5,
+     1315.3,
+     1461.8
+    ],
+    [
+     "2027-01-10",
+     1380.5,
+     1306.2,
+     1472.0
+    ]
+   ],
+   "MIN": [
+    [
+     "2026-10-27",
+     1627.0,
+     1627.0,
+     1627.0
+    ],
+    [
+     "2026-10-29",
+     1627.0,
+     1627.0,
+     1627.0
+    ],
+    [
+     "2026-11-09",
+     1663.1,
+     1582.5,
+     1665.6
+    ],
+    [
+     "2026-11-22",
+     1614.6,
+     1578.5,
+     1695.2
+    ],
+    [
+     "2026-11-29",
+     1628.2,
+     1558.5,
+     1675.6
+    ],
+    [
+     "2026-12-07",
+     1639.0,
+     1562.4,
+     1681.3
+    ],
+    [
+     "2026-12-19",
+     1621.3,
+     1551.8,
+     1695.3
+    ],
+    [
+     "2026-12-27",
+     1642.6,
+     1547.0,
+     1705.8
+    ],
+    [
+     "2027-01-10",
+     1630.4,
+     1540.8,
+     1712.9
+    ]
+   ],
+   "NE": [
+    [
+     "2026-10-27",
+     1583.4,
+     1583.4,
+     1583.4
+    ],
+    [
+     "2026-10-29",
+     1583.4,
+     1583.4,
+     1583.4
+    ],
+    [
+     "2026-11-09",
+     1568.7,
+     1528.4,
+     1611.6
+    ],
+    [
+     "2026-11-22",
+     1591.6,
+     1543.8,
+     1629.2
+    ],
+    [
+     "2026-11-29",
+     1560.2,
+     1522.0,
+     1639.1
+    ],
+    [
+     "2026-12-07",
+     1588.1,
+     1529.4,
+     1653.6
+    ],
+    [
+     "2026-12-19",
+     1607.4,
+     1521.9,
+     1642.5
+    ],
+    [
+     "2026-12-27",
+     1589.2,
+     1511.2,
+     1661.3
+    ],
+    [
+     "2027-01-10",
+     1583.8,
+     1500.5,
+     1662.1
+    ]
+   ],
+   "NO": [
+    [
+     "2026-10-27",
+     1412.4,
+     1412.4,
+     1412.4
+    ],
+    [
+     "2026-10-29",
+     1412.4,
+     1412.4,
+     1412.4
+    ],
+    [
+     "2026-11-09",
+     1432.3,
+     1389.4,
+     1434.9
+    ],
+    [
+     "2026-11-22",
+     1400.7,
+     1362.0,
+     1446.4
+    ],
+    [
+     "2026-11-29",
+     1389.3,
+     1354.5,
+     1471.1
+    ],
+    [
+     "2026-12-07",
+     1374.6,
+     1344.9,
+     1462.9
+    ],
+    [
+     "2026-12-19",
+     1404.5,
+     1358.8,
+     1478.4
+    ],
+    [
+     "2026-12-27",
+     1448.2,
+     1336.1,
+     1483.7
+    ],
+    [
+     "2027-01-10",
+     1410.9,
+     1332.8,
+     1498.9
+    ]
+   ],
+   "NYG": [
+    [
+     "2026-10-27",
+     1464.4,
+     1464.4,
+     1464.4
+    ],
+    [
+     "2026-10-29",
+     1464.4,
+     1464.4,
+     1464.4
+    ],
+    [
+     "2026-11-09",
+     1445.0,
+     1442.3,
+     1487.8
+    ],
+    [
+     "2026-11-22",
+     1441.8,
+     1403.6,
+     1522.5
+    ],
+    [
+     "2026-11-29",
+     1424.0,
+     1419.6,
+     1509.5
+    ],
+    [
+     "2026-12-07",
+     1407.6,
+     1409.7,
+     1527.1
+    ],
+    [
+     "2026-12-19",
+     1402.4,
+     1403.6,
+     1524.1
+    ],
+    [
+     "2026-12-27",
+     1382.4,
+     1389.6,
+     1534.6
+    ],
+    [
+     "2027-01-10",
+     1462.3,
+     1379.8,
+     1550.4
+    ]
+   ],
+   "NYJ": [
+    [
+     "2026-10-27",
+     1372.3,
+     1372.3,
+     1372.3
+    ],
+    [
+     "2026-10-29",
+     1372.3,
+     1372.3,
+     1372.3
+    ],
+    [
+     "2026-11-09",
+     1341.4,
+     1341.4,
+     1425.3
+    ],
+    [
+     "2026-11-22",
+     1399.9,
+     1319.5,
+     1436.6
+    ],
+    [
+     "2026-11-29",
+     1382.2,
+     1307.3,
+     1425.2
+    ],
+    [
+     "2026-12-07",
+     1382.2,
+     1307.3,
+     1425.2
+    ],
+    [
+     "2026-12-19",
+     1373.0,
+     1300.9,
+     1443.4
+    ],
+    [
+     "2026-12-27",
+     1339.0,
+     1306.6,
+     1451.2
+    ],
+    [
+     "2027-01-10",
+     1368.7,
+     1297.9,
+     1452.9
+    ]
+   ],
+   "PHI": [
+    [
+     "2026-10-27",
+     1445.7,
+     1445.7,
+     1445.7
+    ],
+    [
+     "2026-10-29",
+     1445.7,
+     1445.7,
+     1445.7
+    ],
+    [
+     "2026-11-09",
+     1445.7,
+     1405.4,
+     1488.5
+    ],
+    [
+     "2026-11-22",
+     1423.9,
+     1388.5,
+     1509.3
+    ],
+    [
+     "2026-11-29",
+     1407.4,
+     1377.9,
+     1495.2
+    ],
+    [
+     "2026-12-07",
+     1389.4,
+     1389.1,
+     1508.1
+    ],
+    [
+     "2026-12-19",
+     1404.6,
+     1367.6,
+     1515.8
+    ],
+    [
+     "2026-12-27",
+     1425.8,
+     1371.2,
+     1526.0
+    ],
+    [
+     "2027-01-10",
+     1441.8,
+     1362.9,
+     1533.9
+    ]
+   ],
+   "PIT": [
+    [
+     "2026-10-27",
+     1554.0,
+     1554.0,
+     1554.0
+    ],
+    [
+     "2026-10-29",
+     1554.0,
+     1554.0,
+     1554.0
+    ],
+    [
+     "2026-11-09",
+     1567.5,
+     1524.6,
+     1567.5
+    ],
+    [
+     "2026-11-22",
+     1565.4,
+     1520.0,
+     1605.8
+    ],
+    [
+     "2026-11-29",
+     1543.5,
+     1503.6,
+     1619.6
+    ],
+    [
+     "2026-12-07",
+     1564.0,
+     1486.2,
+     1604.5
+    ],
+    [
+     "2026-12-19",
+     1592.2,
+     1479.7,
+     1621.6
+    ],
+    [
+     "2026-12-27",
+     1569.5,
+     1474.2,
+     1634.7
+    ],
+    [
+     "2027-01-10",
+     1557.9,
+     1467.2,
+     1635.6
+    ]
+   ],
+   "SEA": [
+    [
+     "2026-10-27",
+     1651.9,
+     1651.9,
+     1651.9
+    ],
+    [
+     "2026-10-29",
+     1651.9,
+     1651.9,
+     1651.9
+    ],
+    [
+     "2026-11-09",
+     1672.0,
+     1629.1,
+     1673.2
+    ],
+    [
+     "2026-11-22",
+     1639.2,
+     1599.5,
+     1682.1
+    ],
+    [
+     "2026-11-29",
+     1658.3,
+     1615.3,
+     1701.3
+    ],
+    [
+     "2026-12-07",
+     1669.9,
+     1591.7,
+     1708.6
+    ],
+    [
+     "2026-12-19",
+     1647.5,
+     1578.9,
+     1722.8
+    ],
+    [
+     "2026-12-27",
+     1665.1,
+     1583.0,
+     1726.9
+    ],
+    [
+     "2027-01-10",
+     1654.4,
+     1571.8,
+     1725.3
+    ]
+   ],
+   "SF": [
+    [
+     "2026-10-27",
+     1614.9,
+     1614.9,
+     1614.9
+    ],
+    [
+     "2026-10-29",
+     1614.9,
+     1614.9,
+     1614.9
+    ],
+    [
+     "2026-11-09",
+     1622.9,
+     1580.0,
+     1622.9
+    ],
+    [
+     "2026-11-22",
+     1576.3,
+     1574.2,
+     1658.8
+    ],
+    [
+     "2026-11-29",
+     1599.9,
+     1558.3,
+     1675.5
+    ],
+    [
+     "2026-12-07",
+     1578.0,
+     1564.2,
+     1683.0
+    ],
+    [
+     "2026-12-19",
+     1564.0,
+     1540.1,
+     1677.8
+    ],
+    [
+     "2026-12-27",
+     1588.3,
+     1541.0,
+     1689.2
+    ],
+    [
+     "2027-01-10",
+     1618.9,
+     1530.5,
+     1698.9
+    ]
+   ],
+   "TB": [
+    [
+     "2026-10-27",
+     1469.7,
+     1469.7,
+     1469.7
+    ],
+    [
+     "2026-10-29",
+     1469.7,
+     1469.7,
+     1469.7
+    ],
+    [
+     "2026-11-09",
+     1433.9,
+     1433.9,
+     1517.4
+    ],
+    [
+     "2026-11-22",
+     1462.6,
+     1421.9,
+     1505.5
+    ],
+    [
+     "2026-11-29",
+     1462.6,
+     1421.9,
+     1505.5
+    ],
+    [
+     "2026-12-07",
+     1457.6,
+     1412.4,
+     1530.1
+    ],
+    [
+     "2026-12-19",
+     1442.7,
+     1403.2,
+     1531.2
+    ],
+    [
+     "2026-12-27",
+     1478.8,
+     1398.4,
+     1546.0
+    ],
+    [
+     "2027-01-10",
+     1470.9,
+     1383.2,
+     1553.7
+    ]
+   ],
+   "TEN": [
+    [
+     "2026-10-27",
+     1317.5,
+     1317.5,
+     1317.5
+    ],
+    [
+     "2026-10-29",
+     1317.5,
+     1317.5,
+     1317.5
+    ],
+    [
+     "2026-11-09",
+     1310.6,
+     1310.6,
+     1353.4
+    ],
+    [
+     "2026-11-22",
+     1374.1,
+     1290.5,
+     1372.1
+    ],
+    [
+     "2026-11-29",
+     1406.6,
+     1285.7,
+     1367.4
+    ],
+    [
+     "2026-12-07",
+     1386.6,
+     1269.4,
+     1380.1
+    ],
+    [
+     "2026-12-19",
+     1376.4,
+     1264.3,
+     1379.6
+    ],
+    [
+     "2026-12-27",
+     1335.3,
+     1244.5,
+     1388.6
+    ],
+    [
+     "2027-01-10",
+     1308.9,
+     1252.9,
+     1396.4
+    ]
+   ],
+   "WAS": [
+    [
+     "2026-10-27",
+     1409.5,
+     1409.5,
+     1409.5
+    ],
+    [
+     "2026-10-29",
+     1409.5,
+     1409.5,
+     1409.5
+    ],
+    [
+     "2026-11-09",
+     1373.2,
+     1373.2,
+     1456.6
+    ],
+    [
+     "2026-11-22",
+     1404.0,
+     1358.8,
+     1442.4
+    ],
+    [
+     "2026-11-29",
+     1411.5,
+     1359.5,
+     1478.7
+    ],
+    [
+     "2026-12-07",
+     1388.1,
+     1344.4,
+     1471.7
+    ],
+    [
+     "2026-12-19",
+     1373.3,
+     1334.1,
+     1481.9
+    ],
+    [
+     "2026-12-27",
+     1390.9,
+     1325.7,
+     1490.4
+    ],
+    [
+     "2027-01-10",
+     1405.8,
+     1324.2,
+     1498.3
+    ]
+   ]
+  },
+  "samples": {
+   "ARI": [
+    [
+     1378.0,
+     1378.0,
+     1359.5,
+     1378.8,
+     1359.3,
+     1344.4,
+     1344.4,
+     1386.3,
+     1353.0
+    ],
+    [
+     1378.0,
+     1378.0,
+     1399.7,
+     1373.7,
+     1397.5,
+     1423.1,
+     1423.1,
+     1421.0,
+     1424.6
+    ],
+    [
+     1378.0,
+     1378.0,
+     1442.6,
+     1414.7,
+     1386.4,
+     1367.1,
+     1367.1,
+     1357.7,
+     1369.8
+    ]
+   ],
+   "ATL": [
+    [
+     1481.4,
+     1481.4,
+     1529.9,
+     1549.9,
+     1536.4,
+     1555.5,
+     1528.6,
+     1526.6,
+     1553.5
+    ],
+    [
+     1481.4,
+     1481.4,
+     1489.5,
+     1469.2,
+     1456.1,
+     1441.9,
+     1421.3,
+     1425.2,
+     1433.5
+    ],
+    [
+     1481.4,
+     1481.4,
+     1487.0,
+     1509.6,
+     1536.9,
+     1555.7,
+     1574.0,
+     1555.4,
+     1535.5
+    ]
+   ],
+   "BAL": [
+    [
+     1515.5,
+     1515.5,
+     1529.5,
+     1512.4,
+     1540.4,
+     1540.4,
+     1554.9,
+     1588.7,
+     1623.2
+    ],
+    [
+     1515.5,
+     1515.5,
+     1484.0,
+     1481.1,
+     1463.8,
+     1463.8,
+     1435.4,
+     1439.3,
+     1448.5
+    ],
+    [
+     1515.5,
+     1515.5,
+     1569.8,
+     1594.0,
+     1617.6,
+     1617.6,
+     1628.3,
+     1655.1,
+     1645.9
+    ]
+   ],
+   "BUF": [
+    [
+     1639.6,
+     1639.6,
+     1631.5,
+     1605.1,
+     1620.1,
+     1601.5,
+     1634.4,
+     1616.9,
+     1595.9
+    ],
+    [
+     1639.6,
+     1639.6,
+     1671.8,
+     1684.7,
+     1697.5,
+     1674.7,
+     1701.6,
+     1722.4,
+     1732.0
+    ],
+    [
+     1639.6,
+     1639.6,
+     1588.7,
+     1606.9,
+     1621.7,
+     1600.6,
+     1637.5,
+     1660.5,
+     1678.3
+    ]
+   ],
+   "CAR": [
+    [
+     1449.3,
+     1435.1,
+     1421.1,
+     1430.0,
+     1430.0,
+     1407.1,
+     1425.7,
+     1439.0,
+     1407.5
+    ],
+    [
+     1449.3,
+     1435.1,
+     1421.1,
+     1422.4,
+     1422.4,
+     1481.6,
+     1453.2,
+     1461.1,
+     1458.1
+    ],
+    [
+     1449.3,
+     1435.1,
+     1421.1,
+     1427.3,
+     1427.3,
+     1400.3,
+     1415.3,
+     1388.7,
+     1355.7
+    ]
+   ],
+   "CHI": [
+    [
+     1574.5,
+     1574.5,
+     1571.5,
+     1582.3,
+     1558.9,
+     1576.8,
+     1532.9,
+     1547.2,
+     1547.7
+    ],
+    [
+     1574.5,
+     1574.5,
+     1614.4,
+     1621.7,
+     1600.9,
+     1619.0,
+     1613.7,
+     1623.9,
+     1582.6
+    ],
+    [
+     1574.5,
+     1574.5,
+     1612.4,
+     1618.4,
+     1638.1,
+     1608.9,
+     1563.9,
+     1578.4,
+     1574.3
+    ]
+   ],
+   "CIN": [
+    [
+     1553.9,
+     1553.9,
+     1536.1,
+     1557.7,
+     1589.4,
+     1604.4,
+     1621.1,
+     1560.6,
+     1506.4
+    ],
+    [
+     1553.9,
+     1553.9,
+     1533.6,
+     1555.4,
+     1542.0,
+     1559.2,
+     1578.5,
+     1527.3,
+     1510.5
+    ],
+    [
+     1553.9,
+     1553.9,
+     1578.9,
+     1555.1,
+     1577.1,
+     1549.6,
+     1569.9,
+     1599.4,
+     1627.9
+    ]
+   ],
+   "CLE": [
+    [
+     1467.8,
+     1467.8,
+     1434.4,
+     1415.6,
+     1432.1,
+     1417.2,
+     1444.1,
+     1456.4,
+     1461.1
+    ],
+    [
+     1467.8,
+     1467.8,
+     1434.4,
+     1456.0,
+     1425.2,
+     1408.0,
+     1428.5,
+     1481.4,
+     1486.6
+    ],
+    [
+     1467.8,
+     1467.8,
+     1477.3,
+     1455.9,
+     1429.3,
+     1456.7,
+     1438.4,
+     1418.7,
+     1386.8
+    ]
+   ],
+   "DAL": [
+    [
+     1466.7,
+     1466.7,
+     1500.4,
+     1492.5,
+     1466.9,
+     1459.2,
+     1459.2,
+     1424.1,
+     1431.9
+    ],
+    [
+     1466.7,
+     1466.7,
+     1462.8,
+     1458.5,
+     1434.9,
+     1425.3,
+     1425.3,
+     1439.3,
+     1399.9
+    ],
+    [
+     1466.7,
+     1466.7,
+     1417.3,
+     1417.6,
+     1439.4,
+     1468.8,
+     1468.8,
+     1484.7,
+     1521.8
+    ]
+   ],
+   "DEN": [
+    [
+     1612.7,
+     1612.7,
+     1642.2,
+     1648.6,
+     1622.4,
+     1629.8,
+     1639.1,
+     1667.5,
+     1656.1
+    ],
+    [
+     1612.7,
+     1612.7,
+     1642.2,
+     1647.4,
+     1664.2,
+     1669.3,
+     1634.3,
+     1623.2,
+     1662.4
+    ],
+    [
+     1612.7,
+     1612.7,
+     1642.2,
+     1649.9,
+     1626.2,
+     1590.5,
+     1599.9,
+     1591.4,
+     1622.5
+    ]
+   ],
+   "DET": [
+    [
+     1554.4,
+     1554.4,
+     1549.3,
+     1502.8,
+     1526.2,
+     1507.1,
+     1514.2,
+     1504.4,
+     1440.5
+    ],
+    [
+     1554.4,
+     1554.4,
+     1589.9,
+     1584.1,
+     1604.9,
+     1619.1,
+     1623.1,
+     1604.1,
+     1611.3
+    ],
+    [
+     1554.4,
+     1554.4,
+     1547.0,
+     1541.5,
+     1521.9,
+     1503.1,
+     1468.6,
+     1457.9,
+     1534.0
+    ]
+   ],
+   "GB": [
+    [
+     1523.9,
+     1538.1,
+     1521.8,
+     1506.1,
+     1488.6,
+     1508.1,
+     1489.4,
+     1446.6,
+     1448.0
+    ],
+    [
+     1523.9,
+     1538.1,
+     1521.8,
+     1501.1,
+     1484.3,
+     1458.8,
+     1447.0,
+     1449.7,
+     1502.2
+    ],
+    [
+     1523.9,
+     1538.1,
+     1521.8,
+     1546.5,
+     1531.6,
+     1544.3,
+     1523.3,
+     1480.8,
+     1443.1
+    ]
+   ],
+   "HOU": [
+    [
+     1509.5,
+     1509.5,
+     1525.9,
+     1553.9,
+     1525.9,
+     1551.7,
+     1529.5,
+     1531.9,
+     1512.7
+    ],
+    [
+     1509.5,
+     1509.5,
+     1485.6,
+     1481.4,
+     1498.6,
+     1523.4,
+     1500.5,
+     1541.5,
+     1481.2
+    ],
+    [
+     1509.5,
+     1509.5,
+     1525.9,
+     1560.3,
+     1536.8,
+     1564.2,
+     1576.2,
+     1613.7,
+     1635.3
+    ]
+   ],
+   "IND": [
+    [
+     1421.7,
+     1421.7,
+     1392.9,
+     1357.5,
+     1380.2,
+     1380.2,
+     1368.0,
+     1416.7,
+     1424.8
+    ],
+    [
+     1421.7,
+     1421.7,
+     1430.6,
+     1427.8,
+     1403.2,
+     1403.2,
+     1430.3,
+     1469.9,
+     1472.9
+    ],
+    [
+     1421.7,
+     1421.7,
+     1433.2,
+     1437.1,
+     1416.8,
+     1416.8,
+     1443.1,
+     1404.0,
+     1414.0
+    ]
+   ],
+   "JAX": [
+    [
+     1596.7,
+     1596.7,
+     1580.6,
+     1562.3,
+     1568.2,
+     1550.4,
+     1567.2,
+     1564.4,
+     1556.1
+    ],
+    [
+     1596.7,
+     1596.7,
+     1583.2,
+     1610.0,
+     1614.7,
+     1596.5,
+     1565.7,
+     1516.8,
+     1555.0
+    ],
+    [
+     1596.7,
+     1596.7,
+     1583.2,
+     1569.5,
+     1575.1,
+     1604.3,
+     1620.2,
+     1572.0,
+     1595.3
+    ]
+   ],
+   "KC": [
+    [
+     1561.1,
+     1561.1,
+     1554.1,
+     1544.8,
+     1529.8,
+     1554.8,
+     1538.1,
+     1549.5,
+     1574.2
+    ],
+    [
+     1561.1,
+     1561.1,
+     1555.9,
+     1584.7,
+     1571.9,
+     1551.8,
+     1532.6,
+     1502.0,
+     1451.7
+    ],
+    [
+     1561.1,
+     1561.1,
+     1554.1,
+     1544.1,
+     1529.3,
+     1559.0,
+     1538.7,
+     1542.3,
+     1569.4
+    ]
+   ],
+   "LA": [
+    [
+     1568.9,
+     1568.9,
+     1552.2,
+     1522.4,
+     1539.9,
+     1514.9,
+     1503.0,
+     1551.5,
+     1593.1
+    ],
+    [
+     1568.9,
+     1568.9,
+     1511.9,
+     1529.4,
+     1546.2,
+     1566.3,
+     1553.5,
+     1593.1,
+     1621.8
+    ],
+    [
+     1568.9,
+     1568.9,
+     1592.8,
+     1608.1,
+     1623.0,
+     1593.3,
+     1621.8,
+     1604.8,
+     1596.1
+    ]
+   ],
+   "LAC": [
+    [
+     1410.3,
+     1410.3,
+     1382.9,
+     1391.9,
+     1382.0,
+     1369.0,
+     1387.9,
+     1371.7,
+     1352.7
+    ],
+    [
+     1410.3,
+     1410.3,
+     1466.1,
+     1504.6,
+     1489.1,
+     1510.2,
+     1557.3,
+     1525.0,
+     1529.7
+    ],
+    [
+     1410.3,
+     1410.3,
+     1382.9,
+     1390.8,
+     1378.9,
+     1366.3,
+     1430.4,
+     1414.2,
+     1390.0
+    ]
+   ],
+   "LV": [
+    [
+     1403.5,
+     1403.5,
+     1418.1,
+     1401.6,
+     1385.1,
+     1385.1,
+     1401.5,
+     1401.4,
+     1414.0
+    ],
+    [
+     1403.5,
+     1403.5,
+     1376.7,
+     1361.5,
+     1392.3,
+     1392.3,
+     1373.9,
+     1333.5,
+     1353.1
+    ],
+    [
+     1403.5,
+     1403.5,
+     1418.1,
+     1439.0,
+     1465.6,
+     1465.6,
+     1434.6,
+     1435.5,
+     1401.6
+    ]
+   ],
+   "MIA": [
+    [
+     1387.8,
+     1387.8,
+     1361.2,
+     1379.5,
+     1396.7,
+     1389.3,
+     1418.9,
+     1463.6,
+     1483.9
+    ],
+    [
+     1387.8,
+     1387.8,
+     1363.5,
+     1344.5,
+     1364.1,
+     1359.0,
+     1349.2,
+     1368.6,
+     1356.5
+    ],
+    [
+     1387.8,
+     1387.8,
+     1406.3,
+     1381.5,
+     1396.1,
+     1431.8,
+     1460.9,
+     1505.1,
+     1518.2
+    ]
+   ],
+   "MIN": [
+    [
+     1627.0,
+     1627.0,
+     1665.6,
+     1657.3,
+     1670.8,
+     1677.1,
+     1657.4,
+     1678.3,
+     1655.2
+    ],
+    [
+     1627.0,
+     1627.0,
+     1582.5,
+     1583.8,
+     1596.9,
+     1564.5,
+     1594.8,
+     1625.4,
+     1651.1
+    ],
+    [
+     1627.0,
+     1627.0,
+     1622.7,
+     1578.9,
+     1551.6,
+     1562.5,
+     1590.2,
+     1563.9,
+     1546.5
+    ]
+   ],
+   "NE": [
+    [
+     1583.4,
+     1583.4,
+     1611.6,
+     1629.2,
+     1639.1,
+     1657.6,
+     1677.3,
+     1697.7,
+     1721.8
+    ],
+    [
+     1583.4,
+     1583.4,
+     1611.6,
+     1631.7,
+     1647.1,
+     1670.0,
+     1639.6,
+     1664.7,
+     1643.6
+    ],
+    [
+     1583.4,
+     1583.4,
+     1611.6,
+     1586.2,
+     1598.0,
+     1619.2,
+     1591.5,
+     1577.0,
+     1525.4
+    ]
+   ],
+   "NO": [
+    [
+     1412.4,
+     1412.4,
+     1432.3,
+     1439.3,
+     1428.4,
+     1409.0,
+     1390.4,
+     1351.5,
+     1324.7
+    ],
+    [
+     1412.4,
+     1412.4,
+     1432.3,
+     1399.9,
+     1388.6,
+     1414.2,
+     1442.5,
+     1483.7,
+     1516.4
+    ],
+    [
+     1412.4,
+     1412.4,
+     1389.4,
+     1360.9,
+     1352.9,
+     1340.2,
+     1325.3,
+     1337.8,
+     1359.1
+    ]
+   ],
+   "NYG": [
+    [
+     1464.4,
+     1464.4,
+     1442.3,
+     1446.4,
+     1423.7,
+     1412.0,
+     1449.8,
+     1425.0,
+     1416.6
+    ],
+    [
+     1464.4,
+     1464.4,
+     1442.3,
+     1443.9,
+     1468.5,
+     1456.2,
+     1489.9,
+     1461.9,
+     1446.2
+    ],
+    [
+     1464.4,
+     1464.4,
+     1487.8,
+     1522.9,
+     1543.2,
+     1526.5,
+     1550.2,
+     1562.5,
+     1489.4
+    ]
+   ],
+   "NYJ": [
+    [
+     1372.3,
+     1372.3,
+     1341.4,
+     1357.1,
+     1340.0,
+     1340.0,
+     1330.6,
+     1308.5,
+     1338.9
+    ],
+    [
+     1372.3,
+     1372.3,
+     1382.5,
+     1362.0,
+     1342.5,
+     1342.5,
+     1377.5,
+     1354.4,
+     1341.8
+    ],
+    [
+     1372.3,
+     1372.3,
+     1341.4,
+     1315.2,
+     1300.5,
+     1300.5,
+     1291.2,
+     1269.7,
+     1258.5
+    ]
+   ],
+   "PHI": [
+    [
+     1445.7,
+     1445.7,
+     1448.3,
+     1471.5,
+     1497.2,
+     1512.1,
+     1551.8,
+     1570.2,
+     1569.7
+    ],
+    [
+     1445.7,
+     1445.7,
+     1448.3,
+     1471.5,
+     1495.1,
+     1469.4,
+     1427.4,
+     1408.9,
+     1431.1
+    ],
+    [
+     1445.7,
+     1445.7,
+     1445.7,
+     1471.8,
+     1450.0,
+     1469.2,
+     1464.5,
+     1448.2,
+     1508.1
+    ]
+   ],
+   "PIT": [
+    [
+     1554.0,
+     1554.0,
+     1567.5,
+     1522.6,
+     1548.8,
+     1523.0,
+     1506.2,
+     1501.5,
+     1499.3
+    ],
+    [
+     1554.0,
+     1554.0,
+     1567.5,
+     1522.4,
+     1505.7,
+     1480.9,
+     1511.7,
+     1501.2,
+     1490.3
+    ],
+    [
+     1554.0,
+     1554.0,
+     1567.5,
+     1565.2,
+     1588.9,
+     1561.4,
+     1545.5,
+     1537.7,
+     1538.3
+    ]
+   ],
+   "SEA": [
+    [
+     1651.9,
+     1651.9,
+     1672.0,
+     1682.1,
+     1704.1,
+     1711.7,
+     1646.4,
+     1615.1,
+     1606.9
+    ],
+    [
+     1651.9,
+     1651.9,
+     1631.8,
+     1641.8,
+     1622.9,
+     1632.5,
+     1613.8,
+     1586.6,
+     1544.7
+    ],
+    [
+     1651.9,
+     1651.9,
+     1588.9,
+     1560.2,
+     1546.0,
+     1516.7,
+     1471.3,
+     1499.5,
+     1502.4
+    ]
+   ],
+   "SF": [
+    [
+     1614.9,
+     1614.9,
+     1622.9,
+     1663.8,
+     1641.7,
+     1653.4,
+     1630.1,
+     1603.9,
+     1631.4
+    ],
+    [
+     1614.9,
+     1614.9,
+     1621.4,
+     1655.6,
+     1674.5,
+     1686.8,
+     1670.9,
+     1684.8,
+     1701.1
+    ],
+    [
+     1614.9,
+     1614.9,
+     1622.9,
+     1654.4,
+     1668.5,
+     1685.3,
+     1623.7,
+     1643.0,
+     1620.6
+    ]
+   ],
+   "TB": [
+    [
+     1469.7,
+     1469.7,
+     1433.9,
+     1462.8,
+     1462.8,
+     1492.3,
+     1477.7,
+     1473.8,
+     1471.7
+    ],
+    [
+     1469.7,
+     1469.7,
+     1476.8,
+     1462.5,
+     1462.5,
+     1414.6,
+     1443.0,
+     1399.4,
+     1374.5
+    ],
+    [
+     1469.7,
+     1469.7,
+     1435.9,
+     1466.8,
+     1466.8,
+     1495.6,
+     1484.8,
+     1524.3,
+     1561.7
+    ]
+   ],
+   "TEN": [
+    [
+     1317.5,
+     1317.5,
+     1310.6,
+     1292.2,
+     1286.3,
+     1273.3,
+     1266.2,
+     1237.3,
+     1266.1
+    ],
+    [
+     1317.5,
+     1317.5,
+     1310.6,
+     1290.8,
+     1286.2,
+     1270.8,
+     1266.9,
+     1282.9,
+     1307.5
+    ],
+    [
+     1317.5,
+     1317.5,
+     1310.6,
+     1288.7,
+     1283.1,
+     1307.2,
+     1341.7,
+     1351.0,
+     1332.4
+    ]
+   ],
+   "WAS": [
+    [
+     1409.5,
+     1409.5,
+     1456.6,
+     1480.1,
+     1478.7,
+     1491.7,
+     1513.9,
+     1522.1,
+     1561.6
+    ],
+    [
+     1409.5,
+     1409.5,
+     1454.1,
+     1434.9,
+     1435.8,
+     1451.1,
+     1474.0,
+     1477.8,
+     1477.4
+    ],
+    [
+     1409.5,
+     1409.5,
+     1373.2,
+     1361.1,
+     1375.4,
+     1351.3,
+     1339.3,
+     1365.4,
+     1342.0
+    ]
+   ]
+  }
+ }
+}
