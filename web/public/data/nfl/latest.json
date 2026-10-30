@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-29T16:33:46+00:00",
- "run_date": "2026-10-29",
+ "generated_at": "2026-10-30T16:26:07+00:00",
+ "run_date": "2026-10-30",
  "season": 2026,
  "week": 8,
  "week_label": "Week 8",
@@ -240,14 +240,14 @@
    "name": "Green Bay Packers",
    "conference": "NFC",
    "division": "NFC North",
-   "elo": 1523.9,
-   "wins": 4,
+   "elo": 1537.7,
+   "wins": 5,
    "losses": 3,
    "ties": 0,
    "div_wins": 1,
    "div_losses": 2,
-   "pts_diff": -1,
-   "games": 477,
+   "pts_diff": 7,
+   "games": 478,
    "preseason_elo": 1522.6,
    "preseason_rank": 15,
    "rank": 14
@@ -372,23 +372,6 @@
    "rank": 21
   },
   {
-   "team": "CAR",
-   "name": "Carolina Panthers",
-   "conference": "NFC",
-   "division": "NFC South",
-   "elo": 1449.3,
-   "wins": 3,
-   "losses": 3,
-   "ties": 0,
-   "div_wins": 1,
-   "div_losses": 1,
-   "pts_diff": -7,
-   "games": 459,
-   "preseason_elo": 1438.5,
-   "preseason_rank": 26,
-   "rank": 22
-  },
-  {
    "team": "PHI",
    "name": "Philadelphia Eagles",
    "conference": "NFC",
@@ -403,6 +386,23 @@
    "games": 480,
    "preseason_elo": 1553.0,
    "preseason_rank": 8,
+   "rank": 22
+  },
+  {
+   "team": "CAR",
+   "name": "Carolina Panthers",
+   "conference": "NFC",
+   "division": "NFC South",
+   "elo": 1435.5,
+   "wins": 3,
+   "losses": 4,
+   "ties": 0,
+   "div_wins": 1,
+   "div_losses": 1,
+   "pts_diff": -15,
+   "games": 460,
+   "preseason_elo": 1438.5,
+   "preseason_rank": 26,
    "rank": 23
   },
   {
@@ -624,19 +624,19 @@
    "name": "NFC North",
    "conference": "NFC",
    "teams": 4,
-   "avgElo": 1569.9,
+   "avgElo": 1573.4,
    "preseasonAvgElo": 1533.8,
    "top10": 2,
    "bestTeam": "MIN",
    "bestElo": 1627.0,
    "worstTeam": "GB",
-   "worstElo": 1523.9
+   "worstElo": 1537.7
   },
   "NFC South": {
    "name": "NFC South",
    "conference": "NFC",
    "teams": 4,
-   "avgElo": 1453.2,
+   "avgElo": 1449.8,
    "preseasonAvgElo": 1459.3,
    "top10": 0,
    "bestTeam": "ATL",
@@ -659,37 +659,6 @@
  },
  "slate": [
   {
-   "game_id": "2026_08_CAR_GB",
-   "date": "2026-10-29",
-   "weekday": "Thursday",
-   "gametime": "20:15",
-   "season": 2026,
-   "week": 8,
-   "game_type": "REG",
-   "week_label": "Week 8",
-   "home_team": "GB",
-   "away_team": "CAR",
-   "home_name": "Green Bay Packers",
-   "away_name": "Carolina Panthers",
-   "home_division": "NFC North",
-   "away_division": "NFC South",
-   "div_game": false,
-   "neutral": false,
-   "home_rest": 4.0,
-   "away_rest": 4.0,
-   "elo_home_pre": 1523.9,
-   "elo_away_pre": 1449.3,
-   "p_home": 0.6397,
-   "p_home_elo": 0.6695,
-   "model": "elo+efficiency:random_forest",
-   "pick": "GB",
-   "pick_prob": 0.6397,
-   "elo_spread": 4.7,
-   "pred_home_score": 25.0,
-   "pred_away_score": 20.3,
-   "pred_total": 45.3
-  },
-  {
    "game_id": "2026_08_BAL_BUF",
    "date": "2026-11-01",
    "weekday": "Sunday",
@@ -710,11 +679,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1639.6,
    "elo_away_pre": 1515.5,
-   "p_home": 0.6918,
+   "p_home": 0.6846,
    "p_home_elo": 0.7513,
    "model": "elo+efficiency:random_forest",
    "pick": "BUF",
-   "pick_prob": 0.6918,
+   "pick_prob": 0.6846,
    "elo_spread": 7.5,
    "pred_home_score": 29.8,
    "pred_away_score": 22.3,
@@ -741,11 +710,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1553.9,
    "elo_away_pre": 1317.5,
-   "p_home": 0.846,
+   "p_home": 0.8447,
    "p_home_elo": 0.8371,
    "model": "elo+efficiency:random_forest",
    "pick": "CIN",
-   "pick_prob": 0.846,
+   "pick_prob": 0.8447,
    "elo_spread": 11.3,
    "pred_home_score": 29.0,
    "pred_away_score": 17.7,
@@ -803,11 +772,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1554.4,
    "elo_away_pre": 1627.0,
-   "p_home": 0.5265,
+   "p_home": 0.531,
    "p_home_elo": 0.4647,
    "model": "elo+efficiency:random_forest",
    "pick": "DET",
-   "pick_prob": 0.5265,
+   "pick_prob": 0.531,
    "elo_spread": -1.3,
    "pred_home_score": 21.6,
    "pred_away_score": 22.9,
@@ -834,11 +803,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1596.7,
    "elo_away_pre": 1421.7,
-   "p_home": 0.8007,
+   "p_home": 0.796,
    "p_home_elo": 0.802,
    "model": "elo+efficiency:random_forest",
    "pick": "JAX",
-   "pick_prob": 0.8007,
+   "pick_prob": 0.796,
    "elo_spread": 9.6,
    "pred_home_score": 28.8,
    "pred_away_score": 19.2,
@@ -865,11 +834,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1372.3,
    "elo_away_pre": 1403.5,
-   "p_home": 0.5466,
+   "p_home": 0.5538,
    "p_home_elo": 0.5242,
    "model": "elo+efficiency:random_forest",
    "pick": "NYJ",
-   "pick_prob": 0.5466,
+   "pick_prob": 0.5538,
    "elo_spread": 0.4,
    "pred_home_score": 22.6,
    "pred_away_score": 22.3,
@@ -896,11 +865,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1554.0,
    "elo_away_pre": 1467.8,
-   "p_home": 0.6769,
+   "p_home": 0.6733,
    "p_home_elo": 0.6841,
    "model": "elo+efficiency:random_forest",
    "pick": "PIT",
-   "pick_prob": 0.6769,
+   "pick_prob": 0.6733,
    "elo_spread": 5.1,
    "pred_home_score": 22.7,
    "pred_away_score": 17.5,
@@ -927,11 +896,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1469.7,
    "elo_away_pre": 1481.4,
-   "p_home": 0.5344,
+   "p_home": 0.5372,
    "p_home_elo": 0.5521,
    "model": "elo+efficiency:random_forest",
    "pick": "TB",
-   "pick_prob": 0.5344,
+   "pick_prob": 0.5372,
    "elo_spread": 1.2,
    "pred_home_score": 24.0,
    "pred_away_score": 22.8,
@@ -958,11 +927,11 @@
    "away_rest": 14.0,
    "elo_home_pre": 1568.9,
    "elo_away_pre": 1410.3,
-   "p_home": 0.8241,
+   "p_home": 0.8178,
    "p_home_elo": 0.7455,
    "model": "elo+efficiency:random_forest",
    "pick": "LA",
-   "pick_prob": 0.8241,
+   "pick_prob": 0.8178,
    "elo_spread": 7.3,
    "pred_home_score": 25.9,
    "pred_away_score": 18.7,
@@ -989,11 +958,11 @@
    "away_rest": 7.0,
    "elo_home_pre": 1612.7,
    "elo_away_pre": 1561.1,
-   "p_home": 0.5484,
+   "p_home": 0.5486,
    "p_home_elo": 0.6395,
    "model": "elo+efficiency:random_forest",
    "pick": "DEN",
-   "pick_prob": 0.5484,
+   "pick_prob": 0.5486,
    "elo_spread": 3.7,
    "pred_home_score": 21.7,
    "pred_away_score": 17.9,
@@ -1020,11 +989,11 @@
    "away_rest": 10.0,
    "elo_home_pre": 1387.8,
    "elo_away_pre": 1583.4,
-   "p_home": 0.2686,
+   "p_home": 0.2697,
    "p_home_elo": 0.2759,
    "model": "elo+efficiency:random_forest",
    "pick": "NE",
-   "pick_prob": 0.7314,
+   "pick_prob": 0.7303,
    "elo_spread": -7.1,
    "pred_home_score": 18.3,
    "pred_away_score": 25.4,
@@ -1051,11 +1020,11 @@
    "away_rest": 6.0,
    "elo_home_pre": 1409.5,
    "elo_away_pre": 1445.7,
-   "p_home": 0.6088,
+   "p_home": 0.6045,
    "p_home_elo": 0.5456,
    "model": "elo+efficiency:random_forest",
    "pick": "WAS",
-   "pick_prob": 0.6088,
+   "pick_prob": 0.6045,
    "elo_spread": 1.0,
    "pred_home_score": 23.4,
    "pred_away_score": 22.5,
@@ -1082,48 +1051,49 @@
    "away_rest": 11.0,
    "elo_home_pre": 1651.9,
    "elo_away_pre": 1574.5,
-   "p_home": 0.5417,
+   "p_home": 0.5412,
    "p_home_elo": 0.6471,
    "model": "elo+efficiency:random_forest",
    "pick": "SEA",
-   "pick_prob": 0.5417,
+   "pick_prob": 0.5412,
    "elo_spread": 4.0,
    "pred_home_score": 24.3,
    "pred_away_score": 20.3,
    "pred_total": 44.7
   }
  ],
- "graded_today": [],
- "graded_recent": [
+ "graded_today": [
   {
-   "game_id": "2026_07_NE_CHI",
-   "date": "2026-10-22",
+   "game_id": "2026_08_CAR_GB",
+   "date": "2026-10-29",
    "season": 2026,
-   "week": 7,
+   "week": 8,
    "game_type": "REG",
-   "week_label": "Week 7",
-   "home_team": "CHI",
-   "away_team": "NE",
+   "week_label": "Week 8",
+   "home_team": "GB",
+   "away_team": "CAR",
    "neutral": false,
-   "pick": "CHI",
-   "p_home": 0.5008,
-   "pick_prob": 0.5008,
-   "elo_spread": -0.3,
-   "pred_home_score": 21.8,
-   "pred_away_score": 22.1,
-   "home_score": 30.0,
-   "away_score": 24.0,
+   "pick": "GB",
+   "p_home": 0.6397,
+   "pick_prob": 0.6397,
+   "elo_spread": 4.7,
+   "pred_home_score": 25.0,
+   "pred_away_score": 20.3,
+   "home_score": 27.0,
+   "away_score": 19.0,
    "home_win": 1.0,
    "tie": false,
    "pick_correct": true,
-   "log_loss": 0.6915,
-   "brier": 0.2492,
+   "log_loss": 0.4468,
+   "brier": 0.1298,
    "home_log_loss": 0.5978,
-   "d_ll": 0.0937,
-   "margin_err": 6.3,
-   "total_err": 10.1,
-   "graded_on": "2026-10-23"
-  },
+   "d_ll": -0.1511,
+   "margin_err": 3.3,
+   "total_err": 0.7,
+   "graded_on": "2026-10-30"
+  }
+ ],
+ "graded_recent": [
   {
    "game_id": "2026_07_DEN_ARI",
    "date": "2026-10-25",
@@ -1500,22 +1470,51 @@
    "margin_err": 20.8,
    "total_err": 11.8,
    "graded_on": "2026-10-27"
+  },
+  {
+   "game_id": "2026_08_CAR_GB",
+   "date": "2026-10-29",
+   "season": 2026,
+   "week": 8,
+   "game_type": "REG",
+   "week_label": "Week 8",
+   "home_team": "GB",
+   "away_team": "CAR",
+   "neutral": false,
+   "pick": "GB",
+   "p_home": 0.6397,
+   "pick_prob": 0.6397,
+   "elo_spread": 4.7,
+   "pred_home_score": 25.0,
+   "pred_away_score": 20.3,
+   "home_score": 27.0,
+   "away_score": 19.0,
+   "home_win": 1.0,
+   "tie": false,
+   "pick_correct": true,
+   "log_loss": 0.4468,
+   "brier": 0.1298,
+   "home_log_loss": 0.5978,
+   "d_ll": -0.1511,
+   "margin_err": 3.3,
+   "total_err": 0.7,
+   "graded_on": "2026-10-30"
   }
  ],
  "ledger": {
-  "graded": 107,
-  "correct": 69,
+  "graded": 108,
+  "correct": 70,
   "ties": 1,
-  "accuracy": 0.6449,
-  "log_loss": 0.6445,
-  "brier": 0.2253,
-  "home_log_loss": 0.6951,
-  "avg_margin_err": 9.6,
-  "avg_total_err": 11.0,
-  "d_ll_mean": -0.05061,
-  "d_ll_se": 0.02991,
+  "accuracy": 0.6481,
+  "log_loss": 0.6427,
+  "brier": 0.2244,
+  "home_log_loss": 0.6942,
+  "avg_margin_err": 9.5,
+  "avg_total_err": 10.9,
+  "d_ll_mean": -0.05154,
+  "d_ll_se": 0.02964,
   "first_date": "2026-09-09",
-  "last_date": "2026-10-26",
+  "last_date": "2026-10-29",
   "by_week": {
    "Week 1": {
     "graded": 16,
@@ -1607,6 +1606,19 @@
     "avg_total_err": 9.8,
     "d_ll_mean": -0.00057,
     "d_ll_se": 0.10158
+   },
+   "Week 8": {
+    "graded": 1,
+    "correct": 1,
+    "ties": 0,
+    "accuracy": 1.0,
+    "log_loss": 0.4468,
+    "brier": 0.1298,
+    "home_log_loss": 0.5978,
+    "avg_margin_err": 3.3,
+    "avg_total_err": 0.7,
+    "d_ll_mean": -0.1511,
+    "d_ll_se": null
    }
   },
   "rolling": {
@@ -1615,33 +1627,33 @@
     "correct": 9,
     "ties": 0,
     "accuracy": 0.6429,
-    "log_loss": 0.7187,
-    "brier": 0.2591,
+    "log_loss": 0.7013,
+    "brier": 0.2505,
     "home_log_loss": 0.7193,
-    "avg_margin_err": 10.9,
-    "avg_total_err": 9.8,
-    "d_ll_mean": -0.00057,
-    "d_ll_se": 0.10158
+    "avg_margin_err": 10.7,
+    "avg_total_err": 9.1,
+    "d_ll_mean": -0.01806,
+    "d_ll_se": 0.10184
    },
    "30d": {
-    "graded": 59,
-    "correct": 39,
+    "graded": 60,
+    "correct": 40,
     "ties": 1,
-    "accuracy": 0.661,
-    "log_loss": 0.6414,
-    "brier": 0.2218,
-    "home_log_loss": 0.7098,
-    "avg_margin_err": 8.7,
-    "avg_total_err": 10.6,
-    "d_ll_mean": -0.06844,
-    "d_ll_se": 0.04303
+    "accuracy": 0.6667,
+    "log_loss": 0.6381,
+    "brier": 0.2202,
+    "home_log_loss": 0.7079,
+    "avg_margin_err": 8.6,
+    "avg_total_err": 10.5,
+    "d_ll_mean": -0.06982,
+    "d_ll_se": 0.04233
    }
   }
  },
  "futures": {
   "season": 2026,
   "sims": 10000,
-  "remaining_games": 165,
+  "remaining_games": 164,
   "teams": [
    {
     "team": "MIN",
@@ -1654,13 +1666,13 @@
     "ties": 0,
     "pts_diff": 51,
     "games_left": 11,
-    "exp_wins": 13.1,
-    "exp_losses": 3.9,
-    "p_division": 0.7016,
+    "exp_wins": 13.0,
+    "exp_losses": 4.0,
+    "p_division": 0.6899,
     "p_playoffs": 0.9537,
-    "p_top_seed": 0.4872,
-    "p_conf": 0.2459,
-    "p_sb": 0.1297
+    "p_top_seed": 0.4863,
+    "p_conf": 0.2551,
+    "p_sb": 0.1342
    },
    {
     "team": "BUF",
@@ -1675,11 +1687,11 @@
     "games_left": 11,
     "exp_wins": 12.3,
     "exp_losses": 4.7,
-    "p_division": 0.732,
-    "p_playoffs": 0.9264,
-    "p_top_seed": 0.3044,
-    "p_conf": 0.2371,
-    "p_sb": 0.1273
+    "p_division": 0.7309,
+    "p_playoffs": 0.9265,
+    "p_top_seed": 0.3079,
+    "p_conf": 0.2399,
+    "p_sb": 0.1271
    },
    {
     "team": "SF",
@@ -1694,11 +1706,11 @@
     "games_left": 10,
     "exp_wins": 12.4,
     "exp_losses": 4.6,
-    "p_division": 0.6873,
-    "p_playoffs": 0.9331,
-    "p_top_seed": 0.2886,
-    "p_conf": 0.2159,
-    "p_sb": 0.1118
+    "p_division": 0.6785,
+    "p_playoffs": 0.9255,
+    "p_top_seed": 0.2896,
+    "p_conf": 0.2107,
+    "p_sb": 0.1116
    },
    {
     "team": "SEA",
@@ -1713,11 +1725,11 @@
     "games_left": 10,
     "exp_wins": 11.0,
     "exp_losses": 6.0,
-    "p_division": 0.2666,
-    "p_playoffs": 0.7694,
-    "p_top_seed": 0.0687,
-    "p_conf": 0.1684,
-    "p_sb": 0.0921
+    "p_division": 0.2781,
+    "p_playoffs": 0.7683,
+    "p_top_seed": 0.0693,
+    "p_conf": 0.1721,
+    "p_sb": 0.0935
    },
    {
     "team": "DEN",
@@ -1732,11 +1744,11 @@
     "games_left": 10,
     "exp_wins": 11.7,
     "exp_losses": 5.3,
-    "p_division": 0.5483,
-    "p_playoffs": 0.8779,
-    "p_top_seed": 0.1932,
-    "p_conf": 0.1653,
-    "p_sb": 0.0832
+    "p_division": 0.5485,
+    "p_playoffs": 0.8797,
+    "p_top_seed": 0.1871,
+    "p_conf": 0.1627,
+    "p_sb": 0.0812
    },
    {
     "team": "JAX",
@@ -1751,11 +1763,11 @@
     "games_left": 11,
     "exp_wins": 11.3,
     "exp_losses": 5.7,
-    "p_division": 0.8387,
-    "p_playoffs": 0.8808,
-    "p_top_seed": 0.1016,
-    "p_conf": 0.1391,
-    "p_sb": 0.0719
+    "p_division": 0.829,
+    "p_playoffs": 0.8781,
+    "p_top_seed": 0.1083,
+    "p_conf": 0.1452,
+    "p_sb": 0.0687
    },
    {
     "team": "KC",
@@ -1771,10 +1783,10 @@
     "exp_wins": 11.1,
     "exp_losses": 5.9,
     "p_division": 0.4364,
-    "p_playoffs": 0.8358,
-    "p_top_seed": 0.1579,
-    "p_conf": 0.1119,
-    "p_sb": 0.0521
+    "p_playoffs": 0.8306,
+    "p_top_seed": 0.1545,
+    "p_conf": 0.1083,
+    "p_sb": 0.0523
    },
    {
     "team": "NE",
@@ -1789,30 +1801,11 @@
     "games_left": 10,
     "exp_wins": 10.1,
     "exp_losses": 6.9,
-    "p_division": 0.2603,
-    "p_playoffs": 0.718,
-    "p_top_seed": 0.0621,
-    "p_conf": 0.0965,
-    "p_sb": 0.0446
-   },
-   {
-    "team": "CIN",
-    "name": "Cincinnati Bengals",
-    "conference": "AFC",
-    "division": "AFC North",
-    "elo": 1553.9,
-    "wins": 4,
-    "losses": 2,
-    "ties": 0,
-    "pts_diff": 41,
-    "games_left": 11,
-    "exp_wins": 10.9,
-    "exp_losses": 6.1,
-    "p_division": 0.3872,
-    "p_playoffs": 0.7556,
-    "p_top_seed": 0.0849,
-    "p_conf": 0.0907,
-    "p_sb": 0.0427
+    "p_division": 0.2618,
+    "p_playoffs": 0.7174,
+    "p_top_seed": 0.0627,
+    "p_conf": 0.0922,
+    "p_sb": 0.047
    },
    {
     "team": "CHI",
@@ -1827,30 +1820,11 @@
     "games_left": 10,
     "exp_wins": 10.5,
     "exp_losses": 6.5,
-    "p_division": 0.1159,
-    "p_playoffs": 0.6911,
-    "p_top_seed": 0.0511,
-    "p_conf": 0.0833,
-    "p_sb": 0.041
-   },
-   {
-    "team": "DET",
-    "name": "Detroit Lions",
-    "conference": "NFC",
-    "division": "NFC North",
-    "elo": 1554.4,
-    "wins": 4,
-    "losses": 2,
-    "ties": 0,
-    "pts_diff": 19,
-    "games_left": 11,
-    "exp_wins": 10.0,
-    "exp_losses": 7.0,
-    "p_division": 0.1471,
-    "p_playoffs": 0.6188,
-    "p_top_seed": 0.0677,
-    "p_conf": 0.0766,
-    "p_sb": 0.0392
+    "p_division": 0.1122,
+    "p_playoffs": 0.6673,
+    "p_top_seed": 0.0497,
+    "p_conf": 0.0774,
+    "p_sb": 0.0391
    },
    {
     "team": "PIT",
@@ -1865,11 +1839,49 @@
     "games_left": 10,
     "exp_wins": 10.7,
     "exp_losses": 6.3,
-    "p_division": 0.3275,
-    "p_playoffs": 0.6969,
-    "p_top_seed": 0.0611,
-    "p_conf": 0.0782,
-    "p_sb": 0.0355
+    "p_division": 0.328,
+    "p_playoffs": 0.6972,
+    "p_top_seed": 0.0624,
+    "p_conf": 0.0797,
+    "p_sb": 0.0381
+   },
+   {
+    "team": "CIN",
+    "name": "Cincinnati Bengals",
+    "conference": "AFC",
+    "division": "AFC North",
+    "elo": 1553.9,
+    "wins": 4,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 41,
+    "games_left": 11,
+    "exp_wins": 10.9,
+    "exp_losses": 6.1,
+    "p_division": 0.3875,
+    "p_playoffs": 0.7571,
+    "p_top_seed": 0.0837,
+    "p_conf": 0.0855,
+    "p_sb": 0.0374
+   },
+   {
+    "team": "DET",
+    "name": "Detroit Lions",
+    "conference": "NFC",
+    "division": "NFC North",
+    "elo": 1554.4,
+    "wins": 4,
+    "losses": 2,
+    "ties": 0,
+    "pts_diff": 19,
+    "games_left": 11,
+    "exp_wins": 10.0,
+    "exp_losses": 7.0,
+    "p_division": 0.1446,
+    "p_playoffs": 0.6034,
+    "p_top_seed": 0.0678,
+    "p_conf": 0.0736,
+    "p_sb": 0.0374
    },
    {
     "team": "LA",
@@ -1884,30 +1896,49 @@
     "games_left": 10,
     "exp_wins": 8.7,
     "exp_losses": 8.3,
-    "p_division": 0.0447,
-    "p_playoffs": 0.3915,
-    "p_top_seed": 0.0046,
-    "p_conf": 0.0488,
-    "p_sb": 0.0269
+    "p_division": 0.042,
+    "p_playoffs": 0.379,
+    "p_top_seed": 0.0052,
+    "p_conf": 0.0456,
+    "p_sb": 0.0235
    },
    {
     "team": "GB",
     "name": "Green Bay Packers",
     "conference": "NFC",
     "division": "NFC North",
-    "elo": 1523.9,
+    "elo": 1537.7,
+    "wins": 5,
+    "losses": 3,
+    "ties": 0,
+    "pts_diff": 7,
+    "games_left": 9,
+    "exp_wins": 9.6,
+    "exp_losses": 7.4,
+    "p_division": 0.0533,
+    "p_playoffs": 0.5019,
+    "p_top_seed": 0.0145,
+    "p_conf": 0.0413,
+    "p_sb": 0.02
+   },
+   {
+    "team": "BAL",
+    "name": "Baltimore Ravens",
+    "conference": "AFC",
+    "division": "AFC North",
+    "elo": 1515.5,
     "wins": 4,
     "losses": 3,
     "ties": 0,
-    "pts_diff": -1,
+    "pts_diff": 2,
     "games_left": 10,
-    "exp_wins": 9.1,
-    "exp_losses": 7.9,
-    "p_division": 0.0354,
-    "p_playoffs": 0.4057,
-    "p_top_seed": 0.0118,
-    "p_conf": 0.0316,
-    "p_sb": 0.0176
+    "exp_wins": 9.0,
+    "exp_losses": 8.0,
+    "p_division": 0.0882,
+    "p_playoffs": 0.3822,
+    "p_top_seed": 0.0096,
+    "p_conf": 0.0312,
+    "p_sb": 0.0139
    },
    {
     "team": "CLE",
@@ -1922,49 +1953,11 @@
     "games_left": 10,
     "exp_wins": 9.7,
     "exp_losses": 7.3,
-    "p_division": 0.1934,
-    "p_playoffs": 0.5187,
-    "p_top_seed": 0.0225,
-    "p_conf": 0.029,
-    "p_sb": 0.011
-   },
-   {
-    "team": "BAL",
-    "name": "Baltimore Ravens",
-    "conference": "AFC",
-    "division": "AFC North",
-    "elo": 1515.5,
-    "wins": 4,
-    "losses": 3,
-    "ties": 0,
-    "pts_diff": 2,
-    "games_left": 10,
-    "exp_wins": 8.9,
-    "exp_losses": 8.1,
-    "p_division": 0.0919,
-    "p_playoffs": 0.3796,
-    "p_top_seed": 0.0112,
-    "p_conf": 0.0267,
-    "p_sb": 0.0109
-   },
-   {
-    "team": "NYG",
-    "name": "New York Giants",
-    "conference": "NFC",
-    "division": "NFC East",
-    "elo": 1464.4,
-    "wins": 4,
-    "losses": 2,
-    "ties": 1,
-    "pts_diff": 2,
-    "games_left": 10,
-    "exp_wins": 8.5,
-    "exp_losses": 7.5,
-    "p_division": 0.5364,
-    "p_playoffs": 0.5737,
-    "p_top_seed": 0.0103,
-    "p_conf": 0.0296,
-    "p_sb": 0.0109
+    "p_division": 0.1963,
+    "p_playoffs": 0.5131,
+    "p_top_seed": 0.023,
+    "p_conf": 0.0266,
+    "p_sb": 0.012
    },
    {
     "team": "ATL",
@@ -1979,11 +1972,30 @@
     "games_left": 10,
     "exp_wins": 7.7,
     "exp_losses": 9.3,
-    "p_division": 0.3465,
-    "p_playoffs": 0.3806,
-    "p_top_seed": 0.0031,
-    "p_conf": 0.023,
-    "p_sb": 0.0098
+    "p_division": 0.3764,
+    "p_playoffs": 0.4034,
+    "p_top_seed": 0.0035,
+    "p_conf": 0.0253,
+    "p_sb": 0.012
+   },
+   {
+    "team": "NYG",
+    "name": "New York Giants",
+    "conference": "NFC",
+    "division": "NFC East",
+    "elo": 1464.4,
+    "wins": 4,
+    "losses": 2,
+    "ties": 1,
+    "pts_diff": 2,
+    "games_left": 10,
+    "exp_wins": 8.5,
+    "exp_losses": 7.5,
+    "p_division": 0.5446,
+    "p_playoffs": 0.5798,
+    "p_top_seed": 0.0114,
+    "p_conf": 0.0279,
+    "p_sb": 0.0105
    },
    {
     "team": "DAL",
@@ -1998,49 +2010,11 @@
     "games_left": 10,
     "exp_wins": 7.9,
     "exp_losses": 9.1,
-    "p_division": 0.2808,
-    "p_playoffs": 0.3271,
-    "p_top_seed": 0.0022,
-    "p_conf": 0.0198,
-    "p_sb": 0.0094
-   },
-   {
-    "team": "HOU",
-    "name": "Houston Texans",
-    "conference": "AFC",
-    "division": "AFC South",
-    "elo": 1509.5,
-    "wins": 2,
-    "losses": 5,
-    "ties": 0,
-    "pts_diff": -5,
-    "games_left": 10,
-    "exp_wins": 7.5,
-    "exp_losses": 9.5,
-    "p_division": 0.1091,
-    "p_playoffs": 0.2219,
-    "p_top_seed": 0.0009,
-    "p_conf": 0.0167,
-    "p_sb": 0.0076
-   },
-   {
-    "team": "CAR",
-    "name": "Carolina Panthers",
-    "conference": "NFC",
-    "division": "NFC South",
-    "elo": 1449.3,
-    "wins": 3,
-    "losses": 3,
-    "ties": 0,
-    "pts_diff": -7,
-    "games_left": 11,
-    "exp_wins": 7.4,
-    "exp_losses": 9.6,
-    "p_division": 0.2896,
-    "p_playoffs": 0.3233,
-    "p_top_seed": 0.0039,
-    "p_conf": 0.0188,
-    "p_sb": 0.0069
+    "p_division": 0.2737,
+    "p_playoffs": 0.3202,
+    "p_top_seed": 0.0011,
+    "p_conf": 0.0206,
+    "p_sb": 0.0089
    },
    {
     "team": "TB",
@@ -2055,30 +2029,49 @@
     "games_left": 10,
     "exp_wins": 6.8,
     "exp_losses": 10.2,
-    "p_division": 0.2523,
-    "p_playoffs": 0.273,
-    "p_top_seed": 0.0004,
-    "p_conf": 0.0177,
-    "p_sb": 0.0062
+    "p_division": 0.2745,
+    "p_playoffs": 0.2888,
+    "p_top_seed": 0.0006,
+    "p_conf": 0.02,
+    "p_sb": 0.0085
    },
    {
-    "team": "PHI",
-    "name": "Philadelphia Eagles",
-    "conference": "NFC",
-    "division": "NFC East",
-    "elo": 1445.7,
+    "team": "HOU",
+    "name": "Houston Texans",
+    "conference": "AFC",
+    "division": "AFC South",
+    "elo": 1509.5,
     "wins": 2,
     "losses": 5,
     "ties": 0,
-    "pts_diff": -48,
+    "pts_diff": -5,
     "games_left": 10,
-    "exp_wins": 6.4,
-    "exp_losses": 10.6,
-    "p_division": 0.1082,
-    "p_playoffs": 0.1223,
-    "p_top_seed": 0.0001,
-    "p_conf": 0.0078,
-    "p_sb": 0.0037
+    "exp_wins": 7.5,
+    "exp_losses": 9.5,
+    "p_division": 0.1165,
+    "p_playoffs": 0.2237,
+    "p_top_seed": 0.0005,
+    "p_conf": 0.0193,
+    "p_sb": 0.0082
+   },
+   {
+    "team": "CAR",
+    "name": "Carolina Panthers",
+    "conference": "NFC",
+    "division": "NFC South",
+    "elo": 1435.5,
+    "wins": 3,
+    "losses": 4,
+    "ties": 0,
+    "pts_diff": -15,
+    "games_left": 10,
+    "exp_wins": 7.0,
+    "exp_losses": 10.0,
+    "p_division": 0.2239,
+    "p_playoffs": 0.2411,
+    "p_top_seed": 0.0009,
+    "p_conf": 0.0129,
+    "p_sb": 0.0049
    },
    {
     "team": "NO",
@@ -2093,30 +2086,49 @@
     "games_left": 10,
     "exp_wins": 6.1,
     "exp_losses": 10.9,
-    "p_division": 0.1116,
-    "p_playoffs": 0.1262,
+    "p_division": 0.1252,
+    "p_playoffs": 0.1352,
     "p_top_seed": 0.0001,
-    "p_conf": 0.0065,
-    "p_sb": 0.0023
+    "p_conf": 0.0071,
+    "p_sb": 0.0028
    },
    {
-    "team": "WAS",
-    "name": "Washington Commanders",
+    "team": "PHI",
+    "name": "Philadelphia Eagles",
     "conference": "NFC",
     "division": "NFC East",
-    "elo": 1409.5,
-    "wins": 1,
+    "elo": 1445.7,
+    "wins": 2,
+    "losses": 5,
+    "ties": 0,
+    "pts_diff": -48,
+    "games_left": 10,
+    "exp_wins": 6.4,
+    "exp_losses": 10.6,
+    "p_division": 0.11,
+    "p_playoffs": 0.1223,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0059,
+    "p_sb": 0.0018
+   },
+   {
+    "team": "LV",
+    "name": "Las Vegas Raiders",
+    "conference": "AFC",
+    "division": "AFC West",
+    "elo": 1403.5,
+    "wins": 3,
     "losses": 4,
-    "ties": 1,
-    "pts_diff": -40,
-    "games_left": 11,
-    "exp_wins": 5.5,
-    "exp_losses": 10.5,
-    "p_division": 0.0746,
-    "p_playoffs": 0.0891,
+    "ties": 0,
+    "pts_diff": -14,
+    "games_left": 10,
+    "exp_wins": 6.7,
+    "exp_losses": 10.3,
+    "p_division": 0.0148,
+    "p_playoffs": 0.0746,
     "p_top_seed": 0.0002,
-    "p_conf": 0.0052,
-    "p_sb": 0.0021
+    "p_conf": 0.0027,
+    "p_sb": 0.0014
    },
    {
     "team": "IND",
@@ -2131,30 +2143,30 @@
     "games_left": 10,
     "exp_wins": 6.3,
     "exp_losses": 10.7,
-    "p_division": 0.0491,
-    "p_playoffs": 0.0742,
-    "p_top_seed": 0.0,
-    "p_conf": 0.0042,
-    "p_sb": 0.0013
+    "p_division": 0.0519,
+    "p_playoffs": 0.0758,
+    "p_top_seed": 0.0001,
+    "p_conf": 0.0044,
+    "p_sb": 0.0012
    },
    {
-    "team": "LV",
-    "name": "Las Vegas Raiders",
-    "conference": "AFC",
-    "division": "AFC West",
-    "elo": 1403.5,
-    "wins": 3,
+    "team": "WAS",
+    "name": "Washington Commanders",
+    "conference": "NFC",
+    "division": "NFC East",
+    "elo": 1409.5,
+    "wins": 1,
     "losses": 4,
-    "ties": 0,
-    "pts_diff": -14,
-    "games_left": 10,
-    "exp_wins": 6.6,
-    "exp_losses": 10.4,
-    "p_division": 0.015,
-    "p_playoffs": 0.0712,
-    "p_top_seed": 0.0002,
-    "p_conf": 0.0025,
-    "p_sb": 0.0011
+    "ties": 1,
+    "pts_diff": -40,
+    "games_left": 11,
+    "exp_wins": 5.4,
+    "exp_losses": 10.6,
+    "p_division": 0.0717,
+    "p_playoffs": 0.0875,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0034,
+    "p_sb": 0.0012
    },
    {
     "team": "ARI",
@@ -2170,10 +2182,10 @@
     "exp_wins": 5.7,
     "exp_losses": 11.3,
     "p_division": 0.0014,
-    "p_playoffs": 0.0214,
+    "p_playoffs": 0.0226,
     "p_top_seed": 0.0,
     "p_conf": 0.0011,
-    "p_sb": 0.0005
+    "p_sb": 0.0006
    },
    {
     "team": "NYJ",
@@ -2188,11 +2200,11 @@
     "games_left": 10,
     "exp_wins": 5.1,
     "exp_losses": 11.9,
-    "p_division": 0.0035,
-    "p_playoffs": 0.0188,
+    "p_division": 0.0027,
+    "p_playoffs": 0.0218,
     "p_top_seed": 0.0,
-    "p_conf": 0.001,
-    "p_sb": 0.0004
+    "p_conf": 0.0012,
+    "p_sb": 0.0005
    },
    {
     "team": "MIA",
@@ -2205,32 +2217,13 @@
     "ties": 0,
     "pts_diff": -59,
     "games_left": 11,
-    "exp_wins": 4.4,
-    "exp_losses": 12.6,
-    "p_division": 0.0042,
-    "p_playoffs": 0.0137,
+    "exp_wins": 4.5,
+    "exp_losses": 12.5,
+    "p_division": 0.0046,
+    "p_playoffs": 0.0125,
     "p_top_seed": 0.0,
-    "p_conf": 0.0008,
-    "p_sb": 0.0002
-   },
-   {
-    "team": "TEN",
-    "name": "Tennessee Titans",
-    "conference": "AFC",
-    "division": "AFC South",
-    "elo": 1317.5,
-    "wins": 1,
-    "losses": 6,
-    "ties": 0,
-    "pts_diff": -48,
-    "games_left": 10,
-    "exp_wins": 3.6,
-    "exp_losses": 13.4,
-    "p_division": 0.0031,
-    "p_playoffs": 0.0042,
-    "p_top_seed": 0.0,
-    "p_conf": 0.0003,
-    "p_sb": 0.0001
+    "p_conf": 0.0007,
+    "p_sb": 0.0003
    },
    {
     "team": "LAC",
@@ -2246,7 +2239,26 @@
     "exp_wins": 4.0,
     "exp_losses": 13.0,
     "p_division": 0.0003,
-    "p_playoffs": 0.0063,
+    "p_playoffs": 0.006,
+    "p_top_seed": 0.0,
+    "p_conf": 0.0004,
+    "p_sb": 0.0002
+   },
+   {
+    "team": "TEN",
+    "name": "Tennessee Titans",
+    "conference": "AFC",
+    "division": "AFC South",
+    "elo": 1317.5,
+    "wins": 1,
+    "losses": 6,
+    "ties": 0,
+    "pts_diff": -48,
+    "games_left": 10,
+    "exp_wins": 3.6,
+    "exp_losses": 13.4,
+    "p_division": 0.0026,
+    "p_playoffs": 0.0037,
     "p_top_seed": 0.0,
     "p_conf": 0.0,
     "p_sb": 0.0
@@ -2307,15 +2319,15 @@
    "home_def_epa_ewm",
    "away_def_epa_ewm"
   ],
-  "n_train": 6590
+  "n_train": 6591
  },
  "feeds": {
   "pbp_aggregates": {
    "source": "nflverse pbp aggregates (data/nfl/team_games.csv)",
-   "newest": "2026-10-26",
+   "newest": "2026-10-29",
    "age_days": 0,
    "tolerance_days": 10,
-   "rows": 13212,
+   "rows": 13214,
    "fresh": true
   }
  },
@@ -2356,7 +2368,7 @@
      1391.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1378.0
     ]
    ],
@@ -2394,7 +2406,7 @@
      1449.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1481.4
     ]
    ],
@@ -2432,7 +2444,7 @@
      1552.6
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1515.5
     ]
    ],
@@ -2466,7 +2478,7 @@
      1631.9
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1639.6
     ]
    ],
@@ -2502,6 +2514,10 @@
     [
      "2026-10-29",
      1449.3
+    ],
+    [
+     "2026-10-30",
+     1435.5
     ]
    ],
    "CHI": [
@@ -2538,7 +2554,7 @@
      1555.1
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1574.5
     ]
    ],
@@ -2572,7 +2588,7 @@
      1516.9
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1553.9
     ]
    ],
@@ -2610,7 +2626,7 @@
      1457.5
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1467.8
     ]
    ],
@@ -2648,7 +2664,7 @@
      1429.6
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1466.7
     ]
    ],
@@ -2686,7 +2702,7 @@
      1599.6
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1612.7
     ]
    ],
@@ -2720,7 +2736,7 @@
      1544.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1554.4
     ]
    ],
@@ -2760,6 +2776,10 @@
     [
      "2026-10-29",
      1523.9
+    ],
+    [
+     "2026-10-30",
+     1537.7
     ]
    ],
    "HOU": [
@@ -2796,7 +2816,7 @@
      1536.7
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1509.5
     ]
    ],
@@ -2834,7 +2854,7 @@
      1428.1
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1421.7
     ]
    ],
@@ -2868,7 +2888,7 @@
      1614.3
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1596.7
     ]
    ],
@@ -2902,7 +2922,7 @@
      1579.2
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1561.1
     ]
    ],
@@ -2940,7 +2960,7 @@
      1548.4
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1568.9
     ]
    ],
@@ -2974,7 +2994,7 @@
      1422.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1410.3
     ]
    ],
@@ -3012,7 +3032,7 @@
      1424.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1403.5
     ]
    ],
@@ -3046,7 +3066,7 @@
      1372.2
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1387.8
     ]
    ],
@@ -3080,7 +3100,7 @@
      1620.7
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1627.0
     ]
    ],
@@ -3114,7 +3134,7 @@
      1602.9
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1583.4
     ]
    ],
@@ -3152,7 +3172,7 @@
      1425.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1412.4
     ]
    ],
@@ -3190,7 +3210,7 @@
      1437.1
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1464.4
     ]
    ],
@@ -3228,7 +3248,7 @@
      1387.9
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1372.3
     ]
    ],
@@ -3266,7 +3286,7 @@
      1482.8
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1445.7
     ]
    ],
@@ -3304,7 +3324,7 @@
      1541.4
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1554.0
     ]
    ],
@@ -3338,7 +3358,7 @@
      1633.8
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1651.9
     ]
    ],
@@ -3376,7 +3396,7 @@
      1647.3
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1614.9
     ]
    ],
@@ -3414,7 +3434,7 @@
      1424.0
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1469.7
     ]
    ],
@@ -3452,7 +3472,7 @@
      1327.8
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1317.5
     ]
    ],
@@ -3486,7 +3506,7 @@
      1415.4
     ],
     [
-     "2026-10-29",
+     "2026-10-30",
      1409.5
     ]
    ]
@@ -3495,11 +3515,11 @@
  "elo_projection": {
   "season": 2026,
   "sims": 10000,
-  "from_date": "2026-10-29",
+  "from_date": "2026-10-30",
   "teams": {
    "ARI": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1378.0,
      1378.0,
      1378.0
@@ -3512,50 +3532,50 @@
     ],
     [
      "2026-11-12",
+     1359.5,
      1358.3,
-     1358.3,
-     1401.2
+     1402.4
     ],
     [
      "2026-11-22",
-     1420.4,
+     1382.2,
      1338.1,
-     1421.8
+     1422.1
     ],
     [
      "2026-11-29",
-     1396.1,
-     1319.7,
-     1436.6
+     1405.7,
+     1319.6,
+     1437.1
     ],
     [
      "2026-12-10",
-     1417.1,
-     1306.7,
-     1448.6
+     1380.7,
+     1307.1,
+     1450.7
     ],
     [
      "2026-12-20",
-     1432.1,
-     1316.7,
-     1439.0
+     1395.2,
+     1317.7,
+     1440.3
     ],
     [
      "2026-12-27",
-     1411.1,
-     1306.7,
-     1452.9
+     1416.8,
+     1307.7,
+     1453.4
     ],
     [
      "2027-01-10",
-     1377.4,
-     1295.0,
-     1458.7
+     1378.6,
+     1295.6,
+     1460.6
     ]
    ],
    "ATL": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1481.4,
      1481.4,
      1481.4
@@ -3574,100 +3594,100 @@
     ],
     [
      "2026-11-22",
-     1512.0,
-     1429.0,
-     1544.9
+     1509.4,
+     1428.9,
+     1514.6
     ],
     [
      "2026-11-29",
-     1541.3,
-     1420.8,
+     1491.8,
+     1420.9,
      1538.4
     ],
     [
      "2026-12-10",
-     1519.5,
-     1409.3,
+     1474.8,
+     1409.4,
      1552.9
     ],
     [
      "2026-12-20",
-     1513.9,
-     1408.5,
-     1554.8
+     1518.9,
+     1408.8,
+     1554.9
     ],
     [
      "2026-12-27",
-     1492.5,
-     1399.8,
-     1561.2
+     1495.1,
+     1399.1,
+     1562.3
     ],
     [
      "2027-01-10",
-     1482.4,
-     1394.2,
-     1566.9
+     1483.2,
+     1394.6,
+     1566.2
     ]
    ],
    "BAL": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1515.5,
      1515.5,
      1515.5
     ],
     [
      "2026-11-01",
-     1504.9,
+     1547.7,
      1504.9,
      1547.7
     ],
     [
      "2026-11-12",
-     1486.6,
+     1569.8,
      1486.6,
      1567.1
     ],
     [
      "2026-11-22",
-     1521.4,
-     1473.8,
-     1560.0
+     1553.6,
+     1473.4,
+     1559.6
     ],
     [
      "2026-11-29",
-     1544.4,
-     1461.1,
-     1578.5
+     1536.4,
+     1459.5,
+     1577.9
     ],
     [
      "2026-12-10",
-     1544.4,
-     1461.1,
-     1578.5
+     1536.4,
+     1459.5,
+     1577.9
     ],
     [
      "2026-12-20",
-     1539.3,
-     1441.7,
-     1581.9
+     1536.6,
+     1437.7,
+     1580.2
     ],
     [
      "2026-12-27",
-     1509.8,
-     1439.8,
-     1589.4
+     1550.8,
+     1440.7,
+     1587.9
     ],
     [
      "2027-01-10",
-     1515.2,
-     1427.9,
-     1600.7
+     1515.5,
+     1429.0,
+     1598.1
     ]
    ],
    "BUF": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1639.6,
      1639.6,
      1639.6
@@ -3686,100 +3706,100 @@
     ],
     [
      "2026-11-22",
+     1604.4,
      1601.8,
-     1602.4,
-     1687.0
+     1686.9
     ],
     [
      "2026-11-29",
-     1619.5,
-     1580.5,
+     1621.5,
+     1580.6,
      1697.7
     ],
     [
      "2026-12-10",
-     1596.5,
-     1567.8,
-     1709.8
+     1600.8,
+     1568.5,
+     1710.0
     ],
     [
      "2026-12-20",
-     1600.9,
-     1560.4,
-     1705.0
+     1645.1,
+     1561.4,
+     1706.1
     ],
     [
      "2026-12-27",
-     1625.5,
-     1558.2,
-     1717.6
+     1627.0,
+     1562.5,
+     1718.5
     ],
     [
      "2027-01-10",
-     1641.8,
-     1552.0,
-     1724.0
+     1643.5,
+     1553.9,
+     1723.8
     ]
    ],
    "CAR": [
     [
-     "2026-10-29",
-     1449.3,
-     1449.3,
-     1449.3
+     "2026-10-30",
+     1435.5,
+     1435.5,
+     1435.5
     ],
     [
      "2026-11-01",
-     1435.1,
-     1435.1,
-     1478.0
+     1435.5,
+     1435.5,
+     1435.5
     ],
     [
      "2026-11-12",
-     1421.1,
-     1418.6,
-     1501.8
+     1419.0,
+     1419.0,
+     1464.3
     ],
     [
      "2026-11-22",
-     1422.6,
-     1384.8,
-     1503.5
+     1463.6,
+     1385.0,
+     1470.9
     ],
     [
      "2026-11-29",
-     1422.6,
-     1384.8,
-     1503.5
+     1463.6,
+     1385.0,
+     1470.9
     ],
     [
      "2026-12-10",
-     1440.1,
-     1394.5,
-     1515.2
+     1474.9,
+     1367.4,
+     1488.0
     ],
     [
      "2026-12-20",
-     1399.6,
-     1370.2,
-     1524.0
+     1429.0,
+     1366.8,
+     1510.6
     ],
     [
      "2026-12-27",
-     1431.1,
-     1365.6,
-     1531.6
+     1419.5,
+     1360.9,
+     1509.6
     ],
     [
      "2027-01-10",
-     1445.6,
-     1364.4,
-     1537.6
+     1434.3,
+     1357.9,
+     1520.8
     ]
    ],
    "CHI": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1574.5,
      1574.5,
      1574.5
@@ -3792,50 +3812,50 @@
     ],
     [
      "2026-11-12",
-     1571.5,
+     1528.7,
      1530.9,
      1614.4
     ],
     [
      "2026-11-22",
-     1582.6,
+     1539.7,
      1537.8,
      1621.5
     ],
     [
      "2026-11-29",
-     1604.7,
-     1521.9,
-     1637.4
+     1521.5,
+     1521.8,
+     1637.6
     ],
     [
      "2026-12-10",
-     1619.8,
-     1506.2,
+     1546.8,
+     1506.0,
      1624.1
     ],
     [
      "2026-12-20",
-     1616.5,
-     1504.4,
-     1648.1
+     1549.3,
+     1504.0,
+     1647.7
     ],
     [
      "2026-12-27",
-     1625.3,
-     1496.9,
-     1652.0
+     1566.9,
+     1494.2,
+     1648.6
     ],
     [
      "2027-01-10",
-     1577.4,
-     1490.5,
-     1660.0
+     1574.1,
+     1490.1,
+     1658.1
     ]
    ],
    "CIN": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1553.9,
      1553.9,
      1553.9
@@ -3848,162 +3868,162 @@
     ],
     [
      "2026-11-12",
-     1533.6,
+     1578.9,
      1533.6,
      1578.9
     ],
     [
      "2026-11-22",
-     1555.4,
+     1555.1,
      1512.5,
      1595.6
     ],
     [
      "2026-11-29",
-     1580.9,
+     1542.0,
      1499.3,
-     1617.4
+     1617.3
     ],
     [
      "2026-12-10",
-     1593.9,
-     1484.0,
-     1627.3
+     1557.0,
+     1483.9,
+     1626.1
     ],
     [
      "2026-12-20",
-     1547.3,
+     1556.5,
      1478.7,
-     1626.5
+     1626.1
     ],
     [
      "2026-12-27",
-     1525.5,
-     1469.2,
-     1634.5
+     1533.3,
+     1469.3,
+     1633.5
     ],
     [
      "2027-01-10",
-     1555.3,
-     1465.1,
-     1636.2
+     1556.6,
+     1462.5,
+     1636.3
     ]
    ],
    "CLE": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1467.8,
      1467.8,
      1467.8
     ],
     [
      "2026-11-01",
-     1454.2,
+     1497.1,
      1454.2,
      1497.1
     ],
     [
      "2026-11-12",
-     1477.3,
+     1517.5,
      1434.4,
      1517.5
     ],
     [
      "2026-11-22",
-     1496.3,
+     1493.6,
      1415.6,
      1498.9
     ],
     [
      "2026-11-29",
-     1506.4,
+     1507.8,
      1424.8,
-     1510.8
+     1510.9
     ],
     [
      "2026-12-10",
-     1529.1,
-     1410.3,
-     1528.7
+     1490.2,
+     1410.2,
+     1529.2
     ],
     [
      "2026-12-20",
-     1478.6,
-     1391.5,
-     1534.6
+     1484.0,
+     1387.2,
+     1535.4
     ],
     [
      "2026-12-27",
-     1461.9,
-     1397.0,
-     1546.0
+     1462.4,
+     1395.4,
+     1546.8
     ],
     [
      "2027-01-10",
-     1469.7,
-     1381.6,
-     1552.3
+     1468.0,
+     1379.4,
+     1553.8
     ]
    ],
    "DAL": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1466.7,
      1466.7,
      1466.7
     ],
     [
      "2026-11-01",
-     1437.3,
+     1480.1,
      1437.3,
      1480.1
     ],
     [
      "2026-11-12",
-     1460.2,
+     1503.0,
      1417.3,
      1500.4
     ],
     [
      "2026-11-22",
-     1499.1,
+     1494.8,
      1413.3,
-     1532.8
+     1532.9
     ],
     [
      "2026-11-29",
-     1470.8,
-     1397.1,
-     1513.8
+     1466.6,
+     1398.1,
+     1514.0
     ],
     [
      "2026-12-10",
-     1461.2,
-     1393.4,
+     1457.4,
+     1393.5,
      1535.1
     ],
     [
      "2026-12-20",
-     1446.3,
-     1405.8,
-     1529.6
+     1444.4,
+     1406.4,
+     1528.6
     ],
     [
      "2026-12-27",
-     1469.7,
-     1396.9,
-     1543.6
+     1471.8,
+     1397.2,
+     1542.3
     ],
     [
      "2027-01-10",
-     1466.9,
-     1382.9,
-     1546.3
+     1466.4,
+     1382.4,
+     1546.4
     ]
    ],
    "DEN": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1612.7,
      1612.7,
      1612.7
@@ -4016,50 +4036,50 @@
     ],
     [
      "2026-11-12",
-     1599.3,
-     1561.4,
-     1644.6
+     1642.2,
+     1558.9,
+     1642.2
     ],
     [
      "2026-11-22",
-     1607.3,
-     1566.8,
-     1650.0
+     1648.6,
+     1566.7,
+     1648.7
     ],
     [
      "2026-11-29",
-     1629.1,
-     1550.6,
-     1667.6
+     1625.3,
+     1550.0,
+     1667.0
     ],
     [
      "2026-12-10",
-     1635.2,
-     1555.8,
-     1672.8
+     1632.6,
+     1555.3,
+     1672.5
     ],
     [
      "2026-12-20",
-     1656.8,
-     1543.0,
-     1686.9
+     1606.7,
+     1542.6,
+     1686.7
     ],
     [
      "2026-12-27",
-     1680.3,
-     1534.9,
-     1676.5
+     1624.6,
+     1535.4,
+     1675.8
     ],
     [
      "2027-01-10",
-     1618.1,
-     1530.1,
-     1692.6
+     1617.6,
+     1530.6,
+     1691.6
     ]
    ],
    "DET": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1554.4,
      1554.4,
      1554.4
@@ -4072,106 +4092,106 @@
     ],
     [
      "2026-11-12",
-     1549.3,
+     1551.8,
      1506.5,
      1589.9
     ],
     [
      "2026-11-22",
-     1550.4,
-     1502.9,
-     1621.9
+     1585.9,
+     1502.8,
+     1621.8
     ],
     [
      "2026-11-29",
-     1568.3,
-     1487.5,
-     1606.3
+     1563.7,
+     1487.4,
+     1606.4
     ],
     [
      "2026-12-10",
-     1539.7,
-     1493.6,
-     1618.8
+     1580.6,
+     1493.1,
+     1618.7
     ],
     [
      "2026-12-20",
-     1538.9,
-     1473.4,
-     1635.0
+     1572.7,
+     1472.8,
+     1635.5
     ],
     [
      "2026-12-27",
-     1538.9,
-     1473.4,
-     1635.0
+     1572.7,
+     1472.8,
+     1635.5
     ],
     [
      "2027-01-10",
-     1553.9,
-     1464.8,
-     1643.7
+     1554.5,
+     1465.3,
+     1643.9
     ]
    ],
    "GB": [
     [
-     "2026-10-29",
-     1523.9,
-     1523.9,
-     1523.9
+     "2026-10-30",
+     1537.7,
+     1537.7,
+     1537.7
     ],
     [
      "2026-11-01",
-     1495.2,
-     1495.2,
-     1538.1
+     1537.7,
+     1537.7,
+     1537.7
     ],
     [
      "2026-11-12",
-     1524.2,
-     1481.3,
-     1564.7
+     1564.3,
+     1518.8,
+     1564.3
     ],
     [
      "2026-11-22",
-     1508.4,
-     1465.7,
-     1584.2
+     1586.5,
+     1501.0,
+     1586.4
     ],
     [
      "2026-11-29",
-     1538.2,
-     1457.0,
-     1572.1
+     1569.2,
+     1488.3,
+     1574.1
     ],
     [
      "2026-12-10",
-     1552.7,
-     1465.4,
-     1584.4
+     1579.9,
+     1470.0,
+     1586.3
     ],
     [
      "2026-12-20",
-     1541.9,
-     1458.6,
-     1593.2
+     1564.5,
+     1465.2,
+     1607.9
     ],
     [
      "2026-12-27",
-     1523.2,
-     1450.9,
-     1599.2
+     1546.7,
+     1460.7,
+     1603.4
     ],
     [
      "2027-01-10",
-     1523.8,
-     1441.0,
-     1610.2
+     1539.6,
+     1453.2,
+     1619.7
     ]
    ],
    "HOU": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1509.5,
      1509.5,
      1509.5
@@ -4190,44 +4210,44 @@
     ],
     [
      "2026-11-22",
-     1481.5,
-     1472.8,
-     1558.4
+     1481.7,
+     1472.5,
+     1558.7
     ],
     [
      "2026-11-29",
-     1460.8,
+     1460.9,
      1454.2,
-     1571.5
+     1571.4
     ],
     [
      "2026-12-10",
-     1491.9,
-     1444.7,
-     1562.3
+     1447.1,
+     1444.6,
+     1562.5
     ],
     [
      "2026-12-20",
-     1492.9,
-     1440.5,
-     1586.0
+     1487.3,
+     1440.8,
+     1587.0
     ],
     [
      "2026-12-27",
-     1473.3,
-     1431.3,
-     1581.6
+     1511.5,
+     1429.8,
+     1581.8
     ],
     [
      "2027-01-10",
-     1509.7,
-     1425.4,
-     1593.4
+     1510.5,
+     1424.6,
+     1594.3
     ]
    ],
    "IND": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1421.7,
      1421.7,
      1421.7
@@ -4240,50 +4260,50 @@
     ],
     [
      "2026-11-12",
-     1433.2,
+     1435.8,
      1390.3,
      1473.5
     ],
     [
      "2026-11-22",
-     1396.7,
-     1358.7,
+     1441.5,
+     1358.3,
      1477.5
     ],
     [
      "2026-11-29",
-     1378.8,
-     1371.8,
-     1488.6
+     1415.9,
+     1371.7,
+     1488.7
     ],
     [
      "2026-12-10",
-     1378.8,
-     1371.8,
-     1488.6
+     1415.9,
+     1371.7,
+     1488.7
     ],
     [
      "2026-12-20",
-     1385.1,
-     1346.2,
-     1490.7
+     1416.1,
+     1346.5,
+     1490.6
     ],
     [
      "2026-12-27",
-     1411.0,
-     1352.2,
-     1503.1
+     1401.8,
+     1348.0,
+     1501.7
     ],
     [
      "2027-01-10",
-     1418.8,
-     1341.7,
-     1510.7
+     1419.2,
+     1341.0,
+     1508.2
     ]
    ],
    "JAX": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1596.7,
      1596.7,
      1596.7
@@ -4296,50 +4316,50 @@
     ],
     [
      "2026-11-12",
-     1580.6,
+     1623.5,
      1543.0,
-     1623.5
+     1626.1
     ],
     [
      "2026-11-22",
-     1567.3,
-     1531.3,
+     1644.0,
+     1533.2,
      1648.0
     ],
     [
      "2026-11-29",
-     1574.4,
-     1535.5,
+     1647.9,
+     1536.5,
      1652.3
     ],
     [
      "2026-12-10",
-     1555.9,
-     1526.1,
-     1667.9
+     1668.0,
+     1527.0,
+     1668.0
     ],
     [
      "2026-12-20",
-     1561.0,
-     1519.6,
-     1664.4
+     1651.6,
+     1519.1,
+     1664.2
     ],
     [
      "2026-12-27",
-     1582.7,
-     1520.2,
-     1673.7
+     1623.8,
+     1519.3,
+     1673.4
     ],
     [
      "2027-01-10",
-     1598.9,
-     1510.9,
-     1682.5
+     1600.3,
+     1510.5,
+     1683.2
     ]
    ],
    "KC": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1561.1,
      1561.1,
      1561.1
@@ -4352,106 +4372,106 @@
     ],
     [
      "2026-11-12",
-     1554.1,
+     1555.9,
      1513.0,
      1597.0
     ],
     [
      "2026-11-22",
-     1583.2,
+     1543.8,
      1502.1,
-     1619.3
+     1619.4
     ],
     [
      "2026-11-29",
-     1611.2,
-     1494.1,
-     1611.1
+     1569.6,
+     1494.2,
+     1610.8
     ],
     [
      "2026-12-10",
-     1593.1,
-     1507.9,
-     1627.8
+     1597.0,
+     1507.6,
+     1627.1
     ],
     [
      "2026-12-20",
-     1576.1,
-     1495.4,
-     1638.2
+     1576.7,
+     1495.9,
+     1637.3
     ],
     [
      "2026-12-27",
-     1532.2,
-     1479.6,
-     1641.5
+     1578.6,
+     1479.4,
+     1641.2
     ],
     [
      "2027-01-10",
-     1563.4,
-     1473.7,
-     1648.0
+     1561.6,
+     1473.0,
+     1648.4
     ]
    ],
    "LA": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1568.9,
      1568.9,
      1568.9
     ],
     [
      "2026-11-01",
-     1579.8,
+     1537.0,
      1537.0,
      1579.8
     ],
     [
      "2026-11-12",
-     1595.1,
+     1552.2,
      1549.9,
      1595.1
     ],
     [
      "2026-11-22",
-     1606.0,
+     1567.5,
      1522.4,
      1606.0
     ],
     [
      "2026-11-29",
-     1618.5,
-     1504.2,
-     1620.6
+     1539.5,
+     1504.0,
+     1620.8
     ],
     [
      "2026-12-10",
-     1593.2,
-     1514.9,
-     1633.8
+     1555.1,
+     1514.4,
+     1634.1
     ],
     [
      "2026-12-20",
-     1583.1,
-     1492.5,
-     1632.1
+     1596.4,
+     1492.0,
+     1632.8
     ],
     [
      "2026-12-27",
-     1568.4,
-     1499.1,
-     1648.2
+     1577.2,
+     1497.8,
+     1648.0
     ],
     [
      "2027-01-10",
-     1571.9,
-     1483.5,
-     1650.9
+     1572.1,
+     1482.4,
+     1650.0
     ]
    ],
    "LAC": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1410.3,
      1410.3,
      1410.3
@@ -4464,50 +4484,50 @@
     ],
     [
      "2026-11-12",
-     1425.8,
+     1382.9,
      1382.9,
      1466.1
     ],
     [
      "2026-11-22",
-     1385.1,
-     1349.1,
-     1466.7
+     1432.1,
+     1349.0,
+     1466.6
     ],
     [
      "2026-11-29",
-     1416.5,
+     1418.4,
      1341.4,
-     1459.7
+     1461.0
     ],
     [
      "2026-12-10",
-     1439.5,
-     1358.7,
-     1478.0
+     1446.3,
+     1358.5,
+     1477.9
     ],
     [
      "2026-12-20",
-     1450.7,
+     1455.1,
      1339.7,
-     1486.2
+     1486.1
     ],
     [
      "2026-12-27",
-     1433.0,
-     1329.1,
-     1494.0
+     1427.7,
+     1328.8,
+     1492.7
     ],
     [
      "2027-01-10",
-     1407.4,
-     1328.6,
-     1500.6
+     1407.5,
+     1326.2,
+     1497.0
     ]
    ],
    "LV": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1403.5,
      1403.5,
      1403.5
@@ -4526,44 +4546,44 @@
     ],
     [
      "2026-11-22",
-     1362.0,
-     1360.6,
-     1443.9
+     1403.0,
+     1360.5,
+     1444.4
     ],
     [
      "2026-11-29",
-     1353.4,
-     1349.7,
+     1429.4,
+     1349.8,
      1466.2
     ],
     [
      "2026-12-10",
-     1353.4,
-     1349.7,
+     1429.4,
+     1349.8,
      1466.2
     ],
     [
      "2026-12-20",
-     1365.4,
-     1347.9,
-     1470.4
+     1430.2,
+     1349.4,
+     1470.7
     ],
     [
      "2026-12-27",
-     1383.9,
-     1333.3,
-     1476.9
+     1445.4,
+     1333.4,
+     1477.5
     ],
     [
      "2027-01-10",
-     1400.7,
-     1321.9,
-     1483.3
+     1405.2,
+     1324.1,
+     1485.6
     ]
    ],
    "MIA": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1387.8,
      1387.8,
      1387.8
@@ -4582,44 +4602,44 @@
     ],
     [
      "2026-11-22",
-     1341.5,
+     1342.4,
      1341.4,
-     1427.3
+     1427.4
     ],
     [
      "2026-11-29",
-     1315.8,
-     1321.6,
-     1439.8
+     1361.9,
+     1321.8,
+     1439.5
     ],
     [
      "2026-12-10",
-     1310.0,
-     1317.7,
-     1456.5
+     1354.3,
+     1318.1,
+     1458.2
     ],
     [
      "2026-12-20",
-     1373.7,
-     1328.2,
-     1455.1
+     1329.0,
+     1328.7,
+     1460.1
     ],
     [
      "2026-12-27",
-     1393.5,
+     1353.8,
      1315.3,
-     1461.8
+     1464.9
     ],
     [
      "2027-01-10",
-     1380.5,
-     1306.2,
-     1472.0
+     1381.5,
+     1306.4,
+     1474.1
     ]
    ],
    "MIN": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1627.0,
      1627.0,
      1627.0
@@ -4632,50 +4652,50 @@
     ],
     [
      "2026-11-12",
-     1663.1,
+     1620.2,
      1582.5,
      1665.6
     ],
     [
      "2026-11-22",
-     1614.6,
-     1578.5,
+     1619.8,
+     1578.8,
      1695.2
     ],
     [
      "2026-11-29",
-     1628.2,
-     1558.5,
-     1675.6
+     1590.1,
+     1556.5,
+     1675.5
     ],
     [
      "2026-12-10",
-     1621.3,
-     1551.8,
-     1695.3
+     1628.3,
+     1550.2,
+     1695.1
     ],
     [
      "2026-12-20",
-     1633.0,
-     1554.3,
-     1702.0
+     1637.9,
+     1553.3,
+     1701.9
     ],
     [
      "2026-12-27",
-     1642.6,
-     1547.0,
-     1705.8
+     1644.7,
+     1543.9,
+     1705.5
     ],
     [
      "2027-01-10",
-     1630.4,
-     1540.8,
-     1712.9
+     1629.8,
+     1536.8,
+     1711.3
     ]
    ],
    "NE": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1583.4,
      1583.4,
      1583.4
@@ -4688,50 +4708,50 @@
     ],
     [
      "2026-11-12",
-     1568.7,
-     1528.4,
-     1611.6
+     1571.2,
+     1528.3,
+     1611.5
     ],
     [
      "2026-11-22",
-     1591.6,
-     1543.8,
+     1591.5,
+     1546.0,
      1629.2
     ],
     [
      "2026-11-29",
-     1560.2,
-     1522.0,
-     1639.1
+     1604.8,
+     1523.5,
+     1640.3
     ],
     [
      "2026-12-10",
-     1607.4,
+     1606.7,
      1521.9,
-     1642.5
+     1643.0
     ],
     [
      "2026-12-20",
-     1607.4,
+     1606.7,
      1521.9,
-     1642.5
+     1643.0
     ],
     [
      "2026-12-27",
-     1589.2,
+     1592.3,
      1511.2,
-     1661.3
+     1662.4
     ],
     [
      "2027-01-10",
-     1583.8,
-     1500.5,
-     1662.1
+     1584.8,
+     1501.5,
+     1662.8
     ]
    ],
    "NO": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1412.4,
      1412.4,
      1412.4
@@ -4750,44 +4770,44 @@
     ],
     [
      "2026-11-22",
-     1400.7,
-     1362.0,
-     1446.4
+     1402.4,
+     1361.8,
+     1446.1
     ],
     [
      "2026-11-29",
-     1389.3,
-     1354.5,
-     1471.1
+     1392.8,
+     1353.9,
+     1470.8
     ],
     [
      "2026-12-10",
-     1374.6,
-     1344.9,
-     1462.9
+     1377.6,
+     1345.6,
+     1462.3
     ],
     [
      "2026-12-20",
-     1433.8,
-     1349.4,
-     1490.5
+     1434.1,
+     1348.7,
+     1488.8
     ],
     [
      "2026-12-27",
-     1448.2,
-     1336.1,
-     1483.7
+     1450.4,
+     1336.2,
+     1484.1
     ],
     [
      "2027-01-10",
-     1410.9,
-     1332.8,
+     1409.4,
+     1332.7,
      1498.9
     ]
    ],
    "NYG": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1464.4,
      1464.4,
      1464.4
@@ -4800,50 +4820,50 @@
     ],
     [
      "2026-11-12",
-     1459.3,
+     1459.2,
      1416.4,
      1501.8
     ],
     [
      "2026-11-22",
-     1441.8,
+     1444.1,
      1403.6,
      1522.5
     ],
     [
      "2026-11-29",
-     1424.0,
-     1419.6,
-     1509.5
+     1421.5,
+     1419.8,
+     1509.4
     ],
     [
      "2026-12-10",
-     1407.6,
-     1409.7,
-     1527.1
+     1407.5,
+     1409.5,
+     1527.9
     ],
     [
      "2026-12-20",
-     1382.4,
-     1389.6,
-     1534.6
+     1467.1,
+     1389.8,
+     1534.8
     ],
     [
      "2026-12-27",
-     1382.4,
-     1389.6,
-     1534.6
+     1467.1,
+     1389.8,
+     1534.8
     ],
     [
      "2027-01-10",
-     1462.3,
-     1379.8,
-     1550.4
+     1464.4,
+     1380.1,
+     1551.6
     ]
    ],
    "NYJ": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1372.3,
      1372.3,
      1372.3
@@ -4856,106 +4876,106 @@
     ],
     [
      "2026-11-12",
-     1341.4,
+     1384.3,
      1341.4,
      1425.3
     ],
     [
      "2026-11-22",
-     1399.9,
+     1357.0,
      1319.5,
-     1436.6
+     1435.6
     ],
     [
      "2026-11-29",
-     1382.2,
-     1307.3,
-     1425.2
+     1380.5,
+     1306.9,
+     1425.3
     ],
     [
      "2026-12-10",
-     1382.2,
-     1307.3,
-     1425.2
+     1380.5,
+     1306.9,
+     1425.3
     ],
     [
      "2026-12-20",
-     1353.7,
-     1313.5,
-     1437.1
+     1397.6,
+     1313.0,
+     1438.0
     ],
     [
      "2026-12-27",
-     1339.0,
-     1306.6,
-     1451.2
+     1385.3,
+     1306.4,
+     1451.3
     ],
     [
      "2027-01-10",
-     1368.7,
-     1297.9,
-     1452.9
+     1368.6,
+     1297.6,
+     1452.2
     ]
    ],
    "PHI": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1445.7,
      1445.7,
      1445.7
     ],
     [
      "2026-11-01",
-     1469.1,
+     1426.2,
      1426.2,
      1469.1
     ],
     [
      "2026-11-12",
-     1445.7,
+     1405.4,
      1405.4,
      1488.5
     ],
     [
      "2026-11-22",
-     1423.9,
+     1431.4,
      1388.5,
-     1509.3
+     1507.0
     ],
     [
      "2026-11-29",
-     1407.4,
-     1377.9,
-     1495.2
+     1414.3,
+     1378.1,
+     1495.1
     ],
     [
      "2026-12-10",
-     1389.4,
+     1431.6,
      1389.1,
-     1508.1
+     1508.0
     ],
     [
      "2026-12-20",
-     1404.6,
+     1434.7,
      1367.6,
-     1515.8
+     1514.1
     ],
     [
      "2026-12-27",
-     1425.8,
-     1371.2,
-     1526.0
+     1420.4,
+     1369.0,
+     1525.1
     ],
     [
      "2027-01-10",
-     1441.8,
-     1362.9,
-     1533.9
+     1442.2,
+     1361.8,
+     1532.1
     ]
    ],
    "PIT": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1554.0,
      1554.0,
      1554.0
@@ -4974,44 +4994,44 @@
     ],
     [
      "2026-11-22",
-     1565.4,
+     1567.9,
      1520.0,
      1605.8
     ],
     [
      "2026-11-29",
-     1543.5,
-     1503.6,
-     1619.6
+     1548.4,
+     1505.3,
+     1621.9
     ],
     [
      "2026-12-10",
-     1564.0,
-     1486.2,
-     1604.5
+     1563.6,
+     1487.3,
+     1605.9
     ],
     [
      "2026-12-20",
-     1561.3,
+     1563.5,
      1484.9,
-     1630.1
+     1630.9
     ],
     [
      "2026-12-27",
-     1569.5,
-     1474.2,
-     1634.7
+     1573.5,
+     1473.0,
+     1636.1
     ],
     [
      "2027-01-10",
-     1557.9,
-     1467.2,
-     1635.6
+     1557.8,
+     1466.5,
+     1635.2
     ]
    ],
    "SEA": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1651.9,
      1651.9,
      1651.9
@@ -5024,50 +5044,50 @@
     ],
     [
      "2026-11-12",
-     1672.0,
+     1673.2,
      1629.1,
      1673.2
     ],
     [
      "2026-11-22",
-     1639.2,
+     1640.3,
      1599.5,
      1682.1
     ],
     [
      "2026-11-29",
-     1658.3,
-     1615.3,
+     1659.7,
+     1615.4,
      1701.3
     ],
     [
      "2026-12-10",
-     1669.9,
+     1626.5,
      1591.7,
      1708.6
     ],
     [
      "2026-12-20",
-     1647.5,
+     1644.9,
      1578.9,
-     1722.8
+     1723.0
     ],
     [
      "2026-12-27",
-     1665.1,
-     1583.0,
-     1726.9
+     1617.5,
+     1583.6,
+     1729.1
     ],
     [
      "2027-01-10",
-     1654.4,
-     1571.8,
-     1725.3
+     1654.8,
+     1572.6,
+     1725.9
     ]
    ],
    "SF": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1614.9,
      1614.9,
      1614.9
@@ -5080,106 +5100,106 @@
     ],
     [
      "2026-11-12",
-     1622.9,
+     1621.4,
      1580.0,
      1622.9
     ],
     [
      "2026-11-22",
-     1576.3,
-     1574.2,
+     1575.1,
+     1574.0,
      1658.8
     ],
     [
      "2026-11-29",
-     1599.9,
-     1558.3,
-     1675.5
+     1598.7,
+     1557.9,
+     1675.7
     ],
     [
      "2026-12-10",
-     1578.0,
-     1564.2,
-     1683.0
+     1576.8,
+     1562.5,
+     1683.4
     ],
     [
      "2026-12-20",
-     1564.0,
-     1540.1,
-     1677.8
+     1568.9,
+     1539.2,
+     1677.7
     ],
     [
      "2026-12-27",
-     1588.3,
-     1541.0,
-     1689.2
+     1593.3,
+     1540.2,
+     1688.8
     ],
     [
      "2027-01-10",
-     1618.9,
-     1530.5,
-     1698.9
+     1618.1,
+     1529.8,
+     1698.8
     ]
    ],
    "TB": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1469.7,
      1469.7,
      1469.7
     ],
     [
      "2026-11-01",
-     1446.0,
+     1488.9,
      1446.0,
      1488.9
     ],
     [
      "2026-11-12",
-     1433.9,
+     1474.5,
      1433.9,
      1517.4
     ],
     [
      "2026-11-22",
-     1462.6,
-     1421.9,
+     1505.5,
+     1421.8,
      1505.5
     ],
     [
      "2026-11-29",
-     1462.6,
-     1421.9,
+     1505.5,
+     1421.8,
      1505.5
     ],
     [
      "2026-12-10",
-     1457.6,
-     1412.4,
-     1530.1
+     1493.4,
+     1412.3,
+     1529.4
     ],
     [
      "2026-12-20",
-     1455.3,
-     1404.5,
-     1534.0
+     1488.1,
+     1405.4,
+     1533.9
     ],
     [
      "2026-12-27",
-     1478.8,
-     1398.4,
-     1546.0
+     1466.5,
+     1398.0,
+     1545.2
     ],
     [
      "2027-01-10",
-     1470.9,
-     1383.2,
-     1553.7
+     1470.5,
+     1383.6,
+     1552.7
     ]
    ],
    "TEN": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1317.5,
      1317.5,
      1317.5
@@ -5198,95 +5218,95 @@
     ],
     [
      "2026-11-22",
-     1374.1,
+     1292.2,
      1290.5,
-     1372.1
+     1372.0
     ],
     [
      "2026-11-29",
-     1406.6,
+     1286.4,
      1285.7,
      1367.4
     ],
     [
      "2026-12-10",
-     1386.6,
-     1269.4,
-     1380.1
+     1271.9,
+     1269.5,
+     1381.3
     ],
     [
      "2026-12-20",
-     1353.4,
-     1251.5,
-     1375.4
+     1294.6,
+     1251.7,
+     1376.4
     ],
     [
      "2026-12-27",
-     1335.3,
-     1244.5,
-     1388.6
+     1283.5,
+     1244.0,
+     1388.3
     ],
     [
      "2027-01-10",
-     1308.9,
-     1252.9,
-     1396.4
+     1307.8,
+     1253.4,
+     1397.6
     ]
    ],
    "WAS": [
     [
-     "2026-10-29",
+     "2026-10-30",
      1409.5,
      1409.5,
      1409.5
     ],
     [
      "2026-11-01",
-     1386.1,
+     1429.0,
      1386.1,
      1429.0
     ],
     [
      "2026-11-12",
-     1404.0,
+     1480.1,
      1358.8,
-     1442.4
+     1444.6
     ],
     [
      "2026-11-22",
-     1404.0,
+     1480.1,
      1358.8,
-     1442.4
+     1444.6
     ],
     [
      "2026-11-29",
-     1411.5,
-     1359.5,
-     1478.7
+     1523.7,
+     1358.1,
+     1478.5
     ],
     [
      "2026-12-10",
-     1388.1,
-     1344.4,
-     1471.7
+     1495.8,
+     1343.8,
+     1469.3
     ],
     [
      "2026-12-20",
-     1397.1,
-     1325.8,
-     1491.9
+     1445.8,
+     1325.7,
+     1490.8
     ],
     [
      "2026-12-27",
-     1390.9,
-     1325.7,
-     1490.4
+     1435.6,
+     1324.5,
+     1489.9
     ],
     [
      "2027-01-10",
-     1405.8,
-     1324.2,
-     1498.3
+     1404.9,
+     1322.9,
+     1497.6
     ]
    ]
   },
@@ -5296,34 +5316,34 @@
      1378.0,
      1364.5,
      1359.5,
-     1378.8,
-     1359.3,
-     1344.4,
-     1360.9,
-     1386.3,
-     1353.0
+     1339.7,
+     1318.3,
+     1345.7,
+     1364.6,
+     1394.1,
+     1370.6
     ],
     [
      1378.0,
-     1407.4,
-     1399.7,
-     1373.7,
-     1397.5,
-     1423.1,
-     1437.8,
-     1421.0,
-     1424.6
+     1364.5,
+     1359.5,
+     1342.6,
+     1325.6,
+     1310.2,
+     1288.7,
+     1320.5,
+     1298.7
     ],
     [
      1378.0,
-     1407.4,
-     1442.6,
-     1414.7,
-     1386.4,
-     1367.1,
-     1380.2,
-     1357.7,
-     1369.8
+     1364.5,
+     1358.3,
+     1379.5,
+     1398.2,
+     1376.0,
+     1395.7,
+     1379.6,
+     1427.1
     ]
    ],
    "ATL": [
@@ -5332,138 +5352,138 @@
      1505.0,
      1529.9,
      1549.9,
-     1536.4,
-     1555.5,
-     1509.2,
-     1526.6,
-     1553.5
-    ],
-    [
-     1481.4,
-     1462.2,
-     1489.5,
-     1469.2,
-     1456.1,
-     1441.9,
-     1405.9,
-     1425.2,
-     1433.5
+     1536.3,
+     1515.0,
+     1466.7,
+     1482.1,
+     1517.6
     ],
     [
      1481.4,
      1505.0,
      1487.0,
-     1509.6,
-     1536.9,
-     1555.7,
-     1584.9,
-     1555.4,
-     1535.5
+     1469.3,
+     1498.9,
+     1484.1,
+     1486.0,
+     1503.4,
+     1490.0
+    ],
+    [
+     1481.4,
+     1505.0,
+     1529.9,
+     1507.1,
+     1491.7,
+     1515.7,
+     1549.7,
+     1557.8,
+     1543.6
     ]
    ],
    "BAL": [
     [
      1515.5,
-     1504.9,
-     1529.5,
-     1512.4,
-     1540.4,
-     1540.4,
-     1576.3,
-     1588.7,
-     1623.2
-    ],
-    [
-     1515.5,
-     1504.9,
-     1484.0,
-     1481.1,
-     1463.8,
-     1463.8,
-     1464.2,
-     1439.3,
-     1448.5
-    ],
-    [
-     1515.5,
      1547.7,
      1569.8,
-     1594.0,
-     1617.6,
-     1617.6,
-     1647.6,
-     1655.1,
-     1645.9
+     1548.9,
+     1529.7,
+     1529.7,
+     1529.2,
+     1541.6,
+     1587.3
+    ],
+    [
+     1515.5,
+     1504.9,
+     1486.6,
+     1478.5,
+     1461.1,
+     1461.1,
+     1418.9,
+     1434.5,
+     1401.8
+    ],
+    [
+     1515.5,
+     1504.9,
+     1486.6,
+     1438.3,
+     1425.7,
+     1425.7,
+     1425.8,
+     1400.3,
+     1371.4
     ]
    ],
    "BUF": [
     [
      1639.6,
-     1650.2,
-     1631.5,
-     1605.1,
-     1620.1,
-     1601.5,
-     1634.4,
-     1616.9,
-     1595.9
-    ],
-    [
-     1639.6,
-     1650.2,
-     1671.8,
-     1684.7,
-     1697.5,
-     1674.7,
-     1701.6,
-     1722.4,
-     1732.0
-    ],
-    [
-     1639.6,
      1607.4,
-     1588.7,
-     1606.9,
-     1621.7,
-     1600.6,
-     1637.5,
-     1660.5,
-     1678.3
+     1591.2,
+     1607.8,
+     1579.7,
+     1606.3,
+     1636.6,
+     1614.2,
+     1629.2
+    ],
+    [
+     1639.6,
+     1650.2,
+     1628.9,
+     1644.1,
+     1618.3,
+     1592.6,
+     1631.7,
+     1612.2,
+     1629.9
+    ],
+    [
+     1639.6,
+     1650.2,
+     1674.4,
+     1687.0,
+     1699.9,
+     1714.9,
+     1747.7,
+     1723.1,
+     1732.0
     ]
    ],
    "CAR": [
     [
-     1449.3,
-     1435.1,
-     1421.1,
-     1430.0,
-     1430.0,
-     1407.1,
-     1455.8,
-     1439.0,
-     1407.5
+     1435.5,
+     1435.5,
+     1421.4,
+     1432.5,
+     1432.5,
+     1406.9,
+     1412.7,
+     1448.5,
+     1412.5
     ],
     [
-     1449.3,
-     1435.1,
-     1421.1,
-     1422.4,
-     1422.4,
-     1481.6,
-     1479.4,
-     1461.1,
-     1458.1
+     1435.5,
+     1435.5,
+     1419.0,
+     1466.1,
+     1466.1,
+     1473.2,
+     1424.5,
+     1411.4,
+     1424.7
     ],
     [
-     1449.3,
-     1435.1,
-     1421.1,
-     1427.3,
-     1427.3,
-     1400.3,
-     1400.2,
-     1388.7,
-     1355.7
+     1435.5,
+     1435.5,
+     1421.4,
+     1463.3,
+     1463.3,
+     1473.0,
+     1422.6,
+     1409.8,
+     1375.5
     ]
    ],
    "CHI": [
@@ -5472,33 +5492,33 @@
      1574.5,
      1571.5,
      1582.3,
-     1558.9,
-     1576.8,
-     1532.9,
-     1547.2,
-     1547.7
+     1561.6,
+     1536.7,
+     1535.9,
+     1550.3,
+     1560.9
     ],
     [
      1574.5,
      1574.5,
-     1614.4,
-     1621.7,
-     1600.9,
-     1619.0,
-     1613.7,
-     1623.9,
-     1582.6
+     1571.5,
+     1580.4,
+     1564.4,
+     1586.8,
+     1580.1,
+     1553.0,
+     1600.1
     ],
     [
      1574.5,
      1574.5,
      1612.4,
-     1618.4,
-     1638.1,
-     1608.9,
-     1563.9,
-     1578.4,
-     1574.3
+     1618.5,
+     1640.8,
+     1656.3,
+     1648.6,
+     1621.6,
+     1659.1
     ]
    ],
    "CIN": [
@@ -5507,33 +5527,33 @@
      1560.9,
      1536.1,
      1557.7,
-     1589.4,
-     1604.4,
-     1591.1,
-     1560.6,
-     1506.4
-    ],
-    [
-     1553.9,
-     1560.9,
-     1533.6,
-     1555.4,
      1542.0,
-     1559.2,
-     1552.4,
-     1527.3,
-     1510.5
+     1559.6,
+     1594.3,
+     1609.8,
+     1590.8
     ],
     [
      1553.9,
      1560.9,
      1578.9,
      1555.1,
-     1577.1,
-     1549.6,
-     1585.0,
-     1599.4,
-     1627.9
+     1499.1,
+     1519.2,
+     1525.6,
+     1504.6,
+     1527.3
+    ],
+    [
+     1553.9,
+     1560.9,
+     1536.1,
+     1512.2,
+     1497.8,
+     1519.8,
+     1519.6,
+     1497.4,
+     1479.3
     ]
    ],
    "CLE": [
@@ -5541,68 +5561,68 @@
      1467.8,
      1454.2,
      1434.4,
-     1415.6,
-     1432.1,
-     1417.2,
-     1468.8,
-     1456.4,
-     1461.1
+     1458.5,
+     1432.0,
+     1414.4,
+     1420.7,
+     1408.3,
+     1418.8
     ],
     [
      1467.8,
      1454.2,
      1434.4,
-     1456.0,
-     1425.2,
-     1408.0,
-     1456.5,
-     1481.4,
-     1486.6
+     1413.0,
+     1429.5,
+     1409.4,
+     1370.2,
+     1354.6,
+     1331.0
     ],
     [
      1467.8,
-     1454.2,
-     1477.3,
-     1455.9,
-     1429.3,
-     1456.7,
-     1426.2,
-     1418.7,
-     1386.8
+     1497.1,
+     1517.5,
+     1491.1,
+     1458.6,
+     1436.6,
+     1406.2,
+     1431.8,
+     1441.5
     ]
    ],
    "DAL": [
     [
      1466.7,
      1480.1,
+     1457.5,
+     1453.8,
+     1473.1,
+     1504.5,
+     1491.3,
+     1516.2,
+     1548.0
+    ],
+    [
+     1466.7,
+     1480.1,
+     1457.5,
+     1453.9,
+     1473.7,
+     1508.6,
+     1493.2,
+     1478.5,
+     1517.0
+    ],
+    [
+     1466.7,
+     1480.1,
      1500.4,
-     1492.5,
-     1466.9,
-     1459.2,
-     1442.1,
-     1424.1,
-     1431.9
-    ],
-    [
-     1466.7,
-     1437.3,
-     1462.8,
-     1458.5,
-     1434.9,
-     1425.3,
-     1412.9,
-     1439.3,
-     1399.9
-    ],
-    [
-     1466.7,
-     1437.3,
-     1417.3,
-     1417.6,
-     1439.4,
-     1468.8,
-     1457.6,
-     1484.7,
+     1533.7,
+     1546.2,
+     1573.7,
+     1549.9,
+     1527.9,
      1521.8
     ]
    ],
@@ -5611,34 +5631,34 @@
      1612.7,
      1628.1,
      1642.2,
-     1648.6,
-     1622.4,
-     1629.8,
-     1649.9,
-     1667.5,
-     1656.1
+     1650.1,
+     1626.5,
+     1632.6,
+     1573.1,
+     1595.5,
+     1585.8
+    ],
+    [
+     1612.7,
+     1585.3,
+     1601.8,
+     1609.5,
+     1631.2,
+     1637.0,
+     1615.7,
+     1635.1,
+     1615.8
     ],
     [
      1612.7,
      1628.1,
      1642.2,
      1647.4,
-     1664.2,
-     1669.3,
-     1644.0,
-     1623.2,
-     1662.4
-    ],
-    [
-     1612.7,
-     1628.1,
-     1642.2,
-     1649.9,
-     1626.2,
-     1590.5,
-     1614.3,
-     1591.4,
-     1622.5
+     1666.9,
+     1670.9,
+     1647.0,
+     1671.7,
+     1695.9
     ]
    ],
    "DET": [
@@ -5646,69 +5666,69 @@
      1554.4,
      1534.5,
      1549.3,
-     1502.8,
-     1526.2,
-     1507.1,
-     1504.4,
-     1504.4,
-     1440.5
+     1545.7,
+     1566.4,
+     1587.7,
+     1578.5,
+     1578.5,
+     1628.3
     ],
     [
      1554.4,
      1577.4,
-     1589.9,
-     1584.1,
-     1604.9,
-     1619.1,
-     1604.1,
-     1604.1,
-     1611.3
+     1592.2,
+     1622.4,
+     1638.4,
+     1653.1,
+     1632.5,
+     1632.5,
+     1594.6
     ],
     [
      1554.4,
-     1577.4,
-     1547.0,
-     1541.5,
-     1521.9,
-     1503.1,
-     1457.9,
-     1457.9,
-     1534.0
+     1534.5,
+     1549.3,
+     1584.0,
+     1561.7,
+     1537.7,
+     1531.1,
+     1531.1,
+     1565.7
     ]
    ],
    "GB": [
     [
-     1523.9,
-     1538.1,
-     1521.8,
-     1506.1,
-     1488.6,
-     1508.1,
-     1460.9,
-     1446.6,
-     1448.0
+     1537.7,
+     1537.7,
+     1521.4,
+     1505.6,
+     1492.7,
+     1468.9,
+     1465.0,
+     1450.7,
+     1458.5
     ],
     [
-     1523.9,
-     1538.1,
-     1521.8,
-     1501.1,
-     1484.3,
-     1458.8,
-     1459.9,
-     1449.7,
-     1502.2
+     1537.7,
+     1537.7,
+     1518.8,
+     1543.9,
+     1529.0,
+     1546.1,
+     1533.4,
+     1560.6,
+     1594.9
     ],
     [
-     1523.9,
-     1538.1,
-     1521.8,
-     1546.5,
-     1531.6,
-     1544.3,
-     1495.3,
-     1480.8,
-     1443.1
+     1537.7,
+     1537.7,
+     1564.3,
+     1586.4,
+     1606.7,
+     1617.8,
+     1604.7,
+     1631.6,
+     1577.6
     ]
    ],
    "HOU": [
@@ -5716,104 +5736,104 @@
      1509.5,
      1509.5,
      1525.9,
-     1553.9,
-     1525.9,
-     1551.7,
-     1550.3,
-     1531.9,
-     1512.7
+     1517.3,
+     1536.5,
+     1521.2,
+     1517.5,
+     1538.9,
+     1522.0
     ],
     [
      1509.5,
      1509.5,
-     1485.6,
-     1481.4,
-     1498.6,
-     1523.4,
-     1523.0,
-     1541.5,
-     1481.2
+     1483.1,
+     1477.0,
+     1494.4,
+     1521.7,
+     1485.4,
+     1469.0,
+     1463.5
     ],
     [
      1509.5,
      1509.5,
-     1525.9,
-     1560.3,
-     1536.8,
-     1564.2,
-     1597.4,
-     1613.7,
-     1635.3
+     1483.1,
+     1522.3,
+     1534.9,
+     1560.1,
+     1594.7,
+     1609.7,
+     1639.1
     ]
    ],
    "IND": [
     [
      1421.7,
      1413.2,
-     1392.9,
-     1357.5,
-     1380.2,
-     1380.2,
-     1386.2,
-     1416.7,
-     1424.8
-    ],
-    [
-     1421.7,
-     1456.1,
-     1430.6,
-     1427.8,
-     1403.2,
-     1403.2,
-     1444.9,
-     1469.9,
-     1472.9
+     1435.8,
+     1434.5,
+     1454.9,
+     1454.9,
+     1447.2,
+     1431.7,
+     1440.5
     ],
     [
      1421.7,
      1413.2,
-     1433.2,
-     1437.1,
-     1416.8,
-     1416.8,
-     1418.4,
-     1404.0,
-     1414.0
+     1435.8,
+     1479.9,
+     1492.9,
+     1492.9,
+     1484.4,
+     1505.4,
+     1548.7
+    ],
+    [
+     1421.7,
+     1413.2,
+     1392.9,
+     1396.7,
+     1422.0,
+     1422.0,
+     1459.6,
+     1481.8,
+     1485.8
     ]
    ],
    "JAX": [
     [
      1596.7,
      1605.2,
-     1580.6,
-     1562.3,
-     1568.2,
-     1550.4,
-     1546.4,
-     1564.4,
-     1556.1
-    ],
-    [
-     1596.7,
-     1562.4,
      1583.2,
-     1610.0,
-     1614.7,
-     1596.5,
-     1543.2,
-     1516.8,
-     1555.0
+     1567.0,
+     1572.8,
+     1597.7,
+     1596.1,
+     1571.2,
+     1553.1
     ],
     [
      1596.7,
      1605.2,
-     1583.2,
-     1569.5,
-     1575.1,
-     1604.3,
-     1599.0,
-     1572.0,
-     1595.3
+     1623.5,
+     1644.0,
+     1647.9,
+     1625.5,
+     1654.0,
+     1668.7,
+     1650.9
+    ],
+    [
+     1596.7,
+     1605.2,
+     1623.5,
+     1606.0,
+     1610.8,
+     1595.3,
+     1588.9,
+     1610.9,
+     1635.8
     ]
    ],
    "KC": [
@@ -5821,69 +5841,69 @@
      1561.1,
      1545.6,
      1554.1,
-     1544.8,
-     1529.8,
-     1554.8,
-     1538.1,
-     1549.5,
-     1574.2
+     1543.0,
+     1571.1,
+     1555.3,
+     1535.9,
+     1506.8,
+     1494.9
+    ],
+    [
+     1561.1,
+     1588.5,
+     1595.4,
+     1619.2,
+     1645.1,
+     1668.0,
+     1682.3,
+     1670.7,
+     1687.1
     ],
     [
      1561.1,
      1545.6,
      1555.9,
-     1584.7,
-     1571.9,
-     1551.8,
-     1532.6,
-     1502.0,
-     1451.7
-    ],
-    [
-     1561.1,
-     1545.6,
-     1554.1,
-     1544.1,
-     1529.3,
-     1559.0,
-     1538.7,
-     1542.3,
-     1569.4
+     1587.3,
+     1574.5,
+     1551.4,
+     1572.6,
+     1529.5,
+     1555.9
     ]
    ],
    "LA": [
     [
      1568.9,
      1579.8,
-     1552.2,
-     1522.4,
-     1539.9,
-     1514.9,
-     1520.1,
-     1551.5,
-     1593.1
-    ],
-    [
-     1568.9,
-     1537.0,
-     1511.9,
-     1529.4,
-     1546.2,
-     1566.3,
-     1565.9,
-     1593.1,
-     1621.8
+     1592.8,
+     1603.8,
+     1616.7,
+     1632.5,
+     1629.6,
+     1607.5,
+     1637.6
     ],
     [
      1568.9,
      1579.8,
-     1592.8,
-     1608.1,
-     1623.0,
-     1593.3,
-     1633.0,
-     1604.8,
-     1596.1
+     1595.1,
+     1606.0,
+     1620.8,
+     1597.9,
+     1596.5,
+     1623.7,
+     1655.7
+    ],
+    [
+     1568.9,
+     1579.8,
+     1549.9,
+     1520.1,
+     1499.8,
+     1522.9,
+     1532.1,
+     1556.7,
+     1584.5
     ]
    ],
    "LAC": [
@@ -5891,69 +5911,69 @@
      1410.3,
      1399.3,
      1382.9,
-     1391.9,
-     1382.0,
-     1369.0,
-     1387.9,
-     1371.7,
-     1352.7
-    ],
-    [
-     1410.3,
-     1442.2,
-     1466.1,
-     1504.6,
-     1489.1,
-     1510.2,
-     1557.3,
-     1525.0,
-     1529.7
+     1347.9,
+     1339.8,
+     1326.9,
+     1311.9,
+     1293.2,
+     1276.1
     ],
     [
      1410.3,
      1399.3,
-     1382.9,
-     1390.8,
-     1378.9,
-     1366.3,
-     1430.4,
-     1414.2,
-     1390.0
+     1425.8,
+     1383.1,
+     1412.7,
+     1393.6,
+     1367.0,
+     1387.9,
+     1416.1
+    ],
+    [
+     1410.3,
+     1399.3,
+     1425.8,
+     1468.6,
+     1450.2,
+     1471.6,
+     1476.2,
+     1446.2,
+     1420.8
     ]
    ],
    "LV": [
     [
      1403.5,
      1426.0,
-     1418.1,
-     1401.6,
-     1385.1,
-     1385.1,
-     1390.7,
-     1401.4,
-     1414.0
+     1418.0,
+     1443.0,
+     1469.5,
+     1469.5,
+     1505.1,
+     1511.5,
+     1552.5
+    ],
+    [
+     1403.5,
+     1426.0,
+     1418.0,
+     1400.2,
+     1383.7,
+     1383.7,
+     1434.1,
+     1443.4,
+     1452.7
     ],
     [
      1403.5,
      1383.1,
      1376.7,
-     1361.5,
-     1392.3,
-     1392.3,
-     1364.1,
-     1333.5,
-     1353.1
-    ],
-    [
-     1403.5,
-     1426.0,
-     1418.1,
-     1439.0,
-     1465.6,
-     1465.6,
-     1420.1,
-     1435.5,
-     1401.6
+     1361.4,
+     1393.9,
+     1393.9,
+     1363.5,
+     1332.8,
+     1309.9
     ]
    ],
    "MIA": [
@@ -5961,104 +5981,104 @@
      1387.8,
      1376.0,
      1361.2,
-     1379.5,
-     1396.7,
-     1389.3,
-     1447.4,
-     1463.6,
-     1483.9
+     1340.6,
+     1360.2,
+     1354.1,
+     1328.4,
+     1347.1,
+     1333.4
+    ],
+    [
+     1387.8,
+     1418.9,
+     1404.0,
+     1380.9,
+     1355.5,
+     1349.7,
+     1330.0,
+     1309.2,
+     1336.0
     ],
     [
      1387.8,
      1376.0,
-     1363.5,
-     1344.5,
-     1364.1,
-     1359.0,
-     1336.3,
-     1368.6,
-     1356.5
-    ],
-    [
-     1387.8,
-     1376.0,
-     1406.3,
-     1381.5,
-     1396.1,
-     1431.8,
-     1488.9,
-     1505.1,
-     1518.2
+     1361.2,
+     1340.4,
+     1317.2,
+     1313.3,
+     1301.4,
+     1331.3,
+     1318.8
     ]
    ],
    "MIN": [
     [
      1627.0,
      1646.9,
-     1665.6,
-     1657.3,
-     1670.8,
-     1657.4,
-     1667.2,
-     1678.3,
-     1655.2
+     1663.1,
+     1654.9,
+     1668.5,
+     1652.4,
+     1666.3,
+     1673.3,
+     1647.9
     ],
     [
      1627.0,
      1604.1,
-     1582.5,
-     1583.8,
-     1596.9,
-     1594.8,
-     1613.8,
      1625.4,
-     1651.1
+     1581.2,
+     1551.6,
+     1546.7,
+     1570.7,
+     1586.9,
+     1535.5
     ],
     [
      1627.0,
-     1604.1,
+     1646.9,
      1622.7,
      1578.9,
-     1551.6,
-     1590.2,
-     1600.9,
-     1563.9,
-     1546.5
+     1594.4,
+     1627.6,
+     1640.2,
+     1602.8,
+     1591.3
     ]
    ],
    "NE": [
     [
      1583.4,
      1595.3,
-     1611.6,
+     1611.5,
      1629.2,
-     1639.1,
-     1677.3,
-     1677.3,
-     1697.7,
-     1721.8
+     1637.3,
+     1633.1,
+     1633.1,
+     1658.6,
+     1677.6
+    ],
+    [
+     1583.4,
+     1552.4,
+     1571.2,
+     1551.1,
+     1521.4,
+     1566.7,
+     1566.7,
+     1525.9,
+     1473.3
     ],
     [
      1583.4,
      1595.3,
-     1611.6,
-     1631.7,
-     1647.1,
-     1639.6,
-     1639.6,
-     1664.7,
-     1643.6
-    ],
-    [
-     1583.4,
-     1595.3,
-     1611.6,
-     1586.2,
-     1598.0,
-     1591.5,
-     1591.5,
-     1577.0,
-     1525.4
+     1568.7,
+     1546.0,
+     1564.4,
+     1528.6,
+     1528.6,
+     1569.3,
+     1558.6
     ]
    ],
    "NO": [
@@ -6067,68 +6087,68 @@
      1412.4,
      1432.3,
      1439.3,
-     1428.4,
-     1409.0,
-     1376.9,
-     1351.5,
-     1324.7
+     1425.9,
+     1449.8,
+     1453.6,
+     1424.2,
+     1426.2
     ],
     [
      1412.4,
      1412.4,
      1432.3,
-     1399.9,
-     1388.6,
-     1414.2,
-     1466.9,
-     1483.7,
-     1516.4
+     1398.2,
+     1429.9,
+     1412.7,
+     1422.7,
+     1390.9,
+     1357.9
     ],
     [
      1412.4,
      1412.4,
-     1389.4,
-     1360.9,
-     1352.9,
-     1340.2,
-     1315.3,
-     1337.8,
-     1359.1
+     1392.0,
+     1363.3,
+     1396.6,
+     1385.5,
+     1436.2,
+     1452.3,
+     1449.8
     ]
    ],
    "NYG": [
     [
      1464.4,
      1464.4,
-     1418.8,
-     1446.4,
-     1423.7,
-     1412.0,
-     1425.0,
-     1425.0,
-     1416.6
+     1459.3,
+     1484.7,
+     1464.4,
+     1452.5,
+     1459.9,
+     1459.9,
+     1409.6
     ],
     [
      1464.4,
      1464.4,
-     1461.5,
-     1443.9,
-     1468.5,
-     1456.2,
-     1461.9,
-     1461.9,
-     1446.2
+     1416.2,
+     1403.4,
+     1390.4,
+     1379.9,
+     1393.9,
+     1393.9,
+     1358.6
     ],
     [
      1464.4,
      1464.4,
-     1499.9,
-     1522.9,
-     1543.2,
-     1526.5,
-     1562.5,
-     1562.5,
-     1489.4
+     1502.2,
+     1527.3,
+     1502.1,
+     1528.8,
+     1567.8,
+     1567.8,
+     1582.5
     ]
    ],
    "NYJ": [
@@ -6136,69 +6156,69 @@
      1372.3,
      1349.9,
      1341.4,
-     1357.1,
-     1340.0,
-     1340.0,
-     1314.1,
-     1308.5,
-     1338.9
+     1358.1,
+     1338.6,
+     1338.6,
+     1353.4,
+     1345.1,
+     1332.5
+    ],
+    [
+     1372.3,
+     1349.9,
+     1343.0,
+     1363.1,
+     1388.6,
+     1388.6,
+     1398.9,
+     1426.7,
+     1445.1
     ],
     [
      1372.3,
      1392.7,
      1382.5,
-     1362.0,
-     1342.5,
-     1342.5,
-     1362.8,
-     1354.4,
-     1341.8
-    ],
-    [
-     1372.3,
-     1349.9,
-     1341.4,
-     1315.2,
-     1300.5,
-     1300.5,
-     1278.2,
-     1269.7,
-     1258.5
+     1360.2,
+     1383.4,
+     1383.4,
+     1397.0,
+     1382.1,
+     1366.8
     ]
    ],
    "PHI": [
     [
      1445.7,
-     1426.2,
-     1448.3,
-     1471.5,
-     1497.2,
-     1512.1,
-     1551.8,
-     1570.2,
-     1569.7
+     1469.1,
+     1488.5,
+     1466.4,
+     1447.2,
+     1419.7,
+     1469.6,
+     1448.2,
+     1465.7
     ],
     [
      1445.7,
      1426.2,
      1448.3,
-     1471.5,
-     1495.1,
-     1469.4,
-     1427.4,
-     1408.9,
-     1431.1
+     1474.3,
+     1454.6,
+     1469.9,
+     1520.4,
+     1536.8,
+     1541.1
     ],
     [
      1445.7,
      1469.1,
      1445.7,
-     1471.8,
-     1450.0,
-     1469.2,
-     1464.5,
-     1448.2,
-     1508.1
+     1426.4,
+     1413.9,
+     1436.1,
+     1439.7,
+     1424.7,
+     1447.5
     ]
    ],
    "PIT": [
@@ -6206,34 +6226,34 @@
      1554.0,
      1567.5,
      1567.5,
-     1522.6,
-     1548.8,
-     1523.0,
-     1484.8,
-     1501.5,
-     1499.3
+     1567.9,
+     1591.5,
+     1606.7,
+     1644.0,
+     1608.3,
+     1554.0
     ],
     [
      1554.0,
      1567.5,
      1567.5,
-     1522.4,
-     1505.7,
-     1480.9,
-     1482.9,
-     1501.2,
-     1490.3
+     1565.4,
+     1543.7,
+     1516.4,
+     1518.4,
+     1531.6,
+     1558.7
     ],
     [
      1554.0,
-     1567.5,
-     1567.5,
-     1565.2,
-     1588.9,
-     1561.4,
-     1526.2,
-     1537.7,
-     1538.3
+     1524.6,
+     1524.6,
+     1567.8,
+     1548.3,
+     1523.1,
+     1523.3,
+     1536.1,
+     1562.1
     ]
    ],
    "SEA": [
@@ -6241,34 +6261,34 @@
      1651.9,
      1651.9,
      1672.0,
+     1639.2,
+     1620.8,
+     1589.4,
+     1572.3,
+     1594.3,
+     1592.0
+    ],
+    [
+     1651.9,
+     1651.9,
+     1672.0,
      1682.1,
-     1704.1,
-     1711.7,
-     1646.4,
-     1615.1,
-     1606.9
+     1703.6,
+     1668.7,
+     1644.7,
+     1617.5,
+     1611.8
     ],
     [
      1651.9,
      1651.9,
-     1631.8,
-     1641.8,
-     1622.9,
-     1632.5,
-     1613.8,
-     1586.6,
-     1544.7
-    ],
-    [
-     1651.9,
-     1651.9,
-     1588.9,
-     1560.2,
-     1546.0,
-     1516.7,
-     1471.3,
-     1499.5,
-     1502.4
+     1630.4,
+     1640.4,
+     1619.3,
+     1591.8,
+     1536.1,
+     1511.4,
+     1513.4
     ]
    ],
    "SF": [
@@ -6276,34 +6296,34 @@
      1614.9,
      1614.9,
      1622.9,
-     1663.8,
-     1641.7,
-     1653.4,
-     1630.1,
-     1603.9,
-     1631.4
-    ],
-    [
-     1614.9,
-     1614.9,
-     1621.4,
-     1655.6,
-     1674.5,
-     1686.8,
-     1670.9,
-     1684.8,
-     1701.1
+     1661.3,
+     1679.7,
+     1691.5,
+     1712.9,
+     1724.8,
+     1737.4
     ],
     [
      1614.9,
      1614.9,
      1622.9,
-     1654.4,
-     1668.5,
-     1685.3,
-     1623.7,
-     1643.0,
-     1620.6
+     1656.5,
+     1634.9,
+     1645.4,
+     1670.9,
+     1695.5,
+     1711.4
+    ],
+    [
+     1614.9,
+     1614.9,
+     1621.4,
+     1617.3,
+     1638.4,
+     1611.6,
+     1642.4,
+     1659.7,
+     1592.9
     ]
    ],
    "TB": [
@@ -6311,34 +6331,34 @@
      1469.7,
      1446.0,
      1433.9,
-     1462.8,
-     1462.8,
-     1492.3,
-     1491.2,
-     1473.8,
-     1471.7
+     1419.9,
+     1419.9,
+     1452.0,
+     1414.1,
+     1398.7,
+     1369.4
     ],
     [
      1469.7,
-     1488.9,
-     1476.8,
-     1462.5,
-     1462.5,
-     1414.6,
-     1418.6,
-     1399.4,
-     1374.5
+     1446.0,
+     1433.9,
+     1423.9,
+     1423.9,
+     1421.2,
+     1467.1,
+     1449.7,
+     1456.6
     ],
     [
      1469.7,
      1446.0,
      1435.9,
-     1466.8,
-     1466.8,
-     1495.6,
-     1494.8,
-     1524.3,
-     1561.7
+     1423.9,
+     1423.9,
+     1380.5,
+     1344.5,
+     1336.4,
+     1357.6
     ]
    ],
    "TEN": [
@@ -6346,69 +6366,69 @@
      1317.5,
      1310.6,
      1310.6,
-     1292.2,
-     1286.3,
-     1273.3,
-     1248.1,
-     1237.3,
-     1266.1
+     1290.6,
+     1284.8,
+     1268.0,
+     1249.2,
+     1242.9,
+     1272.8
     ],
     [
      1317.5,
      1310.6,
      1310.6,
-     1290.8,
-     1286.2,
+     1292.1,
+     1288.2,
+     1275.2,
+     1259.2,
+     1249.9,
+     1233.3
+    ],
+    [
+     1317.5,
+     1310.6,
+     1310.6,
+     1295.5,
+     1290.6,
      1270.8,
-     1252.3,
-     1282.9,
-     1307.5
-    ],
-    [
-     1317.5,
-     1310.6,
-     1310.6,
-     1288.7,
-     1283.1,
-     1307.2,
-     1366.4,
-     1351.0,
-     1332.4
+     1251.2,
+     1281.8,
+     1268.2
     ]
    ],
    "WAS": [
     [
      1409.5,
-     1429.0,
-     1480.1,
-     1480.1,
-     1478.7,
-     1491.7,
-     1533.3,
-     1522.1,
-     1561.6
+     1386.1,
+     1358.8,
+     1358.8,
+     1409.4,
+     1426.2,
+     1431.2,
+     1424.2,
+     1396.4
     ],
     [
      1409.5,
      1429.0,
-     1434.9,
-     1434.9,
-     1435.8,
-     1451.1,
-     1489.4,
-     1477.8,
-     1477.4
+     1439.8,
+     1439.8,
+     1481.1,
+     1494.1,
+     1532.1,
+     1515.9,
+     1480.4
     ],
     [
      1409.5,
      1386.1,
-     1361.1,
-     1361.1,
-     1375.4,
-     1351.3,
-     1328.4,
-     1365.4,
-     1342.0
+     1401.7,
+     1401.7,
+     1364.2,
+     1384.1,
+     1355.7,
+     1393.1,
+     1368.3
     ]
    ]
   }
