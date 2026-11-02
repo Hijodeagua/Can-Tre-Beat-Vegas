@@ -373,8 +373,18 @@ class TestChart:
         ]
         n = min(len(w) for w in widths)
         mean = [sum(w[i] for w in widths) / len(widths) for i in range(n)]
-        assert mean[1] < mean[n - 1]
         assert mean[0] == 0.0  # the anchor is today's rating, not a range
+        # Never narrows from one checkpoint to the next, at any point in
+        # the season.
+        assert all(mean[i] <= mean[i + 1] + 1e-9 for i in range(n - 1))
+        # Strict widening needs at least two checkpoints past the anchor.
+        # At the very end of a season (2026-11-02: one or two matches left
+        # per club) the projection has only the anchor and the final point,
+        # and mean[1] is mean[n - 1].
+        if n >= 3:
+            assert mean[1] < mean[n - 1]
+        if n >= 2:
+            assert mean[n - 1] > 0.0
 
     def test_samples_are_whole_seasons(self, out):
         for club, p in out["chart"]["projection"].items():
