@@ -1,0 +1,842 @@
+{
+ "model": "nfl",
+ "title": "NFL Elo + efficiency",
+ "date": "2026-11-02",
+ "kind": "draft",
+ "generated_at": "2026-11-02T07:43:16+00:00",
+ "summary": "NFL Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-29, 108 graded this season; second stage on (elo+efficiency:random_forest).",
+ "status": {
+  "state": "live",
+  "summary": "NFL Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-29, 108 graded this season; second stage on (elo+efficiency:random_forest).",
+  "source": "web/public/data/nfl/latest.json",
+  "as_of": "2026-11-01",
+  "blocks": [
+   {
+    "kind": "kv",
+    "heading": "Pipeline",
+    "rows": [
+     [
+      "Verdict",
+      "live"
+     ],
+     [
+      "Last pipeline run (site JSON)",
+      "2026-11-01"
+     ],
+     [
+      "Last graded game",
+      "2026-10-29"
+     ],
+     [
+      "Season / week on the site",
+      "2026 / Week 8"
+     ],
+     [
+      "Pick model on latest slate",
+      "elo+efficiency:random_forest"
+     ],
+     [
+      "Second-stage training rows",
+      6591
+     ]
+    ],
+    "source": "web/public/data/nfl/latest.json",
+    "as_of": "2026-11-01"
+   },
+   {
+    "kind": "table",
+    "heading": "Workflow run health (last 10 runs each)",
+    "columns": [
+     "Workflow",
+     "Last conclusion",
+     "Last run (UTC)",
+     "Last success (UTC)",
+     "Failed/completed"
+    ],
+    "rows": [
+     [
+      "nfl-daily.yml",
+      "unavailable",
+      null,
+      null,
+      null
+     ],
+     [
+      "weekly-nfl-report.yml",
+      "unavailable",
+      null,
+      null,
+      null
+     ]
+    ],
+    "source": "reports/model_review/_runs/<workflow>.json (gh run list)",
+    "as_of": "2026-11-02"
+   },
+   {
+    "kind": "table",
+    "heading": "Feed freshness",
+    "columns": [
+     "Feed",
+     "Newest row",
+     "Age (days)",
+     "Tolerance",
+     "State"
+    ],
+    "rows": [
+     [
+      "nflverse pbp aggregates (data/nfl/team_games.csv)",
+      "2026-10-29",
+      0,
+      10,
+      "fresh"
+     ]
+    ],
+    "source": "web/public/data/nfl/latest.json → feeds",
+    "as_of": "2026-11-01"
+   },
+   {
+    "kind": "bullets",
+    "heading": "Known failures and caveats",
+    "items": [
+     "nfl-daily.yml: run history unavailable (no `reports/model_review/_runs/nfl-daily.yml.json`; the workflow writes it from `gh run list` and a local run has no token)",
+     "weekly-nfl-report.yml: run history unavailable (no `reports/model_review/_runs/weekly-nfl-report.yml.json`; the workflow writes it from `gh run list` and a local run has no token)"
+    ]
+   }
+  ]
+ },
+ "features": {
+  "source": "docs/MODEL_FEATURES.md and web/public/data/nfl/latest.json",
+  "as_of": "2026-11-02",
+  "blocks": [
+   {
+    "kind": "kv",
+    "heading": "Model",
+    "rows": [
+     [
+      "Type",
+      "Betting-blind Elo, with a random-forest second stage (elo+efficiency:random_forest) over Elo plus efficiency features for the pick probability"
+     ],
+     [
+      "Target",
+      "Home win (binary); picks are the side at >= 50% from the pick model"
+     ],
+     [
+      "Training window",
+      "NFL: replay 2002 → last completed week, ties excluded"
+     ],
+     [
+      "Second-stage inputs",
+      "49 columns: elo_logit, elo_home_pre, elo_away_pre, home_off_epa_adj, away_off_epa_adj, home_def_epa_adj, away_def_epa_adj, epa_matchup_net, home_off_success_adj, away_off_success_adj, home_def_success_adj, away_def_success_adj …"
+     ],
+     [
+      "Tuned Elo parameters",
+      "k=20.0, home_advantage=48.0, season_regression=0.4, playoff_k_mult=1.0, margin_cap=45.0, rest_bonus=20.0, elo_per_point=24.6"
+     ]
+    ]
+   },
+   {
+    "kind": "bullets",
+    "heading": "Inputs (from docs/MODEL_FEATURES.md)",
+    "items": [
+     "Elo logit, Home Elo, Away Elo — the Elo probability and the two ratings as their own columns (a favourite by 75+ Elo wins 79% of the time above 1575 and 59% below 1425 — the forest can use that, the gap alone cannot)",
+     "Opponent-adjusted ratings, offence and defence, both sides, plus the cross-unit matchup net for each: EPA/play, success rate, dropback EPA and success, rush EPA and success, early-down EPA and success, explosive rate, points and EPA per drive, red-zone TD per trip, third-down conversion (weighted ridge over every game before the week, half-life 5 weeks, prior season at half weight)",
+     "Form (EWMA, 5-game half-life, shrunk by games played): PROE (all and neutral), pass rate, neutral pace, drives, plays and yards per drive, series success, red-zone trips / points per trip / EPA, third-down EPA / distance / short and long conversion, sack rate for and against, net special-teams EPA, raw EPA for and against",
+     "Home Elo — team Elo, plus home advantage (+48, and zero at a neutral site)",
+     "Away Elo — team Elo",
+     "Rest — a side coming off a bye (10+ days) gets +20 Elo at prediction time",
+     "Postseason weight — playoff results update ratings at K × playoffkmult (currently 1.0)",
+     "Margin of victory — ln-damped and capped at 45 points, shrunk when the favourite wins",
+     "Season carryover — 40% regression toward 1500 at each boundary; franchise continuity (STL→LA, SD→LAC, OAK→LV) carries a rating through a relocation",
+     "Ties — scored as 0.5, plain K"
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Measured worth of each input (component ablation)",
+    "columns": [
+     "Input",
+     "increase in holdout log loss when the component is neutralised",
+     "What was removed / shuffled"
+    ],
+    "rows": [
+     [
+      "Margin of victory",
+      0.02504,
+      "every win counts the same, whatever the margin"
+     ],
+     [
+      "Season regression",
+      0.01877,
+      "ratings carry over untouched"
+     ],
+     [
+      "Home advantage",
+      0.00174,
+      "home edge set to 0 Elo"
+     ],
+     [
+      "Postseason K weight",
+      0.0,
+      "playoff games update like any other"
+     ],
+     [
+      "Rest (bye week)",
+      -0.00065,
+      "no bonus off a bye"
+     ]
+    ],
+    "note": "Baseline log loss 0.62424 on n=586 (2024 onward (never tuned on)). A positive value means the model gets worse without that input.",
+    "source": "web/public/data/importance.json",
+    "as_of": "2026-09-20"
+   }
+  ]
+ },
+ "findings": {
+  "source": "data/nfl/predictions/grades.csv, web/public/data/nfl/latest.json, web/public/data/nfl/history/2026-10-26.json",
+  "as_of": "2026-11-02",
+  "blocks": [
+   {
+    "kind": "table",
+    "heading": "Biggest misses, last 30 days (by log loss)",
+    "columns": [
+     "Date",
+     "Game (away @ home)",
+     "Pick",
+     "Quoted",
+     "Final (home-away)",
+     "Log loss"
+    ],
+    "rows": [
+     [
+      "2026-10-18",
+      "ARI @ LA",
+      "LA",
+      "79%",
+      "16-18",
+      1.58
+     ],
+     [
+      "2026-10-25",
+      "SF @ ATL",
+      "SF",
+      "76%",
+      "29-20",
+      1.41
+     ],
+     [
+      "2026-10-25",
+      "NYG @ HOU",
+      "HOU",
+      "75%",
+      "21-27",
+      1.38
+     ],
+     [
+      "2026-10-18",
+      "TEN @ IND",
+      "IND",
+      "73%",
+      "20-26",
+      1.31
+     ],
+     [
+      "2026-10-18",
+      "HOU @ JAX",
+      "JAX",
+      "72%",
+      "31-34",
+      1.26
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Best upset calls, last 30 days (correct picks with the lowest quote)",
+    "columns": [
+     "Date",
+     "Game (away @ home)",
+     "Pick",
+     "Quoted",
+     "Final (home-away)",
+     "Log loss"
+    ],
+    "rows": [
+     [
+      "2026-10-22",
+      "NE @ CHI",
+      "CHI",
+      "50%",
+      "30-24",
+      0.69
+     ],
+     [
+      "2026-10-15",
+      "SEA @ DEN",
+      "DEN",
+      "51%",
+      "17-14",
+      0.68
+     ],
+     [
+      "2026-10-04",
+      "IND @ WAS",
+      "IND",
+      "51%",
+      "13-30",
+      0.67
+     ],
+     [
+      "2026-10-18",
+      "CHI @ ATL",
+      "CHI",
+      "52%",
+      "23-31",
+      0.66
+     ],
+     [
+      "2026-10-11",
+      "SF @ SEA",
+      "SF",
+      "52%",
+      "29-32",
+      0.66
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Rating movers since preseason",
+    "columns": [
+     "Team",
+     "Elo now",
+     "Preseason",
+     "Δ"
+    ],
+    "rows": [
+     [
+      "LAC",
+      1410.3,
+      1522.9,
+      -112.6
+     ],
+     [
+      "PHI",
+      1445.7,
+      1553.0,
+      -107.3
+     ],
+     [
+      "MIN",
+      1627.0,
+      1542.5,
+      84.5
+     ],
+     [
+      "HOU",
+      1509.5,
+      1591.0,
+      -81.5
+     ],
+     [
+      "CIN",
+      1553.9,
+      1476.4,
+      77.5
+     ],
+     [
+      "MIA",
+      1387.8,
+      1458.5,
+      -70.7
+     ],
+     [
+      "KC",
+      1561.1,
+      1490.7,
+      70.4
+     ],
+     [
+      "SF",
+      1614.9,
+      1550.5,
+      64.4
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Rating movers since 2026-10-26 (site snapshot nearest 7 days back)",
+    "columns": [
+     "Team",
+     "Elo now",
+     "Elo then",
+     "Δ",
+     "Rank then → now"
+    ],
+    "rows": [
+     [
+      "DAL",
+      1466.7,
+      1429.6,
+      37.1,
+      "23 → 20"
+     ],
+     [
+      "PHI",
+      1445.7,
+      1482.8,
+      -37.1,
+      "17 → 22"
+     ],
+     [
+      "GB",
+      1537.7,
+      1523.9,
+      13.8,
+      "14 → 14"
+     ],
+     [
+      "CAR",
+      1435.5,
+      1449.3,
+      -13.8,
+      "22 → 23"
+     ],
+     [
+      "SEA",
+      1651.9,
+      1651.9,
+      0.0,
+      "1 → 1"
+     ],
+     [
+      "BUF",
+      1639.6,
+      1639.6,
+      0.0,
+      "2 → 2"
+     ],
+     [
+      "MIN",
+      1627.0,
+      1627.0,
+      0.0,
+      "3 → 3"
+     ],
+     [
+      "SF",
+      1614.9,
+      1614.9,
+      0.0,
+      "4 → 4"
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Forecast shifts: Playoffs vs 2026-10-26",
+    "columns": [
+     "Team",
+     "Now",
+     "Then",
+     "Shift"
+    ],
+    "rows": [
+     [
+      "PHI",
+      "12.2%",
+      "30.2%",
+      "-17.9 pts"
+     ],
+     [
+      "DAL",
+      "32.0%",
+      "16.3%",
+      "+15.7 pts"
+     ],
+     [
+      "GB",
+      "50.2%",
+      "39.9%",
+      "+10.3 pts"
+     ],
+     [
+      "CAR",
+      "24.1%",
+      "32.4%",
+      "-8.3 pts"
+     ],
+     [
+      "TB",
+      "28.9%",
+      "25.9%",
+      "+2.9 pts"
+     ],
+     [
+      "CHI",
+      "66.7%",
+      "69.4%",
+      "-2.7 pts"
+     ],
+     [
+      "NYG",
+      "58.0%",
+      "55.4%",
+      "+2.6 pts"
+     ],
+     [
+      "LA",
+      "37.9%",
+      "39.9%",
+      "-2.0 pts"
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Calibration drift (season vs last 30 days)",
+    "columns": [
+     "Quoted",
+     "n season",
+     "Hit − quote, season",
+     "n 30d",
+     "Hit − quote, 30d"
+    ],
+    "rows": [
+     [
+      "50-60%",
+      46,
+      8.5,
+      26,
+      11.4
+     ],
+     [
+      "60-70%",
+      30,
+      -1.7,
+      14,
+      6.9
+     ],
+     [
+      "70-80%",
+      26,
+      -13.1,
+      14,
+      -24.9
+     ],
+     [
+      "80-90%",
+      6,
+      15.2,
+      5,
+      15.3
+     ]
+    ]
+   }
+  ]
+ },
+ "report_card": {
+  "summary": "Season: 70/108 picks correct (64.8%), log loss 0.6427, Brier 0.2244, always-home log loss 0.6942, paired delta -0.05154 ± 0.02964 (negative = beating the baseline).",
+  "source": "data/nfl/predictions/grades.csv",
+  "as_of": "2026-10-29",
+  "blocks": [
+   {
+    "kind": "table",
+    "heading": "Windows (by game date)",
+    "columns": [
+     "Window",
+     "n",
+     "Accuracy",
+     "Log loss",
+     "Brier",
+     "Always-home LL",
+     "Δ LL",
+     "± SE"
+    ],
+    "rows": [
+     [
+      "Last 7 days",
+      2,
+      "100.0%",
+      0.5153,
+      0.1627,
+      0.6982,
+      -0.1829,
+      0.0318
+     ],
+     [
+      "Last 30 days",
+      59,
+      "66.1%",
+      0.6376,
+      0.2199,
+      0.7098,
+      -0.0722,
+      0.043
+     ],
+     [
+      "Season to date",
+      108,
+      "64.8%",
+      0.6427,
+      0.2244,
+      0.6942,
+      -0.0515,
+      0.0296
+     ]
+    ],
+    "note": "Δ LL is the paired per-game log-loss difference against the fixed always-pick-home forecast (p = 0.55 NFL / 0.632 CFB, coin flip at neutral sites); negative beats it."
+   },
+   {
+    "kind": "table",
+    "heading": "Calibration, season (pick probability vs hit rate)",
+    "columns": [
+     "Quoted",
+     "n",
+     "Mean quote",
+     "Hit rate",
+     "Hit − quote (pts)"
+    ],
+    "rows": [
+     [
+      "50-60%",
+      46,
+      "54.5%",
+      "63.0%",
+      8.5
+     ],
+     [
+      "60-70%",
+      30,
+      "65.0%",
+      "63.3%",
+      -1.7
+     ],
+     [
+      "70-80%",
+      26,
+      "74.6%",
+      "61.5%",
+      -13.1
+     ],
+     [
+      "80-90%",
+      6,
+      "84.8%",
+      "100.0%",
+      15.2
+     ],
+     [
+      "90-100%",
+      0,
+      null,
+      null,
+      null
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Calibration, last 30 days",
+    "columns": [
+     "Quoted",
+     "n",
+     "Mean quote",
+     "Hit rate",
+     "Hit − quote (pts)"
+    ],
+    "rows": [
+     [
+      "50-60%",
+      26,
+      "54.0%",
+      "65.4%",
+      11.4
+     ],
+     [
+      "60-70%",
+      14,
+      "64.6%",
+      "71.4%",
+      6.9
+     ],
+     [
+      "70-80%",
+      14,
+      "74.9%",
+      "50.0%",
+      -24.9
+     ],
+     [
+      "80-90%",
+      5,
+      "84.7%",
+      "100.0%",
+      15.3
+     ],
+     [
+      "90-100%",
+      0,
+      null,
+      null,
+      null
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Segments, season",
+    "columns": [
+     "Segment",
+     "n",
+     "Accuracy",
+     "Log loss",
+     "Δ LL vs always-home"
+    ],
+    "rows": [
+     [
+      "Home-side picks",
+      68,
+      "61.8%",
+      0.6519,
+      -0.0195
+     ],
+     [
+      "Away-side picks",
+      40,
+      "70.0%",
+      0.627,
+      -0.1059
+     ],
+     [
+      "Picks at 50-65%",
+      62,
+      "62.9%",
+      0.6668,
+      -0.0359
+     ],
+     [
+      "Picks at 65-80%",
+      40,
+      "62.5%",
+      0.677,
+      -0.0185
+     ],
+     [
+      "Picks at 80%+",
+      6,
+      "100.0%",
+      0.1647,
+      -0.4331
+     ],
+     [
+      "Neutral site",
+      5,
+      "60.0%",
+      0.7313,
+      0.0382
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "By week (site ledger)",
+    "columns": [
+     "Week",
+     "n",
+     "Correct",
+     "Accuracy",
+     "Log loss",
+     "Δ LL"
+    ],
+    "rows": [
+     [
+      "Week 1",
+      16,
+      10,
+      "62.5%",
+      0.6479,
+      -0.01859
+     ],
+     [
+      "Week 2",
+      16,
+      10,
+      "62.5%",
+      0.6591,
+      -0.05161
+     ],
+     [
+      "Week 3",
+      16,
+      10,
+      "62.5%",
+      0.6381,
+      -0.01591
+     ],
+     [
+      "Week 4",
+      16,
+      12,
+      "75.0%",
+      0.5272,
+      -0.16436
+     ],
+     [
+      "Week 5",
+      15,
+      9,
+      "60.0%",
+      0.6035,
+      -0.12143
+     ],
+     [
+      "Week 6",
+      14,
+      9,
+      "64.3%",
+      0.7351,
+      0.03009
+     ],
+     [
+      "Week 7",
+      14,
+      9,
+      "64.3%",
+      0.7187,
+      -0.00057
+     ],
+     [
+      "Week 8",
+      1,
+      1,
+      "100.0%",
+      0.4468,
+      -0.1511
+     ]
+    ],
+    "source": "web/public/data/nfl/latest.json → ledger.by_week",
+    "as_of": "2026-11-01"
+   }
+  ]
+ },
+ "improvements": {
+  "summary": "Candidates only, each with the number that raises it; the reviewer weighs them.",
+  "blocks": [
+   {
+    "kind": "bullets",
+    "items": [
+     "Edge over always-home is not clear at 2 SE on the season (delta log loss -0.0515 ± 0.0296, n=108): the honest baseline comparison to keep in view before adding inputs.",
+     "Calibration: picks quoted at 50-60% hit 63.0% (n=46, mean quote 54.5%), 8 points under-confident. Candidate: a calibration layer on the pick probability, measured on held-out weeks first.",
+     "Calibration: picks quoted at 70-80% hit 61.5% (n=26, mean quote 74.6%), 13 points over-confident. Candidate: a calibration layer on the pick probability, measured on held-out weeks first."
+    ]
+   }
+  ]
+ },
+ "sources": [
+  "data/nfl/predictions/grades.csv",
+  "docs/MODEL_FEATURES.md",
+  "web/public/data/importance.json",
+  "web/public/data/nfl/latest.json"
+ ]
+}

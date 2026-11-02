@@ -1,0 +1,119 @@
+# Weekly model review drafts: a stats-heavy one-pager per model, generated
+# by the repo, that a Claude scheduled task under TW's account then reads,
+# assesses and sends. The repo only writes the draft; no paid API is called
+# from Actions. The standing instruction for the Claude session is
+# docs/weekly_model_review_prompt.md.
+#
+# Schedule (UTC; "football" = the NFL model, college has its own slot):
+#   Monday    college football + soccer  (two separate reviews)
+#   Tuesday   basketball                 (odds data only - there is no model)
+#   Wednesday NFL
+# 18:17 UTC is after the 10:00 UTC daily jobs even on a day GitHub delays
+# them by hours, and off the busy :00 minute. The drafts land under
+# reports/model_review/<model>/<date>.{json,html} with a stable latest.*
+# copy, committed through the shared push-retry helper.
+
+name: Weekly Model Review Drafts
+
+on:
+  schedule:
+    - cron: "17 18 * * 1,2,3"
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Which draft(s) to build (schedule = by weekday)"
+        required: false
+        default: "schedule"
+        type: choice
+        options:
+          - schedule
+          - all
+          - cfb
+          - soccer
+          - basketball
+          - nfl
+      run_date:
+        description: "Override draft date (YYYY-MM-DD UTC, default today)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: weekly-model-review
+  cancel-in-progress: false
+
+jobs:
+  drafts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run health for the "current status" section: the last ten runs of
+      # each pipeline workflow, dumped with the preinstalled gh CLI and the
+      # job's own token (read-only on actions). Best effort: a missing dump
+      # renders as "unavailable" rather than failing the draft.
+      - name: Dump workflow run history
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p reports/model_review/_runs
+          for wf in nfl-daily.yml weekly-nfl-report.yml cfb-daily.yml soccer-daily.yml unified-odds.yml; do
+            gh run list --workflow "$wf" --limit 10 \
+              --json conclusion,status,createdAt,url,displayTitle \
+              > "reports/model_review/_runs/$wf.json" || echo "[]" > "reports/model_review/_runs/$wf.json"
+          done
+
+      - name: Build drafts
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARGS=(--model "${{ github.event.inputs.model || 'schedule' }}")
+          RUN_DATE="${{ github.event.inputs.run_date }}"
+          [ -n "${RUN_DATE:-}" ] && ARGS+=(--date "$RUN_DATE")
+          python -m data_jobs.reports.model_review "${ARGS[@]}"
+
+      - name: Commit and push drafts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/model_review/
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Model review drafts: $(date -u +%F)"
+            bash .github/scripts/git-push-retry.sh main
+          else
+            echo "No changes to commit."
+          fi
+
+      - name: Upload drafts artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-review-${{ github.run_number }}
+          path: reports/model_review/
+          retention-days: 30

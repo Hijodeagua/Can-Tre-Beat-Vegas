@@ -28,6 +28,23 @@ That is the honest baseline every future change here gets measured against.
 Details and the two places an edge might actually live are in
 [`NFL/model/v2/README.md`](NFL/model/v2/README.md).
 
+## Weekly model review
+
+Every week the repo drafts a one-page, stats-heavy review of each live
+model and a Claude session (under TW's account, no API key in Actions)
+turns it into the final assessment and sends it. `data_jobs/reports/model_review.py`
+builds the drafts into `reports/model_review/<model>/<date>.{json,html}`
+with a stable `latest.*` copy, on the schedule in
+`.github/workflows/weekly-model-review.yml`: Monday college football and
+soccer, Tuesday basketball (odds data only, there is no model, and the
+page says so), Wednesday NFL. Each draft has five sections (current
+status, key features, interesting findings, report card, potential
+improvements) and every number carries the file it came from and its
+as-of date. The standing instruction for the review session is
+[`docs/weekly_model_review_prompt.md`](docs/weekly_model_review_prompt.md);
+its first step is `python -m data_jobs.reports.model_review --check --model <model>`,
+which refuses an old or missing draft.
+
 ## Features
 
 > **What each live model actually looks at, per sport:**

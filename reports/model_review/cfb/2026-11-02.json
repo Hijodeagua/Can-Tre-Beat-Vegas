@@ -1,0 +1,833 @@
+{
+ "model": "cfb",
+ "title": "College football Elo + efficiency",
+ "date": "2026-11-02",
+ "kind": "draft",
+ "generated_at": "2026-11-02T07:43:16+00:00",
+ "summary": "College football Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-31, 606 graded this season; second stage on (elo+efficiency:random_forest).",
+ "status": {
+  "state": "live",
+  "summary": "College football Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-31, 606 graded this season; second stage on (elo+efficiency:random_forest).",
+  "source": "web/public/data/cfb/latest.json",
+  "as_of": "2026-11-01",
+  "blocks": [
+   {
+    "kind": "kv",
+    "heading": "Pipeline",
+    "rows": [
+     [
+      "Verdict",
+      "live"
+     ],
+     [
+      "Last pipeline run (site JSON)",
+      "2026-11-01"
+     ],
+     [
+      "Last graded game",
+      "2026-10-31"
+     ],
+     [
+      "Season / week on the site",
+      "2026 / 10"
+     ],
+     [
+      "Pick model on latest slate",
+      "elo+efficiency:random_forest"
+     ],
+     [
+      "Second-stage training rows",
+      17576
+     ]
+    ],
+    "source": "web/public/data/cfb/latest.json",
+    "as_of": "2026-11-01"
+   },
+   {
+    "kind": "table",
+    "heading": "Workflow run health (last 10 runs each)",
+    "columns": [
+     "Workflow",
+     "Last conclusion",
+     "Last run (UTC)",
+     "Last success (UTC)",
+     "Failed/completed"
+    ],
+    "rows": [
+     [
+      "cfb-daily.yml",
+      "unavailable",
+      null,
+      null,
+      null
+     ]
+    ],
+    "source": "reports/model_review/_runs/<workflow>.json (gh run list)",
+    "as_of": "2026-11-02"
+   },
+   {
+    "kind": "table",
+    "heading": "Feed freshness",
+    "columns": [
+     "Feed",
+     "Newest row",
+     "Age (days)",
+     "Tolerance",
+     "State"
+    ],
+    "rows": [
+     [
+      "sportsdataverse weekly summaries (team_weeks.csv)",
+      "2026 week 8",
+      1,
+      2,
+      "fresh"
+     ]
+    ],
+    "source": "web/public/data/cfb/latest.json → feeds",
+    "as_of": "2026-11-01"
+   },
+   {
+    "kind": "bullets",
+    "heading": "Known failures and caveats",
+    "items": [
+     "cfb-daily.yml: run history unavailable (no `reports/model_review/_runs/cfb-daily.yml.json`; the workflow writes it from `gh run list` and a local run has no token)"
+    ]
+   }
+  ]
+ },
+ "features": {
+  "source": "docs/MODEL_FEATURES.md and web/public/data/cfb/latest.json",
+  "as_of": "2026-11-02",
+  "blocks": [
+   {
+    "kind": "kv",
+    "heading": "Model",
+    "rows": [
+     [
+      "Type",
+      "Betting-blind Elo, with a random-forest second stage (elo+efficiency:random_forest) over Elo plus efficiency features for the pick probability"
+     ],
+     [
+      "Target",
+      "Home win (binary); picks are the side at >= 50% from the pick model"
+     ],
+     [
+      "Training window",
+      "CFB: replay 2005 → last completed week"
+     ],
+     [
+      "Second-stage inputs",
+      "34 columns: elo_logit, elo_home_pre, elo_away_pre, home_adj_epa_off, away_adj_epa_off, home_adj_epa_def, away_adj_epa_def, adj_epa_matchup_net, home_success_off, away_success_off, home_success_def, away_success_def …"
+     ],
+     [
+      "Tuned Elo parameters",
+      "k=35.0, home_advantage=50.0, season_regression=0.3, conf_weight=0.75, fcs_rating=950.0, entry_rating=1250.0, margin_cap=80.0, elo_per_point=18.0"
+     ]
+    ]
+   },
+   {
+    "kind": "bullets",
+    "heading": "Inputs (from docs/MODEL_FEATURES.md)",
+    "items": [
+     "Elo logit, Home Elo, Away Elo — the Elo probability and the two ratings as their own columns (a favourite by 250+ Elo wins 95% of the time above 1650 and 89% below 1350)",
+     "Opponent-adjusted EPA (adjoffepa, adjdefepa), both sides, from the SportsDataverse snapshot through the previous week, blended with the prior season's regressed final until a program has games, plus the matchup net",
+     "Efficiency, both sides, each with its matchup net: success rate, early-down EPA, explosive rate, havoc, EPA per drive, drives per game, plays and yards per drive, red-zone success, third-down success and distance, pass rate, pass and rush EPA",
+     "Home Elo — program Elo, plus home advantage (+50, zero at a neutral site)",
+     "Away Elo — program Elo",
+     "Conference-aware season regression — 30% regression at each boundary, toward a 0.75/0.25 blend of the program's new conference's mean and the 1500 base, so realignment is handled by construction; independents regress to the base",
+     "Pooled FCS opponent — every non-FBS side is one synthetic team at 950, and such a game updates only the FBS side (keeps ~13% of the schedule in the data)",
+     "FBS entry rating — a program's first FBS game starts it at 1250, not at average",
+     "Margin of victory — ln-damped, capped at 80 points"
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Measured worth of each input (component ablation)",
+    "columns": [
+     "Input",
+     "increase in holdout log loss when the component is neutralised",
+     "What was removed / shuffled"
+    ],
+    "rows": [
+     [
+      "FCS opponent rating",
+      0.03772,
+      "non-FBS opponents rated as average FBS"
+     ],
+     [
+      "Margin of victory",
+      0.0365,
+      "every win counts the same, whatever the margin"
+     ],
+     [
+      "Season regression",
+      0.02754,
+      "ratings carry over untouched"
+     ],
+     [
+      "Conference regression",
+      0.01125,
+      "regress to 1500 alone, ignoring the new conference"
+     ],
+     [
+      "Home advantage",
+      0.01073,
+      "home edge set to 0 Elo"
+     ],
+     [
+      "FBS entry rating",
+      0.00078,
+      "a new FBS program starts at average"
+     ]
+    ],
+    "note": "Baseline log loss 0.48462 on n=2038 (2024 onward (never tuned on)). A positive value means the model gets worse without that input.",
+    "source": "web/public/data/importance.json",
+    "as_of": "2026-09-20"
+   }
+  ]
+ },
+ "findings": {
+  "source": "data/college_football/predictions/grades.csv, web/public/data/cfb/latest.json, web/public/data/cfb/history/2026-10-26.json",
+  "as_of": "2026-11-02",
+  "blocks": [
+   {
+    "kind": "table",
+    "heading": "Biggest misses, last 30 days (by log loss)",
+    "columns": [
+     "Date",
+     "Game (away @ home)",
+     "Pick",
+     "Quoted",
+     "Final (home-away)",
+     "Log loss"
+    ],
+    "rows": [
+     [
+      "2026-10-10",
+      "Buffalo @ Toledo",
+      "Toledo",
+      "94%",
+      "8-23",
+      2.88
+     ],
+     [
+      "2026-10-29",
+      "Troy @ James Madison",
+      "James Madison",
+      "91%",
+      "21-24",
+      2.44
+     ],
+     [
+      "2026-10-17",
+      "Auburn @ Georgia",
+      "Georgia",
+      "90%",
+      "24-27",
+      2.3
+     ],
+     [
+      "2026-10-03",
+      "Temple @ South Florida",
+      "South Florida",
+      "88%",
+      "13-17",
+      2.09
+     ],
+     [
+      "2026-10-22",
+      "James Madison @ App State",
+      "James Madison",
+      "86%",
+      "34-31",
+      2.0
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Best upset calls, last 30 days (correct picks with the lowest quote)",
+    "columns": [
+     "Date",
+     "Game (away @ home)",
+     "Pick",
+     "Quoted",
+     "Final (home-away)",
+     "Log loss"
+    ],
+    "rows": [
+     [
+      "2026-10-31",
+      "Oregon State @ Fresno State",
+      "Fresno State",
+      "50%",
+      "38-22",
+      0.69
+     ],
+     [
+      "2026-10-31",
+      "Oklahoma State @ Iowa State",
+      "Iowa State",
+      "50%",
+      "51-49",
+      0.69
+     ],
+     [
+      "2026-10-24",
+      "Akron @ Kent State",
+      "Kent State",
+      "50%",
+      "35-20",
+      0.68
+     ],
+     [
+      "2026-10-31",
+      "Marshall @ Old Dominion",
+      "Marshall",
+      "51%",
+      "23-36",
+      0.67
+     ],
+     [
+      "2026-10-03",
+      "Washington @ USC",
+      "USC",
+      "52%",
+      "25-21",
+      0.66
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Rating movers since 2026-10-26 (site snapshot nearest 7 days back)",
+    "columns": [
+     "Team",
+     "Elo now",
+     "Elo then",
+     "Δ",
+     "Rank then → now"
+    ],
+    "rows": [
+     [
+      "Sacramento State",
+      1104.0,
+      1026.6,
+      77.4,
+      "138 → 134"
+     ],
+     [
+      "Kent State",
+      1159.4,
+      1236.8,
+      -77.4,
+      "122 → 130"
+     ],
+     [
+      "Ohio State",
+      1871.1,
+      1940.7,
+      -69.6,
+      "2 → 4"
+     ],
+     [
+      "USC",
+      1745.2,
+      1675.6,
+      69.6,
+      "25 → 17"
+     ],
+     [
+      "South Carolina",
+      1692.5,
+      1625.0,
+      67.5,
+      "35 → 22"
+     ],
+     [
+      "Oklahoma",
+      1628.3,
+      1695.8,
+      -67.5,
+      "21 → 33"
+     ],
+     [
+      "UCF",
+      1439.9,
+      1503.2,
+      -63.3,
+      "57 → 77"
+     ],
+     [
+      "Baylor",
+      1604.9,
+      1541.7,
+      63.2,
+      "51 → 38"
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Forecast shifts: Conf. title vs 2026-10-26",
+    "columns": [
+     "Team",
+     "Now",
+     "Then",
+     "Shift"
+    ],
+    "rows": [
+     [
+      "James Madison",
+      "31.2%",
+      "69.7%",
+      "-38.5 pts"
+     ],
+     [
+      "Ohio State",
+      "27.1%",
+      "49.9%",
+      "-22.8 pts"
+     ],
+     [
+      "Louisiana Tech",
+      "36.7%",
+      "15.6%",
+      "+21.1 pts"
+     ],
+     [
+      "Indiana",
+      "49.9%",
+      "33.8%",
+      "+16.0 pts"
+     ],
+     [
+      "Army",
+      "5.3%",
+      "19.2%",
+      "-13.9 pts"
+     ],
+     [
+      "SMU",
+      "4.2%",
+      "15.1%",
+      "-10.8 pts"
+     ],
+     [
+      "Georgia Southern",
+      "15.0%",
+      "5.1%",
+      "+9.8 pts"
+     ],
+     [
+      "Arizona",
+      "2.9%",
+      "12.7%",
+      "-9.8 pts"
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Calibration drift (season vs last 30 days)",
+    "columns": [
+     "Quoted",
+     "n season",
+     "Hit − quote, season",
+     "n 30d",
+     "Hit − quote, 30d"
+    ],
+    "rows": [
+     [
+      "50-60%",
+      104,
+      -5.9,
+      66,
+      -6.6
+     ],
+     [
+      "60-70%",
+      119,
+      2.5,
+      72,
+      -0.9
+     ],
+     [
+      "70-80%",
+      126,
+      1.8,
+      74,
+      -0.5
+     ],
+     [
+      "80-90%",
+      108,
+      0.5,
+      52,
+      -3.6
+     ],
+     [
+      "90-100%",
+      149,
+      -0.6,
+      22,
+      -8.0
+     ]
+    ]
+   }
+  ]
+ },
+ "report_card": {
+  "summary": "Season: 461/606 picks correct (76.1%), log loss 0.4756, Brier 0.1575, always-home log loss 0.6262, paired delta -0.15058 ± 0.01866 (negative = beating the baseline).",
+  "source": "data/college_football/predictions/grades.csv",
+  "as_of": "2026-10-31",
+  "blocks": [
+   {
+    "kind": "table",
+    "heading": "Windows (by game date)",
+    "columns": [
+     "Window",
+     "n",
+     "Accuracy",
+     "Log loss",
+     "Brier",
+     "Always-home LL",
+     "Δ LL",
+     "± SE"
+    ],
+    "rows": [
+     [
+      "Last 7 days",
+      56,
+      "78.6%",
+      0.5026,
+      0.1636,
+      0.6507,
+      -0.1482,
+      0.0586
+     ],
+     [
+      "Last 30 days",
+      286,
+      "67.8%",
+      0.5893,
+      0.2022,
+      0.6731,
+      -0.0838,
+      0.0281
+     ],
+     [
+      "Season to date",
+      606,
+      "76.1%",
+      0.4756,
+      0.1575,
+      0.6262,
+      -0.1506,
+      0.0187
+     ]
+    ],
+    "note": "Δ LL is the paired per-game log-loss difference against the fixed always-pick-home forecast (p = 0.55 NFL / 0.632 CFB, coin flip at neutral sites); negative beats it."
+   },
+   {
+    "kind": "kv",
+    "heading": "FBS vs FBS only (site ledger)",
+    "rows": [
+     [
+      "n",
+      487
+     ],
+     [
+      "Accuracy",
+      "71.5%"
+     ],
+     [
+      "Log loss",
+      0.5511
+     ],
+     [
+      "Brier",
+      0.1851
+     ],
+     [
+      "Δ LL vs always-home",
+      "-0.10926 ± 0.02137"
+     ]
+    ],
+    "source": "web/public/data/cfb/latest.json → ledger.fbs_only",
+    "as_of": "2026-11-01"
+   },
+   {
+    "kind": "table",
+    "heading": "Calibration, season (pick probability vs hit rate)",
+    "columns": [
+     "Quoted",
+     "n",
+     "Mean quote",
+     "Hit rate",
+     "Hit − quote (pts)"
+    ],
+    "rows": [
+     [
+      "50-60%",
+      104,
+      "55.0%",
+      "49.0%",
+      -5.9
+     ],
+     [
+      "60-70%",
+      119,
+      "64.8%",
+      "67.2%",
+      2.5
+     ],
+     [
+      "70-80%",
+      126,
+      "75.1%",
+      "77.0%",
+      1.8
+     ],
+     [
+      "80-90%",
+      108,
+      "84.7%",
+      "85.2%",
+      0.5
+     ],
+     [
+      "90-100%",
+      149,
+      "95.3%",
+      "94.6%",
+      -0.6
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Calibration, last 30 days",
+    "columns": [
+     "Quoted",
+     "n",
+     "Mean quote",
+     "Hit rate",
+     "Hit − quote (pts)"
+    ],
+    "rows": [
+     [
+      "50-60%",
+      66,
+      "55.1%",
+      "48.5%",
+      -6.6
+     ],
+     [
+      "60-70%",
+      72,
+      "64.8%",
+      "63.9%",
+      -0.9
+     ],
+     [
+      "70-80%",
+      74,
+      "74.8%",
+      "74.3%",
+      -0.5
+     ],
+     [
+      "80-90%",
+      52,
+      "84.4%",
+      "80.8%",
+      -3.6
+     ],
+     [
+      "90-100%",
+      22,
+      "94.4%",
+      "86.4%",
+      -8.0
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "Segments, season",
+    "columns": [
+     "Segment",
+     "n",
+     "Accuracy",
+     "Log loss",
+     "Δ LL vs always-home"
+    ],
+    "rows": [
+     [
+      "Home-side picks",
+      446,
+      "80.7%",
+      0.4212,
+      -0.1433
+     ],
+     [
+      "Away-side picks",
+      160,
+      "63.1%",
+      0.6271,
+      -0.1708
+     ],
+     [
+      "Picks at 50-65%",
+      170,
+      "57.1%",
+      0.6689,
+      -0.0486
+     ],
+     [
+      "Picks at 65-80%",
+      179,
+      "73.2%",
+      0.5683,
+      -0.0895
+     ],
+     [
+      "Picks at 80%+",
+      257,
+      "90.7%",
+      0.2831,
+      -0.2605
+     ],
+     [
+      "Neutral site",
+      8,
+      "75.0%",
+      0.4979,
+      -0.1953
+     ],
+     [
+      "FBS vs FBS only",
+      487,
+      "71.5%",
+      0.5511,
+      -0.1093
+     ],
+     [
+      "Games with an FCS side",
+      119,
+      "95.0%",
+      0.1664,
+      -0.3197
+     ]
+    ]
+   },
+   {
+    "kind": "table",
+    "heading": "By week (site ledger)",
+    "columns": [
+     "Week",
+     "n",
+     "Correct",
+     "Accuracy",
+     "Log loss",
+     "Δ LL"
+    ],
+    "rows": [
+     [
+      "1",
+      83,
+      74,
+      "89.2%",
+      0.2875,
+      -0.23193
+     ],
+     [
+      "2",
+      86,
+      71,
+      "82.6%",
+      0.3855,
+      -0.1866
+     ],
+     [
+      "3",
+      75,
+      65,
+      "86.7%",
+      0.3528,
+      -0.2277
+     ],
+     [
+      "4",
+      71,
+      53,
+      "74.7%",
+      0.4691,
+      -0.19543
+     ],
+     [
+      "5",
+      59,
+      42,
+      "71.2%",
+      0.5157,
+      -0.18145
+     ],
+     [
+      "6",
+      58,
+      36,
+      "62.1%",
+      0.6095,
+      -0.09584
+     ],
+     [
+      "7",
+      62,
+      41,
+      "66.1%",
+      0.6249,
+      -0.06076
+     ],
+     [
+      "8",
+      56,
+      35,
+      "62.5%",
+      0.6921,
+      0.05943
+     ],
+     [
+      "9",
+      56,
+      44,
+      "78.6%",
+      0.5026,
+      -0.14815
+     ]
+    ],
+    "source": "web/public/data/cfb/latest.json → ledger.by_week",
+    "as_of": "2026-11-01"
+   }
+  ]
+ },
+ "improvements": {
+  "summary": "Candidates only, each with the number that raises it; the reviewer weighs them.",
+  "blocks": [
+   {
+    "kind": "bullets",
+    "items": [
+     "Segment split: home-side picks 80.7% (n=446) vs away-side picks 63.1% (n=160). Candidate: re-check the home edge and rest handling on the side that lags."
+    ]
+   }
+  ]
+ },
+ "sources": [
+  "data/college_football/predictions/grades.csv",
+  "docs/MODEL_FEATURES.md",
+  "web/public/data/cfb/latest.json",
+  "web/public/data/importance.json"
+ ]
+}
