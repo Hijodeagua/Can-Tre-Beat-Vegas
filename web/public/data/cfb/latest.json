@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-01T16:36:36+00:00",
- "run_date": "2026-11-01",
+ "generated_at": "2026-11-02T17:04:00+00:00",
+ "run_date": "2026-11-02",
  "season": 2026,
  "week": 10,
  "params": {
@@ -2264,1278 +2264,59 @@
    "independent": false
   }
  },
- "slate": [],
- "graded_today": [
+ "slate": [
   {
-   "game_id": 401861966,
-   "date": "2026-10-31",
+   "game_id": 401866453,
+   "date": "2026-11-03",
    "season": 2026,
-   "week": 9,
-   "home_team": "Air Force",
-   "away_team": "UConn",
+   "week": 10,
+   "season_type": "regular",
+   "home_team": "Akron",
+   "away_team": "Ohio",
+   "home_conference": "Mid-American",
+   "away_conference": "Mid-American",
    "neutral": false,
    "home_fcs": false,
    "away_fcs": false,
-   "pick": "Air Force",
-   "p_home": 0.6263,
-   "pick_prob": 0.6263,
-   "pred_home_score": 26.3,
-   "pred_away_score": 28.3,
-   "home_points": 35.0,
-   "away_points": 26.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4679,
-   "brier": 0.1397,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.0091,
-   "margin_err": 11.0,
-   "total_err": 6.4,
-   "graded_on": "2026-11-01"
+   "elo_home_pre": 1104.8,
+   "elo_away_pre": 1495.7,
+   "p_home": 0.1578,
+   "p_home_elo": 0.1232,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Ohio",
+   "pick_prob": 0.8422,
+   "pred_home_score": 15.7,
+   "pred_away_score": 34.5,
+   "pred_total": 50.2,
+   "notes": ""
   },
   {
-   "game_id": 401856733,
-   "date": "2026-10-31",
+   "game_id": 401866454,
+   "date": "2026-11-03",
    "season": 2026,
-   "week": 9,
-   "home_team": "Arkansas",
-   "away_team": "Missouri",
+   "week": 10,
+   "season_type": "regular",
+   "home_team": "Miami (OH)",
+   "away_team": "Buffalo",
+   "home_conference": "Mid-American",
+   "away_conference": "Mid-American",
    "neutral": false,
    "home_fcs": false,
    "away_fcs": false,
-   "pick": "Missouri",
-   "p_home": 0.3173,
-   "pick_prob": 0.6827,
-   "pred_home_score": 22.2,
-   "pred_away_score": 30.4,
-   "home_points": 10.0,
-   "away_points": 34.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.3817,
-   "brier": 0.1007,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.618,
-   "margin_err": 15.8,
-   "total_err": 8.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856843,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "BYU",
-   "away_team": "Arizona State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "BYU",
-   "p_home": 0.8324,
-   "pick_prob": 0.8324,
-   "pred_home_score": 33.5,
-   "pred_away_score": 19.9,
-   "home_points": 27.0,
-   "away_points": 20.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.1834,
-   "brier": 0.0281,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.2754,
-   "margin_err": 6.6,
-   "total_err": 6.4,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401860908,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Boise State",
-   "away_team": "Texas State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Boise State",
-   "p_home": 0.7783,
-   "pick_prob": 0.7783,
-   "pred_home_score": 35.9,
-   "pred_away_score": 23.8,
-   "home_points": 46.0,
-   "away_points": 45.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.2506,
-   "brier": 0.0492,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.2082,
-   "margin_err": 11.1,
-   "total_err": 31.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856848,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Cincinnati",
-   "away_team": "Utah",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Utah",
-   "p_home": 0.2648,
-   "pick_prob": 0.7352,
-   "pred_home_score": 22.5,
-   "pred_away_score": 33.0,
-   "home_points": 25.0,
-   "away_points": 49.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.3076,
-   "brier": 0.0701,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.6921,
-   "margin_err": 13.5,
-   "total_err": 18.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856846,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Colorado",
-   "away_team": "Kansas State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Kansas State",
-   "p_home": 0.3742,
-   "pick_prob": 0.6258,
-   "pred_home_score": 23.1,
-   "pred_away_score": 31.5,
-   "home_points": 27.0,
-   "away_points": 24.0,
-   "home_win": 1.0,
-   "pick_correct": false,
-   "log_loss": 0.983,
-   "brier": 0.3916,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.5241,
-   "margin_err": 11.4,
-   "total_err": 3.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858279,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Duke",
-   "away_team": "Boston College",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Duke",
-   "p_home": 0.752,
-   "pick_prob": 0.752,
-   "pred_home_score": 32.5,
-   "pred_away_score": 21.2,
-   "home_points": 47.0,
-   "away_points": 2.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.285,
-   "brier": 0.0615,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.1738,
-   "margin_err": 33.7,
-   "total_err": 4.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401862815,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "East Carolina",
-   "away_team": "Temple",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "East Carolina",
-   "p_home": 0.6941,
-   "pick_prob": 0.6941,
-   "pred_home_score": 33.8,
-   "pred_away_score": 21.1,
-   "home_points": 17.0,
-   "away_points": 9.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.3651,
-   "brier": 0.0936,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.0937,
-   "margin_err": 4.7,
-   "total_err": 28.9,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858280,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Florida State",
-   "away_team": "Clemson",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Florida State",
-   "p_home": 0.5692,
-   "pick_prob": 0.5692,
-   "pred_home_score": 24.6,
-   "pred_away_score": 25.9,
-   "home_points": 24.0,
-   "away_points": 36.0,
-   "home_win": 0.0,
-   "pick_correct": false,
-   "log_loss": 0.8421,
-   "brier": 0.324,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.1576,
-   "margin_err": 10.7,
-   "total_err": 9.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401860924,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Fresno State",
-   "away_team": "Oregon State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Fresno State",
-   "p_home": 0.503,
-   "pick_prob": 0.503,
-   "pred_home_score": 28.0,
-   "pred_away_score": 23.4,
-   "home_points": 38.0,
-   "away_points": 22.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.6872,
-   "brier": 0.247,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.2283,
-   "margin_err": 11.4,
-   "total_err": 8.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856734,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Georgia",
-   "away_team": "Florida",
-   "neutral": true,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Georgia",
-   "p_home": 0.8464,
-   "pick_prob": 0.8464,
-   "pred_home_score": 35.3,
-   "pred_away_score": 19.3,
-   "home_points": 27.0,
-   "away_points": 8.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.1668,
-   "brier": 0.0236,
-   "home_log_loss": 0.6931,
-   "d_ll": -0.5264,
-   "margin_err": 3.0,
-   "total_err": 19.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401869846,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Georgia Southern",
-   "away_team": "App State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Georgia Southern",
-   "p_home": 0.6903,
-   "pick_prob": 0.6903,
-   "pred_home_score": 29.7,
-   "pred_away_score": 24.9,
-   "home_points": 19.0,
-   "away_points": 3.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.3706,
-   "brier": 0.0959,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.0882,
-   "margin_err": 11.2,
-   "total_err": 32.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401869944,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Georgia State",
-   "away_team": "Coastal Carolina",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Georgia State",
-   "p_home": 0.7115,
-   "pick_prob": 0.7115,
-   "pred_home_score": 32.7,
-   "pred_away_score": 25.0,
-   "home_points": 20.0,
-   "away_points": 31.0,
-   "home_win": 0.0,
-   "pick_correct": false,
-   "log_loss": 1.2431,
-   "brier": 0.5062,
-   "home_log_loss": 0.9997,
-   "d_ll": 0.2434,
-   "margin_err": 18.7,
-   "total_err": 6.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858501,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Indiana",
-   "away_team": "Minnesota",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Indiana",
-   "p_home": 0.9362,
-   "pick_prob": 0.9362,
-   "pred_home_score": 34.8,
-   "pred_away_score": 11.7,
-   "home_points": 23.0,
-   "away_points": 16.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.0659,
-   "brier": 0.0041,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.3929,
-   "margin_err": 16.1,
-   "total_err": 7.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858502,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Iowa",
-   "away_team": "Wisconsin",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Iowa",
-   "p_home": 0.6388,
-   "pick_prob": 0.6388,
-   "pred_home_score": 24.4,
-   "pred_away_score": 16.3,
-   "home_points": 30.0,
-   "away_points": 0.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4482,
-   "brier": 0.1305,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.0107,
-   "margin_err": 21.9,
-   "total_err": 10.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856847,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Iowa State",
-   "away_team": "Oklahoma State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Iowa State",
-   "p_home": 0.5041,
-   "pick_prob": 0.5041,
-   "pred_home_score": 29.3,
-   "pred_away_score": 24.4,
-   "home_points": 51.0,
-   "away_points": 49.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.685,
-   "brier": 0.2459,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.2261,
-   "margin_err": 2.9,
-   "total_err": 46.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401871059,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Liberty",
-   "away_team": "Florida International",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Liberty",
-   "p_home": 0.7834,
-   "pick_prob": 0.7834,
-   "pred_home_score": 31.4,
-   "pred_away_score": 18.9,
-   "home_points": 49.0,
-   "away_points": 10.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.2441,
-   "brier": 0.0469,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.2148,
-   "margin_err": 26.5,
-   "total_err": 8.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858283,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Louisville",
-   "away_team": "Stanford",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Louisville",
-   "p_home": 0.8877,
-   "pick_prob": 0.8877,
-   "pred_home_score": 35.2,
-   "pred_away_score": 21.3,
-   "home_points": 52.0,
-   "away_points": 24.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.1191,
-   "brier": 0.0126,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.3397,
-   "margin_err": 14.1,
-   "total_err": 19.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858503,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Maryland",
-   "away_team": "Illinois",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Illinois",
-   "p_home": 0.3157,
-   "pick_prob": 0.6843,
-   "pred_home_score": 21.2,
-   "pred_away_score": 33.2,
-   "home_points": 17.0,
-   "away_points": 20.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.3794,
-   "brier": 0.0997,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.6203,
-   "margin_err": 9.0,
-   "total_err": 17.4,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401862814,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Memphis",
-   "away_team": "Army",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Memphis",
-   "p_home": 0.6271,
-   "pick_prob": 0.6271,
-   "pred_home_score": 27.3,
-   "pred_away_score": 27.0,
-   "home_points": 49.0,
-   "away_points": 22.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4666,
-   "brier": 0.1391,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.0078,
-   "margin_err": 26.7,
-   "total_err": 16.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858277,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "NC State",
-   "away_team": "California",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "NC State",
-   "p_home": 0.7686,
-   "pick_prob": 0.7686,
-   "pred_home_score": 32.8,
-   "pred_away_score": 23.4,
-   "home_points": 31.0,
-   "away_points": 10.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.2632,
-   "brier": 0.0535,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.1957,
-   "margin_err": 11.6,
-   "total_err": 15.2,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401859185,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Navy",
-   "away_team": "Notre Dame",
-   "neutral": true,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Notre Dame",
-   "p_home": 0.1035,
-   "pick_prob": 0.8965,
-   "pred_home_score": 16.3,
-   "pred_away_score": 39.4,
-   "home_points": 13.0,
-   "away_points": 35.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.1093,
-   "brier": 0.0107,
-   "home_log_loss": 0.6931,
-   "d_ll": -0.5839,
-   "margin_err": 1.1,
-   "total_err": 7.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858504,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Nebraska",
-   "away_team": "Washington",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Nebraska",
-   "p_home": 0.6247,
-   "pick_prob": 0.6247,
-   "pred_home_score": 26.4,
-   "pred_away_score": 23.7,
-   "home_points": 10.0,
-   "away_points": 17.0,
-   "home_win": 0.0,
-   "pick_correct": false,
-   "log_loss": 0.98,
-   "brier": 0.3903,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.0196,
-   "margin_err": 9.7,
-   "total_err": 23.1,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858282,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "North Carolina",
-   "away_team": "Miami",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Miami",
-   "p_home": 0.1298,
-   "pick_prob": 0.8702,
-   "pred_home_score": 17.3,
-   "pred_away_score": 35.6,
-   "home_points": 35.0,
-   "away_points": 38.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.139,
-   "brier": 0.0168,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.8606,
-   "margin_err": 15.3,
-   "total_err": 20.1,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401864531,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "North Dakota State",
-   "away_team": "UTEP",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "North Dakota State",
-   "p_home": 0.9323,
-   "pick_prob": 0.9323,
-   "pred_home_score": 36.6,
-   "pred_away_score": 12.7,
-   "home_points": 31.0,
-   "away_points": 7.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.0701,
-   "brier": 0.0046,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.3888,
-   "margin_err": 0.1,
-   "total_err": 11.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856736,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Oklahoma",
-   "away_team": "South Carolina",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Oklahoma",
-   "p_home": 0.6727,
-   "pick_prob": 0.6727,
-   "pred_home_score": 27.3,
-   "pred_away_score": 20.4,
-   "home_points": 25.0,
-   "away_points": 42.0,
-   "home_win": 0.0,
-   "pick_correct": false,
-   "log_loss": 1.1169,
-   "brier": 0.4525,
-   "home_log_loss": 0.9997,
-   "d_ll": 0.1172,
-   "margin_err": 23.9,
-   "total_err": 19.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401871096,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Old Dominion",
-   "away_team": "Marshall",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Marshall",
-   "p_home": 0.4863,
-   "pick_prob": 0.5137,
-   "pred_home_score": 24.3,
-   "pred_away_score": 26.2,
-   "home_points": 23.0,
-   "away_points": 36.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.6661,
-   "brier": 0.2365,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.3336,
-   "margin_err": 11.1,
-   "total_err": 8.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856735,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Ole Miss",
-   "away_team": "Auburn",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Ole Miss",
-   "p_home": 0.8337,
-   "pick_prob": 0.8337,
-   "pred_home_score": 35.2,
-   "pred_away_score": 18.3,
-   "home_points": 45.0,
-   "away_points": 15.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.1819,
-   "brier": 0.0277,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.277,
-   "margin_err": 13.1,
-   "total_err": 6.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858505,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Oregon",
-   "away_team": "Northwestern",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Oregon",
-   "p_home": 0.6489,
-   "pick_prob": 0.6489,
-   "pred_home_score": 27.8,
-   "pred_away_score": 21.9,
-   "home_points": 34.0,
-   "away_points": 26.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4325,
-   "brier": 0.1233,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.0264,
-   "margin_err": 2.1,
-   "total_err": 10.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858506,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Penn State",
-   "away_team": "Purdue",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Penn State",
-   "p_home": 0.7365,
-   "pick_prob": 0.7365,
-   "pred_home_score": 31.5,
-   "pred_away_score": 22.0,
-   "home_points": 31.0,
-   "away_points": 17.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.3058,
-   "brier": 0.0694,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.153,
-   "margin_err": 4.5,
-   "total_err": 5.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858281,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Pittsburgh",
-   "away_team": "Georgia Tech",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Pittsburgh",
-   "p_home": 0.7567,
-   "pick_prob": 0.7567,
-   "pred_home_score": 33.4,
-   "pred_away_score": 23.2,
-   "home_points": 34.0,
-   "away_points": 11.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.2788,
-   "brier": 0.0592,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.1801,
-   "margin_err": 12.8,
-   "total_err": 11.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858507,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Rutgers",
-   "away_team": "Michigan",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Michigan",
-   "p_home": 0.1996,
-   "pick_prob": 0.8004,
-   "pred_home_score": 19.5,
-   "pred_away_score": 30.6,
-   "home_points": 21.0,
-   "away_points": 28.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.2226,
-   "brier": 0.0398,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.777,
-   "margin_err": 4.1,
-   "total_err": 1.1,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401860909,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "San Diego State",
-   "away_team": "Washington State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "San Diego State",
-   "p_home": 0.6228,
-   "pick_prob": 0.6228,
-   "pred_home_score": 27.0,
-   "pred_away_score": 24.1,
-   "home_points": 26.0,
-   "away_points": 20.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4735,
-   "brier": 0.1423,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.0147,
-   "margin_err": 3.1,
-   "total_err": 5.1,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401864529,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "San José State",
-   "away_team": "New Mexico",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "New Mexico",
-   "p_home": 0.1877,
-   "pick_prob": 0.8123,
-   "pred_home_score": 17.8,
-   "pred_away_score": 32.4,
-   "home_points": 16.0,
-   "away_points": 21.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.2079,
-   "brier": 0.0352,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.7918,
-   "margin_err": 9.6,
-   "total_err": 13.2,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401871097,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "South Alabama",
-   "away_team": "Louisiana Tech",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Louisiana Tech",
-   "p_home": 0.4037,
-   "pick_prob": 0.5963,
-   "pred_home_score": 27.1,
-   "pred_away_score": 28.6,
-   "home_points": 20.0,
-   "away_points": 35.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.517,
-   "brier": 0.163,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.4827,
-   "margin_err": 13.5,
-   "total_err": 0.7,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401862816,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "South Florida",
-   "away_team": "UAB",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "South Florida",
-   "p_home": 0.7573,
-   "pick_prob": 0.7573,
-   "pred_home_score": 33.4,
-   "pred_away_score": 23.2,
-   "home_points": 30.0,
-   "away_points": 10.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.278,
-   "brier": 0.0589,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.1809,
-   "margin_err": 9.8,
-   "total_err": 16.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858278,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Syracuse",
-   "away_team": "SMU",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "SMU",
-   "p_home": 0.2027,
-   "pick_prob": 0.7973,
-   "pred_home_score": 20.2,
-   "pred_away_score": 37.1,
-   "home_points": 30.0,
-   "away_points": 27.0,
-   "home_win": 1.0,
-   "pick_correct": false,
-   "log_loss": 1.596,
-   "brier": 0.6357,
-   "home_log_loss": 0.4589,
-   "d_ll": 1.1372,
-   "margin_err": 19.9,
-   "total_err": 0.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856845,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "TCU",
-   "away_team": "Kansas",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "TCU",
-   "p_home": 0.6487,
-   "pick_prob": 0.6487,
-   "pred_home_score": 31.0,
-   "pred_away_score": 21.3,
-   "home_points": 22.0,
-   "away_points": 16.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4328,
-   "brier": 0.1234,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.0261,
-   "margin_err": 3.7,
-   "total_err": 14.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856737,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Texas",
-   "away_team": "Mississippi State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Texas",
-   "p_home": 0.8165,
-   "pick_prob": 0.8165,
-   "pred_home_score": 36.7,
-   "pred_away_score": 18.6,
-   "home_points": 31.0,
-   "away_points": 3.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.2027,
-   "brier": 0.0337,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.2561,
-   "margin_err": 9.9,
-   "total_err": 21.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401856842,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Texas Tech",
-   "away_team": "Arizona",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Texas Tech",
-   "p_home": 0.6159,
-   "pick_prob": 0.6159,
-   "pred_home_score": 27.9,
-   "pred_away_score": 25.7,
-   "home_points": 34.0,
-   "away_points": 26.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4847,
-   "brier": 0.1475,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.0258,
-   "margin_err": 5.8,
-   "total_err": 6.4,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858508,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "UCLA",
-   "away_team": "Nevada",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "UCLA",
-   "p_home": 0.9441,
-   "pick_prob": 0.9441,
-   "pred_home_score": 37.7,
-   "pred_away_score": 10.7,
-   "home_points": 27.0,
-   "away_points": 0.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.0575,
-   "brier": 0.0031,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.4013,
-   "margin_err": 0.0,
-   "total_err": 21.4,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401871095,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "UL Monroe",
-   "away_team": "Southern Miss",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Southern Miss",
-   "p_home": 0.399,
-   "pick_prob": 0.601,
-   "pred_home_score": 26.0,
-   "pred_away_score": 27.9,
-   "home_points": 21.0,
-   "away_points": 35.0,
-   "home_win": 0.0,
-   "pick_correct": true,
-   "log_loss": 0.5092,
-   "brier": 0.1592,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.4905,
-   "margin_err": 12.1,
-   "total_err": 2.1,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401864530,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "UNLV",
-   "away_team": "Northern Illinois",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "UNLV",
-   "p_home": 0.9231,
-   "pick_prob": 0.9231,
-   "pred_home_score": 38.8,
-   "pred_away_score": 12.9,
-   "home_points": 31.0,
-   "away_points": 24.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.08,
-   "brier": 0.0059,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.3788,
-   "margin_err": 18.9,
-   "total_err": 3.3,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858509,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "USC",
-   "away_team": "Ohio State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Ohio State",
-   "p_home": 0.2461,
-   "pick_prob": 0.7539,
-   "pred_home_score": 19.9,
-   "pred_away_score": 31.7,
-   "home_points": 30.0,
-   "away_points": 18.0,
-   "home_win": 1.0,
-   "pick_correct": false,
-   "log_loss": 1.402,
-   "brier": 0.5684,
-   "home_log_loss": 0.4589,
-   "d_ll": 0.9432,
-   "margin_err": 23.8,
-   "total_err": 3.6,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401860910,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Utah State",
-   "away_team": "Colorado State",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Utah State",
-   "p_home": 0.6381,
-   "pick_prob": 0.6381,
-   "pred_home_score": 33.0,
-   "pred_away_score": 25.5,
-   "home_points": 31.0,
-   "away_points": 14.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.4493,
-   "brier": 0.131,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.0096,
-   "margin_err": 9.5,
-   "total_err": 13.5,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401858284,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Wake Forest",
-   "away_team": "Virginia",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Wake Forest",
-   "p_home": 0.8415,
-   "pick_prob": 0.8415,
-   "pred_home_score": 32.6,
-   "pred_away_score": 18.6,
-   "home_points": 51.0,
-   "away_points": 7.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.1726,
-   "brier": 0.0251,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.2863,
-   "margin_err": 30.0,
-   "total_err": 6.8,
-   "graded_on": "2026-11-01"
-  },
-  {
-   "game_id": 401866452,
-   "date": "2026-10-31",
-   "season": 2026,
-   "week": 9,
-   "home_team": "Western Michigan",
-   "away_team": "Bowling Green",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "pick": "Western Michigan",
-   "p_home": 0.8946,
-   "pick_prob": 0.8946,
-   "pred_home_score": 33.0,
-   "pred_away_score": 14.7,
-   "home_points": 23.0,
-   "away_points": 10.0,
-   "home_win": 1.0,
-   "pick_correct": true,
-   "log_loss": 0.1114,
-   "brier": 0.0111,
-   "home_log_loss": 0.4589,
-   "d_ll": -0.3475,
-   "margin_err": 5.3,
-   "total_err": 14.7,
-   "graded_on": "2026-11-01"
+   "elo_home_pre": 1358.1,
+   "elo_away_pre": 1349.0,
+   "p_home": 0.6028,
+   "p_home_elo": 0.5843,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Miami (OH)",
+   "pick_prob": 0.6028,
+   "pred_home_score": 25.7,
+   "pred_away_score": 22.3,
+   "pred_total": 48.0,
+   "notes": ""
   }
  ],
+ "graded_today": [],
  "graded_recent": [
   {
    "game_id": 401871072,
@@ -5199,16 +3980,16 @@
     "d_ll_se": 0.05864
    },
    "30d": {
-    "graded": 289,
-    "correct": 196,
-    "accuracy": 0.6782,
-    "log_loss": 0.59,
-    "brier": 0.2025,
-    "home_log_loss": 0.6747,
+    "graded": 286,
+    "correct": 194,
+    "accuracy": 0.6783,
+    "log_loss": 0.5893,
+    "brier": 0.2022,
+    "home_log_loss": 0.6731,
     "avg_margin_err": 12.5,
-    "avg_total_err": 13.5,
-    "d_ll_mean": -0.08465,
-    "d_ll_se": 0.02794
+    "avg_total_err": 13.6,
+    "d_ll_mean": -0.08376,
+    "d_ll_se": 0.02806
    }
   }
  },
@@ -7609,10 +6390,10 @@
  "feeds": {
   "weekly_summaries": {
    "source": "sportsdataverse weekly summaries (team_weeks.csv)",
-   "newest": "2026 week 8",
-   "age_days": 1,
+   "newest": "2026 week 9",
+   "age_days": 0,
    "tolerance_days": 2,
-   "rows": 42022,
+   "rows": 42160,
    "fresh": true
   }
  },
@@ -7653,7 +6434,7 @@
      1559.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1576.2
     ]
    ],
@@ -7691,7 +6472,7 @@
      1498.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1493.5
     ]
    ],
@@ -7733,7 +6514,7 @@
      1675.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1745.2
     ]
    ],
@@ -7775,7 +6556,7 @@
      1228.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1218.7
     ]
    ],
@@ -7817,7 +6598,7 @@
      1492.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1469.6
     ]
    ],
@@ -7855,7 +6636,7 @@
      1484.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1512.4
     ]
    ],
@@ -7897,7 +6678,7 @@
      1411.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1419.2
     ]
    ],
@@ -7935,7 +6716,7 @@
      1396.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1431.2
     ]
    ],
@@ -7977,7 +6758,7 @@
      1266.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1257.9
     ]
    ],
@@ -8019,7 +6800,7 @@
      1026.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1104.0
     ]
    ],
@@ -8061,7 +6842,7 @@
      1452.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1431.7
     ]
    ],
@@ -8099,7 +6880,7 @@
      1234.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1279.2
     ]
    ],
@@ -8137,7 +6918,7 @@
      1481.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1440.4
     ]
    ],
@@ -8175,7 +6956,7 @@
      1221.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1186.8
     ]
    ],
@@ -8213,7 +6994,7 @@
      1462.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1466.2
     ]
    ],
@@ -8255,7 +7036,7 @@
      1497.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1555.5
     ]
    ],
@@ -8293,7 +7074,7 @@
      1416.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1400.0
     ]
    ],
@@ -8331,7 +7112,7 @@
      1148.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1138.8
     ]
    ],
@@ -8369,7 +7150,7 @@
      1503.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1439.9
     ]
    ],
@@ -8407,7 +7188,7 @@
      1692.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1715.1
     ]
    ],
@@ -8445,7 +7226,7 @@
      1135.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1104.8
     ]
    ],
@@ -8483,7 +7264,7 @@
      1292.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1349.7
     ]
    ],
@@ -8521,7 +7302,7 @@
      1208.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1269.5
     ]
    ],
@@ -8559,7 +7340,7 @@
      1330.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1349.0
     ]
    ],
@@ -8597,7 +7378,7 @@
      1714.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1745.6
     ]
    ],
@@ -8635,7 +7416,7 @@
      1389.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1362.3
     ]
    ],
@@ -8673,7 +7454,7 @@
      1331.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1365.6
     ]
    ],
@@ -8711,7 +7492,7 @@
      1579.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1574.0
     ]
    ],
@@ -8749,7 +7530,7 @@
      1823.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1849.1
     ]
    ],
@@ -8787,7 +7568,7 @@
      1612.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1622.0
     ]
    ],
@@ -8825,7 +7606,7 @@
      1368.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1343.3
     ]
    ],
@@ -8863,7 +7644,7 @@
      1464.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1439.9
     ]
    ],
@@ -8901,7 +7682,7 @@
      1334.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1275.2
     ]
    ],
@@ -8939,7 +7720,7 @@
      1695.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1628.3
     ]
    ],
@@ -8977,7 +7758,7 @@
      1035.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1027.7
     ]
    ],
@@ -9015,7 +7796,7 @@
      1437.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1420.1
     ]
    ],
@@ -9053,7 +7834,7 @@
      1402.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1391.4
     ]
    ],
@@ -9091,7 +7872,7 @@
      1449.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1485.5
     ]
    ],
@@ -9129,7 +7910,7 @@
      1880.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1885.7
     ]
    ],
@@ -9167,7 +7948,7 @@
      1484.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1521.6
     ]
    ],
@@ -9205,7 +7986,7 @@
      1783.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1802.1
     ]
    ],
@@ -9243,7 +8024,7 @@
      1413.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1428.7
     ]
    ],
@@ -9281,7 +8062,7 @@
      1695.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1674.8
     ]
    ],
@@ -9319,7 +8100,7 @@
      1454.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1417.3
     ]
    ],
@@ -9357,7 +8138,7 @@
      1455.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1497.6
     ]
    ],
@@ -9395,7 +8176,7 @@
      1249.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1309.2
     ]
    ],
@@ -9433,7 +8214,7 @@
      1342.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1383.7
     ]
    ],
@@ -9475,7 +8256,7 @@
      1941.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1946.9
     ]
    ],
@@ -9513,7 +8294,7 @@
      1565.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1578.5
     ]
    ],
@@ -9551,7 +8332,7 @@
      1634.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1593.3
     ]
    ],
@@ -9589,7 +8370,7 @@
      1487.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1495.7
     ]
    ],
@@ -9627,7 +8408,7 @@
      1470.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1425.4
     ]
    ],
@@ -9665,7 +8446,7 @@
      1544.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1486.8
     ]
    ],
@@ -9707,7 +8488,7 @@
      1188.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1177.8
     ]
    ],
@@ -9749,7 +8530,7 @@
      1677.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1632.7
     ]
    ],
@@ -9787,7 +8568,7 @@
      1463.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1489.5
     ]
    ],
@@ -9829,7 +8610,7 @@
      1519.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1546.4
     ]
    ],
@@ -9867,7 +8648,7 @@
      1346.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1358.1
     ]
    ],
@@ -9905,7 +8686,7 @@
      1940.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1871.1
     ]
    ],
@@ -9943,7 +8724,7 @@
      1135.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1166.1
     ]
    ],
@@ -9981,7 +8762,7 @@
      1625.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1692.5
     ]
    ],
@@ -10023,7 +8804,7 @@
      1236.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1159.4
     ]
    ],
@@ -10061,7 +8842,7 @@
      1683.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1709.1
     ]
    ],
@@ -10099,7 +8880,7 @@
      1533.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1547.7
     ]
    ],
@@ -10137,7 +8918,7 @@
      1381.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1425.9
     ]
    ],
@@ -10175,7 +8956,7 @@
      1238.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1223.3
     ]
    ],
@@ -10213,7 +8994,7 @@
      1893.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1908.4
     ]
    ],
@@ -10251,7 +9032,7 @@
      1571.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1555.8
     ]
    ],
@@ -10289,7 +9070,7 @@
      1541.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1604.9
     ]
    ],
@@ -10327,7 +9108,7 @@
      1786.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1752.2
     ]
    ],
@@ -10365,7 +9146,7 @@
      1820.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1834.6
     ]
    ],
@@ -10403,7 +9184,7 @@
      1500.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1495.6
     ]
    ],
@@ -10441,7 +9222,7 @@
      1582.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1556.7
     ]
    ],
@@ -10479,7 +9260,7 @@
      1491.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1462.1
     ]
    ],
@@ -10517,7 +9298,7 @@
      1642.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1672.0
     ]
    ],
@@ -10555,7 +9336,7 @@
      1486.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1496.7
     ]
    ],
@@ -10593,7 +9374,7 @@
      1732.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1758.2
     ]
    ],
@@ -10631,7 +9412,7 @@
      1665.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1670.7
     ]
    ],
@@ -10669,7 +9450,7 @@
      1583.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1607.3
     ]
    ],
@@ -10707,7 +9488,7 @@
      1397.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1437.8
     ]
    ],
@@ -10745,7 +9526,7 @@
      1148.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1138.2
     ]
    ],
@@ -10783,7 +9564,7 @@
      1399.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1392.2
     ]
    ],
@@ -10821,7 +9602,7 @@
      1579.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1637.8
     ]
    ],
@@ -10859,7 +9640,7 @@
      1380.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1344.5
     ]
    ],
@@ -10897,7 +9678,7 @@
      1327.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1314.2
     ]
    ],
@@ -10935,7 +9716,7 @@
      1497.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1483.4
     ]
    ],
@@ -10973,7 +9754,7 @@
      1514.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1483.1
     ]
    ],
@@ -11011,7 +9792,7 @@
      1735.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1769.7
     ]
    ],
@@ -11049,7 +9830,7 @@
      1048.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1044.8
     ]
    ],
@@ -11087,7 +9868,7 @@
      1226.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1267.9
     ]
    ],
@@ -11125,7 +9906,7 @@
      1242.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1212.0
     ]
    ],
@@ -11163,7 +9944,7 @@
      1291.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1352.1
     ]
    ],
@@ -11205,7 +9986,7 @@
      1310.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1270.0
     ]
    ],
@@ -11243,7 +10024,7 @@
      1631.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1612.8
     ]
    ],
@@ -11281,7 +10062,7 @@
      1183.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1212.2
     ]
    ],
@@ -11319,7 +10100,7 @@
      1564.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1538.5
     ]
    ],
@@ -11357,7 +10138,7 @@
      1722.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1756.4
     ]
    ],
@@ -11395,7 +10176,7 @@
      1535.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1500.9
     ]
    ],
@@ -11433,7 +10214,7 @@
      1324.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1354.8
     ]
    ],
@@ -11471,7 +10252,7 @@
      1349.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1380.1
     ]
    ],
@@ -11509,7 +10290,7 @@
      1179.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1172.1
     ]
    ],
@@ -11547,7 +10328,7 @@
      1500.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1525.8
     ]
    ],
@@ -11585,7 +10366,7 @@
      1292.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1266.7
     ]
    ],
@@ -11623,7 +10404,7 @@
      1241.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1180.4
     ]
    ],
@@ -11661,7 +10442,7 @@
      1415.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1452.1
     ]
    ],
@@ -11699,7 +10480,7 @@
      1376.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1332.0
     ]
    ],
@@ -11737,7 +10518,7 @@
      1280.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1325.1
     ]
    ],
@@ -11775,7 +10556,7 @@
      1074.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1045.4
     ]
    ],
@@ -11813,7 +10594,7 @@
      1749.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1788.7
     ]
    ],
@@ -11851,7 +10632,7 @@
      1556.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1597.8
     ]
    ],
@@ -11889,7 +10670,7 @@
      1548.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1534.8
     ]
    ],
@@ -11927,7 +10708,7 @@
      1138.9
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1097.3
     ]
    ],
@@ -11965,7 +10746,7 @@
      1524.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1562.2
     ]
    ],
@@ -12003,7 +10784,7 @@
      1666.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1682.7
     ]
    ],
@@ -12045,7 +10826,7 @@
      1464.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1474.7
     ]
    ],
@@ -12083,7 +10864,7 @@
      1454.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1498.3
     ]
    ],
@@ -12121,7 +10902,7 @@
      1609.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1594.0
     ]
    ],
@@ -12159,7 +10940,7 @@
      1373.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1360.7
     ]
    ],
@@ -12197,7 +10978,7 @@
      1742.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1755.7
     ]
    ],
@@ -12235,7 +11016,7 @@
      1344.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1334.4
     ]
    ],
@@ -12273,7 +11054,7 @@
      1678.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1652.2
     ]
    ],
@@ -12311,7 +11092,7 @@
      1468.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1423.8
     ]
    ],
@@ -12349,7 +11130,7 @@
      1736.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1702.5
     ]
    ],
@@ -12391,7 +11172,7 @@
      1304.2
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1332.8
     ]
    ],
@@ -12429,7 +11210,7 @@
      1550.6
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1537.5
     ]
    ],
@@ -12467,7 +11248,7 @@
      1543.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1553.1
     ]
    ],
@@ -12505,7 +11286,7 @@
      1294.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1282.2
     ]
    ],
@@ -12547,7 +11328,7 @@
      1368.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1340.2
     ]
    ],
@@ -12585,7 +11366,7 @@
      1702.8
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1708.4
     ]
    ],
@@ -12623,7 +11404,7 @@
      1269.5
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1263.9
     ]
    ],
@@ -12661,7 +11442,7 @@
      1314.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1257.1
     ]
    ],
@@ -12699,7 +11480,7 @@
      1638.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1679.6
     ]
    ],
@@ -12741,7 +11522,7 @@
      1304.3
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1275.8
     ]
    ],
@@ -12779,7 +11560,7 @@
      1823.7
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1839.5
     ]
    ],
@@ -12817,7 +11598,7 @@
      1649.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1669.6
     ]
    ],
@@ -12855,7 +11636,7 @@
      1816.4
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1824.1
     ]
    ],
@@ -12893,7 +11674,7 @@
      1641.1
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1606.9
     ]
    ],
@@ -12931,7 +11712,7 @@
      1698.0
     ],
     [
-     "2026-11-01",
+     "2026-11-02",
      1656.6
     ]
    ]
@@ -12940,11 +11721,11 @@
  "elo_projection": {
   "season": 2026,
   "sims": 10000,
-  "from_date": "2026-11-01",
+  "from_date": "2026-11-02",
   "teams": {
    "Air Force": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1425.9,
      1425.9,
      1425.9
@@ -13000,7 +11781,7 @@
    ],
    "Akron": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1104.8,
      1104.8,
      1104.8
@@ -13056,7 +11837,7 @@
    ],
    "Alabama": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1802.1,
      1802.1,
      1802.1
@@ -13112,7 +11893,7 @@
    ],
    "App State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1344.5,
      1344.5,
      1344.5
@@ -13168,7 +11949,7 @@
    ],
    "Arizona": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1702.5,
      1702.5,
      1702.5
@@ -13224,7 +12005,7 @@
    ],
    "Arizona State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1537.5,
      1537.5,
      1537.5
@@ -13280,7 +12061,7 @@
    ],
    "Arkansas": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1483.1,
      1483.1,
      1483.1
@@ -13336,7 +12117,7 @@
    ],
    "Arkansas State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1380.1,
      1380.1,
      1380.1
@@ -13392,7 +12173,7 @@
    ],
    "Army": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1486.8,
      1486.8,
      1486.8
@@ -13448,7 +12229,7 @@
    ],
    "Auburn": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1555.8,
      1555.8,
      1555.8
@@ -13504,7 +12285,7 @@
    ],
    "BYU": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1755.7,
      1755.7,
      1755.7
@@ -13560,7 +12341,7 @@
    ],
    "Ball State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1166.1,
      1166.1,
      1166.1
@@ -13616,7 +12397,7 @@
    ],
    "Baylor": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1604.9,
      1604.9,
      1604.9
@@ -13672,7 +12453,7 @@
    ],
    "Boise State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1670.7,
      1670.7,
      1670.7
@@ -13728,7 +12509,7 @@
    ],
    "Boston College": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1462.1,
      1462.1,
      1462.1
@@ -13784,7 +12565,7 @@
    ],
    "Bowling Green": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1177.8,
      1177.8,
      1177.8
@@ -13840,7 +12621,7 @@
    ],
    "Buffalo": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1349.0,
      1349.0,
      1349.0
@@ -13896,7 +12677,7 @@
    ],
    "California": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1340.2,
      1340.2,
      1340.2
@@ -13952,7 +12733,7 @@
    ],
    "Central Michigan": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1282.2,
      1282.2,
      1282.2
@@ -14008,7 +12789,7 @@
    ],
    "Charlotte": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1138.2,
      1138.2,
      1138.2
@@ -14064,7 +12845,7 @@
    ],
    "Cincinnati": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1556.7,
      1556.7,
      1556.7
@@ -14120,7 +12901,7 @@
    ],
    "Clemson": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1597.8,
      1597.8,
      1597.8
@@ -14176,7 +12957,7 @@
    ],
    "Coastal Carolina": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1309.2,
      1309.2,
      1309.2
@@ -14232,7 +13013,7 @@
    ],
    "Colorado": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1365.6,
      1365.6,
      1365.6
@@ -14288,7 +13069,7 @@
    ],
    "Colorado State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1212.0,
      1212.0,
      1212.0
@@ -14344,7 +13125,7 @@
    ],
    "Delaware": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1349.7,
      1349.7,
      1349.7
@@ -14400,7 +13181,7 @@
    ],
    "Duke": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1672.0,
      1672.0,
      1672.0
@@ -14456,7 +13237,7 @@
    ],
    "East Carolina": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1428.7,
      1428.7,
      1428.7
@@ -14512,7 +13293,7 @@
    ],
    "Eastern Michigan": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1257.9,
      1257.9,
      1257.9
@@ -14568,7 +13349,7 @@
    ],
    "Florida": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1594.0,
      1594.0,
      1594.0
@@ -14624,7 +13405,7 @@
    ],
    "Florida Atlantic": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1360.7,
      1360.7,
      1360.7
@@ -14680,7 +13461,7 @@
    ],
    "Florida International": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1266.7,
      1266.7,
      1266.7
@@ -14736,7 +13517,7 @@
    ],
    "Florida State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1440.4,
      1440.4,
      1440.4
@@ -14792,7 +13573,7 @@
    ],
    "Fresno State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1521.6,
      1521.6,
      1521.6
@@ -14848,7 +13629,7 @@
    ],
    "Georgia": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1908.4,
      1908.4,
      1908.4
@@ -14904,7 +13685,7 @@
    ],
    "Georgia Southern": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1452.1,
      1452.1,
      1452.1
@@ -14960,7 +13741,7 @@
    ],
    "Georgia State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1275.2,
      1275.2,
      1275.2
@@ -15016,7 +13797,7 @@
    ],
    "Georgia Tech": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1362.3,
      1362.3,
      1362.3
@@ -15072,7 +13853,7 @@
    ],
    "Hawai'i": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1279.2,
      1279.2,
      1279.2
@@ -15128,7 +13909,7 @@
    ],
    "Houston": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1674.8,
      1674.8,
      1674.8
@@ -15184,7 +13965,7 @@
    ],
    "Illinois": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1622.0,
      1622.0,
      1622.0
@@ -15240,7 +14021,7 @@
    ],
    "Indiana": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1946.9,
      1946.9,
      1946.9
@@ -15296,7 +14077,7 @@
    ],
    "Iowa": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1769.7,
      1769.7,
      1769.7
@@ -15352,7 +14133,7 @@
    ],
    "Iowa State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1547.7,
      1547.7,
      1547.7
@@ -15408,7 +14189,7 @@
    ],
    "Jacksonville State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1431.2,
      1431.2,
      1431.2
@@ -15464,7 +14245,7 @@
    ],
    "James Madison": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1632.7,
      1632.7,
      1632.7
@@ -15520,7 +14301,7 @@
    ],
    "Kansas": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1420.1,
      1420.1,
      1420.1
@@ -15576,7 +14357,7 @@
    ],
    "Kansas State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1500.9,
      1500.9,
      1500.9
@@ -15632,7 +14413,7 @@
    ],
    "Kennesaw State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1269.5,
      1269.5,
      1269.5
@@ -15688,7 +14469,7 @@
    ],
    "Kent State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1159.4,
      1159.4,
      1159.4
@@ -15744,7 +14525,7 @@
    ],
    "Kentucky": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1709.1,
      1709.1,
      1709.1
@@ -15800,7 +14581,7 @@
    ],
    "LSU": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1788.7,
      1788.7,
      1788.7
@@ -15856,7 +14637,7 @@
    ],
    "Liberty": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1489.5,
      1489.5,
      1489.5
@@ -15912,7 +14693,7 @@
    ],
    "Louisiana": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1423.8,
      1423.8,
      1423.8
@@ -15968,7 +14749,7 @@
    ],
    "Louisiana Tech": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1498.3,
      1498.3,
      1498.3
@@ -16024,7 +14805,7 @@
    ],
    "Louisville": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1669.6,
      1669.6,
      1669.6
@@ -16080,7 +14861,7 @@
    ],
    "Marshall": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1437.8,
      1437.8,
      1437.8
@@ -16136,7 +14917,7 @@
    ],
    "Maryland": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1334.4,
      1334.4,
      1334.4
@@ -16192,7 +14973,7 @@
    ],
    "Massachusetts": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1138.8,
      1138.8,
      1138.8
@@ -16248,7 +15029,7 @@
    ],
    "Memphis": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1555.5,
      1555.5,
      1555.5
@@ -16304,7 +15085,7 @@
    ],
    "Miami": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1885.7,
      1885.7,
      1885.7
@@ -16360,7 +15141,7 @@
    ],
    "Miami (OH)": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1358.1,
      1358.1,
      1358.1
@@ -16416,7 +15197,7 @@
    ],
    "Michigan": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1682.7,
      1682.7,
      1682.7
@@ -16472,7 +15253,7 @@
    ],
    "Michigan State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1391.4,
      1391.4,
      1391.4
@@ -16528,7 +15309,7 @@
    ],
    "Middle Tennessee": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1180.4,
      1180.4,
      1180.4
@@ -16584,7 +15365,7 @@
    ],
    "Minnesota": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1574.0,
      1574.0,
      1574.0
@@ -16640,7 +15421,7 @@
    ],
    "Mississippi State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1534.8,
      1534.8,
      1534.8
@@ -16696,7 +15477,7 @@
    ],
    "Missouri": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1745.6,
      1745.6,
      1745.6
@@ -16752,7 +15533,7 @@
    ],
    "Missouri State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1212.2,
      1212.2,
      1212.2
@@ -16808,7 +15589,7 @@
    ],
    "NC State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1512.4,
      1512.4,
      1512.4
@@ -16864,7 +15645,7 @@
    ],
    "Navy": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1392.2,
      1392.2,
      1392.2
@@ -16920,7 +15701,7 @@
    ],
    "Nebraska": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1593.3,
      1593.3,
      1593.3
@@ -16976,7 +15757,7 @@
    ],
    "Nevada": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1263.9,
      1263.9,
      1263.9
@@ -17032,7 +15813,7 @@
    ],
    "New Mexico": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1553.1,
      1553.1,
      1553.1
@@ -17088,7 +15869,7 @@
    ],
    "New Mexico State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1186.8,
      1186.8,
      1186.8
@@ -17144,7 +15925,7 @@
    ],
    "North Carolina": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1493.5,
      1493.5,
      1493.5
@@ -17200,7 +15981,7 @@
    ],
    "North Dakota State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1419.2,
      1419.2,
      1419.2
@@ -17256,7 +16037,7 @@
    ],
    "North Texas": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1578.5,
      1578.5,
      1578.5
@@ -17312,7 +16093,7 @@
    ],
    "Northern Illinois": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1044.8,
      1044.8,
      1044.8
@@ -17368,7 +16149,7 @@
    ],
    "Northwestern": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1652.2,
      1652.2,
      1652.2
@@ -17424,7 +16205,7 @@
    ],
    "Notre Dame": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1824.1,
      1824.1,
      1824.1
@@ -17480,7 +16261,7 @@
    ],
    "Ohio": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1495.7,
      1495.7,
      1495.7
@@ -17536,7 +16317,7 @@
    ],
    "Ohio State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1871.1,
      1871.1,
      1871.1
@@ -17592,7 +16373,7 @@
    ],
    "Oklahoma": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1628.3,
      1628.3,
      1628.3
@@ -17648,7 +16429,7 @@
    ],
    "Oklahoma State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1483.4,
      1483.4,
      1483.4
@@ -17704,7 +16485,7 @@
    ],
    "Old Dominion": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1270.0,
      1270.0,
      1270.0
@@ -17760,7 +16541,7 @@
    ],
    "Ole Miss": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1839.5,
      1839.5,
      1839.5
@@ -17816,7 +16597,7 @@
    ],
    "Oregon": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1758.2,
      1758.2,
      1758.2
@@ -17872,7 +16653,7 @@
    ],
    "Oregon State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1417.3,
      1417.3,
      1417.3
@@ -17928,7 +16709,7 @@
    ],
    "Penn State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1607.3,
      1607.3,
      1607.3
@@ -17984,7 +16765,7 @@
    ],
    "Pittsburgh": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1546.4,
      1546.4,
      1546.4
@@ -18040,7 +16821,7 @@
    ],
    "Purdue": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1439.9,
      1439.9,
      1439.9
@@ -18096,7 +16877,7 @@
    ],
    "Rice": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1172.1,
      1172.1,
      1172.1
@@ -18152,7 +16933,7 @@
    ],
    "Rutgers": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1400.0,
      1400.0,
      1400.0
@@ -18208,7 +16989,7 @@
    ],
    "SMU": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1656.6,
      1656.6,
      1656.6
@@ -18264,7 +17045,7 @@
    ],
    "Sacramento State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1104.0,
      1104.0,
      1104.0
@@ -18320,7 +17101,7 @@
    ],
    "Sam Houston": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1045.4,
      1045.4,
      1045.4
@@ -18376,7 +17157,7 @@
    ],
    "San Diego State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1332.8,
      1332.8,
      1332.8
@@ -18432,7 +17213,7 @@
    ],
    "San José State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1218.7,
      1218.7,
      1218.7
@@ -18488,7 +17269,7 @@
    ],
    "South Alabama": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1332.0,
      1332.0,
      1332.0
@@ -18544,7 +17325,7 @@
    ],
    "South Carolina": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1692.5,
      1692.5,
      1692.5
@@ -18600,7 +17381,7 @@
    ],
    "South Florida": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1525.8,
      1525.8,
      1525.8
@@ -18656,7 +17437,7 @@
    ],
    "Southern Miss": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1267.9,
      1267.9,
      1267.9
@@ -18712,7 +17493,7 @@
    ],
    "Stanford": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1431.7,
      1431.7,
      1431.7
@@ -18768,7 +17549,7 @@
    ],
    "Syracuse": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1383.7,
      1383.7,
      1383.7
@@ -18824,7 +17605,7 @@
    ],
    "TCU": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1576.2,
      1576.2,
      1576.2
@@ -18880,7 +17661,7 @@
    ],
    "Temple": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1223.3,
      1223.3,
      1223.3
@@ -18936,7 +17717,7 @@
    ],
    "Tennessee": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1752.2,
      1752.2,
      1752.2
@@ -18992,7 +17773,7 @@
    ],
    "Texas": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1834.6,
      1834.6,
      1834.6
@@ -19048,7 +17829,7 @@
    ],
    "Texas A&M": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1612.8,
      1612.8,
      1612.8
@@ -19104,7 +17885,7 @@
    ],
    "Texas State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1495.6,
      1495.6,
      1495.6
@@ -19160,7 +17941,7 @@
    ],
    "Texas Tech": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1756.4,
      1756.4,
      1756.4
@@ -19216,7 +17997,7 @@
    ],
    "Toledo": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1485.5,
      1485.5,
      1485.5
@@ -19272,7 +18053,7 @@
    ],
    "Troy": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1325.1,
      1325.1,
      1325.1
@@ -19328,7 +18109,7 @@
    ],
    "Tulane": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1496.7,
      1496.7,
      1496.7
@@ -19384,7 +18165,7 @@
    ],
    "Tulsa": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1314.2,
      1314.2,
      1314.2
@@ -19440,7 +18221,7 @@
    ],
    "UAB": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1343.3,
      1343.3,
      1343.3
@@ -19496,7 +18277,7 @@
    ],
    "UCF": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1439.9,
      1439.9,
      1439.9
@@ -19552,7 +18333,7 @@
    ],
    "UCLA": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1708.4,
      1708.4,
      1708.4
@@ -19608,7 +18389,7 @@
    ],
    "UConn": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1425.4,
      1425.4,
      1425.4
@@ -19664,7 +18445,7 @@
    ],
    "UL Monroe": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1097.3,
      1097.3,
      1097.3
@@ -19720,7 +18501,7 @@
    ],
    "UNLV": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1466.2,
      1466.2,
      1466.2
@@ -19776,7 +18557,7 @@
    ],
    "USC": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1745.2,
      1745.2,
      1745.2
@@ -19832,7 +18613,7 @@
    ],
    "UTEP": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1027.7,
      1027.7,
      1027.7
@@ -19888,7 +18669,7 @@
    ],
    "UTSA": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1637.8,
      1637.8,
      1637.8
@@ -19944,7 +18725,7 @@
    ],
    "Utah": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1849.1,
      1849.1,
      1849.1
@@ -20000,7 +18781,7 @@
    ],
    "Utah State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1354.8,
      1354.8,
      1354.8
@@ -20056,7 +18837,7 @@
    ],
    "Vanderbilt": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1538.5,
      1538.5,
      1538.5
@@ -20112,7 +18893,7 @@
    ],
    "Virginia": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1469.6,
      1469.6,
      1469.6
@@ -20168,7 +18949,7 @@
    ],
    "Virginia Tech": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1562.2,
      1562.2,
      1562.2
@@ -20224,7 +19005,7 @@
    ],
    "Wake Forest": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1715.1,
      1715.1,
      1715.1
@@ -20280,7 +19061,7 @@
    ],
    "Washington": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1679.6,
      1679.6,
      1679.6
@@ -20336,7 +19117,7 @@
    ],
    "Washington State": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1275.8,
      1275.8,
      1275.8
@@ -20392,7 +19173,7 @@
    ],
    "West Virginia": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1497.6,
      1497.6,
      1497.6
@@ -20448,7 +19229,7 @@
    ],
    "Western Kentucky": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1257.1,
      1257.1,
      1257.1
@@ -20504,7 +19285,7 @@
    ],
    "Western Michigan": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1474.7,
      1474.7,
      1474.7
@@ -20560,7 +19341,7 @@
    ],
    "Wisconsin": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1606.9,
      1606.9,
      1606.9
@@ -20616,7 +19397,7 @@
    ],
    "Wyoming": [
     [
-     "2026-11-01",
+     "2026-11-02",
      1352.1,
      1352.1,
      1352.1
