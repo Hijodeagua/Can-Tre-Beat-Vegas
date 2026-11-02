@@ -3,13 +3,13 @@
  "title": "NFL Elo + efficiency",
  "date": "2026-11-02",
  "kind": "draft",
- "generated_at": "2026-11-02T07:43:16+00:00",
- "summary": "NFL Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-29, 108 graded this season; second stage on (elo+efficiency:random_forest).",
+ "generated_at": "2026-11-02T17:59:51+00:00",
+ "summary": "NFL Elo + efficiency: last pipeline run 2026-11-02, last graded game 2026-11-01, 120 graded this season; second stage on (elo+efficiency:random_forest).",
  "status": {
   "state": "live",
-  "summary": "NFL Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-29, 108 graded this season; second stage on (elo+efficiency:random_forest).",
+  "summary": "NFL Elo + efficiency: last pipeline run 2026-11-02, last graded game 2026-11-01, 120 graded this season; second stage on (elo+efficiency:random_forest).",
   "source": "web/public/data/nfl/latest.json",
-  "as_of": "2026-11-01",
+  "as_of": "2026-11-02",
   "blocks": [
    {
     "kind": "kv",
@@ -21,11 +21,11 @@
      ],
      [
       "Last pipeline run (site JSON)",
-      "2026-11-01"
+      "2026-11-02"
      ],
      [
       "Last graded game",
-      "2026-10-29"
+      "2026-11-01"
      ],
      [
       "Season / week on the site",
@@ -37,11 +37,11 @@
      ],
      [
       "Second-stage training rows",
-      6591
+      6603
      ]
     ],
     "source": "web/public/data/nfl/latest.json",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    },
    {
     "kind": "table",
@@ -56,17 +56,17 @@
     "rows": [
      [
       "nfl-daily.yml",
-      "unavailable",
-      null,
-      null,
-      null
+      "success",
+      "2026-11-02 17:02",
+      "2026-11-02 17:02",
+      "0/10"
      ],
      [
       "weekly-nfl-report.yml",
-      "unavailable",
-      null,
-      null,
-      null
+      "success",
+      "2026-10-31 09:23",
+      "2026-10-31 09:23",
+      "0/9"
      ]
     ],
     "source": "reports/model_review/_runs/<workflow>.json (gh run list)",
@@ -85,21 +85,20 @@
     "rows": [
      [
       "nflverse pbp aggregates (data/nfl/team_games.csv)",
-      "2026-10-29",
+      "2026-11-01",
       0,
       10,
       "fresh"
      ]
     ],
     "source": "web/public/data/nfl/latest.json → feeds",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    },
    {
     "kind": "bullets",
     "heading": "Known failures and caveats",
     "items": [
-     "nfl-daily.yml: run history unavailable (no `reports/model_review/_runs/nfl-daily.yml.json`; the workflow writes it from `gh run list` and a local run has no token)",
-     "weekly-nfl-report.yml: run history unavailable (no `reports/model_review/_runs/weekly-nfl-report.yml.json`; the workflow writes it from `gh run list` and a local run has no token)"
+     "None detected from the committed files."
     ]
    }
   ]
@@ -130,7 +129,7 @@
      ],
      [
       "Tuned Elo parameters",
-      "k=20.0, home_advantage=48.0, season_regression=0.4, playoff_k_mult=1.0, margin_cap=45.0, rest_bonus=20.0, elo_per_point=24.6"
+      "k=20.0, home_advantage=48.0, season_regression=0.4, playoff_k_mult=1.0, margin_cap=45.0, rest_bonus=20.0, elo_per_point=24.5"
      ]
     ]
    },
@@ -314,22 +313,22 @@
     ],
     "rows": [
      [
-      "LAC",
-      1410.3,
-      1522.9,
-      -112.6
-     ],
-     [
       "PHI",
-      1445.7,
+      1419.8,
       1553.0,
-      -107.3
+      -133.2
      ],
      [
-      "MIN",
-      1627.0,
-      1542.5,
-      84.5
+      "LAC",
+      1397.3,
+      1522.9,
+      -125.6
+     ],
+     [
+      "CIN",
+      1559.9,
+      1476.4,
+      83.5
      ],
      [
       "HOU",
@@ -338,28 +337,28 @@
       -81.5
      ],
      [
-      "CIN",
-      1553.9,
-      1476.4,
-      77.5
-     ],
-     [
       "MIA",
-      1387.8,
+      1378.7,
       1458.5,
-      -70.7
+      -79.8
      ],
      [
-      "KC",
-      1561.1,
-      1490.7,
-      70.4
+      "MIN",
+      1609.8,
+      1542.5,
+      67.3
      ],
      [
       "SF",
       1614.9,
       1550.5,
       64.4
+     ],
+     [
+      "PIT",
+      1572.4,
+      1508.3,
+      64.1
      ]
     ]
    },
@@ -375,60 +374,60 @@
     ],
     "rows": [
      [
-      "DAL",
-      1466.7,
-      1429.6,
-      37.1,
-      "23 → 20"
-     ],
-     [
       "PHI",
-      1445.7,
+      1419.8,
       1482.8,
-      -37.1,
-      "17 → 22"
+      -63.0,
+      "17 → 25"
      ],
      [
-      "GB",
-      1537.7,
-      1523.9,
-      13.8,
-      "14 → 14"
+      "WAS",
+      1435.4,
+      1409.5,
+      25.9,
+      "27 → 23"
      ],
      [
-      "CAR",
-      1435.5,
+      "TB",
+      1494.7,
+      1469.7,
+      25.0,
+      "19 → 17"
+     ],
+     [
+      "ATL",
+      1456.4,
+      1481.4,
+      -25.0,
+      "18 → 19"
+     ],
+     [
+      "ARI",
+      1397.0,
+      1378.0,
+      19.0,
+      "30 → 29"
+     ],
+     [
+      "LV",
+      1422.3,
+      1403.5,
+      18.8,
+      "28 → 24"
+     ],
+     [
+      "NYJ",
+      1353.5,
+      1372.3,
+      -18.8,
+      "31 → 31"
+     ],
+     [
+      "CLE",
       1449.3,
-      -13.8,
-      "22 → 23"
-     ],
-     [
-      "SEA",
-      1651.9,
-      1651.9,
-      0.0,
-      "1 → 1"
-     ],
-     [
-      "BUF",
-      1639.6,
-      1639.6,
-      0.0,
-      "2 → 2"
-     ],
-     [
-      "MIN",
-      1627.0,
-      1627.0,
-      0.0,
-      "3 → 3"
-     ],
-     [
-      "SF",
-      1614.9,
-      1614.9,
-      0.0,
-      "4 → 4"
+      1467.8,
+      -18.5,
+      "20 → 20"
      ]
     ]
    },
@@ -444,51 +443,51 @@
     "rows": [
      [
       "PHI",
-      "12.2%",
+      "6.3%",
       "30.2%",
-      "-17.9 pts"
-     ],
-     [
-      "DAL",
-      "32.0%",
-      "16.3%",
-      "+15.7 pts"
-     ],
-     [
-      "GB",
-      "50.2%",
-      "39.9%",
-      "+10.3 pts"
-     ],
-     [
-      "CAR",
-      "24.1%",
-      "32.4%",
-      "-8.3 pts"
+      "-23.9 pts"
      ],
      [
       "TB",
-      "28.9%",
+      "43.4%",
       "25.9%",
-      "+2.9 pts"
+      "+17.4 pts"
      ],
      [
-      "CHI",
-      "66.7%",
-      "69.4%",
-      "-2.7 pts"
+      "ATL",
+      "22.4%",
+      "38.5%",
+      "-16.1 pts"
+     ],
+     [
+      "DET",
+      "75.1%",
+      "61.9%",
+      "+13.2 pts"
+     ],
+     [
+      "CLE",
+      "38.7%",
+      "51.9%",
+      "-13.1 pts"
+     ],
+     [
+      "BAL",
+      "26.7%",
+      "38.0%",
+      "-11.3 pts"
+     ],
+     [
+      "PIT",
+      "78.8%",
+      "68.4%",
+      "+10.4 pts"
      ],
      [
       "NYG",
-      "58.0%",
+      "64.6%",
       "55.4%",
-      "+2.6 pts"
-     ],
-     [
-      "LA",
-      "37.9%",
-      "39.9%",
-      "-2.0 pts"
+      "+9.3 pts"
      ]
     ]
    },
@@ -505,40 +504,40 @@
     "rows": [
      [
       "50-60%",
-      46,
-      8.5,
-      26,
-      11.4
+      50,
+      9.5,
+      30,
+      12.7
      ],
      [
       "60-70%",
-      30,
-      -1.7,
-      14,
-      6.9
+      34,
+      -0.5,
+      18,
+      7.2
      ],
      [
       "70-80%",
-      26,
-      -13.1,
-      14,
-      -24.9
+      27,
+      -11.6,
+      15,
+      -21.5
      ],
      [
       "80-90%",
-      6,
-      15.2,
-      5,
-      15.3
+      9,
+      16.0,
+      8,
+      16.2
      ]
     ]
    }
   ]
  },
  "report_card": {
-  "summary": "Season: 70/108 picks correct (64.8%), log loss 0.6427, Brier 0.2244, always-home log loss 0.6942, paired delta -0.05154 ± 0.02964 (negative = beating the baseline).",
+  "summary": "Season: 80/120 picks correct (66.7%), log loss 0.628, Brier 0.218, always-home log loss 0.6896, paired delta -0.06156 ± 0.02768 (negative = beating the baseline).",
   "source": "data/nfl/predictions/grades.csv",
-  "as_of": "2026-10-29",
+  "as_of": "2026-11-01",
   "blocks": [
    {
     "kind": "table",
@@ -556,33 +555,33 @@
     "rows": [
      [
       "Last 7 days",
-      2,
-      "100.0%",
-      0.5153,
-      0.1627,
-      0.6982,
-      -0.1829,
-      0.0318
+      14,
+      "85.7%",
+      0.499,
+      0.1609,
+      0.6551,
+      -0.1562,
+      0.0612
      ],
      [
       "Last 30 days",
-      59,
-      "66.1%",
-      0.6376,
-      0.2199,
-      0.7098,
-      -0.0722,
-      0.043
+      71,
+      "69.0%",
+      0.6137,
+      0.2099,
+      0.6994,
+      -0.0857,
+      0.0377
      ],
      [
       "Season to date",
-      108,
-      "64.8%",
-      0.6427,
-      0.2244,
-      0.6942,
-      -0.0515,
-      0.0296
+      120,
+      "66.7%",
+      0.628,
+      0.218,
+      0.6896,
+      -0.0616,
+      0.0277
      ]
     ],
     "note": "Δ LL is the paired per-game log-loss difference against the fixed always-pick-home forecast (p = 0.55 NFL / 0.632 CFB, coin flip at neutral sites); negative beats it."
@@ -600,31 +599,31 @@
     "rows": [
      [
       "50-60%",
-      46,
+      50,
       "54.5%",
-      "63.0%",
-      8.5
+      "64.0%",
+      9.5
      ],
      [
       "60-70%",
-      30,
-      "65.0%",
-      "63.3%",
-      -1.7
+      34,
+      "65.2%",
+      "64.7%",
+      -0.5
      ],
      [
       "70-80%",
-      26,
-      "74.6%",
-      "61.5%",
-      -13.1
+      27,
+      "74.5%",
+      "63.0%",
+      -11.6
      ],
      [
       "80-90%",
-      6,
-      "84.8%",
+      9,
+      "84.0%",
       "100.0%",
-      15.2
+      16.0
      ],
      [
       "90-100%",
@@ -648,31 +647,31 @@
     "rows": [
      [
       "50-60%",
-      26,
+      30,
       "54.0%",
-      "65.4%",
-      11.4
+      "66.7%",
+      12.7
      ],
      [
       "60-70%",
-      14,
-      "64.6%",
-      "71.4%",
-      6.9
+      18,
+      "65.0%",
+      "72.2%",
+      7.2
      ],
      [
       "70-80%",
-      14,
-      "74.9%",
-      "50.0%",
-      -24.9
+      15,
+      "74.8%",
+      "53.3%",
+      -21.5
      ],
      [
       "80-90%",
-      5,
-      "84.7%",
+      8,
+      "83.8%",
       "100.0%",
-      15.3
+      16.2
      ],
      [
       "90-100%",
@@ -696,38 +695,38 @@
     "rows": [
      [
       "Home-side picks",
-      68,
-      "61.8%",
-      0.6519,
-      -0.0195
+      79,
+      "64.6%",
+      0.6326,
+      -0.0337
      ],
      [
       "Away-side picks",
-      40,
-      "70.0%",
-      0.627,
-      -0.1059
+      41,
+      "70.7%",
+      0.6193,
+      -0.1152
      ],
      [
       "Picks at 50-65%",
-      62,
-      "62.9%",
-      0.6668,
-      -0.0359
+      67,
+      "64.2%",
+      0.6641,
+      -0.0337
      ],
      [
       "Picks at 65-80%",
-      40,
-      "62.5%",
-      0.677,
-      -0.0185
+      44,
+      "63.6%",
+      0.6658,
+      -0.0299
      ],
      [
       "Picks at 80%+",
-      6,
+      9,
       "100.0%",
-      0.1647,
-      -0.4331
+      0.1746,
+      -0.4233
      ],
      [
       "Neutral site",
@@ -808,15 +807,15 @@
      ],
      [
       "Week 8",
-      1,
-      1,
-      "100.0%",
-      0.4468,
-      -0.1511
+      13,
+      11,
+      "84.6%",
+      0.4925,
+      -0.15165
      ]
     ],
     "source": "web/public/data/nfl/latest.json → ledger.by_week",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    }
   ]
  },
@@ -826,9 +825,8 @@
    {
     "kind": "bullets",
     "items": [
-     "Edge over always-home is not clear at 2 SE on the season (delta log loss -0.0515 ± 0.0296, n=108): the honest baseline comparison to keep in view before adding inputs.",
-     "Calibration: picks quoted at 50-60% hit 63.0% (n=46, mean quote 54.5%), 8 points under-confident. Candidate: a calibration layer on the pick probability, measured on held-out weeks first.",
-     "Calibration: picks quoted at 70-80% hit 61.5% (n=26, mean quote 74.6%), 13 points over-confident. Candidate: a calibration layer on the pick probability, measured on held-out weeks first."
+     "Calibration: picks quoted at 50-60% hit 64.0% (n=50, mean quote 54.5%), 10 points under-confident. Candidate: a calibration layer on the pick probability, measured on held-out weeks first.",
+     "Calibration: picks quoted at 70-80% hit 63.0% (n=27, mean quote 74.5%), 12 points over-confident. Candidate: a calibration layer on the pick probability, measured on held-out weeks first."
     ]
    }
   ]

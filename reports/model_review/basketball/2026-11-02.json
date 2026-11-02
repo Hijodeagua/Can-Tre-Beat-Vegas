@@ -3,7 +3,7 @@
  "title": "Basketball (NBA odds only, no model)",
  "date": "2026-11-02",
  "kind": "draft",
- "generated_at": "2026-11-02T07:43:16+00:00",
+ "generated_at": "2026-11-02T17:59:51+00:00",
  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1005 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-01 20:17, 17 games in the latest file across 9 books.",
  "status": {
   "state": "none",
@@ -68,10 +68,10 @@
     "rows": [
      [
       "unified-odds.yml",
-      "unavailable",
-      null,
-      null,
-      null
+      "success",
+      "2026-11-02 01:16",
+      "2026-11-02 01:16",
+      "3/9"
      ]
     ],
     "source": "reports/model_review/_runs/unified-odds.yml.json (gh run list)",
@@ -81,7 +81,7 @@
     "kind": "bullets",
     "heading": "Known failures and caveats",
     "items": [
-     "unified-odds.yml: run history unavailable (no `reports/model_review/_runs/unified-odds.yml.json`; the workflow writes it from `gh run list` and a local run has no token)"
+     "unified-odds.yml: 3 of the last 9 completed runs failed"
     ]
    }
   ]

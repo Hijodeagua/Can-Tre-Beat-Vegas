@@ -3,13 +3,13 @@
  "title": "College football Elo + efficiency",
  "date": "2026-11-02",
  "kind": "draft",
- "generated_at": "2026-11-02T07:43:16+00:00",
- "summary": "College football Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-31, 606 graded this season; second stage on (elo+efficiency:random_forest).",
+ "generated_at": "2026-11-02T17:59:51+00:00",
+ "summary": "College football Elo + efficiency: last pipeline run 2026-11-02, last graded game 2026-10-31, 606 graded this season; second stage on (elo+efficiency:random_forest).",
  "status": {
   "state": "live",
-  "summary": "College football Elo + efficiency: last pipeline run 2026-11-01, last graded game 2026-10-31, 606 graded this season; second stage on (elo+efficiency:random_forest).",
+  "summary": "College football Elo + efficiency: last pipeline run 2026-11-02, last graded game 2026-10-31, 606 graded this season; second stage on (elo+efficiency:random_forest).",
   "source": "web/public/data/cfb/latest.json",
-  "as_of": "2026-11-01",
+  "as_of": "2026-11-02",
   "blocks": [
    {
     "kind": "kv",
@@ -21,7 +21,7 @@
      ],
      [
       "Last pipeline run (site JSON)",
-      "2026-11-01"
+      "2026-11-02"
      ],
      [
       "Last graded game",
@@ -41,7 +41,7 @@
      ]
     ],
     "source": "web/public/data/cfb/latest.json",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    },
    {
     "kind": "table",
@@ -56,10 +56,10 @@
     "rows": [
      [
       "cfb-daily.yml",
-      "unavailable",
-      null,
-      null,
-      null
+      "success",
+      "2026-11-02 17:02",
+      "2026-11-02 17:02",
+      "0/10"
      ]
     ],
     "source": "reports/model_review/_runs/<workflow>.json (gh run list)",
@@ -78,20 +78,20 @@
     "rows": [
      [
       "sportsdataverse weekly summaries (team_weeks.csv)",
-      "2026 week 8",
-      1,
+      "2026 week 9",
+      0,
       2,
       "fresh"
      ]
     ],
     "source": "web/public/data/cfb/latest.json → feeds",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    },
    {
     "kind": "bullets",
     "heading": "Known failures and caveats",
     "items": [
-     "cfb-daily.yml: run history unavailable (no `reports/model_review/_runs/cfb-daily.yml.json`; the workflow writes it from `gh run list` and a local run has no token)"
+     "None detected from the committed files."
     ]
    }
   ]
@@ -556,7 +556,7 @@
      ]
     ],
     "source": "web/public/data/cfb/latest.json → ledger.fbs_only",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    },
    {
     "kind": "table",
@@ -809,7 +809,7 @@
      ]
     ],
     "source": "web/public/data/cfb/latest.json → ledger.by_week",
-    "as_of": "2026-11-01"
+    "as_of": "2026-11-02"
    }
   ]
  },

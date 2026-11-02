@@ -3,11 +3,11 @@
  "title": "Club soccer Elo + outcome model",
  "date": "2026-11-02",
  "kind": "draft",
- "generated_at": "2026-11-02T07:43:16+00:00",
- "summary": "Club soccer: last pipeline run 2026-11-02, results as of 2026-11-01, last graded match 2026-11-01, 481 graded this season; stale leagues: championship.",
+ "generated_at": "2026-11-02T17:59:51+00:00",
+ "summary": "Club soccer: last pipeline run 2026-11-02, results as of 2026-11-01, last graded match 2026-11-01, 551 graded this season; no league stale.",
  "status": {
-  "state": "stale",
-  "summary": "Club soccer: last pipeline run 2026-11-02, results as of 2026-11-01, last graded match 2026-11-01, 481 graded this season; stale leagues: championship.",
+  "state": "live",
+  "summary": "Club soccer: last pipeline run 2026-11-02, results as of 2026-11-01, last graded match 2026-11-01, 551 graded this season; no league stale.",
   "source": "web/public/data/soccer/latest.json",
   "as_of": "2026-11-02",
   "blocks": [
@@ -17,7 +17,7 @@
     "rows": [
      [
       "Verdict",
-      "stale"
+      "live"
      ],
      [
       "Last pipeline run (site JSON)",
@@ -33,7 +33,7 @@
      ],
      [
       "Overlay (last run)",
-      "understat: filled 187, agree 21765, conflicts 5, football-data: filled 0, agree 0, conflicts 0"
+      "understat: filled 0, agree 21952, conflicts 5, football-data: filled 0, agree 603, conflicts 0"
      ]
     ],
     "source": "web/public/data/soccer/latest.json, soccer/clubs/data/results_overlay_report.json",
@@ -52,10 +52,10 @@
     "rows": [
      [
       "soccer-daily.yml",
-      "unavailable",
-      null,
-      null,
-      null
+      "success",
+      "2026-11-02 17:02",
+      "2026-11-02 17:02",
+      "0/10"
      ]
     ],
     "source": "reports/model_review/_runs/soccer-daily.yml.json (gh run list)",
@@ -75,24 +75,24 @@
     "rows": [
      [
       "Premier League",
-      "2026-10-31",
-      88,
+      "2026-11-01",
+      89,
       380,
       0,
       "ok"
      ],
      [
       "Championship",
-      "2026-09-20",
-      95,
+      "2026-10-31",
+      156,
       552,
-      61,
-      "STALE"
+      0,
+      "ok"
      ],
      [
       "Bundesliga",
       "2026-11-01",
-      71,
+      72,
       306,
       0,
       "ok"
@@ -108,7 +108,7 @@
      [
       "La Liga",
       "2026-11-01",
-      105,
+      108,
       380,
       1,
       "ok"
@@ -124,7 +124,7 @@
      [
       "Serie A",
       "2026-11-01",
-      96,
+      98,
       380,
       0,
       "ok"
@@ -140,9 +140,9 @@
      [
       "Ligue 1",
       "2026-11-01",
-      77,
+      80,
       306,
-      2,
+      1,
       "ok"
      ],
      [
@@ -155,9 +155,9 @@
      ],
      [
       "MLS",
-      "2026-10-26",
-      466,
-      466,
+      "2026-11-02",
+      495,
+      495,
       0,
       "no_fixture_list"
      ]
@@ -186,10 +186,10 @@
      ],
      [
       "football-data shots (shots_matches.csv)",
-      "2026-09-20",
-      43,
+      "2026-11-01",
+      1,
       10,
-      "STALE"
+      "fresh"
      ],
      [
       "understat advanced (understat_matches.csv)",
@@ -206,9 +206,6 @@
     "kind": "bullets",
     "heading": "Known failures and caveats",
     "items": [
-     "soccer-daily.yml: run history unavailable (no `reports/model_review/_runs/soccer-daily.yml.json`; the workflow writes it from `gh run list` and a local run has no token)",
-     "Championship results stale: 61 fixtures dated on or before 2026-10-31 have no result (limit 3); newest result 2026-09-20",
-     "stale form feed(s): shots (feature zeroed by its guard)",
      "results overlay conflict (home_away_swapped): ligue_1 2026-08-23 Paris Saint-Germain FC v Stade Rennais FC 1901 openfootball [2, 2] vs understat [2, 2]"
     ]
    }
@@ -334,10 +331,6 @@
   "as_of": "2026-11-02",
   "blocks": [
    {
-    "kind": "warn",
-    "text": "Stale leagues (championship) are frozen at their newest final; their movers, shifts and grades below are not current."
-   },
-   {
     "kind": "table",
     "heading": "Biggest misses, last 30 days (by log loss)",
     "columns": [
@@ -360,6 +353,24 @@
       2.25
      ],
      [
+      "2026-10-13",
+      "championship",
+      "Wolverhampton Wanderers FC v Bolton Wanderers FC",
+      "H",
+      "66%",
+      "1-3",
+      2.15
+     ],
+     [
+      "2026-10-31",
+      "championship",
+      "West Ham United FC v West Bromwich Albion FC",
+      "H",
+      "69%",
+      "1-3",
+      2.08
+     ],
+     [
       "2026-10-23",
       "bundesliga",
       "VfB Stuttgart v Borussia Mönchengladbach",
@@ -376,24 +387,6 @@
       "66%",
       "2-0",
       2.02
-     ],
-     [
-      "2026-10-31",
-      "epl",
-      "Manchester City FC v Brighton & Hove Albion FC",
-      "H",
-      "67%",
-      "0-1",
-      1.97
-     ],
-     [
-      "2026-10-18",
-      "serie_a",
-      "Juventus FC v SS Lazio",
-      "H",
-      "65%",
-      "0-3",
-      1.93
      ]
     ]
    },
@@ -410,6 +403,15 @@
      "Log loss"
     ],
     "rows": [
+     [
+      "2026-10-13",
+      "championship",
+      "Cardiff City FC v Watford FC",
+      "H",
+      "34%",
+      "5-1",
+      1.07
+     ],
      [
       "2026-10-31",
       "epl",
@@ -444,15 +446,6 @@
       "H",
       "35%",
       "2-1",
-      1.04
-     ],
-     [
-      "2026-10-19",
-      "serie_a",
-      "Parma Calcio 1913 v Torino FC",
-      "A",
-      "36%",
-      "0-3",
       1.04
      ]
     ]
@@ -490,6 +483,13 @@
       -30.2
      ],
      [
+      "championship",
+      "Preston North End FC",
+      1275.4,
+      1303.2,
+      -27.8
+     ],
+     [
       "epl",
       "Manchester United FC",
       1582.9,
@@ -498,45 +498,38 @@
      ],
      [
       "serie_a",
+      "Genoa CFC",
+      1438.7,
+      1412.2,
+      26.5
+     ],
+     [
+      "championship",
+      "Derby County FC",
+      1336.3,
+      1361.9,
+      -25.6
+     ],
+     [
+      "championship",
+      "Middlesbrough FC",
+      1476.2,
+      1451.5,
+      24.7
+     ],
+     [
+      "championship",
+      "Charlton Athletic FC",
+      1314.2,
+      1338.9,
+      -24.7
+     ],
+     [
+      "serie_a",
       "Frosinone Calcio",
       1445.0,
       1420.5,
       24.5
-     ],
-     [
-      "serie_a",
-      "Como 1907",
-      1577.9,
-      1554.0,
-      23.9
-     ],
-     [
-      "serie_a",
-      "Bologna FC 1909",
-      1523.4,
-      1499.6,
-      23.8
-     ],
-     [
-      "serie_a",
-      "Juventus FC",
-      1592.0,
-      1615.0,
-      -23.0
-     ],
-     [
-      "serie_a",
-      "Cagliari Calcio",
-      1406.9,
-      1429.8,
-      -22.9
-     ],
-     [
-      "epl",
-      "Sunderland AFC",
-      1467.8,
-      1490.6,
-      -22.8
      ]
     ]
    },
@@ -554,83 +547,83 @@
     "rows": [
      [
       "serie_a",
-      "Juventus FC",
-      "p_top4",
-      "17.1%",
-      "53.2%",
-      "-36.2 pts"
+      "Genoa CFC",
+      "p_relegation",
+      "6.0%",
+      "44.2%",
+      "-38.2 pts"
      ],
      [
       "serie_a",
       "SS Lazio",
       "p_top4",
-      "66.2%",
+      "66.5%",
       "31.6%",
-      "+34.5 pts"
+      "+34.9 pts"
      ],
      [
       "epl",
       "Tottenham Hotspur FC",
       "p_relegation",
-      "11.6%",
+      "11.2%",
       "45.7%",
-      "-34.1 pts"
+      "-34.5 pts"
+     ],
+     [
+      "ligue_1",
+      "AS Monaco FC",
+      "p_top4",
+      "41.4%",
+      "71.6%",
+      "-30.2 pts"
      ],
      [
       "serie_a",
-      "Genoa CFC",
-      "p_relegation",
-      "11.3%",
-      "44.2%",
-      "-32.9 pts"
-     ],
-     [
-      "serie_a",
-      "Udinese Calcio",
-      "p_relegation",
-      "42.0%",
-      "16.0%",
-      "+26.0 pts"
+      "Juventus FC",
+      "p_top4",
+      "24.7%",
+      "53.2%",
+      "-28.5 pts"
      ],
      [
       "epl",
-      "Sunderland AFC",
-      "p_relegation",
-      "56.5%",
-      "33.1%",
-      "+23.5 pts"
+      "Arsenal FC",
+      "p_title",
+      "68.6%",
+      "42.6%",
+      "+26.0 pts"
      ],
      [
       "epl",
       "Brighton & Hove Albion FC",
       "p_top4",
-      "59.2%",
+      "61.3%",
       "36.0%",
-      "+23.1 pts"
+      "+25.2 pts"
+     ],
+     [
+      "serie_a",
+      "Udinese Calcio",
+      "p_relegation",
+      "41.1%",
+      "16.0%",
+      "+25.1 pts"
+     ],
+     [
+      "epl",
+      "Sunderland AFC",
+      "p_relegation",
+      "56.6%",
+      "33.1%",
+      "+23.5 pts"
      ],
      [
       "bundesliga",
       "FC Schalke 04",
       "p_relegation",
-      "51.9%",
+      "52.0%",
       "29.3%",
       "+22.6 pts"
-     ],
-     [
-      "ligue_1",
-      "Paris Saint-Germain FC",
-      "p_title",
-      "82.9%",
-      "60.9%",
-      "+22.0 pts"
-     ],
-     [
-      "bundesliga",
-      "RB Leipzig",
-      "p_top4",
-      "54.5%",
-      "32.9%",
-      "+21.6 pts"
      ]
     ]
    },
@@ -647,31 +640,31 @@
     "rows": [
      [
       "30-40%",
-      80,
-      5.2,
-      34,
-      7.3
+      100,
+      4.7,
+      54,
+      5.6
      ],
      [
       "40-50%",
-      198,
-      -2.9,
-      60,
-      6.7
+      227,
+      2.2,
+      89,
+      16.6
      ],
      [
       "50-60%",
-      99,
-      3.3,
-      31,
-      13.2
+      108,
+      3.1,
+      40,
+      10.5
      ],
      [
       "60-70%",
-      74,
-      1.8,
-      33,
-      -0.4
+      86,
+      -1.6,
+      45,
+      -6.3
      ],
      [
       "70-100%",
@@ -685,7 +678,7 @@
   ]
  },
  "report_card": {
-  "summary": "Season: 481 graded, pick accuracy 52.0%, log loss 0.9896 (three-way, so not comparable to the binary sports). Baseline = season outcome frequencies H/D/A 45%/25%/30%.",
+  "summary": "Season: 551 graded, pick accuracy 53.0%, log loss 0.9911 (three-way, so not comparable to the binary sports). Baseline = season outcome frequencies H/D/A 45%/24%/31%.",
   "source": "data/soccer_clubs/predictions/grades.csv",
   "as_of": "2026-11-01",
   "blocks": [
@@ -705,33 +698,33 @@
     "rows": [
      [
       "Last 7 days",
-      37,
-      "59.5%",
-      0.9719,
-      0.5728,
-      1.029,
-      -0.0571,
-      0.0771
+      58,
+      "67.2%",
+      0.9228,
+      0.5374,
+      0.9987,
+      -0.076,
+      0.0541
      ],
      [
       "Last 30 days",
-      175,
-      "58.3%",
-      0.9449,
-      0.5581,
-      1.0484,
-      -0.1036,
-      0.0293
+      245,
+      "58.8%",
+      0.9611,
+      0.5699,
+      1.047,
+      -0.0859,
+      0.023
      ],
      [
       "Season to date",
-      481,
-      "52.0%",
-      0.9896,
-      0.5886,
-      1.0657,
-      -0.0761,
-      0.0162
+      551,
+      "53.0%",
+      0.9911,
+      0.59,
+      1.0631,
+      -0.072,
+      0.0148
      ]
     ],
     "note": "Δ LL is the per-match log-loss difference against a fixed forecast equal to the season's own H/D/A frequencies (in-sample for the baseline, so it flatters the baseline slightly); negative beats it."
@@ -749,31 +742,31 @@
     "rows": [
      [
       "30-40%",
-      80,
+      100,
       "37.3%",
-      "42.5%",
-      5.2
+      "42.0%",
+      4.7
      ],
      [
       "40-50%",
-      198,
-      "44.9%",
-      "41.9%",
-      -2.9
+      227,
+      "45.0%",
+      "47.1%",
+      2.2
      ],
      [
       "50-60%",
-      99,
+      108,
       "54.3%",
-      "57.6%",
-      3.3
+      "57.4%",
+      3.1
      ],
      [
       "60-70%",
-      74,
+      86,
       "64.4%",
-      "66.2%",
-      1.8
+      "62.8%",
+      -1.6
      ],
      [
       "70-100%",
@@ -797,31 +790,31 @@
     "rows": [
      [
       "30-40%",
-      34,
-      "36.8%",
-      "44.1%",
-      7.3
+      54,
+      "37.0%",
+      "42.6%",
+      5.6
      ],
      [
       "40-50%",
-      60,
-      "44.9%",
-      "51.7%",
-      6.7
+      89,
+      "45.2%",
+      "61.8%",
+      16.6
      ],
      [
       "50-60%",
-      31,
+      40,
       "54.5%",
-      "67.7%",
-      13.2
+      "65.0%",
+      10.5
      ],
      [
       "60-70%",
-      33,
-      "64.0%",
-      "63.6%",
-      -0.4
+      45,
+      "64.1%",
+      "57.8%",
+      -6.3
      ],
      [
       "70-100%",
@@ -844,57 +837,57 @@
     "rows": [
      [
       "Home-win picks",
-      328,
-      "53.7%",
-      0.9765
+      379,
+      "53.8%",
+      0.9843
      ],
      [
       "Draw picks",
-      0,
-      null,
-      null
+      1,
+      "0.0%",
+      1.2191
      ],
      [
       "Away-win picks",
-      153,
-      "48.4%",
-      1.0177
+      171,
+      "51.5%",
+      1.0049
      ],
      [
       "League: bundesliga",
-      71,
-      "49.3%",
-      1.0168
+      72,
+      "50.0%",
+      1.0115
      ],
      [
       "League: championship",
-      82,
-      "43.9%",
-      1.073
+      143,
+      "49.0%",
+      1.056
      ],
      [
       "League: epl",
-      87,
-      "46.0%",
-      1.0334
+      88,
+      "46.6%",
+      1.0299
      ],
      [
       "League: la_liga",
-      83,
-      "51.8%",
-      0.9394
+      86,
+      "52.3%",
+      0.9353
      ],
      [
       "League: ligue_1",
-      66,
-      "56.1%",
-      0.9785
+      68,
+      "57.4%",
+      0.9728
      ],
      [
       "League: serie_a",
-      92,
-      "64.1%",
-      0.9061
+      94,
+      "64.9%",
+      0.905
      ]
     ]
    },
@@ -904,11 +897,11 @@
     "rows": [
      [
       "7d",
-      "n=37, accuracy 59.5%, log loss 0.9719"
+      "n=58, accuracy 67.2%, log loss 0.9228"
      ],
      [
       "30d",
-      "n=175, accuracy 58.3%, log loss 0.9449"
+      "n=245, accuracy 58.8%, log loss 0.9611"
      ]
     ],
     "source": "web/public/data/soccer/latest.json → ledger.rolling",
@@ -922,11 +915,7 @@
    {
     "kind": "bullets",
     "items": [
-     "Calibration: picks quoted at 70-100% hit 90.0% (n=30), 13 points under-confident. Candidate: calibration layer, measured out of sample first.",
-     "The model never picks the draw (0 draw picks this season) although draws are 24.5% of outcomes: expected for an argmax pick, worth knowing when reading accuracy.",
-     "championship: pick accuracy 43.9% on n=82, below the other leagues. Candidate: check that league's results freshness and feature coverage before changing anything.",
-     "Championship: results stale; nothing about this league can be judged until its source (fd_results from football-data.co.uk) lands.",
-     "Form feed shots is stale; the feature is zeroed by its guard until it is current."
+     "Calibration: picks quoted at 70-100% hit 90.0% (n=30), 13 points under-confident. Candidate: calibration layer, measured out of sample first."
     ]
    }
   ]
