@@ -64,3 +64,35 @@ EMAIL_REPORTS_DIR = REPO_ROOT / "reports" / "soccer"
 # League goal rates are estimated from this many most recent completed
 # seasons (COVID-era home rates argue against reaching further back).
 GOAL_RATE_SEASONS = 2
+
+# --- Results freshness (state.results_status) ---------------------------
+# openfootball stalled on 2026-09-20 and every run stayed green for six
+# weeks: the fetch "succeeded" with the same frozen file, the form feeds'
+# 130-day guard still read fresh, and the email kept printing a September
+# table. These thresholds make that loud. A league fixture is OVERDUE when
+# it is dated more than RESULTS_GRACE_DAYS before the run date and still
+# has no score (the 10:00 UTC run grades the prior evening; two days
+# covers a late upstream commit). A league is STALE when more than
+# RESULTS_OVERDUE_MAX fixtures are overdue: a stalled feed accumulates a
+# whole round (8-10 fixtures) within days, while a genuinely postponed
+# match - Rayo Vallecano v Athletic Club, 2026-10-10, scoreless in every
+# source - stays a lone overdue row and never trips it. The overdue rows
+# are listed in the status so a lone one is still visible. Because the
+# test is built on fixtures that *should* have a score, it is naturally
+# season-aware: an international break or a winter break schedules
+# nothing and so overdues nothing.
+RESULTS_GRACE_DAYS = 2
+RESULTS_OVERDUE_MAX = 3
+RESULTS_OVERDUE_LIST = 10   # how many overdue fixtures to list per league
+
+# The form feeds' freshness *report* (state.feed_status). The model's own
+# staleness guard (MAX_AGE_DAYS = 130 in model/xg.py etc.) spans a summer
+# break and is a tuned model parameter, so it is left alone; but as a
+# report tolerance it let a six-week-old shots feed print "fresh: true"
+# mid-season. While league fixtures are being played (any top-flight
+# fixture dated inside the last SEASON_ACTIVE_LOOKBACK_DAYS), a feed
+# older than FEED_TOLERANCE_IN_SEASON_DAYS reads STALE in the log, the
+# site JSON and the weekly review; off-season the guard's own tolerance
+# applies.
+FEED_TOLERANCE_IN_SEASON_DAYS = 10
+SEASON_ACTIVE_LOOKBACK_DAYS = 14

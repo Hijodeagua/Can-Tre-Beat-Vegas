@@ -13,7 +13,14 @@ from dataclasses import dataclass
 import pandas as pd
 from common import freshness
 from soccer.clubs.daily import scoring
-from soccer.clubs.data.leagues import LEAGUES, pool_of
+from soccer.clubs.daily.config import (
+    FEED_TOLERANCE_IN_SEASON_DAYS,
+    RESULTS_GRACE_DAYS,
+    RESULTS_OVERDUE_LIST,
+    RESULTS_OVERDUE_MAX,
+    SEASON_ACTIVE_LOOKBACK_DAYS,
+)
+from soccer.clubs.data.leagues import LEAGUES, TIER1, pool_of
 from soccer.clubs.model import advanced as adv
 from soccer.clubs.model import shots, xg
 from soccer.clubs.model.elo import ClubEloEngine
@@ -100,30 +107,123 @@ class DailyState:
         return out
 
 
-def feed_status(run_date: str) -> dict[str, freshness.FreshnessReport]:
+def season_active(results: pd.DataFrame, run_date: str,
+                  lookback_days: int = SEASON_ACTIVE_LOOKBACK_DAYS) -> bool:
+    """Whether league football is being played around the run date: any
+    top-flight fixture (played or not) dated inside the trailing window.
+    Fixture lists are published for the whole season up front, so this
+    reads true through a results outage - which is the point."""
+    from datetime import date as _date, timedelta
+    start = (_date.fromisoformat(run_date) - timedelta(days=lookback_days)).isoformat()
+    top = results[results["league"].isin([k for k in TIER1 if LEAGUES[k].source == "openfootball"])]
+    window = top[(top["date"] >= start) & (top["date"] <= run_date)]
+    return bool(len(window))
+
+
+def feed_status(run_date: str, results: pd.DataFrame | None = None) -> dict[str, freshness.FreshnessReport]:
     """Freshness of every form feed the slate features against, on the
-    run date. Tolerance is each feed's own staleness guard, so "STALE"
-    here means exactly "the guard is zeroing this feature on today's
-    slate and the model is running without it". The understat table is
-    the advanced-metrics feed (`soccer/clubs/model/advanced.py`): logged
-    so its revival is visible, not yet a production input."""
+    run date.
+
+    The tolerance each feed is reported against is its own staleness
+    guard off-season (the guard is what zeroes the feature, and it spans
+    a summer break), but FEED_TOLERANCE_IN_SEASON_DAYS while league
+    fixtures are being played: a guard sized for the summer let a
+    six-week-old shots feed read "fresh" in October 2026. The guard
+    itself - a model parameter - is not touched here; only what the log,
+    the site JSON and the weekly review call fresh. The understat table
+    is the advanced-metrics feed (`soccer/clubs/model/advanced.py`):
+    logged so its revival is visible, not yet a production input."""
     from soccer.clubs.data import understat
     from soccer.clubs.model import advanced
+    from soccer.clubs.model.elo import DATA_DIR
 
     def _load(exists, load):
         return load() if exists() else None
 
+    if results is None:
+        results = pd.read_csv(DATA_DIR / "results.csv", usecols=["date", "league"])
+    in_season = season_active(results, run_date)
+
+    def tol(guard: int) -> int:
+        return min(guard, FEED_TOLERANCE_IN_SEASON_DAYS) if in_season else guard
+
     return {
         "xg": freshness.check("understat xG (xg_matches.csv)",
-                              _load(xg.xg_available, xg.load_xg), "date", run_date, xg.MAX_AGE_DAYS),
+                              _load(xg.xg_available, xg.load_xg), "date", run_date,
+                              tol(xg.MAX_AGE_DAYS)),
         "shots": freshness.check("football-data shots (shots_matches.csv)",
                                  _load(shots.shots_available, shots.load_shots), "date", run_date,
-                                 shots.MAX_AGE_DAYS),
+                                 tol(shots.MAX_AGE_DAYS)),
         "understat_advanced": freshness.check(
             "understat advanced (understat_matches.csv)",
             _load(understat.OUT_CSV.exists, understat.load_processed), "date", run_date,
-            advanced.MAX_AGE_DAYS),
+            tol(advanced.MAX_AGE_DAYS)),
     }
+
+
+def results_status(results: pd.DataFrame, run_date: str,
+                   grace_days: int = RESULTS_GRACE_DAYS,
+                   overdue_max: int = RESULTS_OVERDUE_MAX) -> dict:
+    """Per-league results freshness on the run date, built from the
+    fixtures that should already have a score.
+
+    Returns {"as_of": newest played date across the openfootball leagues,
+    "run_date", "stale_leagues": [...], "thresholds": {...}, "leagues":
+    {key: {name, tier, season, newest_played, newest_played_age_days,
+    played_season, fixtures_season, overdue, oldest_overdue, stale,
+    reason}}}. A league with no fixtures upstream for the season (the
+    second divisions at 2026-27 launch) has nothing to be overdue and
+    reads not stale with reason "no_fixtures"; MLS, a completed-match
+    log with no fixture list, is reported for its newest result only.
+    See config.py for the thresholds and why they are what they are."""
+    from datetime import date as _date, timedelta
+
+    from soccer.clubs.data.leagues import current_season_for
+
+    run = _date.fromisoformat(run_date)
+    cutoff = (run - timedelta(days=grace_days)).isoformat()
+    df = results[["date", "season", "league", "home_score", "away_score"]].copy()
+    results = results[["date", "season", "league", "home_team", "away_team", "home_score"]]
+    df["played"] = df["home_score"].notna() & df["away_score"].notna()
+    out: dict = {"run_date": run_date, "as_of": None, "stale_leagues": [],
+                 "thresholds": {"grace_days": grace_days, "overdue_max": overdue_max},
+                 "leagues": {}}
+    for key, lg in LEAGUES.items():
+        season = current_season_for(key, run_date)
+        sub = df[(df["league"] == key)]
+        season_rows = sub[sub["season"].astype(str) == season]
+        played = sub[sub["played"] & (sub["date"] <= run_date)]
+        newest = played["date"].max() if len(played) else None
+        age = (run - _date.fromisoformat(newest)).days if newest else None
+        overdue_rows = results[(results["league"] == key)
+                               & (results["season"].astype(str) == season)
+                               & results["home_score"].isna() & (results["date"] <= cutoff)]
+        overdue_rows = overdue_rows.sort_values("date")
+        oldest = overdue_rows["date"].min() if len(overdue_rows) else None
+        entry = {
+            "name": lg.name, "tier": lg.tier, "season": season,
+            "newest_played": newest, "newest_played_age_days": age,
+            "played_season": int(season_rows["played"].sum()),
+            "fixtures_season": int(len(season_rows)),
+            "overdue": int(len(overdue_rows)), "oldest_overdue": oldest,
+            "overdue_fixtures": [f"{r.date} {r.home_team} v {r.away_team}"
+                                 for r in overdue_rows.head(RESULTS_OVERDUE_LIST).itertuples()],
+            "stale": False, "reason": None,
+        }
+        if lg.source != "openfootball":
+            entry["reason"] = "no_fixture_list"
+        elif len(season_rows) == 0:
+            entry["reason"] = "no_fixtures"
+        elif len(overdue_rows) > overdue_max:
+            entry["stale"] = True
+            entry["reason"] = (f"{len(overdue_rows)} fixtures dated on or before {cutoff} "
+                               f"have no result (limit {overdue_max}); newest result {newest}")
+        if entry["stale"]:
+            out["stale_leagues"].append(key)
+        if lg.source == "openfootball" and newest and (out["as_of"] is None or newest > out["as_of"]):
+            out["as_of"] = newest
+        out["leagues"][key] = entry
+    return out
 
 
 def build_state() -> DailyState:

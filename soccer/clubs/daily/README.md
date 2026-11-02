@@ -34,8 +34,8 @@ publish the site JSON, and render the twice-weekly update email.
    it, or MLS would be silently dropped; `results_overlay` runs again on
    the committed file so a failed openfootball fetch still gets the day's
    finals; `fetch_shots` goes last because it snaps onto `results.csv`
-   finals. `state.feed_status` then logs each form feed's freshness (a
-   STALE feed is zeroed by its guard, not an error).
+   finals. `state.feed_status` then logs each form feed's freshness and
+   `state.results_status` each league's results freshness (below).
 2. The glued replay (`model/europe.py`) rebuilds every league pool from
    scratch — deterministic, no incremental state to corrupt — and the
    outcome + score models are refit from that history in-run (no pickle
@@ -145,3 +145,20 @@ publish the site JSON, and render the twice-weekly update email.
   2020). A source row with no fixture to land on is never appended. Every
   run writes `data/results_overlay_report.json` with the counts, the
   conflicts and the unmatched rows.
+- **Results freshness** (`state.results_status`, thresholds in
+  `config.py`): a fixture is *overdue* when it is dated more than
+  `RESULTS_GRACE_DAYS` (2) before the run date and has no score; a league is
+  *stale* when more than `RESULTS_OVERDUE_MAX` (3) of its fixtures are
+  overdue. A stalled feed accumulates a whole round within days, while a
+  genuinely postponed match stays a lone overdue row. Breaks schedule
+  nothing, so they overdue nothing. The block is exported to
+  `latest.json` as `results_freshness`, printed at the top of the update
+  email (as-of date, a warning per stale league, STALE tags on that
+  league's headings) and on the site, and read back by
+  `freshness_check.py`, which the workflow runs last to fail the run when
+  any league is stale.
+- **Feed freshness** (`state.feed_status`): while league fixtures are being
+  played (`SEASON_ACTIVE_LOOKBACK_DAYS`), each form feed is reported
+  against `FEED_TOLERANCE_IN_SEASON_DAYS` (10) instead of its 130-day
+  model guard, so a six-week-old feed can no longer print `fresh: true`
+  mid-season. The guard itself is a model parameter and is unchanged.
