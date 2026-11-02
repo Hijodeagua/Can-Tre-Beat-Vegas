@@ -66,10 +66,21 @@ li{margin:3px 0}
 """
 
 
+# TW's reviews carry no em dashes (docs/weekly_model_review_prompt.md), and
+# the review session may send the rendered page as it stands, so the
+# template never emits one: missing values render as a plain hyphen and any
+# em dash in quoted text (the feature docs use them) becomes " - ".
+MISSING = "-"
+
+
+def _no_em_dash(text: str) -> str:
+    return text.replace("\u2014", " - ").replace("&mdash;", "-")
+
+
 def _e(x: Any) -> str:
     """Escape for HTML; numbers and None render plainly."""
     if x is None:
-        return "&mdash;"
+        return MISSING
     if isinstance(x, bool):
         return "yes" if x else "no"
     if isinstance(x, float):
@@ -140,7 +151,7 @@ def render(doc: dict) -> str:
     grade = doc.get("grade")
     grade_html = f"<span class='grade'>{_e(grade)}</span>" if grade else ""
     head = (
-        f"<h1>{_e(title)} &mdash; weekly model review{grade_html}</h1>"
+        f"<h1>{_e(title)}: weekly model review{grade_html}</h1>"
         f"<p class='sub'>{_e(kind).capitalize()} for <b>{_e(date)}</b> &middot; "
         f"status <span class='badge' style='background:{color}'>{_e(state)}</span>"
         + (f" &middot; generated {_e(doc['generated_at'])}" if doc.get("generated_at") else "")
@@ -169,7 +180,7 @@ def render(doc: dict) -> str:
         + "every number above carries the file it came from and its as-of date. "
         "Static page, no scripts.</p>"
     )
-    return (
+    return _no_em_dash(
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
         f"<title>{_e(title)} review {_e(date)}</title><style>{CSS}</style></head>"

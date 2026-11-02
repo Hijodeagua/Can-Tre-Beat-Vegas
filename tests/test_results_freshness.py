@@ -78,17 +78,24 @@ class TestResultsStatus:
         assert not st["leagues"]["bundesliga_2"]["stale"]
         assert st["leagues"]["mls"]["reason"] == "no_fixture_list"
 
-    def test_live_data_today(self):
-        """The committed results.csv: the Championship (no overlay source
-        before fd_results runs from Actions) must read stale; a top flight
-        the Understat overlay filled must not."""
-        r = pd.read_csv(state.DATA_DIR_RESULTS) if hasattr(state, "DATA_DIR_RESULTS") else None
-        if r is None:
-            from soccer.clubs.model.elo import DATA_DIR
-            r = pd.read_csv(DATA_DIR / "results.csv")
-        st = state.results_status(r, "2026-11-02")
-        assert st["leagues"]["championship"]["stale"]
-        assert not st["leagues"]["epl"]["stale"]
+    def test_live_data_is_internally_consistent(self):
+        """The committed results.csv, on whatever day it was last written:
+        every league's verdict follows the rule, and the as-of date is the
+        newest final across the fixture-list leagues. (The first version of
+        this test pinned the Championship as stale; it stopped being true
+        on 2026-11-02 when football-data.co.uk filled it, which is the
+        point of the overlay.)"""
+        from soccer.clubs.model.elo import DATA_DIR
+        r = pd.read_csv(DATA_DIR / "results.csv")
+        run_date = str(r.dropna(subset=["home_score"])["date"].max())
+        st = state.results_status(r, run_date)
+        for key, e in st["leagues"].items():
+            has_fixtures = e["reason"] not in ("no_fixtures", "no_fixture_list")
+            assert e["stale"] == (has_fixtures and e["overdue"] > RESULTS_OVERDUE_MAX), key
+            assert (key in st["stale_leagues"]) == e["stale"]
+        newest = [e["newest_played"] for k, e in st["leagues"].items()
+                  if e["reason"] != "no_fixture_list" and e["newest_played"]]
+        assert st["as_of"] == max(newest)
 
 
 class TestSeasonAwareFeedTolerance:

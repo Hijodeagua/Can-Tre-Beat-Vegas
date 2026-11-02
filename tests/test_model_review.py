@@ -153,6 +153,16 @@ class TestPromptDoc:
 
 
 class TestTemplate:
+    def test_page_never_contains_an_em_dash(self, drafts):
+        out, docs = drafts
+        for m in mr.MODELS:
+            html = (out / m / "latest.html").read_text()
+            assert "\u2014" not in html and "&mdash;" not in html, m
+        html = render({"model": "x", "title": "A \u2014 B", "date": "2026-11-02",
+                       "status": {"state": "live", "blocks": [{"kind": "kv", "rows": [["k", None]]}]}})
+        assert "\u2014" not in html and "&mdash;" not in html
+
+
     def test_review_kind_renders_grade(self):
         html = render({"model": "nfl", "title": "NFL", "date": "2026-11-04", "kind": "review", "grade": "B",
                        "grade_reason": "n=108, edge -0.05 ± 0.03.", "status": {"state": "live", "blocks": []}})
