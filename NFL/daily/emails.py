@@ -5,8 +5,9 @@ sibling of `CFB/daily/emails.py`, in the same email-client-safe style
 One email, four sections:
 
 1. Power ratings — all 32 teams by Elo with season-to-date record.
-2. This week's games — win probability, pick, the model's own spread and
-   an expected score.
+2. This week's games — the pick and the pick model's win probability
+   next to the pure-Elo win probability, line and expected score, each
+   column labelled with the model it comes from (they can disagree).
 3. Model performance — rolling tracker (7d / 30d / season) with the
    paired Δlog-loss vs. always-pick-home, plus the past week's grades.
 4. Season forecasts — expected wins, division / playoff / #1 seed /
@@ -108,10 +109,41 @@ def _divisions_section(divisions: dict) -> str:
     )
 
 
+def _model_label(fixtures: pd.DataFrame) -> str:
+    """Human name for the pick model on this slate, from the slate's own
+    `model` column: "elo+efficiency:random_forest" -> "Elo + efficiency
+    (random forest)"; a plain "elo" slate (second stage off) says so."""
+    models = set(fixtures["model"].dropna().astype(str)) if "model" in fixtures else set()
+    if not models or models == {"elo"}:
+        return "pure Elo"
+    names = []
+    for m in sorted(models):
+        if m == "elo":
+            continue
+        base, _, learner = m.partition(":")
+        base = base.replace("+", " + ").replace("efficiency", "efficiency")
+        names.append(f"{base} ({learner.replace('_', ' ')})" if learner else base)
+    return " / ".join(names)
+
+
+def _pick_side_prob(p_home: float, pick_home: bool) -> float:
+    return p_home if pick_home else 1 - p_home
+
+
+def _elo_pick_prob(m) -> float | None:
+    """Pure-Elo probability for the *picked* side, so the two columns
+    describe the same team. None when the slate predates the column."""
+    p = getattr(m, "p_home_elo", None)
+    if p is None or p != p:
+        return None
+    return _pick_side_prob(float(p), m.pick == m.home_team)
+
+
 def _fixtures_section(fixtures: pd.DataFrame) -> str:
     if fixtures.empty:
         return "<p>No games on the slate.</p>"
     parts = []
+    disagreements = 0
     for day, sub in fixtures.groupby("date", sort=True):
         rows = []
         weekday = sub["weekday"].iloc[0]
@@ -119,28 +151,51 @@ def _fixtures_section(fixtures: pd.DataFrame) -> str:
             fav_home = m.pick == m.home_team
             score = (f"{m.pred_home_score}&ndash;{m.pred_away_score}" if fav_home
                      else f"{m.pred_away_score}&ndash;{m.pred_home_score}")
+            p_elo = _elo_pick_prob(m)
+            # The Elo side of the table can favour the other team. Say so
+            # on the row rather than leaving a 53% pick next to a line
+            # that points the other way.
+            elo_other = p_elo is not None and p_elo < 0.5
+            if elo_other:
+                disagreements += 1
+            flag = (" <span style='color:#b00;font-size:11px;'>&ne; Elo</span>"
+                    if elo_other else "")
             rows.append(
                 f"<tr><td style='{STYLE_TD}'>{m.gametime or ''}</td>"
                 f"<td style='{STYLE_TD}'>{_matchup(m.home_team, m.away_team, bool(m.neutral))}</td>"
-                f"<td style='{STYLE_TD}'><b>{m.pick}</b></td>"
+                f"<td style='{STYLE_TD}'><b>{m.pick}</b>{flag}</td>"
                 f"<td style='{STYLE_TD}'>{_pct(m.pick_prob)}</td>"
+                f"<td style='{STYLE_TD}'>{_pct(p_elo)}</td>"
                 f"<td style='{STYLE_TD}'>{_spread(m.elo_spread)}</td>"
                 f"<td style='{STYLE_TD}'>{score}</td>"
                 f"<td style='{STYLE_TD}'>{m.pred_total:.1f}</td></tr>"
             )
         parts.append(
             f"<h3 style='{STYLE_H3}'>{weekday} {day} &middot; {len(sub)} games</h3>"
-            + _table(["ET", "Matchup (home in bold)", "Pick", "Win prob",
-                      "Elo line (home)", "Exp. score (winner first)", "Exp. total"], rows)
+            + _table(["ET", "Matchup (home in bold)", "Pick", "Pick model win prob",
+                      "Elo-only win prob", "Elo-only line (home)",
+                      "Elo-only exp. score (pick first)", "Elo-only exp. total"], rows)
         )
+    model = _model_label(fixtures)
+    disagree_txt = (
+        f" On this slate the two disagree on {disagreements} game"
+        f"{'s' if disagreements != 1 else ''}, marked &ne; Elo: there the pick is "
+        f"the model's call and the Elo columns show what rating alone would say."
+        if disagreements else " On this slate the two agree on every pick."
+    )
     parts.append(
-        f"<p style='{STYLE_NOTE}'>Win probability straight from Elo (home "
-        f"edge applied except at neutral sites, marked N; a side off its bye "
-        f"gets the rest edge). The Elo line is the model's own spread from "
-        f"the home side &mdash; it has never seen a market number. Expected "
-        f"score is that margin carved out of a matchup-specific total (each "
-        f"team's recent points for/against, shrunk to the league mean); read "
-        f"it as an average, not a literal final.</p>"
+        f"<p style='{STYLE_NOTE}'><b>Two different numbers.</b> The <b>pick</b> and "
+        f"the <b>pick model win prob</b> come from the {model} model, which "
+        f"starts from the Elo rating and adds each team's efficiency features; "
+        f"both are quoted for the picked side. The <b>Elo-only</b> columns "
+        f"(win prob, line, expected score, total) come from the pure Elo rating "
+        f"alone (home edge applied except at neutral sites, marked N; a side "
+        f"off its bye gets the rest edge) and have never seen the efficiency "
+        f"features or a market number.{disagree_txt} The Elo-only line is the "
+        f"rating's own spread from the home side; the expected score is that "
+        f"margin carved out of a matchup-specific total (each team's recent "
+        f"points for/against, shrunk to the league mean) &mdash; read it as an "
+        f"average, not a literal final.</p>"
     )
     return "".join(parts)
 
@@ -201,8 +256,11 @@ def _performance_section(recent: pd.DataFrame, ledger: dict) -> str:
         correct = int(recent["pick_correct"].astype(bool).sum())
         parts.append(
             f"<h3 style='{STYLE_H3}'>Past week: {correct}/{len(recent)} picks correct</h3>"
-            + _table(["", "Date", "Game", "Pick", "Elo line", "Final (home first)",
-                      "Log loss"], rows)
+            + _table(["", "Date", "Game", "Pick (pick model prob)", "Elo-only line",
+                      "Final (home first)", "Log loss"], rows)
+            + f"<p style='{STYLE_NOTE}'>Pick probability is the pick model's; the "
+              f"line is Elo-only, as in the slate table above. Log loss is scored "
+              f"on the pick model's probability.</p>"
         )
     return "".join(parts)
 
