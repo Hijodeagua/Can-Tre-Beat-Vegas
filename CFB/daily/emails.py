@@ -5,7 +5,9 @@ One email, four sections, in the soccer update's email-client-safe style
 
 1. Top 25 — the Elo board with season-to-date record.
 2. Games this week — every FBS-involved game in the next
-   EMAIL_FIXTURE_DAYS days with win probability, pick and expected score.
+   EMAIL_FIXTURE_DAYS days: the pick and the pick model's win probability
+   next to the pure-Elo win probability and expected score, each column
+   labelled with the model it comes from (they can disagree).
 3. Model performance — rolling tracker (7d / 30d / season) with the paired
    Δlog-loss vs. always-pick-home, plus the past week's graded games.
 4. Season forecasts — expected wins, bowl / undefeated odds and each
@@ -103,10 +105,36 @@ def _conferences_section(conferences: dict) -> str:
     )
 
 
+def _model_label(fixtures: pd.DataFrame) -> str:
+    """Human name for the pick model on this slate, from its `model`
+    column ("elo+efficiency:random_forest" -> "elo + efficiency (random
+    forest)"); a plain "elo" slate (second stage off) says so."""
+    models = set(fixtures["model"].dropna().astype(str)) if "model" in fixtures else set()
+    if not models or models == {"elo"}:
+        return "pure Elo"
+    names = []
+    for m in sorted(models):
+        if m == "elo":
+            continue
+        base, _, learner = m.partition(":")
+        names.append(f"{base.replace('+', ' + ')} ({learner.replace('_', ' ')})" if learner else base)
+    return " / ".join(names)
+
+
+def _elo_pick_prob(m) -> float | None:
+    """Pure-Elo probability for the *picked* side. None when the slate
+    predates the column."""
+    p = getattr(m, "p_home_elo", None)
+    if p is None or p != p:
+        return None
+    return float(p) if m.pick == m.home_team else 1 - float(p)
+
+
 def _fixtures_section(fixtures: pd.DataFrame) -> str:
     if fixtures.empty:
         return "<p>No FBS games in the coming week.</p>"
     parts = []
+    disagreements = 0
     for day, sub in fixtures.groupby("date", sort=True):
         rows = []
         for m in sub.itertuples(index=False):
@@ -114,26 +142,46 @@ def _fixtures_section(fixtures: pd.DataFrame) -> str:
             score = (f"{m.pred_home_score}&ndash;{m.pred_away_score}" if fav_home
                      else f"{m.pred_away_score}&ndash;{m.pred_home_score}")
             fcs = " <span style='color:#999;'>(FCS)</span>" if (m.home_fcs or m.away_fcs) else ""
+            p_elo = _elo_pick_prob(m)
+            elo_other = p_elo is not None and p_elo < 0.5
+            if elo_other:
+                disagreements += 1
+            flag = (" <span style='color:#b00;font-size:11px;'>&ne; Elo</span>"
+                    if elo_other else "")
             rows.append(
                 f"<tr><td style='{STYLE_TD}'>{_matchup(m.home_team, m.away_team, bool(m.neutral))}{fcs}</td>"
-                f"<td style='{STYLE_TD}'><b>{m.pick}</b></td>"
+                f"<td style='{STYLE_TD}'><b>{m.pick}</b>{flag}</td>"
                 f"<td style='{STYLE_TD}'>{_pct(m.pick_prob)}</td>"
+                f"<td style='{STYLE_TD}'>{_pct(p_elo)}</td>"
                 f"<td style='{STYLE_TD}'>{score}</td>"
                 f"<td style='{STYLE_TD}'>{m.pred_total:.1f}</td></tr>"
             )
         parts.append(
             f"<h3 style='{STYLE_H3}'>{day} &middot; {len(sub)} games</h3>"
-            + _table(["Matchup (home in bold)", "Pick", "Win prob",
-                      "Exp. score (winner first)", "Exp. total"], rows)
+            + _table(["Matchup (home in bold)", "Pick", "Pick model win prob",
+                      "Elo-only win prob", "Elo-only exp. score (pick first)",
+                      "Elo-only exp. total"], rows)
         )
+    model = _model_label(fixtures)
+    disagree_txt = (
+        f" On this slate the two disagree on {disagreements} game"
+        f"{'s' if disagreements != 1 else ''}, marked &ne; Elo: there the pick is "
+        f"the model's call and the Elo columns show what rating alone would say."
+        if disagreements else " On this slate the two agree on every pick."
+    )
     parts.append(
-        f"<p style='{STYLE_NOTE}'>Win probability straight from Elo (home "
-        f"edge applied except at neutral sites, marked N). Expected score is "
-        f"the Elo-implied margin carved out of a matchup-specific total "
-        f"(each program's recent points for/against, shrunk to the FBS "
-        f"mean); read it as an average, not a literal final. FCS opponents "
-        f"are one pooled rating, so those lines are the least informative "
-        f"on the slate.</p>"
+        f"<p style='{STYLE_NOTE}'><b>Two different numbers.</b> The <b>pick</b> and "
+        f"the <b>pick model win prob</b> come from the {model} model, which "
+        f"starts from the Elo rating and adds each program's efficiency "
+        f"features; both are quoted for the picked side. The <b>Elo-only</b> "
+        f"columns (win prob, expected score, total) come from the pure Elo "
+        f"rating alone (home edge applied except at neutral sites, marked N) "
+        f"and have never seen the efficiency features or a market number."
+        f"{disagree_txt} The Elo-only expected score is the rating's implied "
+        f"margin carved out of a matchup-specific total (each program's recent "
+        f"points for/against, shrunk to the FBS mean); read it as an average, "
+        f"not a literal final. FCS opponents are one pooled rating, so those "
+        f"rows are the least informative on the slate.</p>"
     )
     return "".join(parts)
 
@@ -195,7 +243,10 @@ def _performance_section(recent: pd.DataFrame, ledger: dict) -> str:
         correct = int(recent["pick_correct"].astype(bool).sum())
         parts.append(
             f"<h3 style='{STYLE_H3}'>Past week: {correct}/{len(recent)} picks correct</h3>"
-            + _table(["", "Date", "Game", "Pick", "Final (home first)", "Log loss"], rows)
+            + _table(["", "Date", "Game", "Pick (pick model prob)", "Final (home first)",
+                      "Log loss"], rows)
+            + f"<p style='{STYLE_NOTE}'>Pick probability is the pick model's, as in "
+              f"the slate table above; log loss is scored on it.</p>"
         )
     return "".join(parts)
 
