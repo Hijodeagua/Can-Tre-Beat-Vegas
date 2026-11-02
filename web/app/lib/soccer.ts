@@ -260,9 +260,39 @@ export interface SoccerLeagueRanking {
   squadStatsClubCount: number | null;
 }
 
+/** One league's results freshness, from `state.results_status` in the
+ * pipeline. `stale` means more fixtures than a postponement or two are
+ * past their date with no score: the league's ratings, grades and
+ * forecasts stop at `newest_played`. */
+export interface SoccerLeagueFreshness {
+  name: string;
+  tier: number;
+  season: string;
+  newest_played: string | null;
+  newest_played_age_days: number | null;
+  played_season: number;
+  fixtures_season: number;
+  overdue: number;
+  oldest_overdue: string | null;
+  overdue_fixtures?: string[];
+  stale: boolean;
+  reason: string | null;
+}
+
+export interface SoccerResultsFreshness {
+  run_date: string;
+  /** Newest final across the openfootball leagues: the "results as of" date. */
+  as_of: string | null;
+  stale_leagues: string[];
+  thresholds?: { grace_days: number; overdue_max: number };
+  leagues: Record<string, SoccerLeagueFreshness>;
+}
+
 export interface SoccerLatest {
   generated_at: string;
   run_date: string;
+  /** Absent on a latest.json written before the freshness export existed. */
+  results_freshness?: SoccerResultsFreshness;
   ratings: Record<string, SoccerLeagueRatings>;
   league_rankings: Record<string, SoccerLeagueRanking>;
   slate: SoccerSlateRow[];

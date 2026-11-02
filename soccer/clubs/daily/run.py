@@ -7,7 +7,9 @@ For a run dated D (default: today, UTC — a 10:00 UTC run grades the prior
 evening's European slate in full):
 
 1. Refresh results.csv (league fixtures + finals) and uefa_results.csv
-   from openfootball — best-effort; committed data carries a failed fetch.
+   from openfootball, with finals overlaid from Understat (top flights)
+   and football-data.co.uk (top flights + Championship) — best-effort;
+   committed data carries a failed fetch.
 2. Rebuild the glued Elo state (leagues + UEFA cross-league matches) and
    refit the outcome + score models from it.
 3. Grade every previously persisted slate row whose result has now landed;
@@ -41,7 +43,7 @@ from soccer.clubs.daily.config import (
     SEASON_SIMS,
 )
 from soccer.clubs.daily.config import MLS_SIMS
-from soccer.clubs.daily.state import build_state, feed_status
+from soccer.clubs.daily.state import build_state, feed_status, results_status
 from soccer.clubs.data import mls as mls_struct
 from soccer.clubs.data.leagues import TIER1, current_season_for
 from soccer.clubs.model import mls_forecast as mls_predict
@@ -49,15 +51,24 @@ from soccer.clubs.model import mls_forecast as mls_predict
 
 def refresh_data() -> None:
     """Run the fetchers as subprocesses so their exit codes can't kill the
-    run — the committed CSVs are the fallback. fetch_mls MUST run after
-    fetch_results: the latter owns results.csv outright and rewrites it
-    whole from the openfootball leagues alone, which would drop MLS's rows
-    if it ran second."""
+    run — the committed CSVs are the fallback.
+
+    Order matters. The two secondary results sources (Understat via
+    fetch_xg, football-data.co.uk via fd_results) refresh first so
+    fetch_results can overlay their finals onto the openfootball fixture
+    list it rewrites results.csv from. fetch_mls MUST run after
+    fetch_results: the latter owns results.csv outright and would drop
+    MLS's rows if it ran second. results_overlay then runs once more on
+    the committed file, which is what carries the day's finals when the
+    openfootball fetch itself fails. fetch_shots goes last because it
+    snaps its rows onto results.csv finals."""
     for mod in (
+        "soccer.clubs.data.fetch_xg",
+        "soccer.clubs.data.fd_results",
         "soccer.clubs.data.fetch_results",
         "soccer.clubs.data.fetch_uefa",
         "soccer.clubs.data.fetch_mls",
-        "soccer.clubs.data.fetch_xg",
+        "soccer.clubs.data.results_overlay",
         "soccer.clubs.data.fetch_shots",
     ):
         proc = subprocess.run([sys.executable, "-m", mod], check=False)
@@ -87,10 +98,22 @@ def main() -> None:
     # guard already zeroes the feature and the slate runs on what is
     # current. It is the thing to notice in the log, though.
     print("== Feed freshness")
-    feeds = feed_status(run_date)
+    feeds = feed_status(run_date, state.results)
     from common.freshness import gate
     for report in feeds.values():
         gate(report)
+
+    # Results freshness per league: which leagues' finals have stopped
+    # arriving. Exported to the site, printed on the email, and read back
+    # by freshness_check.py to fail the workflow after the commit + send.
+    print("== Results freshness")
+    results_fresh = results_status(state.results, run_date)
+    for key, e in results_fresh["leagues"].items():
+        flag = "STALE" if e["stale"] else "ok"
+        print(f"   {e['name']:<20} newest {e['newest_played'] or '-'}  "
+              f"overdue {e['overdue']:>3}  {flag}" + (f"  {e['reason']}" if e["stale"] else ""))
+    if results_fresh["stale_leagues"]:
+        print(f"   ! stale results: {', '.join(results_fresh['stale_leagues'])}")
 
     print("== Grading")
     graded = grade.grade_all(state.results, run_date)
@@ -168,7 +191,8 @@ def main() -> None:
 
     print("== Exporting site JSON + ratings artifact")
     export_site.export(state, run_date, slate, futures, ledger, graded,
-                       feeds=feeds, mls_forecast=mls_forecast)
+                       feeds=feeds, mls_forecast=mls_forecast,
+                       results_freshness=results_fresh)
     from soccer.clubs.model import export_ratings
     export_ratings.export()
 
@@ -181,7 +205,8 @@ def main() -> None:
     week_season = current_season_for("epl", run_date)
     trend = trends.week_trends(week_slate, week_season, matches=state.adv_matches)
     html = emails.update_html(run_date, week_slate, recent, ledger, futures,
-                              mls_forecast=mls_forecast, trend=trend)
+                              mls_forecast=mls_forecast, trend=trend,
+                              freshness=results_fresh)
     out = EMAIL_REPORTS_DIR / run_date
     out.mkdir(parents=True, exist_ok=True)
     (out / "update.html").write_text(html, encoding="utf-8")

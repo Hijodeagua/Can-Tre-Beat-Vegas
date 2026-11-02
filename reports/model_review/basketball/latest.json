@@ -1,0 +1,256 @@
+{
+ "model": "basketball",
+ "title": "Basketball (NBA odds only, no model)",
+ "date": "2026-11-02",
+ "kind": "draft",
+ "generated_at": "2026-11-02T07:43:16+00:00",
+ "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1005 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-01 20:17, 17 games in the latest file across 9 books.",
+ "status": {
+  "state": "none",
+  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1005 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-01 20:17, 17 games in the latest file across 9 books.",
+  "source": "data/nba",
+  "as_of": "2026-11-01 20:17",
+  "blocks": [
+   {
+    "kind": "warn",
+    "text": "No NBA model, no picks, no grades. Every number on this page describes the odds feed, not a forecast. Do not read a win probability below as the repo's prediction: it is the bookmakers' consensus."
+   },
+   {
+    "kind": "kv",
+    "heading": "What exists",
+    "rows": [
+     [
+      "Predictive model",
+      "none (no NBA model folder, no NBA daily workflow)"
+     ],
+     [
+      "Odds snapshots on disk",
+      "1005 files, 2025-10-27 → 2026-11-02"
+     ],
+     [
+      "Newest snapshot pulled (ET)",
+      "2026-11-01 20:17"
+     ],
+     [
+      "Games in newest snapshot",
+      17
+     ],
+     [
+      "Bookmakers in newest snapshot",
+      "BetMGM, BetOnline.ag, BetRivers, BetUS, Bovada, DraftKings, FanDuel, LowVig.ag, MyBookie.ag"
+     ],
+     [
+      "Hand-dropped results files",
+      "december.csv, january.csv, november.csv, october.csv"
+     ],
+     [
+      "Cross-sport summary entry",
+      "status in_season, record —, last graded —"
+     ],
+     [
+      "Site slate block (48h window)",
+      "12 games, snapshot 2026-11-01 20:17:31"
+     ]
+    ],
+    "source": "data/nba, web/public/data/summary.json, web/public/data/slate.json",
+    "as_of": "2026-11-01 20:17"
+   },
+   {
+    "kind": "table",
+    "heading": "Workflow run health (unified odds, last 10 runs)",
+    "columns": [
+     "Workflow",
+     "Last conclusion",
+     "Last run (UTC)",
+     "Last success (UTC)",
+     "Failed/completed"
+    ],
+    "rows": [
+     [
+      "unified-odds.yml",
+      "unavailable",
+      null,
+      null,
+      null
+     ]
+    ],
+    "source": "reports/model_review/_runs/unified-odds.yml.json (gh run list)",
+    "as_of": "2026-11-02"
+   },
+   {
+    "kind": "bullets",
+    "heading": "Known failures and caveats",
+    "items": [
+     "unified-odds.yml: run history unavailable (no `reports/model_review/_runs/unified-odds.yml.json`; the workflow writes it from `gh run list` and a local run has no token)"
+    ]
+   }
+  ]
+ },
+ "features": {
+  "summary": "There is no model to describe. This is what a basketball board would need, from docs/MODEL_SOURCES.md.",
+  "source": "docs/MODEL_SOURCES.md",
+  "as_of": "2026-11-02",
+  "blocks": [
+   {
+    "kind": "bullets",
+    "heading": "What would be needed to build one",
+    "items": [
+     "A results spine (nba_api or Basketball Reference) with dates, scores, home/away and rest days",
+     "A betting-blind Elo tuned on held-out seasons, as the other four sports have",
+     "Then roster/availability inputs, the biggest signal in basketball"
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "summary": "Odds-feed observations only.",
+  "source": "data/nba/nba_odds_api_data_latest.csv",
+  "as_of": "2026-11-01 20:17",
+  "blocks": [
+   {
+    "kind": "table",
+    "heading": "Newest snapshot: consensus lines",
+    "columns": [
+     "Tip-off (ET)",
+     "Game (away @ home)",
+     "Home spread",
+     "Total",
+     "Home win prob (book consensus)"
+    ],
+    "rows": [
+     [
+      "2026-11-01 20:40",
+      "Los Angeles Clippers @ Golden State Warriors",
+      -1.78,
+      220.44,
+      "56.3%"
+     ],
+     [
+      "2026-11-01 21:10",
+      "Toronto Raptors @ Los Angeles Lakers",
+      -3.44,
+      223.67,
+      "61.5%"
+     ],
+     [
+      "2026-11-02 19:10",
+      "Oklahoma City Thunder @ Cleveland Cavaliers",
+      -3.92,
+      227.25,
+      "63.8%"
+     ],
+     [
+      "2026-11-02 19:40",
+      "Brooklyn Nets @ New York Knicks",
+      -14.75,
+      221.75,
+      "89.9%"
+     ],
+     [
+      "2026-11-02 19:40",
+      "Detroit Pistons @ Charlotte Hornets",
+      3.92,
+      209.42,
+      "41.7%"
+     ],
+     [
+      "2026-11-02 19:40",
+      "Chicago Bulls @ Philadelphia 76ers",
+      -11.33,
+      238.08,
+      "85.5%"
+     ],
+     [
+      "2026-11-02 19:40",
+      "Washington Wizards @ Orlando Magic",
+      -1.33,
+      224.83,
+      "54.7%"
+     ],
+     [
+      "2026-11-02 20:10",
+      "New Orleans Pelicans @ Memphis Grizzlies",
+      -6.08,
+      235.42,
+      "69.2%"
+     ],
+     [
+      "2026-11-02 20:10",
+      "Milwaukee Bucks @ Minnesota Timberwolves",
+      -10.67,
+      233.5,
+      "82.7%"
+     ],
+     [
+      "2026-11-02 20:40",
+      "Boston Celtics @ Houston Rockets",
+      -4.9,
+      219.3,
+      "64.6%"
+     ],
+     [
+      "2026-11-02 20:40",
+      "Utah Jazz @ San Antonio Spurs",
+      -16.0,
+      231.0,
+      "92.2%"
+     ],
+     [
+      "2026-11-02 21:10",
+      "Portland Trail Blazers @ Denver Nuggets",
+      -4.1,
+      229.9,
+      "63.1%"
+     ]
+    ],
+    "note": "Win probability is the de-vigged-free conversion of the average home moneyline; it is the market's number, not a model's."
+   }
+  ]
+ },
+ "report_card": {
+  "summary": "No report card: nothing is predicted, so nothing is graded. Accuracy, log loss, Brier and calibration do not exist for basketball.",
+  "source": "web/public/data/summary.json",
+  "as_of": "2026-11-02",
+  "blocks": [
+   {
+    "kind": "kv",
+    "rows": [
+     [
+      "Graded games",
+      0
+     ],
+     [
+      "Accuracy",
+      null
+     ],
+     [
+      "Log loss",
+      null
+     ],
+     [
+      "Brier",
+      null
+     ]
+    ]
+   }
+  ]
+ },
+ "improvements": {
+  "summary": "The only honest candidate is whether to build a model at all.",
+  "blocks": [
+   {
+    "kind": "bullets",
+    "items": [
+     "Decide whether basketball stays an odds-tracking page or gets a model (open question for TW).",
+     "If it gets one: the odds archive already holds 1005 snapshots since 2025-10-27, so a closing-line benchmark exists from day one."
+    ]
+   }
+  ]
+ },
+ "sources": [
+  "data/nba",
+  "docs/MODEL_SOURCES.md",
+  "web/public/data/slate.json",
+  "web/public/data/summary.json"
+ ]
+}

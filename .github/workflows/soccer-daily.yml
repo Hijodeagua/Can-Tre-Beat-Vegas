@@ -121,7 +121,8 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add soccer/clubs/data/*.csv soccer/clubs/model/artifacts/ \
+          git add soccer/clubs/data/*.csv soccer/clubs/data/*.json \
+                  soccer/clubs/model/artifacts/ \
                   data/soccer_clubs/ web/public/data/soccer/ reports/soccer/ \
                   web/public/emails/
           if [ -n "$(git status --porcelain)" ]; then
@@ -201,3 +202,17 @@ jobs:
             git commit -m "Soccer daily: record delivery ${{ steps.pipeline.outputs.date }}"
             bash .github/scripts/git-push-retry.sh main
           fi
+
+      # Loud failure for silently frozen results. openfootball stalled on
+      # 2026-09-20 and six weeks of green runs followed, each one emailing
+      # a September table. The pipeline now exports a per-league results
+      # freshness block; this step reads it back (thresholds in
+      # soccer/clubs/daily/config.py) and fails the run when a league in
+      # season has more overdue fixtures than a postponement or two. It
+      # runs last, after the commit and the email, so the day's outputs -
+      # which carry their own stale warning - still land; a red run is
+      # what makes GitHub notify the repo owner.
+      - name: Check results freshness
+        if: ${{ always() && steps.pipeline.outcome == 'success' }}
+        shell: bash
+        run: python -m soccer.clubs.daily.freshness_check

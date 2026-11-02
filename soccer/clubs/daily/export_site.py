@@ -297,7 +297,8 @@ def metric_catalogue() -> list[dict]:
 def export(state: DailyState, run_date: str, slate: pd.DataFrame,
            futures: dict, ledger: dict, graded_today: pd.DataFrame,
            feeds: dict | None = None,
-           mls_forecast: dict | None = None) -> None:
+           mls_forecast: dict | None = None,
+           results_freshness: dict | None = None) -> None:
     ratings = ratings_payload(state)
     # Before the futures block is serialized — this pops its projection.
     elo_projection = elo_projection_payload(futures, run_date)
@@ -319,6 +320,11 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
         "elo_history": elo_history_payload(state, run_date),
         "elo_projection": elo_projection,
         "feeds": feeds_payload(feeds),
+        # Per-league results freshness (state.results_status): the as-of
+        # date the site prints and the stale flags it warns on. Read back
+        # by daily/freshness_check.py, so the workflow gate and the site
+        # cannot disagree.
+        "results_freshness": results_freshness or {},
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,1064 @@
+{
+ "generated_at": "2026-11-02T07:22:26+00:00",
+ "window_days": 7,
+ "precedence": [
+  "openfootball",
+  "understat",
+  "football-data"
+ ],
+ "sources": {
+  "understat": {
+   "rows": 22026,
+   "filled": 187,
+   "redated": 12,
+   "agree": 21765,
+   "conflicts": 5,
+   "unmatched": 69,
+   "skipped_league": 0
+  },
+  "football-data": {
+   "rows": 0,
+   "filled": 0,
+   "redated": 0,
+   "agree": 0,
+   "conflicts": 0,
+   "unmatched": 0,
+   "skipped_league": 0
+  }
+ },
+ "by_league": {
+  "ligue_1": {
+   "filled": 32,
+   "redated": 1,
+   "agree": 4278,
+   "conflicts": 2,
+   "unmatched": 2,
+   "newest_filled": "2026-11-01"
+  },
+  "epl": {
+   "filled": 38,
+   "redated": 0,
+   "agree": 4544,
+   "conflicts": 0,
+   "unmatched": 66,
+   "newest_filled": "2026-10-31"
+  },
+  "bundesliga": {
+   "filled": 35,
+   "redated": 0,
+   "agree": 3707,
+   "conflicts": 1,
+   "unmatched": 0,
+   "newest_filled": "2026-11-01"
+  },
+  "la_liga": {
+   "filled": 36,
+   "redated": 11,
+   "agree": 4629,
+   "conflicts": 0,
+   "unmatched": 0,
+   "newest_filled": "2026-11-01"
+  },
+  "serie_a": {
+   "filled": 46,
+   "redated": 0,
+   "agree": 4607,
+   "conflicts": 2,
+   "unmatched": 1,
+   "newest_filled": "2026-11-01"
+  }
+ },
+ "conflicts": [
+  {
+   "source": "understat",
+   "kind": "score_mismatch",
+   "league": "serie_a",
+   "season": "2016-17",
+   "date": "2016-08-28",
+   "home_team": "US Sassuolo Calcio",
+   "away_team": "Delfino Pescara",
+   "primary_score": [
+    0,
+    3
+   ],
+   "source_score": [
+    2,
+    1
+   ],
+   "source_date": "2016-08-28"
+  },
+  {
+   "source": "understat",
+   "kind": "score_mismatch",
+   "league": "ligue_1",
+   "season": "2016-17",
+   "date": "2017-04-16",
+   "home_team": "SC Bastia",
+   "away_team": "Olympique Lyonnais",
+   "primary_score": [
+    0,
+    0
+   ],
+   "source_score": [
+    0,
+    3
+   ],
+   "source_date": "2017-04-16"
+  },
+  {
+   "source": "understat",
+   "kind": "score_mismatch",
+   "league": "serie_a",
+   "season": "2020-21",
+   "date": "2020-09-19",
+   "home_team": "Hellas Verona FC",
+   "away_team": "AS Roma",
+   "primary_score": [
+    3,
+    0
+   ],
+   "source_score": [
+    0,
+    0
+   ],
+   "source_date": "2020-09-19"
+  },
+  {
+   "source": "understat",
+   "kind": "score_mismatch",
+   "league": "bundesliga",
+   "season": "2024-25",
+   "date": "2024-12-14",
+   "home_team": "1. FC Union Berlin",
+   "away_team": "VfL Bochum 1848",
+   "primary_score": [
+    0,
+    2
+   ],
+   "source_score": [
+    1,
+    1
+   ],
+   "source_date": "2024-12-14"
+  },
+  {
+   "source": "understat",
+   "league": "ligue_1",
+   "season": "2026-27",
+   "date": "2026-08-23",
+   "home_team": "Paris Saint-Germain FC",
+   "away_team": "Stade Rennais FC 1901",
+   "source_score": [
+    2,
+    2
+   ],
+   "kind": "home_away_swapped",
+   "primary_date": "2026-08-23",
+   "primary_score": [
+    2,
+    2
+   ]
+  }
+ ],
+ "unmatched": [
+  {
+   "source": "understat",
+   "league": "ligue_1",
+   "season": "2017-18",
+   "date": "2018-04-14",
+   "home_team": "SM Caen",
+   "away_team": "Toulouse FC",
+   "source_score": [
+    0,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-01",
+   "home_team": "AFC Bournemouth",
+   "away_team": "Newcastle United FC",
+   "source_score": [
+    1,
+    4
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-01",
+   "home_team": "Arsenal FC",
+   "away_team": "Norwich City FC",
+   "source_score": [
+    4,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-01",
+   "home_team": "Everton FC",
+   "away_team": "Leicester City FC",
+   "source_score": [
+    2,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-01",
+   "home_team": "West Ham United FC",
+   "away_team": "Chelsea FC",
+   "source_score": [
+    3,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-02",
+   "home_team": "Manchester City FC",
+   "away_team": "Liverpool FC",
+   "source_score": [
+    4,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-02",
+   "home_team": "Sheffield United FC",
+   "away_team": "Tottenham Hotspur FC",
+   "source_score": [
+    3,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-04",
+   "home_team": "Chelsea FC",
+   "away_team": "Watford FC",
+   "source_score": [
+    3,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-04",
+   "home_team": "Leicester City FC",
+   "away_team": "Crystal Palace FC",
+   "source_score": [
+    3,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-04",
+   "home_team": "Manchester United FC",
+   "away_team": "AFC Bournemouth",
+   "source_score": [
+    5,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-04",
+   "home_team": "Norwich City FC",
+   "away_team": "Brighton & Hove Albion FC",
+   "source_score": [
+    0,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-04",
+   "home_team": "Wolverhampton Wanderers FC",
+   "away_team": "Arsenal FC",
+   "source_score": [
+    0,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-05",
+   "home_team": "Burnley FC",
+   "away_team": "Sheffield United FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-05",
+   "home_team": "Liverpool FC",
+   "away_team": "Aston Villa FC",
+   "source_score": [
+    2,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-05",
+   "home_team": "Newcastle United FC",
+   "away_team": "West Ham United FC",
+   "source_score": [
+    2,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-05",
+   "home_team": "Southampton FC",
+   "away_team": "Manchester City FC",
+   "source_score": [
+    1,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-06",
+   "home_team": "Tottenham Hotspur FC",
+   "away_team": "Everton FC",
+   "source_score": [
+    1,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-07",
+   "home_team": "Arsenal FC",
+   "away_team": "Leicester City FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-07",
+   "home_team": "Crystal Palace FC",
+   "away_team": "Chelsea FC",
+   "source_score": [
+    2,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-07",
+   "home_team": "Watford FC",
+   "away_team": "Norwich City FC",
+   "source_score": [
+    2,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-08",
+   "home_team": "Brighton & Hove Albion FC",
+   "away_team": "Liverpool FC",
+   "source_score": [
+    1,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-08",
+   "home_team": "Manchester City FC",
+   "away_team": "Newcastle United FC",
+   "source_score": [
+    5,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-08",
+   "home_team": "Sheffield United FC",
+   "away_team": "Wolverhampton Wanderers FC",
+   "source_score": [
+    1,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-08",
+   "home_team": "West Ham United FC",
+   "away_team": "Burnley FC",
+   "source_score": [
+    0,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-09",
+   "home_team": "AFC Bournemouth",
+   "away_team": "Tottenham Hotspur FC",
+   "source_score": [
+    0,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-09",
+   "home_team": "Aston Villa FC",
+   "away_team": "Manchester United FC",
+   "source_score": [
+    0,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-09",
+   "home_team": "Everton FC",
+   "away_team": "Southampton FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-11",
+   "home_team": "Brighton & Hove Albion FC",
+   "away_team": "Manchester City FC",
+   "source_score": [
+    0,
+    5
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-11",
+   "home_team": "Liverpool FC",
+   "away_team": "Burnley FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-11",
+   "home_team": "Norwich City FC",
+   "away_team": "West Ham United FC",
+   "source_score": [
+    0,
+    4
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-11",
+   "home_team": "Sheffield United FC",
+   "away_team": "Chelsea FC",
+   "source_score": [
+    3,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-11",
+   "home_team": "Watford FC",
+   "away_team": "Newcastle United FC",
+   "source_score": [
+    2,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-12",
+   "home_team": "AFC Bournemouth",
+   "away_team": "Leicester City FC",
+   "source_score": [
+    4,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-12",
+   "home_team": "Aston Villa FC",
+   "away_team": "Crystal Palace FC",
+   "source_score": [
+    2,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-12",
+   "home_team": "Tottenham Hotspur FC",
+   "away_team": "Arsenal FC",
+   "source_score": [
+    2,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-12",
+   "home_team": "Wolverhampton Wanderers FC",
+   "away_team": "Everton FC",
+   "source_score": [
+    3,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-13",
+   "home_team": "Manchester United FC",
+   "away_team": "Southampton FC",
+   "source_score": [
+    2,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-14",
+   "home_team": "Chelsea FC",
+   "away_team": "Norwich City FC",
+   "source_score": [
+    1,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-15",
+   "home_team": "Arsenal FC",
+   "away_team": "Liverpool FC",
+   "source_score": [
+    2,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-15",
+   "home_team": "Burnley FC",
+   "away_team": "Wolverhampton Wanderers FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-15",
+   "home_team": "Manchester City FC",
+   "away_team": "AFC Bournemouth",
+   "source_score": [
+    2,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-15",
+   "home_team": "Newcastle United FC",
+   "away_team": "Tottenham Hotspur FC",
+   "source_score": [
+    1,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-16",
+   "home_team": "Crystal Palace FC",
+   "away_team": "Manchester United FC",
+   "source_score": [
+    0,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-16",
+   "home_team": "Everton FC",
+   "away_team": "Aston Villa FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-16",
+   "home_team": "Leicester City FC",
+   "away_team": "Sheffield United FC",
+   "source_score": [
+    2,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-16",
+   "home_team": "Southampton FC",
+   "away_team": "Brighton & Hove Albion FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-17",
+   "home_team": "West Ham United FC",
+   "away_team": "Watford FC",
+   "source_score": [
+    3,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-18",
+   "home_team": "Norwich City FC",
+   "away_team": "Burnley FC",
+   "source_score": [
+    0,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-19",
+   "home_team": "AFC Bournemouth",
+   "away_team": "Southampton FC",
+   "source_score": [
+    0,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-19",
+   "home_team": "Tottenham Hotspur FC",
+   "away_team": "Leicester City FC",
+   "source_score": [
+    3,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-20",
+   "home_team": "Brighton & Hove Albion FC",
+   "away_team": "Newcastle United FC",
+   "source_score": [
+    0,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-20",
+   "home_team": "Sheffield United FC",
+   "away_team": "Everton FC",
+   "source_score": [
+    0,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-20",
+   "home_team": "Wolverhampton Wanderers FC",
+   "away_team": "Crystal Palace FC",
+   "source_score": [
+    2,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-21",
+   "home_team": "Aston Villa FC",
+   "away_team": "Arsenal FC",
+   "source_score": [
+    1,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-21",
+   "home_team": "Watford FC",
+   "away_team": "Manchester City FC",
+   "source_score": [
+    0,
+    4
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-22",
+   "home_team": "Liverpool FC",
+   "away_team": "Chelsea FC",
+   "source_score": [
+    5,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-22",
+   "home_team": "Manchester United FC",
+   "away_team": "West Ham United FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Arsenal FC",
+   "away_team": "Watford FC",
+   "source_score": [
+    3,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Burnley FC",
+   "away_team": "Brighton & Hove Albion FC",
+   "source_score": [
+    1,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Chelsea FC",
+   "away_team": "Wolverhampton Wanderers FC",
+   "source_score": [
+    2,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Crystal Palace FC",
+   "away_team": "Tottenham Hotspur FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Everton FC",
+   "away_team": "AFC Bournemouth",
+   "source_score": [
+    1,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Leicester City FC",
+   "away_team": "Manchester United FC",
+   "source_score": [
+    0,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Manchester City FC",
+   "away_team": "Norwich City FC",
+   "source_score": [
+    5,
+    0
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Newcastle United FC",
+   "away_team": "Liverpool FC",
+   "source_score": [
+    1,
+    3
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "Southampton FC",
+   "away_team": "Sheffield United FC",
+   "source_score": [
+    3,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "epl",
+   "season": "2019-20",
+   "date": "2020-07-26",
+   "home_team": "West Ham United FC",
+   "away_team": "Aston Villa FC",
+   "source_score": [
+    1,
+    1
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "serie_a",
+   "season": "2023-24",
+   "date": "2024-04-14",
+   "home_team": "Udinese Calcio",
+   "away_team": "AS Roma",
+   "source_score": [
+    1,
+    2
+   ],
+   "kind": "no_fixture"
+  },
+  {
+   "source": "understat",
+   "league": "ligue_1",
+   "season": "2025-26",
+   "date": "2026-05-17",
+   "home_team": "FC Nantes",
+   "away_team": "Toulouse FC",
+   "source_score": [
+    0,
+    0
+   ],
+   "kind": "no_fixture"
+  }
+ ],
+ "played_before": 59156,
+ "played_after": 59343
+}

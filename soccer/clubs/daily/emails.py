@@ -37,6 +37,56 @@ def _league_name(key: str) -> str:
     return lg.name if lg else key
 
 
+STYLE_WARN = (
+    "background:#fff4e5;border:1px solid #f0a000;border-radius:4px;"
+    "padding:8px 10px;margin:10px 0;font-size:13px;color:#5a3b00;"
+)
+
+
+def _stale_set(freshness: dict | None) -> set[str]:
+    return set((freshness or {}).get("stale_leagues") or [])
+
+
+def _league_heading(key: str, freshness: dict | None) -> str:
+    """League name, with a loud STALE tag when its results have stopped
+    arriving so a reader never takes a frozen table for a current one."""
+    name = _league_name(key)
+    if key in _stale_set(freshness):
+        e = (freshness or {}).get("leagues", {}).get(key, {})
+        return (f"{name} <span style='color:#b00;font-weight:normal;font-size:12px;'>"
+                f"&#9888; STALE &mdash; no results since {e.get('newest_played') or '?'}</span>")
+    return name
+
+
+def _freshness_section(freshness: dict | None) -> str:
+    """Data as-of line plus a warning box per stale league. Sits at the
+    top of the email: the six-week stall of autumn 2026 went unnoticed
+    partly because nothing on the page said how old the numbers were."""
+    if not freshness or not freshness.get("leagues"):
+        return ""
+    leagues = freshness["leagues"]
+    parts = []
+    bits = []
+    for key, e in leagues.items():
+        if e.get("reason") in ("no_fixtures", "no_fixture_list") and not e.get("newest_played"):
+            continue
+        tag = " <b style='color:#b00;'>STALE</b>" if e.get("stale") else ""
+        bits.append(f"{e.get('name', key)} {e.get('newest_played') or '&mdash;'}{tag}")
+    parts.append(
+        f"<p style='color:#666;font-size:12px;margin:4px 0 0 0;'>"
+        f"<b>Results as of {freshness.get('as_of') or '&mdash;'}</b> (newest final per league: "
+        + " &middot; ".join(bits) + ").</p>"
+    )
+    for key in freshness.get("stale_leagues") or []:
+        e = leagues.get(key, {})
+        parts.append(
+            f"<div style='{STYLE_WARN}'>&#9888; <b>{e.get('name', key)} results are stale.</b> "
+            f"{e.get('reason') or ''} The {e.get('name', key)} ratings, grades and forecasts "
+            f"below stop at that date and should not be read as current.</div>"
+        )
+    return "".join(parts)
+
+
 def _pct(x: float) -> str:
     return f"{100 * x:.0f}%" if x >= 0.005 else "<1%"
 
@@ -73,7 +123,7 @@ def _score_odds(match) -> str:
     return (f" <span style='color:#999;'>({_pct(float(p))})</span>")
 
 
-def _fixtures_section(fixtures: pd.DataFrame) -> str:
+def _fixtures_section(fixtures: pd.DataFrame, freshness: dict | None = None) -> str:
     if fixtures.empty:
         return "<p>No league fixtures in the coming week.</p>"
     parts = []
@@ -92,7 +142,7 @@ def _fixtures_section(fixtures: pd.DataFrame) -> str:
                 f"{_score_odds(m)}</td></tr>"
             )
         parts.append(
-            f"<h3 style='{STYLE_H3}'>{_league_name(league)}</h3>"
+            f"<h3 style='{STYLE_H3}'>{_league_heading(league, freshness)}</h3>"
             + _table(["Date", "Match", "H / D / A", "Pick", "Proj score"], rows)
         )
     return "".join(parts)
@@ -161,10 +211,10 @@ def _performance_section(recent: pd.DataFrame, ledger: dict) -> str:
     return "".join(parts)
 
 
-def _forecast_section(futures: dict) -> str:
+def _forecast_section(futures: dict, freshness: dict | None = None) -> str:
     parts = []
     for league, sim in futures.items():
-        name = _league_name(league)
+        name = _league_heading(league, freshness)
         if sim.get("status") == "mls_forecast":
             continue  # has its own section below, with its own questions
         if sim.get("status") == "no_fixtures" or not sim.get("clubs"):
@@ -355,15 +405,17 @@ def _mls_section(forecast: dict | None) -> str:
 def update_html(run_date: str, fixtures: pd.DataFrame, recent: pd.DataFrame,
                 ledger: dict, futures: dict,
                 mls_forecast: dict | None = None,
-                trend: dict | None = None) -> str:
+                trend: dict | None = None,
+                freshness: dict | None = None) -> str:
     body = (
-        "<h2 style='font-size:16px;margin:20px 0 0 0;'>&#128197; Games this week</h2>"
-        + _fixtures_section(fixtures)
+        _freshness_section(freshness)
+        + "<h2 style='font-size:16px;margin:20px 0 0 0;'>&#128197; Games this week</h2>"
+        + _fixtures_section(fixtures, freshness)
         + _trend_block(trend)
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128200; Model performance</h2>"
         + _performance_section(recent, ledger)
         + "<h2 style='font-size:16px;margin:28px 0 0 0;'>&#128302; Final-table forecasts</h2>"
-        + _forecast_section(futures)
+        + _forecast_section(futures, freshness)
     )
     mls_block = _mls_section(mls_forecast)
     if mls_block:

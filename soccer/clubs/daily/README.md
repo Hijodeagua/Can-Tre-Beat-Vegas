@@ -23,13 +23,19 @@ publish the site JSON, and render the twice-weekly update email.
 
 ## Data flow for a run dated D (UTC)
 
-1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` (a shim over `data/understat.py`) + `fetch_shots` refresh the committed CSVs;
-   `state.feed_status` then logs each form feed's freshness (a STALE feed is zeroed by its guard, not an error)
-   (best-effort; the 10:00 UTC schedule means the prior evening's European
-   matches are final and upstream has usually caught up). Order matters:
-   `fetch_results` rewrites `results.csv` whole from the openfootball
-   leagues alone, so `fetch_mls` — which only ever touches its own rows —
-   always runs after it, or MLS would be silently dropped.
+1. `fetch_xg` (a shim over `data/understat.py`) + `fd_results` +
+   `fetch_results` + `fetch_uefa` + `fetch_mls` + `results_overlay` +
+   `fetch_shots` refresh the committed CSVs (best-effort; the 10:00 UTC
+   schedule means the prior evening's European matches are final and
+   upstream has usually caught up). Order matters: the two secondary
+   results sources refresh first so `fetch_results` can overlay their
+   finals onto the openfootball fixture list it rewrites `results.csv`
+   from; `fetch_mls` — which only ever touches its own rows — runs after
+   it, or MLS would be silently dropped; `results_overlay` runs again on
+   the committed file so a failed openfootball fetch still gets the day's
+   finals; `fetch_shots` goes last because it snaps onto `results.csv`
+   finals. `state.feed_status` then logs each form feed's freshness and
+   `state.results_status` each league's results freshness (below).
 2. The glued replay (`model/europe.py`) rebuilds every league pool from
    scratch — deterministic, no incremental state to corrupt — and the
    outcome + score models are refit from that history in-run (no pickle
@@ -117,3 +123,42 @@ publish the site JSON, and render the twice-weekly update email.
   weekly models check (`data_jobs/reports/models_check.py`,
   `.github/workflows/weekly-models-check.yml`) covers cross-model
   performance and feature importances.
+
+## Results sources and freshness
+
+- **Fixture backbone: openfootball** (`data/fetch_results.py`). It
+  publishes every league's full-season fixture list and most finals, but
+  it stalled on 2026-09-20 for 2026-27 (no played match in any of the six
+  leagues after that date) and every run stayed green for six weeks.
+- **Overlay: Understat + football-data.co.uk** (`data/results_overlay.py`).
+  Understat's processed table (`understat_matches.csv`, the xG feed) carries
+  finals for the five top flights; football-data.co.uk (`data/fd_results.py`
+  → `fd_results.csv`, the same publisher the shots feed uses) carries the
+  Championship as well. Precedence is openfootball → Understat →
+  football-data: a later source never overwrites an earlier score, only
+  cross-checks it. A source row matches a fixture on the exact
+  (league, date, home, away) key, or on the same pairing within
+  `WINDOW_DAYS` (7) — openfootball lists provisional dates that the leagues
+  move by a day or two, and the fixture is moved to the date it was played
+  on. Score disagreements are logged and the openfootball score kept (they
+  are awarded results: Sassuolo–Pescara 2016, Bastia–Lyon 2017, Verona–Roma
+  2020). A source row with no fixture to land on is never appended. Every
+  run writes `data/results_overlay_report.json` with the counts, the
+  conflicts and the unmatched rows.
+- **Results freshness** (`state.results_status`, thresholds in
+  `config.py`): a fixture is *overdue* when it is dated more than
+  `RESULTS_GRACE_DAYS` (2) before the run date and has no score; a league is
+  *stale* when more than `RESULTS_OVERDUE_MAX` (3) of its fixtures are
+  overdue. A stalled feed accumulates a whole round within days, while a
+  genuinely postponed match stays a lone overdue row. Breaks schedule
+  nothing, so they overdue nothing. The block is exported to
+  `latest.json` as `results_freshness`, printed at the top of the update
+  email (as-of date, a warning per stale league, STALE tags on that
+  league's headings) and on the site, and read back by
+  `freshness_check.py`, which the workflow runs last to fail the run when
+  any league is stale.
+- **Feed freshness** (`state.feed_status`): while league fixtures are being
+  played (`SEASON_ACTIVE_LOOKBACK_DAYS`), each form feed is reported
+  against `FEED_TOLERANCE_IN_SEASON_DAYS` (10) instead of its 130-day
+  model guard, so a six-week-old feed can no longer print `fresh: true`
+  mid-season. The guard itself is a model parameter and is unchanged.
