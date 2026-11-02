@@ -180,6 +180,15 @@ def main() -> None:
     if played == 0:
         print("Nothing fetched; keeping the committed results.csv untouched.")
         sys.exit(1)
+    # openfootball stalled on 2026-09-20; the secondary sources (Understat,
+    # football-data.co.uk) carry the finals it is missing. Applied here so
+    # results.csv is never written without them, and again as its own
+    # step in the daily runner so a failed openfootball fetch still gets
+    # the day's finals onto the committed file.
+    from soccer.clubs.data import results_overlay
+    rows, report = results_overlay.apply(rows, results_overlay.default_sources())
+    results_overlay.write_report(report)
+    played = sum(1 for r in rows if r["home_score"] != "")
     write(rows)
     print(f"Wrote {len(rows)} rows ({played} played) to {OUT_CSV}")
 

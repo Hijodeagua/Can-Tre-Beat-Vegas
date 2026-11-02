@@ -7,7 +7,9 @@ For a run dated D (default: today, UTC — a 10:00 UTC run grades the prior
 evening's European slate in full):
 
 1. Refresh results.csv (league fixtures + finals) and uefa_results.csv
-   from openfootball — best-effort; committed data carries a failed fetch.
+   from openfootball, with finals overlaid from Understat (top flights)
+   and football-data.co.uk (top flights + Championship) — best-effort;
+   committed data carries a failed fetch.
 2. Rebuild the glued Elo state (leagues + UEFA cross-league matches) and
    refit the outcome + score models from it.
 3. Grade every previously persisted slate row whose result has now landed;
@@ -49,15 +51,24 @@ from soccer.clubs.model import mls_forecast as mls_predict
 
 def refresh_data() -> None:
     """Run the fetchers as subprocesses so their exit codes can't kill the
-    run — the committed CSVs are the fallback. fetch_mls MUST run after
-    fetch_results: the latter owns results.csv outright and rewrites it
-    whole from the openfootball leagues alone, which would drop MLS's rows
-    if it ran second."""
+    run — the committed CSVs are the fallback.
+
+    Order matters. The two secondary results sources (Understat via
+    fetch_xg, football-data.co.uk via fd_results) refresh first so
+    fetch_results can overlay their finals onto the openfootball fixture
+    list it rewrites results.csv from. fetch_mls MUST run after
+    fetch_results: the latter owns results.csv outright and would drop
+    MLS's rows if it ran second. results_overlay then runs once more on
+    the committed file, which is what carries the day's finals when the
+    openfootball fetch itself fails. fetch_shots goes last because it
+    snaps its rows onto results.csv finals."""
     for mod in (
+        "soccer.clubs.data.fetch_xg",
+        "soccer.clubs.data.fd_results",
         "soccer.clubs.data.fetch_results",
         "soccer.clubs.data.fetch_uefa",
         "soccer.clubs.data.fetch_mls",
-        "soccer.clubs.data.fetch_xg",
+        "soccer.clubs.data.results_overlay",
         "soccer.clubs.data.fetch_shots",
     ):
         proc = subprocess.run([sys.executable, "-m", mod], check=False)

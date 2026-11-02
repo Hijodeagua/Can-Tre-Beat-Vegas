@@ -23,13 +23,19 @@ publish the site JSON, and render the twice-weekly update email.
 
 ## Data flow for a run dated D (UTC)
 
-1. `fetch_results` + `fetch_uefa` + `fetch_mls` + `fetch_xg` (a shim over `data/understat.py`) + `fetch_shots` refresh the committed CSVs;
-   `state.feed_status` then logs each form feed's freshness (a STALE feed is zeroed by its guard, not an error)
-   (best-effort; the 10:00 UTC schedule means the prior evening's European
-   matches are final and upstream has usually caught up). Order matters:
-   `fetch_results` rewrites `results.csv` whole from the openfootball
-   leagues alone, so `fetch_mls` — which only ever touches its own rows —
-   always runs after it, or MLS would be silently dropped.
+1. `fetch_xg` (a shim over `data/understat.py`) + `fd_results` +
+   `fetch_results` + `fetch_uefa` + `fetch_mls` + `results_overlay` +
+   `fetch_shots` refresh the committed CSVs (best-effort; the 10:00 UTC
+   schedule means the prior evening's European matches are final and
+   upstream has usually caught up). Order matters: the two secondary
+   results sources refresh first so `fetch_results` can overlay their
+   finals onto the openfootball fixture list it rewrites `results.csv`
+   from; `fetch_mls` — which only ever touches its own rows — runs after
+   it, or MLS would be silently dropped; `results_overlay` runs again on
+   the committed file so a failed openfootball fetch still gets the day's
+   finals; `fetch_shots` goes last because it snaps onto `results.csv`
+   finals. `state.feed_status` then logs each form feed's freshness (a
+   STALE feed is zeroed by its guard, not an error).
 2. The glued replay (`model/europe.py`) rebuilds every league pool from
    scratch — deterministic, no incremental state to corrupt — and the
    outcome + score models are refit from that history in-run (no pickle
@@ -117,3 +123,25 @@ publish the site JSON, and render the twice-weekly update email.
   weekly models check (`data_jobs/reports/models_check.py`,
   `.github/workflows/weekly-models-check.yml`) covers cross-model
   performance and feature importances.
+
+## Results sources and freshness
+
+- **Fixture backbone: openfootball** (`data/fetch_results.py`). It
+  publishes every league's full-season fixture list and most finals, but
+  it stalled on 2026-09-20 for 2026-27 (no played match in any of the six
+  leagues after that date) and every run stayed green for six weeks.
+- **Overlay: Understat + football-data.co.uk** (`data/results_overlay.py`).
+  Understat's processed table (`understat_matches.csv`, the xG feed) carries
+  finals for the five top flights; football-data.co.uk (`data/fd_results.py`
+  → `fd_results.csv`, the same publisher the shots feed uses) carries the
+  Championship as well. Precedence is openfootball → Understat →
+  football-data: a later source never overwrites an earlier score, only
+  cross-checks it. A source row matches a fixture on the exact
+  (league, date, home, away) key, or on the same pairing within
+  `WINDOW_DAYS` (7) — openfootball lists provisional dates that the leagues
+  move by a day or two, and the fixture is moved to the date it was played
+  on. Score disagreements are logged and the openfootball score kept (they
+  are awarded results: Sassuolo–Pescara 2016, Bastia–Lyon 2017, Verona–Roma
+  2020). A source row with no fixture to land on is never appended. Every
+  run writes `data/results_overlay_report.json` with the counts, the
+  conflicts and the unmatched rows.
