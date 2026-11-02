@@ -84,7 +84,12 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
             git commit -m "Odds update: $timestamp"
-            git push
+            # The MLB/NFL/CFB/soccer jobs push around the same time, so a
+            # bare `git push` here was rejected ("fetch first") on roughly
+            # every other scheduled run and the snapshot + usage record
+            # were lost. The helper rebases, merges the generated files
+            # (api_usage.json is unioned, never dropped) and retries.
+            bash .github/scripts/git-push-retry.sh main
           else
             echo "No changes to commit."
           fi
@@ -130,8 +135,9 @@ jobs:
             <h2>Unified Odds workflow failed</h2>
             <p>Repository: <strong>${{ github.repository }}</strong></p>
             <p>Workflow: <strong>${{ github.workflow }}</strong> (run #${{ github.run_number }})</p>
-            <p>The odds fetch or staleness check failed. This usually means an
-            Odds API outage, an exhausted quota, or a stale
+            <p>The odds fetch, the commit/push, or the staleness check failed.
+            This usually means an Odds API outage, an exhausted quota, a push
+            that was still rejected after every retry, or a stale
             <code>_latest.csv</code> despite upcoming games.</p>
             <p>
               <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">

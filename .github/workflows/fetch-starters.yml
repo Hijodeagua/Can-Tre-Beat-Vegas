@@ -46,11 +46,11 @@ jobs:
           git add data/mlb/starting_pitchers_2009_2025.csv
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Add Retrosheet starting pitchers 2009-2025"
-            for i in 1 2 3 4; do
-              git pull --rebase && git push && break
-              echo "push attempt $i failed; retrying"
-              sleep $((2 ** i))
-            done
+            # The old inline loop fell through to `sleep` (exit 0) after
+            # its last failed attempt, so the step could report success
+            # with the commit never pushed. The shared helper exits
+            # nonzero unless a push actually reached the remote.
+            bash .github/scripts/git-push-retry.sh "$GITHUB_REF_NAME"
           else
             echo "No changes."
           fi

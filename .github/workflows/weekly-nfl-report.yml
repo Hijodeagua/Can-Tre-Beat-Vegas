@@ -92,7 +92,11 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             timestamp=$(date -u +'%Y-%m-%d %H:%M UTC')
             git commit -m "Weekly NFL report: $timestamp"
-            git push
+            # Rebase-and-retry rather than a bare push: the daily NFL job
+            # refreshes the same nflverse schedule file, and a push that
+            # lands between this job's checkout and its push was rejected
+            # outright. The helper keeps this run's (newer) refresh.
+            bash .github/scripts/git-push-retry.sh main
           else
             echo "No changes to commit."
           fi

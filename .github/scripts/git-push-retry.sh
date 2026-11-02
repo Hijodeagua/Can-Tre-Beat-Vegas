@@ -23,6 +23,17 @@ MAX_ATTEMPTS="${2:-4}"
 # derived, never hand-edited: the index is the union of both sides and
 # the summary is rebuilt from the data, so the conflict is resolved here
 # rather than dropping the whole commit.
+#
+# During a rebase, stage 2 (":2:") is the side already on the remote and
+# stage 3 (":3:") is this run's commit being replayed. Three kinds of
+# generated file are resolved:
+#   - append-only ledgers (the email index, the odds API usage log): the
+#     union of both sides, so no delivery or usage record is lost;
+#   - derived summaries (summary.json): rebuilt from the data on disk;
+#   - whole-file refreshes from one upstream (the nflverse schedule, the
+#     squad features, the odds snapshot exports): this run's copy is the
+#     newer fetch of the same thing, so it wins outright.
+# Anything else is a real conflict and fails the push loudly.
 resolve_generated_conflicts() {
   local resolved=1
   for f in $(git diff --name-only --diff-filter=U); do
@@ -34,8 +45,21 @@ resolve_generated_conflicts() {
           --ours /tmp/index.ours.json --theirs /tmp/index.theirs.json --out "$f" \
           && git add "$f" || resolved=0
         ;;
+      data/api_usage.json)
+        git show ":2:$f" > /tmp/usage.ours.json
+        git show ":3:$f" > /tmp/usage.theirs.json
+        python -m data_jobs.odds_api.merge_usage \
+          --ours /tmp/usage.ours.json --theirs /tmp/usage.theirs.json --out "$f" \
+          && git add "$f" || resolved=0
+        ;;
       web/public/data/summary.json)
         python -m data_jobs.build_summary && git add "$f" || resolved=0
+        ;;
+      data/schedules/nflverse_games.csv|data/rosters/squad_features.csv|\
+      data/fetch_status.json|web/public/data/slate.json|web/public/data/meta.json|\
+      web/public/data/importance.json|data/*_latest.csv|data/*/*_latest.csv)
+        echo "git-push-retry: $f is a whole-file refresh; keeping this run's copy"
+        git checkout --theirs -- "$f" && git add "$f" || resolved=0
         ;;
       *)
         echo "git-push-retry: unresolvable conflict in $f"
