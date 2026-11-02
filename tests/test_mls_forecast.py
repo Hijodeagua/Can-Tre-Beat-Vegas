@@ -174,11 +174,26 @@ class TestInterDraw:
             # Always across the conference divide, never within it.
             assert all(mls.conference(h) != mls.conference(a) for h, a in drawn)
 
-    def test_draws_differ_between_simulations(self, results, season):
-        rem = mls.remaining_fixtures(results, season)
+    def test_draws_differ_between_simulations(self):
+        # On the synthetic season no cross-conference match has been played,
+        # so every inter fixture is still to be drawn and the pairing has
+        # real freedom. The live season cannot be used here: late in the
+        # year only a handful of cross-conference fixtures remain (three
+        # on 2026-11-02) and the quotas then admit exactly one valid
+        # pairing, which made this assertion fail from the end of October.
+        rem = mls.remaining_fixtures(synthetic_season(), "2026")
+        assert rem.inter_count > 3
         rng = np.random.default_rng(3)
         draws = {tuple(sorted(F._sample_inter(rng, rem))) for _ in range(10)}
         assert len(draws) > 1
+
+    def test_live_season_draw_is_valid_even_when_forced(self, results, season):
+        """Whatever is left of the live season, the sampler returns a
+        pairing - a single forced one near the end is fine."""
+        rem = mls.remaining_fixtures(results, season)
+        rng = np.random.default_rng(3)
+        drawn = F._sample_inter(rng, rem)
+        assert len(drawn) == rem.inter_count
 
 
 class TestScoreTable:
