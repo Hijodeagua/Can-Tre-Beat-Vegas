@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-02T07:22:26+00:00",
+ "generated_at": "2026-11-02T17:06:49+00:00",
  "window_days": 7,
  "precedence": [
   "openfootball",
@@ -9,18 +9,18 @@
  "sources": {
   "understat": {
    "rows": 22026,
-   "filled": 187,
-   "redated": 12,
-   "agree": 21765,
+   "filled": 0,
+   "redated": 0,
+   "agree": 21952,
    "conflicts": 5,
    "unmatched": 69,
    "skipped_league": 0
   },
   "football-data": {
-   "rows": 0,
+   "rows": 603,
    "filled": 0,
    "redated": 0,
-   "agree": 0,
+   "agree": 603,
    "conflicts": 0,
    "unmatched": 0,
    "skipped_league": 0
@@ -28,44 +28,52 @@
  },
  "by_league": {
   "ligue_1": {
-   "filled": 32,
-   "redated": 1,
-   "agree": 4278,
+   "filled": 0,
+   "redated": 0,
+   "agree": 4390,
    "conflicts": 2,
    "unmatched": 2,
-   "newest_filled": "2026-11-01"
+   "newest_filled": null
   },
   "epl": {
-   "filled": 38,
+   "filled": 0,
    "redated": 0,
-   "agree": 4544,
+   "agree": 4671,
    "conflicts": 0,
    "unmatched": 66,
-   "newest_filled": "2026-10-31"
+   "newest_filled": null
   },
   "bundesliga": {
-   "filled": 35,
+   "filled": 0,
    "redated": 0,
-   "agree": 3707,
+   "agree": 3814,
    "conflicts": 1,
    "unmatched": 0,
-   "newest_filled": "2026-11-01"
+   "newest_filled": null
   },
   "la_liga": {
-   "filled": 36,
-   "redated": 11,
-   "agree": 4629,
+   "filled": 0,
+   "redated": 0,
+   "agree": 4773,
    "conflicts": 0,
    "unmatched": 0,
-   "newest_filled": "2026-11-01"
+   "newest_filled": null
   },
   "serie_a": {
-   "filled": 46,
+   "filled": 0,
    "redated": 0,
-   "agree": 4607,
+   "agree": 4751,
    "conflicts": 2,
    "unmatched": 1,
-   "newest_filled": "2026-11-01"
+   "newest_filled": null
+  },
+  "championship": {
+   "filled": 0,
+   "redated": 0,
+   "agree": 156,
+   "conflicts": 0,
+   "unmatched": 0,
+   "newest_filled": null
   }
  },
  "conflicts": [
@@ -1059,6 +1067,6 @@
    "kind": "no_fixture"
   }
  ],
- "played_before": 59156,
- "played_after": 59343
+ "played_before": 59443,
+ "played_after": 59443
 }
