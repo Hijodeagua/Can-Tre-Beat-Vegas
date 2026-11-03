@@ -1,15 +1,15 @@
 {
  "model": "basketball",
  "title": "Basketball (NBA odds only, no model)",
- "date": "2026-11-02",
+ "date": "2026-11-03",
  "kind": "draft",
- "generated_at": "2026-11-02T17:59:51+00:00",
- "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1005 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-01 20:17, 17 games in the latest file across 9 books.",
+ "generated_at": "2026-11-03T00:56:05+00:00",
+ "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1007 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-02 14:57, 20 games in the latest file across 9 books.",
  "status": {
   "state": "none",
-  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1005 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-01 20:17, 17 games in the latest file across 9 books.",
+  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1007 snapshot files from 2025-10-27 to 2026-11-02, newest pull 2026-11-02 14:57, 20 games in the latest file across 9 books.",
   "source": "data/nba",
-  "as_of": "2026-11-01 20:17",
+  "as_of": "2026-11-02 14:57",
   "blocks": [
    {
     "kind": "warn",
@@ -25,15 +25,15 @@
      ],
      [
       "Odds snapshots on disk",
-      "1005 files, 2025-10-27 → 2026-11-02"
+      "1007 files, 2025-10-27 → 2026-11-02"
      ],
      [
       "Newest snapshot pulled (ET)",
-      "2026-11-01 20:17"
+      "2026-11-02 14:57"
      ],
      [
       "Games in newest snapshot",
-      17
+      20
      ],
      [
       "Bookmakers in newest snapshot",
@@ -49,11 +49,11 @@
      ],
      [
       "Site slate block (48h window)",
-      "12 games, snapshot 2026-11-01 20:17:31"
+      "15 games, snapshot 2026-11-02 14:57:23"
      ]
     ],
     "source": "data/nba, web/public/data/summary.json, web/public/data/slate.json",
-    "as_of": "2026-11-01 20:17"
+    "as_of": "2026-11-02 14:57"
    },
    {
     "kind": "table",
@@ -69,19 +69,19 @@
      [
       "unified-odds.yml",
       "success",
-      "2026-11-02 01:16",
-      "2026-11-02 01:16",
-      "3/9"
+      "2026-11-02 19:56",
+      "2026-11-02 19:56",
+      "3/10"
      ]
     ],
     "source": "reports/model_review/_runs/unified-odds.yml.json (gh run list)",
-    "as_of": "2026-11-02"
+    "as_of": "2026-11-03"
    },
    {
     "kind": "bullets",
     "heading": "Known failures and caveats",
     "items": [
-     "unified-odds.yml: 3 of the last 9 completed runs failed"
+     "unified-odds.yml: 3 of the last 10 completed runs failed"
     ]
    }
   ]
@@ -89,7 +89,7 @@
  "features": {
   "summary": "There is no model to describe. This is what a basketball board would need, from docs/MODEL_SOURCES.md.",
   "source": "docs/MODEL_SOURCES.md",
-  "as_of": "2026-11-02",
+  "as_of": "2026-11-03",
   "blocks": [
    {
     "kind": "bullets",
@@ -105,7 +105,7 @@
  "findings": {
   "summary": "Odds-feed observations only.",
   "source": "data/nba/nba_odds_api_data_latest.csv",
-  "as_of": "2026-11-01 20:17",
+  "as_of": "2026-11-02 14:57",
   "blocks": [
    {
     "kind": "table",
@@ -119,88 +119,88 @@
     ],
     "rows": [
      [
-      "2026-11-01 20:40",
-      "Los Angeles Clippers @ Golden State Warriors",
-      -1.78,
-      220.44,
-      "56.3%"
-     ],
-     [
-      "2026-11-01 21:10",
-      "Toronto Raptors @ Los Angeles Lakers",
-      -3.44,
-      223.67,
-      "61.5%"
-     ],
-     [
       "2026-11-02 19:10",
       "Oklahoma City Thunder @ Cleveland Cavaliers",
-      -3.92,
-      227.25,
-      "63.8%"
+      -4.0,
+      229.17,
+      "63.3%"
+     ],
+     [
+      "2026-11-02 19:40",
+      "Atlanta Hawks @ Indiana Pacers",
+      9.61,
+      229.83,
+      "23.9%"
      ],
      [
       "2026-11-02 19:40",
       "Brooklyn Nets @ New York Knicks",
-      -14.75,
-      221.75,
-      "89.9%"
+      -14.5,
+      218.67,
+      "91.0%"
      ],
      [
       "2026-11-02 19:40",
       "Detroit Pistons @ Charlotte Hornets",
-      3.92,
-      209.42,
-      "41.7%"
+      5.56,
+      210.44,
+      "35.6%"
      ],
      [
       "2026-11-02 19:40",
       "Chicago Bulls @ Philadelphia 76ers",
-      -11.33,
-      238.08,
-      "85.5%"
+      -10.28,
+      238.67,
+      "83.8%"
      ],
      [
       "2026-11-02 19:40",
       "Washington Wizards @ Orlando Magic",
-      -1.33,
-      224.83,
-      "54.7%"
+      -3.11,
+      225.33,
+      "60.5%"
+     ],
+     [
+      "2026-11-02 20:10",
+      "Sacramento Kings @ Dallas Mavericks",
+      -8.5,
+      232.0,
+      "77.1%"
      ],
      [
       "2026-11-02 20:10",
       "New Orleans Pelicans @ Memphis Grizzlies",
-      -6.08,
-      235.42,
-      "69.2%"
+      -5.28,
+      232.28,
+      "66.6%"
      ],
      [
       "2026-11-02 20:10",
       "Milwaukee Bucks @ Minnesota Timberwolves",
-      -10.67,
-      233.5,
-      "82.7%"
+      -10.06,
+      230.67,
+      "80.8%"
      ],
      [
       "2026-11-02 20:40",
       "Boston Celtics @ Houston Rockets",
-      -4.9,
-      219.3,
-      "64.6%"
+      -5.28,
+      217.06,
+      "66.3%"
      ],
      [
       "2026-11-02 20:40",
       "Utah Jazz @ San Antonio Spurs",
-      -16.0,
-      231.0,
-      "92.2%"
+      -16.17,
+      229.11,
+      "91.9%"
      ],
      [
       "2026-11-02 21:10",
       "Portland Trail Blazers @ Denver Nuggets",
-      -4.1,
-      229.9,
-      "63.1%"
+      -4.11,
+      231.28,
+      "63.2%"
      ]
     ],
     "note": "Win probability is the de-vigged-free conversion of the average home moneyline; it is the market's number, not a model's."
@@ -242,7 +242,7 @@
     "kind": "bullets",
     "items": [
      "Decide whether basketball stays an odds-tracking page or gets a model (open question for TW).",
-     "If it gets one: the odds archive already holds 1005 snapshots since 2025-10-27, so a closing-line benchmark exists from day one."
+     "If it gets one: the odds archive already holds 1007 snapshots since 2025-10-27, so a closing-line benchmark exists from day one."
     ]
    }
   ]
