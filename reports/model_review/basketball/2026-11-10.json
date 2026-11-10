@@ -3,13 +3,13 @@
  "title": "Basketball (NBA odds only, no model)",
  "date": "2026-11-10",
  "kind": "draft",
- "generated_at": "2026-11-10T01:30:02+00:00",
- "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1021 snapshot files from 2025-10-27 to 2026-11-09, newest pull 2026-11-09 15:22, 13 games in the latest file across 9 books.",
+ "generated_at": "2026-11-10T23:16:08+00:00",
+ "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1023 snapshot files from 2025-10-27 to 2026-11-10, newest pull 2026-11-10 12:26, 10 games in the latest file across 9 books.",
  "status": {
   "state": "none",
-  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1021 snapshot files from 2025-10-27 to 2026-11-09, newest pull 2026-11-09 15:22, 13 games in the latest file across 9 books.",
+  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1023 snapshot files from 2025-10-27 to 2026-11-10, newest pull 2026-11-10 12:26, 10 games in the latest file across 9 books.",
   "source": "data/nba",
-  "as_of": "2026-11-09 15:22",
+  "as_of": "2026-11-10 12:26",
   "blocks": [
    {
     "kind": "warn",
@@ -25,15 +25,15 @@
      ],
      [
       "Odds snapshots on disk",
-      "1021 files, 2025-10-27 → 2026-11-09"
+      "1023 files, 2025-10-27 → 2026-11-10"
      ],
      [
       "Newest snapshot pulled (ET)",
-      "2026-11-09 15:22"
+      "2026-11-10 12:26"
      ],
      [
       "Games in newest snapshot",
-      13
+      10
      ],
      [
       "Bookmakers in newest snapshot",
@@ -49,11 +49,11 @@
      ],
      [
       "Site slate block (48h window)",
-      "9 games, snapshot 2026-11-09 15:22:49"
+      "6 games, snapshot 2026-11-10 12:26:44"
      ]
     ],
     "source": "data/nba, web/public/data/summary.json, web/public/data/slate.json",
-    "as_of": "2026-11-09 15:22"
+    "as_of": "2026-11-10 12:26"
    },
    {
     "kind": "table",
@@ -69,8 +69,8 @@
      [
       "unified-odds.yml",
       "success",
-      "2026-11-09 20:21",
-      "2026-11-09 20:21",
+      "2026-11-10 17:25",
+      "2026-11-10 17:25",
       "0/10"
      ]
     ],
@@ -105,7 +105,7 @@
  "findings": {
   "summary": "Odds-feed observations only.",
   "source": "data/nba/nba_odds_api_data_latest.csv",
-  "as_of": "2026-11-09 15:22",
+  "as_of": "2026-11-10 12:26",
   "blocks": [
    {
     "kind": "table",
@@ -119,67 +119,46 @@
     ],
     "rows": [
      [
-      "2026-11-09 19:10",
-      "Los Angeles Lakers @ Atlanta Hawks",
-      -1.67,
-      236.17,
-      "56.2%"
-     ],
-     [
-      "2026-11-09 19:10",
-      "Cleveland Cavaliers @ Charlotte Hornets",
-      8.5,
-      214.83,
-      "27.0%"
-     ],
-     [
-      "2026-11-09 19:10",
-      "Washington Wizards @ Detroit Pistons",
-      -10.22,
-      219.11,
-      "83.5%"
-     ],
-     [
-      "2026-11-09 19:40",
-      "Memphis Grizzlies @ Toronto Raptors",
-      -2.5,
-      228.56,
-      "58.9%"
-     ],
-     [
-      "2026-11-09 20:10",
-      "Indiana Pacers @ Dallas Mavericks",
-      -3.78,
-      226.0,
-      "62.9%"
-     ],
-     [
-      "2026-11-09 20:40",
-      "Denver Nuggets @ Houston Rockets",
-      -4.44,
-      223.22,
-      "64.1%"
-     ],
-     [
-      "2026-11-09 21:10",
-      "San Antonio Spurs @ Phoenix Suns",
-      8.61,
-      226.0,
-      "25.8%"
-     ],
-     [
-      "2026-11-09 22:10",
-      "New Orleans Pelicans @ Golden State Warriors",
-      -9.11,
-      232.06,
-      "79.2%"
+      "2026-11-10 19:40",
+      "Milwaukee Bucks @ New York Knicks",
+      -15.39,
+      221.94,
+      "91.8%"
      ],
      [
       "2026-11-10 20:10",
       "Boston Celtics @ Philadelphia 76ers",
-      0.79,
-      215.93,
-      "41.0%"
+      1.5,
+      217.39,
+      "64.1%"
+     ],
+     [
+      "2026-11-10 21:10",
+      "Los Angeles Clippers @ Phoenix Suns",
+      -3.56,
+      224.5,
+      "62.1%"
+     ],
+     [
+      "2026-11-10 21:10",
+      "Miami Heat @ Utah Jazz",
+      8.44,
+      228.28,
+      "26.4%"
+     ],
+     [
+      "2026-11-10 22:10",
+      "Orlando Magic @ Sacramento Kings",
+      6.11,
+      223.17,
+      "34.2%"
+     ],
+     [
+      "2026-11-10 23:10",
+      "Oklahoma City Thunder @ Portland Trail Blazers",
+      2.11,
+      224.44,
+      "47.2%"
      ],
      [
       "2026-12-25 12:00",
@@ -201,6 +180,13 @@
       -1.0,
       234.0,
       "53.5%"
+     ],
+     [
+      "2026-12-25 22:30",
+      "Denver Nuggets @ Golden State Warriors",
+      2.0,
+      234.5,
+      "48.8%"
      ]
     ],
     "note": "Win probability is the de-vigged-free conversion of the average home moneyline; it is the market's number, not a model's."
@@ -210,7 +196,7 @@
  "report_card": {
   "summary": "No report card: nothing is predicted, so nothing is graded. Accuracy, log loss, Brier and calibration do not exist for basketball.",
   "source": "web/public/data/summary.json",
-  "as_of": "2026-11-09",
+  "as_of": "2026-11-10",
   "blocks": [
    {
     "kind": "kv",
@@ -242,7 +228,7 @@
     "kind": "bullets",
     "items": [
      "Decide whether basketball stays an odds-tracking page or gets a model (open question for TW).",
-     "If it gets one: the odds archive already holds 1021 snapshots since 2025-10-27, so a closing-line benchmark exists from day one."
+     "If it gets one: the odds archive already holds 1023 snapshots since 2025-10-27, so a closing-line benchmark exists from day one."
     ]
    }
   ]
