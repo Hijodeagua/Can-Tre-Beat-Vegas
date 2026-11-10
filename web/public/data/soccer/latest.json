@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-09T20:37:53+00:00",
-  "run_date": "2026-11-09",
+  "generated_at": "2026-11-10T17:41:42+00:00",
+  "run_date": "2026-11-10",
   "ratings": {
     "epl": {
       "name": "Premier League",
@@ -1742,841 +1742,7 @@
       "higherIsBetter": null
     }
   ],
-  "graded_today": [
-    {
-      "date": "2026-11-06",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "Hamburger SV",
-      "away_team": "Borussia Mönchengladbach",
-      "pick": "H",
-      "p_H": 0.4049,
-      "p_D": 0.3063,
-      "p_A": 0.2889,
-      "outcome": "H",
-      "home_score": 3,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.9041,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-06",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Derby County FC",
-      "away_team": "Bolton Wanderers FC",
-      "pick": "H",
-      "p_H": 0.4956,
-      "p_D": 0.256,
-      "p_A": 0.2484,
-      "outcome": "H",
-      "home_score": 3,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.702,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-06",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Toulouse FC",
-      "away_team": "RC Strasbourg Alsace",
-      "pick": "H",
-      "p_H": 0.4864,
-      "p_D": 0.2617,
-      "p_A": 0.2519,
-      "outcome": "H",
-      "home_score": 3,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.7207,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-06",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "Venezia FC",
-      "away_team": "Udinese Calcio",
-      "pick": "H",
-      "p_H": 0.4204,
-      "p_D": 0.3056,
-      "p_A": 0.274,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.8665,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "1. FSV Mainz 05",
-      "away_team": "FC Bayern München",
-      "pick": "A",
-      "p_H": 0.1744,
-      "p_D": 0.1898,
-      "p_A": 0.6358,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.4529,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "Borussia Dortmund",
-      "away_team": "SV 07 Elversberg",
-      "pick": "H",
-      "p_H": 0.8078,
-      "p_D": 0.1187,
-      "p_A": 0.0735,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.2134,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "RB Leipzig",
-      "away_team": "FC Augsburg",
-      "pick": "H",
-      "p_H": 0.6197,
-      "p_D": 0.215,
-      "p_A": 0.1653,
-      "outcome": "H",
-      "home_score": 5,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.4785,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "SC Paderborn 07",
-      "away_team": "Eintracht Frankfurt",
-      "pick": "A",
-      "p_H": 0.2865,
-      "p_D": 0.2832,
-      "p_A": 0.4302,
-      "outcome": "D",
-      "home_score": 2,
-      "away_score": 2,
-      "pick_correct": false,
-      "log_loss": 1.2616,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "VfB Stuttgart",
-      "away_team": "SV Werder Bremen",
-      "pick": "H",
-      "p_H": 0.5381,
-      "p_D": 0.2712,
-      "p_A": 0.1907,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.6197,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Birmingham City FC",
-      "away_team": "Swansea City AFC",
-      "pick": "H",
-      "p_H": 0.4644,
-      "p_D": 0.2452,
-      "p_A": 0.2903,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.767,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Blackburn Rovers FC",
-      "away_team": "West Ham United FC",
-      "pick": "A",
-      "p_H": 0.2019,
-      "p_D": 0.2914,
-      "p_A": 0.5067,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.6,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Bristol City FC",
-      "away_team": "Norwich City FC",
-      "pick": "A",
-      "p_H": 0.3617,
-      "p_D": 0.24,
-      "p_A": 0.3983,
-      "outcome": "A",
-      "home_score": 0,
-      "away_score": 5,
-      "pick_correct": true,
-      "log_loss": 0.9205,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Cardiff City FC",
-      "away_team": "Burnley FC",
-      "pick": "A",
-      "p_H": 0.3266,
-      "p_D": 0.2619,
-      "p_A": 0.4115,
-      "outcome": "H",
-      "home_score": 5,
-      "away_score": 4,
-      "pick_correct": false,
-      "log_loss": 1.119,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Charlton Athletic FC",
-      "away_team": "Sheffield United FC",
-      "pick": "A",
-      "p_H": 0.3584,
-      "p_D": 0.2537,
-      "p_A": 0.3878,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.0261,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Portsmouth FC",
-      "away_team": "Stoke City FC",
-      "pick": "H",
-      "p_H": 0.3742,
-      "p_D": 0.2736,
-      "p_A": 0.3522,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": false,
-      "log_loss": 1.0436,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Preston North End FC",
-      "away_team": "Southampton FC",
-      "pick": "A",
-      "p_H": 0.2512,
-      "p_D": 0.2771,
-      "p_A": 0.4717,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": false,
-      "log_loss": 1.3815,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Queens Park Rangers FC",
-      "away_team": "Lincoln City FC",
-      "pick": "H",
-      "p_H": 0.6354,
-      "p_D": 0.2026,
-      "p_A": 0.162,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.4535,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Watford FC",
-      "away_team": "Middlesbrough FC",
-      "pick": "A",
-      "p_H": 0.3172,
-      "p_D": 0.2438,
-      "p_A": 0.439,
-      "outcome": "D",
-      "home_score": 0,
-      "away_score": 0,
-      "pick_correct": false,
-      "log_loss": 1.4114,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "West Bromwich Albion FC",
-      "away_team": "Millwall FC",
-      "pick": "H",
-      "p_H": 0.3876,
-      "p_D": 0.2708,
-      "p_A": 0.3416,
-      "outcome": "H",
-      "home_score": 3,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.9478,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "championship",
-      "season": "2026-27",
-      "home_team": "Wrexham AFC",
-      "away_team": "Wolverhampton Wanderers FC",
-      "pick": "A",
-      "p_H": 0.1943,
-      "p_D": 0.2668,
-      "p_A": 0.539,
-      "outcome": "D",
-      "home_score": 1,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.3213,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "epl",
-      "season": "2026-27",
-      "home_team": "Arsenal FC",
-      "away_team": "Hull City AFC",
-      "pick": "H",
-      "p_H": 0.9015,
-      "p_D": 0.0686,
-      "p_A": 0.0298,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.1037,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "epl",
-      "season": "2026-27",
-      "home_team": "Fulham FC",
-      "away_team": "Newcastle United FC",
-      "pick": "H",
-      "p_H": 0.5325,
-      "p_D": 0.2305,
-      "p_A": 0.237,
-      "outcome": "D",
-      "home_score": 1,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.4675,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "epl",
-      "season": "2026-27",
-      "home_team": "Leeds United FC",
-      "away_team": "Tottenham Hotspur FC",
-      "pick": "A",
-      "p_H": 0.3403,
-      "p_D": 0.2769,
-      "p_A": 0.3828,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": false,
-      "log_loss": 1.0779,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "epl",
-      "season": "2026-27",
-      "home_team": "Nottingham Forest FC",
-      "away_team": "Manchester City FC",
-      "pick": "A",
-      "p_H": 0.2421,
-      "p_D": 0.2578,
-      "p_A": 0.5002,
-      "outcome": "H",
-      "home_score": 3,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.4184,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "AJ Auxerre",
-      "away_team": "Paris FC",
-      "pick": "A",
-      "p_H": 0.2792,
-      "p_D": 0.2674,
-      "p_A": 0.4535,
-      "outcome": "A",
-      "home_score": 0,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.7908,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Paris Saint-Germain FC",
-      "away_team": "ESTAC Troyes",
-      "pick": "H",
-      "p_H": 0.8328,
-      "p_D": 0.1155,
-      "p_A": 0.0517,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.183,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "AS Roma",
-      "away_team": "US Sassuolo Calcio",
-      "pick": "H",
-      "p_H": 0.7573,
-      "p_D": 0.1401,
-      "p_A": 0.1026,
-      "outcome": "H",
-      "home_score": 3,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.278,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "Cagliari Calcio",
-      "away_team": "Frosinone Calcio",
-      "pick": "A",
-      "p_H": 0.3164,
-      "p_D": 0.311,
-      "p_A": 0.3726,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": false,
-      "log_loss": 1.1507,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "Parma Calcio 1913",
-      "away_team": "Bologna FC 1909",
-      "pick": "A",
-      "p_H": 0.2727,
-      "p_D": 0.285,
-      "p_A": 0.4423,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.8158,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-07",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "Torino FC",
-      "away_team": "US Lecce",
-      "pick": "H",
-      "p_H": 0.4757,
-      "p_D": 0.3001,
-      "p_A": 0.2242,
-      "outcome": "D",
-      "home_score": 1,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.2036,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "1. FC Köln",
-      "away_team": "Bayer 04 Leverkusen",
-      "pick": "A",
-      "p_H": 0.2911,
-      "p_D": 0.251,
-      "p_A": 0.4579,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.7811,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "SC Freiburg",
-      "away_team": "1. FC Union Berlin",
-      "pick": "H",
-      "p_H": 0.5869,
-      "p_D": 0.2401,
-      "p_A": 0.173,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.5329,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "bundesliga",
-      "season": "2026-27",
-      "home_team": "TSG 1899 Hoffenheim",
-      "away_team": "FC Schalke 04",
-      "pick": "H",
-      "p_H": 0.7672,
-      "p_D": 0.1311,
-      "p_A": 0.1017,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.265,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "la_liga",
-      "season": "2026-27",
-      "home_team": "Club Atlético de Madrid",
-      "away_team": "FC Barcelona",
-      "pick": "A",
-      "p_H": 0.2209,
-      "p_D": 0.2184,
-      "p_A": 0.5607,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.5786,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "la_liga",
-      "season": "2026-27",
-      "home_team": "Elche CF",
-      "away_team": "Real Betis Balompié",
-      "pick": "A",
-      "p_H": 0.2658,
-      "p_D": 0.285,
-      "p_A": 0.4491,
-      "outcome": "A",
-      "home_score": 0,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.8005,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "la_liga",
-      "season": "2026-27",
-      "home_team": "RC Celta de Vigo",
-      "away_team": "Levante UD",
-      "pick": "H",
-      "p_H": 0.4961,
-      "p_D": 0.2847,
-      "p_A": 0.2192,
-      "outcome": "D",
-      "home_score": 0,
-      "away_score": 0,
-      "pick_correct": false,
-      "log_loss": 1.2563,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "la_liga",
-      "season": "2026-27",
-      "home_team": "Real Sociedad de Fútbol",
-      "away_team": "Rayo Vallecano de Madrid",
-      "pick": "H",
-      "p_H": 0.4826,
-      "p_D": 0.2882,
-      "p_A": 0.2292,
-      "outcome": "H",
-      "home_score": 1,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.7286,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "la_liga",
-      "season": "2026-27",
-      "home_team": "Villarreal CF",
-      "away_team": "Getafe CF",
-      "pick": "H",
-      "p_H": 0.7535,
-      "p_D": 0.1441,
-      "p_A": 0.1024,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.283,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Angers SCO",
-      "away_team": "OGC Nice",
-      "pick": "A",
-      "p_H": 0.2989,
-      "p_D": 0.2931,
-      "p_A": 0.408,
-      "outcome": "A",
-      "home_score": 0,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.8965,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Havre AC",
-      "away_team": "FC Lorient",
-      "pick": "A",
-      "p_H": 0.3354,
-      "p_D": 0.3047,
-      "p_A": 0.3599,
-      "outcome": "A",
-      "home_score": 0,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 1.0219,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Le Mans FC",
-      "away_team": "AS Monaco FC",
-      "pick": "A",
-      "p_H": 0.2259,
-      "p_D": 0.2259,
-      "p_A": 0.5482,
-      "outcome": "D",
-      "home_score": 1,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.4877,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Racing Club de Lens",
-      "away_team": "Olympique de Marseille",
-      "pick": "H",
-      "p_H": 0.4715,
-      "p_D": 0.2533,
-      "p_A": 0.2752,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": false,
-      "log_loss": 1.2903,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Stade Brestois 29",
-      "away_team": "Olympique Lyonnais",
-      "pick": "H",
-      "p_H": 0.365,
-      "p_D": 0.2746,
-      "p_A": 0.3604,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 1.0079,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "ligue_1",
-      "season": "2026-27",
-      "home_team": "Stade Rennais FC 1901",
-      "away_team": "Lille OSC",
-      "pick": "H",
-      "p_H": 0.4253,
-      "p_D": 0.2724,
-      "p_A": 0.3024,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": false,
-      "log_loss": 1.196,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "AC Monza",
-      "away_team": "Atalanta BC",
-      "pick": "A",
-      "p_H": 0.2059,
-      "p_D": 0.2396,
-      "p_A": 0.5545,
-      "outcome": "A",
-      "home_score": 0,
-      "away_score": 1,
-      "pick_correct": true,
-      "log_loss": 0.5897,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "ACF Fiorentina",
-      "away_team": "Juventus FC",
-      "pick": "A",
-      "p_H": 0.2373,
-      "p_D": 0.2534,
-      "p_A": 0.5093,
-      "outcome": "D",
-      "home_score": 2,
-      "away_score": 2,
-      "pick_correct": false,
-      "log_loss": 1.3728,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "FC Internazionale Milano",
-      "away_team": "Como 1907",
-      "pick": "H",
-      "p_H": 0.5626,
-      "p_D": 0.2467,
-      "p_A": 0.1907,
-      "outcome": "H",
-      "home_score": 2,
-      "away_score": 0,
-      "pick_correct": true,
-      "log_loss": 0.5752,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "Genoa CFC",
-      "away_team": "AC Milan",
-      "pick": "A",
-      "p_H": 0.21,
-      "p_D": 0.2557,
-      "p_A": 0.5344,
-      "outcome": "A",
-      "home_score": 1,
-      "away_score": 2,
-      "pick_correct": true,
-      "log_loss": 0.6266,
-      "graded_on": "2026-11-09"
-    },
-    {
-      "date": "2026-11-08",
-      "league": "serie_a",
-      "season": "2026-27",
-      "home_team": "SSC Napoli",
-      "away_team": "SS Lazio",
-      "pick": "H",
-      "p_H": 0.562,
-      "p_D": 0.2344,
-      "p_A": 0.2036,
-      "outcome": "D",
-      "home_score": 1,
-      "away_score": 1,
-      "pick_correct": false,
-      "log_loss": 1.4507,
-      "graded_on": "2026-11-09"
-    }
-  ],
+  "graded_today": [],
   "ledger": {
     "graded": 615,
     "accuracy": 0.5317,
@@ -2615,14 +1781,14 @@
     },
     "rolling": {
       "7d": {
-        "graded": 64,
-        "accuracy": 0.5469,
-        "log_loss": 0.9345
+        "graded": 61,
+        "accuracy": 0.5574,
+        "log_loss": 0.9168
       },
       "30d": {
-        "graded": 305,
-        "accuracy": 0.5836,
-        "log_loss": 0.9502
+        "graded": 272,
+        "accuracy": 0.5735,
+        "log_loss": 0.9573
       }
     }
   },
@@ -3725,7 +2891,7 @@
   },
   "mls_forecast": {
     "season": "2026",
-    "generatedAt": "2026-11-09T20:37:53+00:00",
+    "generatedAt": "2026-11-10T17:41:42+00:00",
     "sims": 20000,
     "remaining_matches": 15,
     "schedule": {
@@ -10104,7 +9270,7 @@
             1772.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1773.8
           ]
         ],
@@ -10150,7 +9316,7 @@
             1496.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1489.1
           ]
         ],
@@ -10196,7 +9362,7 @@
             1581.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1573.7
           ]
         ],
@@ -10242,7 +9408,7 @@
             1526.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1521.3
           ]
         ],
@@ -10288,7 +9454,7 @@
             1540.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1547.5
           ]
         ],
@@ -10334,7 +9500,7 @@
             1499.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1491.5
           ]
         ],
@@ -10380,7 +9546,7 @@
             1433.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1432.4
           ]
         ],
@@ -10426,7 +9592,7 @@
             1582.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1582.1
           ]
         ],
@@ -10472,7 +9638,7 @@
             1476.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1470.9
           ]
         ],
@@ -10518,7 +9684,7 @@
             1467.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1475.9
           ]
         ],
@@ -10564,7 +9730,7 @@
             1521.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1535.9
           ]
         ],
@@ -10610,7 +9776,7 @@
             1561.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1566.1
           ]
         ],
@@ -10656,7 +9822,7 @@
             1627.2
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1634.6
           ]
         ],
@@ -10702,7 +9868,7 @@
             1599.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1600.7
           ]
         ],
@@ -10748,7 +9914,7 @@
             1732.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1717.5
           ]
         ],
@@ -10794,7 +9960,7 @@
             1596.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1602.1
           ]
         ],
@@ -10840,7 +10006,7 @@
             1550.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1551.5
           ]
         ],
@@ -10886,7 +10052,7 @@
             1660.2
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1667.7
           ]
         ],
@@ -10932,7 +10098,7 @@
             1531.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1530.9
           ]
         ],
@@ -10978,7 +10144,7 @@
             1585.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1577.3
           ]
         ]
@@ -11025,7 +10191,7 @@
             1778.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1780.9
           ]
         ],
@@ -11067,7 +10233,7 @@
             1596.2
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1599.7
           ]
         ],
@@ -11109,7 +10275,7 @@
             1464.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1460.2
           ]
         ],
@@ -11151,7 +10317,7 @@
             1535.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1538.9
           ]
         ],
@@ -11193,7 +10359,7 @@
             1467.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1461.8
           ]
         ],
@@ -11235,7 +10401,7 @@
             1520.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1521.0
           ]
         ],
@@ -11277,7 +10443,7 @@
             1518.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1515.8
           ]
         ],
@@ -11319,7 +10485,7 @@
             1516.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1515.6
           ]
         ],
@@ -11361,7 +10527,7 @@
             1666.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1669.6
           ]
         ],
@@ -11403,7 +10569,7 @@
             1492.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1499.2
           ]
         ],
@@ -11445,7 +10611,7 @@
             1609.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1614.8
           ]
         ],
@@ -11487,7 +10653,7 @@
             1466.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1459.2
           ]
         ],
@@ -11529,7 +10695,7 @@
             1519.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1516.6
           ]
         ],
@@ -11571,7 +10737,7 @@
             1618.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1622.5
           ]
         ],
@@ -11613,7 +10779,7 @@
             1498.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1493.1
           ]
         ],
@@ -11655,7 +10821,7 @@
             1455.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1451.4
           ]
         ],
@@ -11697,7 +10863,7 @@
             1552.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1557.5
           ]
         ],
@@ -11739,7 +10905,7 @@
             1503.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1500.1
           ]
         ]
@@ -11798,7 +10964,7 @@
             1441.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1442.7
           ]
         ],
@@ -11852,7 +11018,7 @@
             1451.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1447.9
           ]
         ],
@@ -11906,7 +11072,7 @@
             1460.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1459.5
           ]
         ],
@@ -11956,7 +11122,7 @@
             1476.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1473.1
           ]
         ],
@@ -12010,7 +11176,7 @@
             1440.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1439.3
           ]
         ],
@@ -12064,7 +11230,7 @@
             1449.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1450.6
           ]
         ],
@@ -12118,7 +11284,7 @@
             1444.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1448.5
           ]
         ],
@@ -12172,7 +11338,7 @@
             1563.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1567.6
           ]
         ],
@@ -12226,7 +11392,7 @@
             1412.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1413.9
           ]
         ],
@@ -12280,7 +11446,7 @@
             1438.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1431.6
           ]
         ],
@@ -12334,7 +11500,7 @@
             1651.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1646.7
           ]
         ],
@@ -12388,7 +11554,7 @@
             1326.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1322.1
           ]
         ],
@@ -12442,7 +11608,7 @@
             1564.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1571.0
           ]
         ],
@@ -12496,7 +11662,7 @@
             1499.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1503.1
           ]
         ],
@@ -12546,7 +11712,7 @@
             1510.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1510.8
           ]
         ],
@@ -12600,7 +11766,7 @@
             1735.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1740.1
           ]
         ],
@@ -12654,7 +11820,7 @@
             1468.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1464.1
           ]
         ],
@@ -12708,7 +11874,7 @@
             1486.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1485.1
           ]
         ],
@@ -12762,7 +11928,7 @@
             1757.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1762.1
           ]
         ],
@@ -12816,7 +11982,7 @@
             1444.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1444.7
           ]
         ]
@@ -12871,7 +12037,7 @@
             1725.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1729.6
           ]
         ],
@@ -12921,7 +12087,7 @@
             1383.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1379.3
           ]
         ],
@@ -12971,7 +12137,7 @@
             1438.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1434.7
           ]
         ],
@@ -13021,7 +12187,7 @@
             1605.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1604.5
           ]
         ],
@@ -13071,7 +12237,7 @@
             1406.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1401.9
           ]
         ],
@@ -13121,7 +12287,7 @@
             1406.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1412.8
           ]
         ],
@@ -13171,7 +12337,7 @@
             1417.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1411.6
           ]
         ],
@@ -13221,7 +12387,7 @@
             1577.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1573.4
           ]
         ],
@@ -13271,7 +12437,7 @@
             1556.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1560.6
           ]
         ],
@@ -13321,7 +12487,7 @@
             1425.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1421.8
           ]
         ],
@@ -13371,7 +12537,7 @@
             1445.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1439.1
           ]
         ],
@@ -13421,7 +12587,7 @@
             1600.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1599.1
           ]
         ],
@@ -13471,7 +12637,7 @@
             1445.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1443.9
           ]
         ],
@@ -13521,7 +12687,7 @@
             1605.2
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1609.2
           ]
         ],
@@ -13571,7 +12737,7 @@
             1389.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1395.1
           ]
         ],
@@ -13621,7 +12787,7 @@
             1371.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1373.8
           ]
         ],
@@ -13671,7 +12837,7 @@
             1649.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1652.8
           ]
         ],
@@ -13721,7 +12887,7 @@
             1477.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1478.3
           ]
         ],
@@ -13771,7 +12937,7 @@
             1523.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1528.2
           ]
         ],
@@ -13821,7 +12987,7 @@
             1586.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1587.7
           ]
         ]
@@ -13872,7 +13038,7 @@
             1576.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1583.7
           ]
         ],
@@ -13918,7 +13084,7 @@
             1534.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1526.0
           ]
         ],
@@ -13964,7 +13130,7 @@
             1429.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1428.4
           ]
         ],
@@ -14010,7 +13176,7 @@
             1531.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1537.2
           ]
         ],
@@ -14056,7 +13222,7 @@
             1383.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1385.9
           ]
         ],
@@ -14102,7 +13268,7 @@
             1491.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1502.0
           ]
         ],
@@ -14148,7 +13314,7 @@
             1500.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1508.3
           ]
         ],
@@ -14194,7 +13360,7 @@
             1500.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1507.7
           ]
         ],
@@ -14240,7 +13406,7 @@
             1593.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1586.7
           ]
         ],
@@ -14286,7 +13452,7 @@
             1446.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1441.5
           ]
         ],
@@ -14332,7 +13498,7 @@
             1497.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1506.1
           ]
         ],
@@ -14378,7 +13544,7 @@
             1590.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1580.1
           ]
         ],
@@ -14424,7 +13590,7 @@
             1402.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1394.8
           ]
         ],
@@ -14470,7 +13636,7 @@
             1604.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1610.7
           ]
         ],
@@ -14516,7 +13682,7 @@
             1402.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1394.3
           ]
         ],
@@ -14562,7 +13728,7 @@
             1578.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1575.7
           ]
         ],
@@ -14608,7 +13774,7 @@
             1557.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1551.5
           ]
         ],
@@ -14654,7 +13820,7 @@
             1758.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1760.0
           ]
         ]
@@ -14797,7 +13963,7 @@
             1441.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1435.8
           ]
         ],
@@ -14935,7 +14101,7 @@
             1495.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1505.4
           ]
         ],
@@ -15073,7 +14239,7 @@
             1399.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1395.0
           ]
         ],
@@ -15211,7 +14377,7 @@
             1560.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1556.3
           ]
         ],
@@ -15349,7 +14515,7 @@
             1517.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1521.7
           ]
         ],
@@ -15487,7 +14653,7 @@
             1418.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1425.0
           ]
         ],
@@ -15625,7 +14791,7 @@
             1524.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1523.0
           ]
         ],
@@ -15763,7 +14929,7 @@
             1443.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1436.6
           ]
         ],
@@ -15901,7 +15067,7 @@
             1502.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1496.2
           ]
         ],
@@ -16039,7 +15205,7 @@
             1514.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1522.5
           ]
         ],
@@ -16177,7 +15343,7 @@
             1558.6
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1548.3
           ]
         ],
@@ -16315,7 +15481,7 @@
             1594.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1599.5
           ]
         ],
@@ -16453,7 +15619,7 @@
             1596.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1598.3
           ]
         ],
@@ -16591,7 +15757,7 @@
             1498.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1493.3
           ]
         ],
@@ -16729,7 +15895,7 @@
             1511.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1504.7
           ]
         ],
@@ -16867,7 +16033,7 @@
             1460.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1457.8
           ]
         ],
@@ -17005,7 +16171,7 @@
             1473.2
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1479.7
           ]
         ],
@@ -17143,7 +16309,7 @@
             1531.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1535.6
           ]
         ],
@@ -17281,7 +16447,7 @@
             1488.3
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1494.6
           ]
         ],
@@ -17419,7 +16585,7 @@
             1391.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1394.0
           ]
         ],
@@ -17557,7 +16723,7 @@
             1476.8
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1480.8
           ]
         ],
@@ -17695,7 +16861,7 @@
             1369.4
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1370.5
           ]
         ],
@@ -17833,7 +16999,7 @@
             1502.2
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1496.0
           ]
         ],
@@ -17971,7 +17137,7 @@
             1523.9
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1531.0
           ]
         ],
@@ -18109,7 +17275,7 @@
             1581.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1586.9
           ]
         ],
@@ -18247,7 +17413,7 @@
             1482.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1478.7
           ]
         ],
@@ -18385,7 +17551,7 @@
             1477.1
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1483.1
           ]
         ],
@@ -18523,7 +17689,7 @@
             1509.7
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1507.2
           ]
         ],
@@ -18661,7 +17827,7 @@
             1519.5
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1513.6
           ]
         ],
@@ -18799,7 +17965,7 @@
             1469.0
           ],
           [
-            "2026-11-09",
+            "2026-11-10",
             1460.8
           ]
         ]
@@ -18810,11 +17976,11 @@
     "epl": {
       "season": "2026-27",
       "sims": 30000,
-      "from_date": "2026-11-09",
+      "from_date": "2026-11-10",
       "clubs": {
         "AFC Bournemouth": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1602.1,
             1602.1,
             1602.1
@@ -18870,7 +18036,7 @@
         ],
         "Arsenal FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1773.8,
             1773.8,
             1773.8
@@ -18926,7 +18092,7 @@
         ],
         "Aston Villa FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1600.7,
             1600.7,
             1600.7
@@ -18982,7 +18148,7 @@
         ],
         "Brentford FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1573.7,
             1573.7,
             1573.7
@@ -19038,7 +18204,7 @@
         ],
         "Brighton & Hove Albion FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1634.6,
             1634.6,
             1634.6
@@ -19094,7 +18260,7 @@
         ],
         "Chelsea FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1577.3,
             1577.3,
             1577.3
@@ -19150,7 +18316,7 @@
         ],
         "Coventry City FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1489.1,
             1489.1,
             1489.1
@@ -19206,7 +18372,7 @@
         ],
         "Crystal Palace FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1491.5,
             1491.5,
             1491.5
@@ -19262,7 +18428,7 @@
         ],
         "Everton FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1547.5,
             1547.5,
             1547.5
@@ -19318,7 +18484,7 @@
         ],
         "Fulham FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1530.9,
             1530.9,
             1530.9
@@ -19374,7 +18540,7 @@
         ],
         "Hull City AFC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1432.4,
             1432.4,
             1432.4
@@ -19430,7 +18596,7 @@
         ],
         "Ipswich Town FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1470.9,
             1470.9,
             1470.9
@@ -19486,7 +18652,7 @@
         ],
         "Leeds United FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1566.1,
             1566.1,
             1566.1
@@ -19542,7 +18708,7 @@
         ],
         "Liverpool FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1667.7,
             1667.7,
             1667.7
@@ -19598,7 +18764,7 @@
         ],
         "Manchester City FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1717.5,
             1717.5,
             1717.5
@@ -19654,7 +18820,7 @@
         ],
         "Manchester United FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1582.1,
             1582.1,
             1582.1
@@ -19710,7 +18876,7 @@
         ],
         "Newcastle United FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1551.5,
             1551.5,
             1551.5
@@ -19766,7 +18932,7 @@
         ],
         "Nottingham Forest FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1535.9,
             1535.9,
             1535.9
@@ -19822,7 +18988,7 @@
         ],
         "Sunderland AFC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1475.9,
             1475.9,
             1475.9
@@ -19878,7 +19044,7 @@
         ],
         "Tottenham Hotspur FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1521.3,
             1521.3,
             1521.3
@@ -20639,11 +19805,11 @@
     "bundesliga": {
       "season": "2026-27",
       "sims": 30000,
-      "from_date": "2026-11-09",
+      "from_date": "2026-11-10",
       "clubs": {
         "1. FC Köln": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1460.2,
             1460.2,
             1460.2
@@ -20699,7 +19865,7 @@
         ],
         "1. FC Union Berlin": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1461.8,
             1461.8,
             1461.8
@@ -20755,7 +19921,7 @@
         ],
         "1. FSV Mainz 05": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1515.8,
             1515.8,
             1515.8
@@ -20811,7 +19977,7 @@
         ],
         "Bayer 04 Leverkusen": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1622.5,
             1622.5,
             1622.5
@@ -20867,7 +20033,7 @@
         ],
         "Borussia Dortmund": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1669.6,
             1669.6,
             1669.6
@@ -20923,7 +20089,7 @@
         ],
         "Borussia Mönchengladbach": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1459.2,
             1459.2,
             1459.2
@@ -20979,7 +20145,7 @@
         ],
         "Eintracht Frankfurt": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1521.0,
             1521.0,
             1521.0
@@ -21035,7 +20201,7 @@
         ],
         "FC Augsburg": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1493.1,
             1493.1,
             1493.1
@@ -21091,7 +20257,7 @@
         ],
         "FC Bayern München": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1780.9,
             1780.9,
             1780.9
@@ -21147,7 +20313,7 @@
         ],
         "FC Schalke 04": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1451.4,
             1451.4,
             1451.4
@@ -21203,7 +20369,7 @@
         ],
         "Hamburger SV": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1499.2,
             1499.2,
             1499.2
@@ -21259,7 +20425,7 @@
         ],
         "RB Leipzig": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1614.8,
             1614.8,
             1614.8
@@ -21315,7 +20481,7 @@
         ],
         "SC Freiburg": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1557.5,
             1557.5,
             1557.5
@@ -21371,7 +20537,7 @@
         ],
         "SC Paderborn 07": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1515.6,
             1515.6,
             1515.6
@@ -21427,7 +20593,7 @@
         ],
         "SV 07 Elversberg": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1516.6,
             1516.6,
             1516.6
@@ -21483,7 +20649,7 @@
         ],
         "SV Werder Bremen": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1500.1,
             1500.1,
             1500.1
@@ -21539,7 +20705,7 @@
         ],
         "TSG 1899 Hoffenheim": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1538.9,
             1538.9,
             1538.9
@@ -21595,7 +20761,7 @@
         ],
         "VfB Stuttgart": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1599.7,
             1599.7,
             1599.7
@@ -22286,11 +21452,11 @@
     "la_liga": {
       "season": "2026-27",
       "sims": 30000,
-      "from_date": "2026-11-09",
+      "from_date": "2026-11-10",
       "clubs": {
         "Athletic Club": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1510.8,
             1510.8,
             1510.8
@@ -22346,7 +21512,7 @@
         ],
         "CA Osasuna": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1444.7,
             1444.7,
             1444.7
@@ -22402,7 +21568,7 @@
         ],
         "Club Atlético de Madrid": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1646.7,
             1646.7,
             1646.7
@@ -22458,7 +21624,7 @@
         ],
         "Deportivo Alavés": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1442.7,
             1442.7,
             1442.7
@@ -22514,7 +21680,7 @@
         ],
         "Elche CF": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1431.6,
             1431.6,
             1431.6
@@ -22570,7 +21736,7 @@
         ],
         "FC Barcelona": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1762.1,
             1762.1,
             1762.1
@@ -22626,7 +21792,7 @@
         ],
         "Getafe CF": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1447.9,
             1447.9,
             1447.9
@@ -22682,7 +21848,7 @@
         ],
         "Levante UD": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1450.6,
             1450.6,
             1450.6
@@ -22738,7 +21904,7 @@
         ],
         "Málaga CF": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1322.1,
             1322.1,
             1322.1
@@ -22794,7 +21960,7 @@
         ],
         "RC Celta de Vigo": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1485.1,
             1485.1,
             1485.1
@@ -22850,7 +22016,7 @@
         ],
         "RC Deportivo La Coruña": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1413.9,
             1413.9,
             1413.9
@@ -22906,7 +22072,7 @@
         ],
         "RCD Espanyol de Barcelona": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1439.3,
             1439.3,
             1439.3
@@ -22962,7 +22128,7 @@
         ],
         "Rayo Vallecano de Madrid": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1473.1,
             1473.1,
             1473.1
@@ -23018,7 +22184,7 @@
         ],
         "Real Betis Balompié": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1571.0,
             1571.0,
             1571.0
@@ -23074,7 +22240,7 @@
         ],
         "Real Madrid CF": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1740.1,
             1740.1,
             1740.1
@@ -23130,7 +22296,7 @@
         ],
         "Real Racing Club de Santander": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1448.5,
             1448.5,
             1448.5
@@ -23186,7 +22352,7 @@
         ],
         "Real Sociedad de Fútbol": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1503.1,
             1503.1,
             1503.1
@@ -23242,7 +22408,7 @@
         ],
         "Sevilla FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1459.5,
             1459.5,
             1459.5
@@ -23298,7 +22464,7 @@
         ],
         "Valencia CF": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1464.1,
             1464.1,
             1464.1
@@ -23354,7 +22520,7 @@
         ],
         "Villarreal CF": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1567.6,
             1567.6,
             1567.6
@@ -24115,11 +23281,11 @@
     "serie_a": {
       "season": "2026-27",
       "sims": 30000,
-      "from_date": "2026-11-09",
+      "from_date": "2026-11-10",
       "clubs": {
         "AC Milan": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1609.2,
             1609.2,
             1609.2
@@ -24175,7 +23341,7 @@
         ],
         "AC Monza": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1379.3,
             1379.3,
             1379.3
@@ -24231,7 +23397,7 @@
         ],
         "ACF Fiorentina": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1478.3,
             1478.3,
             1478.3
@@ -24287,7 +23453,7 @@
         ],
         "AS Roma": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1652.8,
             1652.8,
             1652.8
@@ -24343,7 +23509,7 @@
         ],
         "Atalanta BC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1560.6,
             1560.6,
             1560.6
@@ -24399,7 +23565,7 @@
         ],
         "Bologna FC 1909": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1528.2,
             1528.2,
             1528.2
@@ -24455,7 +23621,7 @@
         ],
         "Cagliari Calcio": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1412.8,
             1412.8,
             1412.8
@@ -24511,7 +23677,7 @@
         ],
         "Como 1907": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1573.4,
             1573.4,
             1573.4
@@ -24567,7 +23733,7 @@
         ],
         "FC Internazionale Milano": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1729.6,
             1729.6,
             1729.6
@@ -24623,7 +23789,7 @@
         ],
         "Frosinone Calcio": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1439.1,
             1439.1,
             1439.1
@@ -24679,7 +23845,7 @@
         ],
         "Genoa CFC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1434.7,
             1434.7,
             1434.7
@@ -24735,7 +23901,7 @@
         ],
         "Juventus FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1599.1,
             1599.1,
             1599.1
@@ -24791,7 +23957,7 @@
         ],
         "Parma Calcio 1913": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1401.9,
             1401.9,
             1401.9
@@ -24847,7 +24013,7 @@
         ],
         "SS Lazio": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1587.7,
             1587.7,
             1587.7
@@ -24903,7 +24069,7 @@
         ],
         "SSC Napoli": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1604.5,
             1604.5,
             1604.5
@@ -24959,7 +24125,7 @@
         ],
         "Torino FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1443.9,
             1443.9,
             1443.9
@@ -25015,7 +24181,7 @@
         ],
         "US Lecce": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1373.8,
             1373.8,
             1373.8
@@ -25071,7 +24237,7 @@
         ],
         "US Sassuolo Calcio": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1421.8,
             1421.8,
             1421.8
@@ -25127,7 +24293,7 @@
         ],
         "Udinese Calcio": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1411.6,
             1411.6,
             1411.6
@@ -25183,7 +24349,7 @@
         ],
         "Venezia FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1395.1,
             1395.1,
             1395.1
@@ -25944,11 +25110,11 @@
     "ligue_1": {
       "season": "2026-27",
       "sims": 30000,
-      "from_date": "2026-11-09",
+      "from_date": "2026-11-10",
       "clubs": {
         "AJ Auxerre": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1441.5,
             1441.5,
             1441.5
@@ -26004,7 +25170,7 @@
         ],
         "AS Monaco FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1575.7,
             1575.7,
             1575.7
@@ -26060,7 +25226,7 @@
         ],
         "Angers SCO": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1394.8,
             1394.8,
             1394.8
@@ -26116,7 +25282,7 @@
         ],
         "ESTAC Troyes": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1428.4,
             1428.4,
             1428.4
@@ -26172,7 +25338,7 @@
         ],
         "FC Lorient": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1507.7,
             1507.7,
             1507.7
@@ -26228,7 +25394,7 @@
         ],
         "Havre AC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1394.3,
             1394.3,
             1394.3
@@ -26284,7 +25450,7 @@
         ],
         "Le Mans FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1385.9,
             1385.9,
             1385.9
@@ -26340,7 +25506,7 @@
         ],
         "Lille OSC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1610.7,
             1610.7,
             1610.7
@@ -26396,7 +25562,7 @@
         ],
         "OGC Nice": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1508.3,
             1508.3,
             1508.3
@@ -26452,7 +25618,7 @@
         ],
         "Olympique Lyonnais": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1580.1,
             1580.1,
             1580.1
@@ -26508,7 +25674,7 @@
         ],
         "Olympique de Marseille": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1583.7,
             1583.7,
             1583.7
@@ -26564,7 +25730,7 @@
         ],
         "Paris FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1537.2,
             1537.2,
             1537.2
@@ -26620,7 +25786,7 @@
         ],
         "Paris Saint-Germain FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1760.0,
             1760.0,
             1760.0
@@ -26676,7 +25842,7 @@
         ],
         "RC Strasbourg Alsace": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1526.0,
             1526.0,
             1526.0
@@ -26732,7 +25898,7 @@
         ],
         "Racing Club de Lens": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1586.7,
             1586.7,
             1586.7
@@ -26788,7 +25954,7 @@
         ],
         "Stade Brestois 29": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1502.0,
             1502.0,
             1502.0
@@ -26844,7 +26010,7 @@
         ],
         "Stade Rennais FC 1901": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1551.5,
             1551.5,
             1551.5
@@ -26900,7 +26066,7 @@
         ],
         "Toulouse FC": [
           [
-            "2026-11-09",
+            "2026-11-10",
             1506.1,
             1506.1,
             1506.1
@@ -27593,7 +26759,7 @@
     "xg": {
       "source": "understat xG (xg_matches.csv)",
       "newest": "2026-11-01",
-      "age_days": 8,
+      "age_days": 9,
       "tolerance_days": 10,
       "rows": 22027,
       "fresh": true
@@ -27601,7 +26767,7 @@
     "shots": {
       "source": "football-data shots (shots_matches.csv)",
       "newest": "2026-11-08",
-      "age_days": 1,
+      "age_days": 2,
       "tolerance_days": 10,
       "rows": 25967,
       "fresh": true
@@ -27609,14 +26775,14 @@
     "understat_advanced": {
       "source": "understat advanced (understat_matches.csv)",
       "newest": "2026-11-01",
-      "age_days": 8,
+      "age_days": 9,
       "tolerance_days": 10,
       "rows": 22026,
       "fresh": true
     }
   },
   "results_freshness": {
-    "run_date": "2026-11-09",
+    "run_date": "2026-11-10",
     "as_of": "2026-11-08",
     "stale_leagues": [],
     "thresholds": {
@@ -27629,7 +26795,7 @@
         "tier": 1,
         "season": "2026-27",
         "newest_played": "2026-11-08",
-        "newest_played_age_days": 1,
+        "newest_played_age_days": 2,
         "played_season": 100,
         "fixtures_season": 380,
         "overdue": 0,
@@ -27643,7 +26809,7 @@
         "tier": 2,
         "season": "2026-27",
         "newest_played": "2026-11-07",
-        "newest_played_age_days": 2,
+        "newest_played_age_days": 3,
         "played_season": 180,
         "fixtures_season": 552,
         "overdue": 0,
@@ -27657,7 +26823,7 @@
         "tier": 1,
         "season": "2026-27",
         "newest_played": "2026-11-08",
-        "newest_played_age_days": 1,
+        "newest_played_age_days": 2,
         "played_season": 81,
         "fixtures_season": 306,
         "overdue": 0,
@@ -27671,7 +26837,7 @@
         "tier": 2,
         "season": "2026-27",
         "newest_played": "2025-11-02",
-        "newest_played_age_days": 372,
+        "newest_played_age_days": 373,
         "played_season": 0,
         "fixtures_season": 0,
         "overdue": 0,
@@ -27685,7 +26851,7 @@
         "tier": 1,
         "season": "2026-27",
         "newest_played": "2026-11-08",
-        "newest_played_age_days": 1,
+        "newest_played_age_days": 2,
         "played_season": 119,
         "fixtures_season": 380,
         "overdue": 1,
@@ -27701,7 +26867,7 @@
         "tier": 2,
         "season": "2026-27",
         "newest_played": "2025-11-03",
-        "newest_played_age_days": 371,
+        "newest_played_age_days": 372,
         "played_season": 0,
         "fixtures_season": 0,
         "overdue": 0,
@@ -27715,7 +26881,7 @@
         "tier": 1,
         "season": "2026-27",
         "newest_played": "2026-11-08",
-        "newest_played_age_days": 1,
+        "newest_played_age_days": 2,
         "played_season": 110,
         "fixtures_season": 380,
         "overdue": 0,
@@ -27729,7 +26895,7 @@
         "tier": 2,
         "season": "2026-27",
         "newest_played": "2026-03-17",
-        "newest_played_age_days": 237,
+        "newest_played_age_days": 238,
         "played_season": 0,
         "fixtures_season": 0,
         "overdue": 0,
@@ -27743,7 +26909,7 @@
         "tier": 1,
         "season": "2026-27",
         "newest_played": "2026-11-08",
-        "newest_played_age_days": 1,
+        "newest_played_age_days": 2,
         "played_season": 90,
         "fixtures_season": 306,
         "overdue": 0,
@@ -27757,7 +26923,7 @@
         "tier": 2,
         "season": "2026-27",
         "newest_played": "2025-11-03",
-        "newest_played_age_days": 371,
+        "newest_played_age_days": 372,
         "played_season": 0,
         "fixtures_season": 0,
         "overdue": 0,
@@ -27771,7 +26937,7 @@
         "tier": 1,
         "season": "2026",
         "newest_played": "2026-11-02",
-        "newest_played_age_days": 7,
+        "newest_played_age_days": 8,
         "played_season": 495,
         "fixtures_season": 495,
         "overdue": 0,
