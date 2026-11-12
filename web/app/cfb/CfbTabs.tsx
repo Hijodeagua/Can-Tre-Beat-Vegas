@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Four-tab view of the daily college-football pipeline output, mirroring
+ * Tabbed view of the daily college-football pipeline output, mirroring
  * `MlbTabs.tsx` and `SoccerTabs.tsx`. All data comes from
  * `public/data/cfb/latest.json`.
  *
@@ -13,9 +13,12 @@
  * Forecasts is the rest-of-season Monte Carlo:
  * expected wins, bowl / undefeated odds and the conference title races,
  * plus the daily-updating Elo trend chart for the top 25.
+ * Interconference grades the model on games between conferences, this
+ * season and last (see `InterconferenceTab.tsx`).
  */
 import { useEffect, useState } from 'react';
 import EloTrendChart from '@/app/components/EloTrendChart';
+import InterconferenceTab from './InterconferenceTab';
 import ModelFeatures from '@/app/components/ModelFeatures';
 import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
@@ -32,6 +35,7 @@ const TABS = [
   { slug: 'forecast', label: 'Forecasts' },
   { slug: 'slate', label: 'This Week' },
   { slug: 'grades', label: 'Grades' },
+  { slug: 'interconference', label: 'Interconference' },
 ] as const;
 
 type TabSlug = (typeof TABS)[number]['slug'];
@@ -570,6 +574,7 @@ export default function CfbTabs() {
       {tab === 'forecast' && <ForecastTab />}
       {tab === 'slate' && <SlateTab />}
       {tab === 'grades' && <GradesTab />}
+      {tab === 'interconference' && <InterconferenceTab />}
     </div>
   );
 }

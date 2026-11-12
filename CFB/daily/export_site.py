@@ -15,6 +15,7 @@ chart.
 from __future__ import annotations
 
 import json
+import math
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -185,6 +186,70 @@ def elo_projection_payload(futures: dict | None, run_date: str) -> dict:
     }
 
 
+def _game_scores(sub: pd.DataFrame) -> pd.DataFrame:
+    """Per-game grading of the Elo replay's pre-game probability: was the
+    favorite right, log-loss and Brier. Ties (none since OT) score 0.5."""
+    p = sub["p_home"].clip(1e-6, 1 - 1e-6)
+    y = sub["home_win"]
+    out = pd.DataFrame(index=sub.index)
+    out["correct"] = ((p >= 0.5) & (y == 1)) | ((p < 0.5) & (y == 0))
+    out["ll"] = -(y * p.map(math.log) + (1 - y) * (1 - p).map(math.log))
+    out["brier"] = (p - y) ** 2
+    return out
+
+
+def interconference_payload(history: pd.DataFrame, season: int,
+                            seasons_back: int = 1) -> dict:
+    """Every FBS-vs-FBS game between two different conferences (the FBS
+    independents count as one) for this season and the `seasons_back`
+    before it, with the Elo replay's pre-game home probability and the
+    result — the site's Interconference tab aggregates these per
+    conference and per conference pair under its season filter.
+
+    The probabilities are the replay's, i.e. what the engine thought the
+    morning of each game with no hindsight (parameters were fit on
+    2005-2023, so 2024+ is out of sample). `baseline` is the same
+    grading over in-conference games, for the "is the model worse
+    across conferences" comparison, as sums so the site can pool any
+    combination of seasons and season types.
+    """
+    if history is None or history.empty:
+        return {}
+    seasons = list(range(season - seasons_back, season + 1))
+    sub = history[history["season"].isin(seasons)
+                  & ~history["home_fcs"].astype(bool)
+                  & ~history["away_fcs"].astype(bool)
+                  & history["home_conference"].notna()
+                  & history["away_conference"].notna()]
+    scores = _game_scores(sub)
+    inter = sub["home_conference"] != sub["away_conference"]
+    games = []
+    for r in sub[inter].sort_values(["date", "game_id"]).itertuples():
+        games.append({
+            "game_id": int(r.game_id), "season": int(r.season), "week": int(r.week),
+            "season_type": r.season_type, "date": r.date,
+            "home_team": r.home_team, "away_team": r.away_team,
+            "home_conference": r.home_conference, "away_conference": r.away_conference,
+            "neutral": bool(r.neutral),
+            "elo_home_pre": round(float(r.elo_home_pre), 1),
+            "elo_away_pre": round(float(r.elo_away_pre), 1),
+            "elo_diff": round(float(r.elo_diff), 1),
+            "p_home": round(float(r.p_home), 4),
+            "home_points": int(r.home_points), "away_points": int(r.away_points),
+        })
+    baseline = []
+    conf_games = sub[~inter]
+    for (yr, stype), g in conf_games.groupby(["season", "season_type"]):
+        sc = scores.loc[g.index]
+        baseline.append({
+            "season": int(yr), "season_type": stype, "games": int(len(g)),
+            "correct": int(sc["correct"].sum()),
+            "ll_sum": round(float(sc["ll"].sum()), 4),
+            "brier_sum": round(float(sc["brier"].sum()), 4),
+        })
+    return {"seasons": seasons, "games": games, "conference_baseline": baseline}
+
+
 def current_week(state: DailyState, run_date: str) -> int | None:
     g = state.games[(state.games["season"] == state.season)
                     & (state.games["season_type"] == "regular")]
@@ -236,6 +301,7 @@ def export(state: DailyState, run_date: str, slate: pd.DataFrame,
                   for k, r in state.feeds.items()},
         "elo_history": elo_history_payload(state, run_date),
         "elo_projection": elo_projection,
+        "interconference": interconference_payload(state.history, state.season),
     }
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     SITE_HISTORY.mkdir(parents=True, exist_ok=True)
