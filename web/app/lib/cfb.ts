@@ -167,6 +167,46 @@ export interface CfbEloProjection {
   samples: Record<string, number[][]>;
 }
 
+/** One FBS-vs-FBS game between two different conferences (the FBS
+ * independents count as one), with the Elo replay's pre-game home
+ * probability — what the engine thought that morning, no hindsight. */
+export interface CfbInterconferenceGame {
+  game_id: number;
+  season: number;
+  week: number;
+  season_type: string;
+  date: string;
+  home_team: string;
+  away_team: string;
+  home_conference: string;
+  away_conference: string;
+  neutral: boolean;
+  elo_home_pre: number;
+  elo_away_pre: number;
+  /** Home Elo + home edge (0 at neutral sites) − away Elo. */
+  elo_diff: number;
+  p_home: number;
+  home_points: number;
+  away_points: number;
+}
+
+/** The same grading over in-conference FBS games, as sums per season and
+ * season type so any filter combination can be pooled. */
+export interface CfbConferenceBaseline {
+  season: number;
+  season_type: string;
+  games: number;
+  correct: number;
+  ll_sum: number;
+  brier_sum: number;
+}
+
+export interface CfbInterconference {
+  seasons: number[];
+  games: CfbInterconferenceGame[];
+  conference_baseline: CfbConferenceBaseline[];
+}
+
 export interface CfbLatest {
   generated_at: string;
   run_date: string;
@@ -183,6 +223,7 @@ export interface CfbLatest {
   futures: CfbFutures;
   elo_history?: CfbEloHistory;
   elo_projection?: CfbEloProjection;
+  interconference?: CfbInterconference;
 }
 
 const data = latest as unknown as CfbLatest;

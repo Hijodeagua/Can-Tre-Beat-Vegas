@@ -262,3 +262,37 @@ class TestSitePayload:
         assert east["topN"] == 2 and east["bestTeam"] == "A" and east["worstTeam"] == "E"
         west = conf["West"]
         assert west["medianElo"] == 1400.0 and west["topN"] == 1
+
+    def test_interconference_payload(self):
+        from CFB.daily.export_site import interconference_payload
+        base = dict(home_fcs=False, away_fcs=False, neutral=False, elo_home_pre=1500.0,
+                    elo_away_pre=1500.0, elo_diff=60.0, week=1, season_type="regular",
+                    date="2026-09-05")
+        h = pd.DataFrame([
+            # interconference, this season and last
+            {**base, "game_id": 1, "season": 2026, "home_team": "A", "away_team": "C",
+             "home_conference": "East", "away_conference": "West", "p_home": 0.7,
+             "home_win": 1.0, "home_points": 30.0, "away_points": 20.0},
+            {**base, "game_id": 2, "season": 2025, "date": "2025-09-06", "home_team": "C", "away_team": "B",
+             "home_conference": "West", "away_conference": "East", "p_home": 0.6,
+             "home_win": 0.0, "home_points": 10.0, "away_points": 14.0},
+            # in-conference -> baseline only
+            {**base, "game_id": 3, "season": 2026, "home_team": "A", "away_team": "B",
+             "home_conference": "East", "away_conference": "East", "p_home": 0.8,
+             "home_win": 1.0, "home_points": 21.0, "away_points": 7.0},
+            # FCS opponent and an older season -> dropped
+            {**base, "game_id": 4, "season": 2026, "home_team": "A", "away_team": "F",
+             "home_conference": "East", "away_conference": "Big Sky", "away_fcs": True,
+             "p_home": 0.95, "home_win": 1.0, "home_points": 50.0, "away_points": 0.0},
+            {**base, "game_id": 5, "season": 2024, "home_team": "A", "away_team": "C",
+             "home_conference": "East", "away_conference": "West", "p_home": 0.5,
+             "home_win": 1.0, "home_points": 3.0, "away_points": 0.0},
+        ])
+        out = interconference_payload(h, 2026)
+        assert out["seasons"] == [2025, 2026]
+        assert [g["game_id"] for g in out["games"]] == [2, 1]
+        assert out["games"][1]["home_conference"] == "East"
+        (b,) = out["conference_baseline"]
+        assert b["season"] == 2026 and b["games"] == 1 and b["correct"] == 1
+        assert b["ll_sum"] == pytest.approx(-math.log(0.8), abs=1e-4)
+        assert b["brier_sum"] == pytest.approx(0.04, abs=1e-4)

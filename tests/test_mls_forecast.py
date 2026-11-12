@@ -366,15 +366,23 @@ class TestChart:
     def test_the_band_widens_as_the_season_runs_out(self, out):
         """Uncertainty about a club's rating grows with every match left
         to play. If this ever inverted, the percentiles would be being
-        computed across the wrong axis."""
+        computed across the wrong axis.
+
+        Late in the season a club can have a single match left, so its
+        projection is just the anchor and the final point; "first
+        checkpoint narrower than the last" then compares a point with
+        itself. Compare the anchor to the end in that case, and the first
+        checkpoint to the end whenever there is one in between."""
         widths = [
             [hi - lo for _, _, lo, hi in p["points"]]
             for p in out["chart"]["projection"].values()
         ]
         n = min(len(w) for w in widths)
         mean = [sum(w[i] for w in widths) / len(widths) for i in range(n)]
-        assert mean[1] < mean[n - 1]
         assert mean[0] == 0.0  # the anchor is today's rating, not a range
+        assert mean[0] < mean[n - 1]
+        if n >= 3:
+            assert mean[1] < mean[n - 1]
 
     def test_samples_are_whole_seasons(self, out):
         for club, p in out["chart"]["projection"].items():
