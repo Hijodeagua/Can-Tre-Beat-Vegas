@@ -64,7 +64,15 @@ class TestDrafts:
         doc = docs["nfl"]
         g = pd.read_csv(REPO / "data" / "nfl" / "predictions" / "grades.csv")
         g = g[g["date"] <= RUN_DATE]
-        ledger = json.loads((REPO / "web" / "public" / "data" / "nfl" / "latest.json").read_text())["ledger"]
+        # The site ledger covering exactly the games the draft graded: the
+        # first daily snapshot whose ledger has caught up to them. Today's
+        # latest.json keeps grading past RUN_DATE, so comparing against it
+        # broke as soon as the next week's games were graded.
+        hist = sorted((REPO / "web" / "public" / "data" / "nfl" / "history").glob("*.json"))
+        ledger = next(
+            led for led in (json.loads(f.read_text()).get("ledger") or {} for f in hist)
+            if led.get("graded") == len(g)
+        )
         windows = next(b for b in doc["report_card"]["blocks"] if b["heading"].startswith("Windows"))["rows"]
         season = next(r for r in windows if r[0] == "Season to date")
         assert season[1] == len(g)

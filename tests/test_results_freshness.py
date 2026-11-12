@@ -79,15 +79,20 @@ class TestResultsStatus:
         assert st["leagues"]["mls"]["reason"] == "no_fixture_list"
 
     def test_live_data_today(self):
-        """The committed results.csv: the Championship (no overlay source
-        before fd_results runs from Actions) must read stale; a top flight
-        the Understat overlay filled must not."""
+        """The committed results.csv on a past run date. This used to
+        assert the Championship read stale, which only held until
+        fd_results started running from Actions and backfilled it; past
+        fixtures only ever gain scores, so the durable check is that no
+        league reads stale for 2026-11-02 now that every overlay has
+        landed. The stale path itself is covered by the synthetic cases
+        above."""
         r = pd.read_csv(state.DATA_DIR_RESULTS) if hasattr(state, "DATA_DIR_RESULTS") else None
         if r is None:
             from soccer.clubs.model.elo import DATA_DIR
             r = pd.read_csv(DATA_DIR / "results.csv")
         st = state.results_status(r, "2026-11-02")
-        assert st["leagues"]["championship"]["stale"]
+        assert st["stale_leagues"] == []
+        assert not st["leagues"]["championship"]["stale"]
         assert not st["leagues"]["epl"]["stale"]
 
 
