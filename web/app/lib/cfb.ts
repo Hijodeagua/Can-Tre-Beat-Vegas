@@ -188,6 +188,9 @@ export interface CfbInterconferenceGame {
   p_home: number;
   home_points: number;
   away_points: number;
+  /** Only on `fcs_games`: which side is the FCS program. */
+  home_fcs?: boolean;
+  away_fcs?: boolean;
 }
 
 /** The same grading over in-conference FBS games, as sums per season and
@@ -204,6 +207,8 @@ export interface CfbConferenceBaseline {
 export interface CfbInterconference {
   seasons: number[];
   games: CfbInterconferenceGame[];
+  /** FBS vs. FCS over the same seasons — never pooled with `games`. */
+  fcs_games?: CfbInterconferenceGame[];
   conference_baseline: CfbConferenceBaseline[];
 }
 

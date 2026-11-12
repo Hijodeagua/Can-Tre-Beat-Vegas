@@ -292,6 +292,9 @@ class TestSitePayload:
         assert out["seasons"] == [2025, 2026]
         assert [g["game_id"] for g in out["games"]] == [2, 1]
         assert out["games"][1]["home_conference"] == "East"
+        (f,) = out["fcs_games"]
+        assert f["game_id"] == 4 and f["away_fcs"] and not f["home_fcs"]
+        assert all(g["game_id"] != 4 for g in out["games"])
         (b,) = out["conference_baseline"]
         assert b["season"] == 2026 and b["games"] == 1 and b["correct"] == 1
         assert b["ll_sum"] == pytest.approx(-math.log(0.8), abs=1e-4)

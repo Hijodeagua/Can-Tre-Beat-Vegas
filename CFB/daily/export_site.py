@@ -198,13 +198,35 @@ def _game_scores(sub: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def _game_row(r, fcs: bool = False) -> dict:
+    row = {
+        "game_id": int(r.game_id), "season": int(r.season), "week": int(r.week),
+        "season_type": r.season_type, "date": r.date,
+        "home_team": r.home_team, "away_team": r.away_team,
+        "home_conference": r.home_conference if isinstance(r.home_conference, str) else "FCS",
+        "away_conference": r.away_conference if isinstance(r.away_conference, str) else "FCS",
+        "neutral": bool(r.neutral),
+        "elo_home_pre": round(float(r.elo_home_pre), 1),
+        "elo_away_pre": round(float(r.elo_away_pre), 1),
+        "elo_diff": round(float(r.elo_diff), 1),
+        "p_home": round(float(r.p_home), 4),
+        "home_points": int(r.home_points), "away_points": int(r.away_points),
+    }
+    if fcs:
+        row["home_fcs"] = bool(r.home_fcs)
+        row["away_fcs"] = bool(r.away_fcs)
+    return row
+
+
 def interconference_payload(history: pd.DataFrame, season: int,
                             seasons_back: int = 1) -> dict:
     """Every FBS-vs-FBS game between two different conferences (the FBS
     independents count as one) for this season and the `seasons_back`
     before it, with the Elo replay's pre-game home probability and the
     result — the site's Interconference tab aggregates these per
-    conference and per conference pair under its season filter.
+    conference, per conference matchup and per team under its season
+    filter. `fcs_games` is every FBS-vs-FCS game over the same seasons,
+    kept apart so it is never pooled with the FBS-vs-FBS numbers.
 
     The probabilities are the replay's, i.e. what the engine thought the
     morning of each game with no hindsight (parameters were fit on
@@ -216,27 +238,22 @@ def interconference_payload(history: pd.DataFrame, season: int,
     if history is None or history.empty:
         return {}
     seasons = list(range(season - seasons_back, season + 1))
-    sub = history[history["season"].isin(seasons)
-                  & ~history["home_fcs"].astype(bool)
-                  & ~history["away_fcs"].astype(bool)
-                  & history["home_conference"].notna()
-                  & history["away_conference"].notna()]
+    window = history[history["season"].isin(seasons)]
+    home_fcs = window["home_fcs"].astype(bool)
+    away_fcs = window["away_fcs"].astype(bool)
+    sub = window[~home_fcs & ~away_fcs
+                 & window["home_conference"].notna()
+                 & window["away_conference"].notna()]
     scores = _game_scores(sub)
     inter = sub["home_conference"] != sub["away_conference"]
-    games = []
-    for r in sub[inter].sort_values(["date", "game_id"]).itertuples():
-        games.append({
-            "game_id": int(r.game_id), "season": int(r.season), "week": int(r.week),
-            "season_type": r.season_type, "date": r.date,
-            "home_team": r.home_team, "away_team": r.away_team,
-            "home_conference": r.home_conference, "away_conference": r.away_conference,
-            "neutral": bool(r.neutral),
-            "elo_home_pre": round(float(r.elo_home_pre), 1),
-            "elo_away_pre": round(float(r.elo_away_pre), 1),
-            "elo_diff": round(float(r.elo_diff), 1),
-            "p_home": round(float(r.p_home), 4),
-            "home_points": int(r.home_points), "away_points": int(r.away_points),
-        })
+    games = [_game_row(r) for r in sub[inter].sort_values(["date", "game_id"]).itertuples()]
+    # FBS vs FCS, kept in its own list so the site never pools it with
+    # the FBS-vs-FBS numbers: every FCS opponent is one pooled rating, so
+    # these are a different (and much easier) kind of game.
+    fcs = window[home_fcs ^ away_fcs]
+    fcs = fcs[fcs["home_conference"].where(~home_fcs, fcs["away_conference"]).notna()]
+    fcs_games = [_game_row(r, fcs=True)
+                 for r in fcs.sort_values(["date", "game_id"]).itertuples()]
     baseline = []
     conf_games = sub[~inter]
     for (yr, stype), g in conf_games.groupby(["season", "season_type"]):
@@ -247,7 +264,8 @@ def interconference_payload(history: pd.DataFrame, season: int,
             "ll_sum": round(float(sc["ll"].sum()), 4),
             "brier_sum": round(float(sc["brier"].sum()), 4),
         })
-    return {"seasons": seasons, "games": games, "conference_baseline": baseline}
+    return {"seasons": seasons, "games": games, "fcs_games": fcs_games,
+            "conference_baseline": baseline}
 
 
 def current_week(state: DailyState, run_date: str) -> int | None:
