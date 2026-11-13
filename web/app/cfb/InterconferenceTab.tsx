@@ -9,7 +9,11 @@
  * thing tying the conferences to one scale, so they are where a
  * conference-strength miss would show.
  *
- * Everything is aggregated here from `data.interconference.games` so the
+ * The Matchup Explorer picks a conference (and optionally one team) and
+ * shows its record against each other conference, with FBS-vs-FCS games
+ * (`fcs_games`) in a separate table that never feeds the FBS numbers.
+ *
+ * Everything is aggregated here from `data.interconference` so the
  * season and game-type filters can pool any combination.
  */
 import { useState } from 'react';
@@ -17,7 +21,7 @@ import SortableThemedTable from '@/app/components/SortableThemedTable';
 import ThemedTable from '@/app/components/ThemedTable';
 import { DASH, fmtNum, fmtPct, fmtPctPrecise } from '@/app/lib/format';
 import {
-  getCfbLatest, matchupLabel,
+  getCfbLatest, matchupLabel, orderedConferences,
   type CfbConferenceBaseline, type CfbInterconferenceGame,
 } from '@/app/lib/cfb';
 
@@ -73,6 +77,8 @@ function Pills<T extends string>({
 interface Side {
   conf: string;
   opp: string;
+  team: string;
+  oppTeam: string;
   p: number;          // model's win probability for this side
   won: boolean;
   margin: number;     // this side's points − opponent's
@@ -86,11 +92,13 @@ function sides(g: CfbInterconferenceGame, eloPerPoint: number): [Side, Side] {
   const correct = (g.p_home >= 0.5 && margin > 0) || (g.p_home < 0.5 && margin < 0);
   return [
     {
-      conf: g.home_conference, opp: g.away_conference, p: g.p_home, won: margin > 0,
+      conf: g.home_conference, opp: g.away_conference, team: g.home_team, oppTeam: g.away_team,
+      p: g.p_home, won: margin > 0,
       margin, expMargin: exp, correct,
     },
     {
-      conf: g.away_conference, opp: g.home_conference, p: 1 - g.p_home, won: margin < 0,
+      conf: g.away_conference, opp: g.home_conference, team: g.away_team, oppTeam: g.home_team,
+      p: 1 - g.p_home, won: margin < 0,
       margin: -margin, expMargin: -exp, correct,
     },
   ];
@@ -165,13 +173,24 @@ const CONF_COLUMNS = [
   { header: 'Log-loss', numeric: true },
 ];
 
-const PAIR_COLUMNS = [
-  { header: 'Matchup', strong: true },
+const EXPLORER_COLUMNS = [
+  { header: 'Opponent', strong: true },
   { header: 'G', numeric: true },
-  { header: 'W–L (first conf)' },
+  { header: 'W–L' },
   { header: 'Exp W', numeric: true },
   { header: 'W vs exp', strong: true, numeric: true },
+  { header: 'Avg margin', numeric: true },
   { header: 'Margin vs exp', numeric: true },
+];
+
+const LOG_COLUMNS = [
+  { header: '' },
+  { header: 'Date' },
+  { header: 'Opponent' },
+  { header: 'Opp conf' },
+  { header: 'Win prob' },
+  { header: 'Result' },
+  { header: 'Margin vs exp' },
 ];
 
 const UPSET_COLUMNS = [
@@ -199,6 +218,166 @@ function H3({ children }: { children: React.ReactNode }) {
     <h3 className="pixel m-3 mt-8 ml-0 text-[11px]" style={{ color: 'var(--th-ink)' }}>
       {children}
     </h3>
+  );
+}
+
+function explorerRow(label: string, a: Agg) {
+  const wVsExp = a.wins - a.expWins;
+  const avgM = a.marginSum / a.games;
+  const mVsExp = (a.marginSum - a.expMarginSum) / a.games;
+  return {
+    key: label,
+    cells: [
+      label, a.games, `${a.wins}–${a.games - a.wins}`, a.expWins.toFixed(1),
+      signed1(wVsExp), signed1(avgM), signed1(mVsExp),
+    ],
+    values: [label, a.games, a.wins, a.expWins, wVsExp, avgM, mVsExp],
+  };
+}
+
+function logRows(list: { g: CfbInterconferenceGame; s: Side }[]) {
+  return list.map(({ g, s }) => ({
+    key: String(g.game_id),
+    cells: [
+      s.won ? '✅' : '❌',
+      g.date,
+      `${g.neutral ? 'vs.' : s.team === g.home_team ? 'vs.' : '@'} ${s.oppTeam}${g.neutral ? ' (N)' : ''}${
+        g.season_type === 'postseason' ? ' · bowl/playoff' : ''}`,
+      shortConf(s.opp),
+      fmtPct(s.p),
+      `${s.won ? 'W' : 'L'} ${Math.max(g.home_points, g.away_points)}–${Math.min(g.home_points, g.away_points)}`,
+      signed1(s.margin - s.expMargin),
+    ],
+  }));
+}
+
+/** Pick a conference (and optionally one of its teams) and see the record
+ * against every other conference, with FBS-vs-FCS games in their own
+ * table — they are never pooled into the FBS numbers. */
+function MatchupExplorer({
+  games, fcsGames, eloPerPoint,
+}: {
+  games: CfbInterconferenceGame[];
+  fcsGames: CfbInterconferenceGame[];
+  eloPerPoint: number;
+}) {
+  const ranked = orderedConferences().map((c) => c.name);
+  const present = new Set(games.flatMap((g) => [g.home_conference, g.away_conference]));
+  const confs = [
+    ...ranked.filter((c) => present.has(c)),
+    ...[...present].filter((c) => !ranked.includes(c)).sort(),
+  ];
+  const [conf, setConf] = useState(confs[0] ?? '');
+  const [team, setTeam] = useState('All');
+  const active = confs.includes(conf) ? conf : (confs[0] ?? '');
+
+  // Every FBS side of a game that belongs to the picked conference.
+  const fbsSides = games
+    .flatMap((g) => sides(g, eloPerPoint).map((s) => ({ g, s })))
+    .filter(({ s }) => s.conf === active);
+  const fcsSides = fcsGames
+    .map((g) => ({ g, s: sides(g, eloPerPoint)[g.home_fcs ? 1 : 0] }))
+    .filter(({ s }) => s.conf === active);
+
+  const teams = [...new Set([...fbsSides, ...fcsSides].map(({ s }) => s.team))].sort();
+  const pickedTeam = teams.includes(team) ? team : 'All';
+  const mine = <T extends { s: Side }>(list: T[]) =>
+    pickedTeam === 'All' ? list : list.filter(({ s }) => s.team === pickedTeam);
+  const fbs = mine(fbsSides);
+  const fcs = mine(fcsSides);
+
+  const byOpp = new Map<string, Agg>();
+  const total = emptyAgg();
+  for (const { s } of fbs) {
+    if (!byOpp.has(s.opp)) byOpp.set(s.opp, emptyAgg());
+    add(byOpp.get(s.opp)!, s);
+    add(total, s);
+  }
+  const fcsByConf = new Map<string, Agg>();
+  const fcsTotal = emptyAgg();
+  for (const { s } of fcs) {
+    if (!fcsByConf.has(s.opp)) fcsByConf.set(s.opp, emptyAgg());
+    add(fcsByConf.get(s.opp)!, s);
+    add(fcsTotal, s);
+  }
+  const subject = pickedTeam === 'All' ? active : pickedTeam;
+  const confOptions = confs.map((c) => ({ key: c, label: shortConf(c) }));
+
+  return (
+    <section>
+      <H3>Matchup Explorer</H3>
+      <Pills options={confOptions} active={active} onSelect={(c) => { setConf(c); setTeam('All'); }} />
+      <label className="mt-3 flex items-center gap-2 text-[13px]" style={{ color: 'var(--th-muted)' }}>
+        Team
+        <select
+          value={pickedTeam}
+          onChange={(e) => setTeam(e.target.value)}
+          className="rounded-md border px-2 py-1 text-[13px]"
+          style={{ borderColor: 'var(--th-border)', background: 'var(--th-card)', color: 'var(--th-ink)' }}
+        >
+          <option value="All">All {shortConf(active)} teams</option>
+          {teams.map((t) => <option key={t} value={t}>{t}</option>)}
+        </select>
+      </label>
+
+      <h4 className="pixel m-0 mt-5 text-[10px]" style={{ color: 'var(--th-ink)' }}>
+        {subject} vs. FBS conferences
+      </h4>
+      <div className="mt-2">
+        {fbs.length === 0 ? (
+          <Empty>No FBS interconference games for {subject} under this filter.</Empty>
+        ) : (
+          <SortableThemedTable
+            columns={EXPLORER_COLUMNS}
+            rows={[
+              ...[...byOpp.entries()]
+                .sort((x, y) => y[1].games - x[1].games)
+                .map(([opp, a]) => explorerRow(opp, a)),
+              { ...explorerRow('All FBS opponents', total), key: '__total' },
+            ]}
+            note="Told from the picked conference's (or team's) side. Exp W sums the model's pre-game win probabilities; W vs exp above zero means it won more than its Elo said it should. Margin vs exp is actual minus Elo-implied margin, points per game. FCS games are in their own table below and are not counted here."
+          />
+        )}
+      </div>
+
+      <h4 className="pixel m-0 mt-6 text-[10px]" style={{ color: 'var(--th-ink)' }}>
+        {subject} vs. FCS (kept separate)
+      </h4>
+      <div className="mt-2">
+        {fcs.length === 0 ? (
+          <Empty>No FCS games for {subject} under this filter.</Empty>
+        ) : (
+          <SortableThemedTable
+            columns={EXPLORER_COLUMNS}
+            rows={[
+              ...[...fcsByConf.entries()]
+                .sort((x, y) => y[1].games - x[1].games)
+                .map(([opp, a]) => explorerRow(opp, a)),
+              { ...explorerRow('All FCS opponents', fcsTotal), key: '__total' },
+            ]}
+            note="FBS vs. FCS only, grouped by the FCS opponent's conference. Every FCS team is one pooled rating in the model, so these lines say little about any single FCS program, and they never feed the FBS tables above."
+          />
+        )}
+      </div>
+
+      {pickedTeam !== 'All' && (
+        <>
+          <h4 className="pixel m-0 mt-6 text-[10px]" style={{ color: 'var(--th-ink)' }}>
+            {pickedTeam} game log
+          </h4>
+          {fbs.length > 0 && (
+            <div className="mt-2">
+              <ThemedTable columns={LOG_COLUMNS} rows={logRows(fbs)} note="FBS interconference games." />
+            </div>
+          )}
+          {fcs.length > 0 && (
+            <div className="mt-3">
+              <ThemedTable columns={LOG_COLUMNS} rows={logRows(fcs)} note="FCS games, listed separately." />
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }
 
@@ -276,18 +455,12 @@ export default function InterconferenceTab() {
 
   // Per-conference and per-pair aggregation.
   const byConf = new Map<string, Agg>();
-  const byPair = new Map<string, { a: string; b: string; agg: Agg }>();
   for (const g of games) {
     const [h, a] = sides(g, eloPerPoint);
     for (const s of [h, a]) {
       if (!byConf.has(s.conf)) byConf.set(s.conf, emptyAgg());
       add(byConf.get(s.conf)!, s);
     }
-    // Pairs are keyed alphabetically and told from the first conference's side.
-    const first = h.conf < a.conf ? h : a;
-    const key = `${first.conf}|${first.opp}`;
-    if (!byPair.has(key)) byPair.set(key, { a: first.conf, b: first.opp, agg: emptyAgg() });
-    add(byPair.get(key)!.agg, first);
   }
   const confRows = [...byConf.entries()]
     .sort((x, y) => (y[1].wins - y[1].expWins) - (x[1].wins - x[1].expWins))
@@ -315,26 +488,6 @@ export default function InterconferenceTab() {
           conf, a.games, a.wins, a.expWins, wVsExp, a.favW, a.dogW, avgM, expM,
           avgM - expM, a.correct / a.games, a.llSum / a.games,
         ],
-      };
-    });
-
-  const pairRows = [...byPair.values()]
-    .filter((p) => p.agg.games >= 2)
-    .sort((x, y) => y.agg.games - x.agg.games)
-    .map(({ a, b, agg }) => {
-      const wVsExp = agg.wins - agg.expWins;
-      const mVsExp = (agg.marginSum - agg.expMarginSum) / agg.games;
-      return {
-        key: `${a}|${b}`,
-        cells: [
-          `${shortConf(a)} vs. ${shortConf(b)}`,
-          agg.games,
-          `${agg.wins}–${agg.games - agg.wins}`,
-          agg.expWins.toFixed(1),
-          signed1(wVsExp),
-          signed1(mVsExp),
-        ],
-        values: [`${a} ${b}`, agg.games, agg.wins, agg.expWins, wVsExp, mVsExp],
       };
     });
 
@@ -390,16 +543,11 @@ export default function InterconferenceTab() {
         }
       />
 
-      {pairRows.length > 0 && (
-        <>
-          <H3>Head-to-Head by Conference Pair</H3>
-          <SortableThemedTable
-            columns={PAIR_COLUMNS}
-            rows={pairRows}
-            note="Every conference pairing with two or more games under the current filter, told from the first-named conference's side (W–L, Exp W, W vs exp and Margin vs exp all belong to it). Small samples — a couple of games is noise, not a verdict."
-          />
-        </>
-      )}
+      <MatchupExplorer
+        games={games}
+        fcsGames={(ic.fcs_games ?? []).filter((g) => seasonOk(g.season) && typeOk(g.season_type))}
+        eloPerPoint={eloPerPoint}
+      />
 
       {upsets.length > 0 && (
         <>
