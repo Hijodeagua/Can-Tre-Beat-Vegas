@@ -1,1225 +1,15 @@
 {
-  "generated_at": "2026-11-22T17:34:54Z",
+  "generated_at": "2026-11-23T02:16:23Z",
   "window_hours": 48,
   "sports": [
     {
       "key": "nfl",
       "name": "NFL",
       "snapshot": {
-        "file": "odds_api_data_2026-11-22-1734.csv",
-        "pulled_at_et": "2026-11-22 12:34:53"
+        "file": "odds_api_data_2026-11-23-0216.csv",
+        "pulled_at_et": "2026-11-22 21:16:21"
       },
       "games": [
-        {
-          "game_id": "403a88701352da05b0710a9e883b803e",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Kansas City Chiefs",
-          "away_team": "Arizona Cardinals",
-          "consensus": {
-            "home_ml": -1513.33,
-            "away_ml": 878.33,
-            "home_spread": -15.33,
-            "home_spread_odds": -84.89,
-            "away_spread_odds": -110.67,
-            "total": 40.44,
-            "over_odds": -108.11,
-            "under_odds": -111.0,
-            "home_win_prob": 0.9017382103252833
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -1460.0,
-              "away_ml": 850.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -107.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -1600.0,
-              "away_ml": 900.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -1500.0,
-              "away_ml": 870.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -1600.0,
-              "away_ml": 910.0,
-              "home_spread_odds": 102.0,
-              "away_spread_odds": -113.0,
-              "over_odds": -103.0,
-              "under_odds": -111.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -1600.0,
-              "away_ml": 910.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -1667.0,
-              "away_ml": 900.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -109.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -1493.0,
-              "away_ml": 890.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -1400.0,
-              "away_ml": 900.0,
-              "home_spread_odds": -102.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -1300.0,
-              "away_ml": 775.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-20 18:59:47",
-            "spread": -11.5,
-            "total": 44.5,
-            "home_ml": -600.0,
-            "away_ml": 440.0,
-            "spread_delta": -3.83,
-            "total_delta": -4.06
-          },
-          "model": null
-        },
-        {
-          "game_id": "4527f57f5bc32742d8194af1ccf7da7e",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Carolina Panthers",
-          "away_team": "Baltimore Ravens",
-          "consensus": {
-            "home_ml": -139.44,
-            "away_ml": 118.11,
-            "home_spread": -2.39,
-            "home_spread_odds": -111.78,
-            "away_spread_odds": -85.0,
-            "total": 44.39,
-            "over_odds": -110.56,
-            "under_odds": -108.78,
-            "home_win_prob": 0.5595068495949016
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -141.0,
-              "away_ml": 119.0,
-              "home_spread_odds": -114.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -109.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -140.0,
-              "away_ml": 120.0,
-              "home_spread_odds": -120.0,
-              "away_spread_odds": 100.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -136.0,
-              "away_ml": 116.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -143.0,
-              "away_ml": 123.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -143.0,
-              "away_ml": 123.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -132.0,
-              "away_ml": 107.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -118.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -138.0,
-              "away_ml": 118.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -140.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -142.0,
-              "away_ml": 122.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": 4.5,
-            "total": 46.5,
-            "home_ml": 170.0,
-            "away_ml": -205.0,
-            "spread_delta": -6.89,
-            "total_delta": -2.11
-          },
-          "model": null
-        },
-        {
-          "game_id": "4c5b1c0843a260278e95eb93e7787576",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Buffalo Bills",
-          "away_team": "Miami Dolphins",
-          "consensus": {
-            "home_ml": -1928.78,
-            "away_ml": 1011.22,
-            "home_spread": -16.61,
-            "home_spread_odds": -112.22,
-            "away_spread_odds": -84.56,
-            "total": 44.94,
-            "over_odds": -110.44,
-            "under_odds": -108.78,
-            "home_win_prob": 0.9135282599547683
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -1820.0,
-              "away_ml": 980.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -104.0,
-              "over_odds": -105.0,
-              "under_odds": -114.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -1800.0,
-              "away_ml": 1000.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -2000.0,
-              "away_ml": 1040.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -2200.0,
-              "away_ml": 1096.0,
-              "home_spread_odds": -113.0,
-              "away_spread_odds": 102.0,
-              "over_odds": -110.0,
-              "under_odds": -104.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -2200.0,
-              "away_ml": 1096.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -113.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -2000.0,
-              "away_ml": 900.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -109.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -2039.0,
-              "away_ml": 1114.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -2000.0,
-              "away_ml": 1100.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -1300.0,
-              "away_ml": 775.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -11.5,
-            "total": 47.5,
-            "home_ml": -550.0,
-            "away_ml": 410.0,
-            "spread_delta": -5.11,
-            "total_delta": -2.56
-          },
-          "model": null
-        },
-        {
-          "game_id": "3ea90704fb576633bd1e2fa5aafd9ea3",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Chicago Bears",
-          "away_team": "New Orleans Saints",
-          "consensus": {
-            "home_ml": -685.56,
-            "away_ml": 498.22,
-            "home_spread": -11.67,
-            "home_spread_odds": -110.56,
-            "away_spread_odds": -108.11,
-            "total": 47.89,
-            "over_odds": -109.67,
-            "under_odds": -109.44,
-            "home_win_prob": 0.8392458587522323
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -670.0,
-              "away_ml": 488.0,
-              "home_spread_odds": -113.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -113.0,
-              "under_odds": -106.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -650.0,
-              "away_ml": 475.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -720.0,
-              "away_ml": 520.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -114.0,
-              "under_odds": -106.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -730.0,
-              "away_ml": 523.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -102.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -730.0,
-              "away_ml": 523.0,
-              "home_spread_odds": -113.0,
-              "away_spread_odds": -107.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -670.0,
-              "away_ml": 475.0,
-              "home_spread_odds": -113.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -725.0,
-              "away_ml": 520.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -650.0,
-              "away_ml": 500.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -625.0,
-              "away_ml": 460.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -6.5,
-            "total": 46.5,
-            "home_ml": -270.0,
-            "away_ml": 220.0,
-            "spread_delta": -5.17,
-            "total_delta": 1.39
-          },
-          "model": null
-        },
-        {
-          "game_id": "5e63079b678f8c13419adc169fff02d3",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Dallas Cowboys",
-          "away_team": "Tennessee Titans",
-          "consensus": {
-            "home_ml": -367.22,
-            "away_ml": 289.89,
-            "home_spread": -7.56,
-            "home_spread_odds": -82.33,
-            "away_spread_odds": -114.33,
-            "total": 54.61,
-            "over_odds": -109.0,
-            "under_odds": -110.22,
-            "home_win_prob": 0.7539618837699783
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -359.0,
-              "away_ml": 288.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -102.0,
-              "under_odds": -117.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -350.0,
-              "away_ml": 280.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -370.0,
-              "away_ml": 295.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -385.0,
-              "away_ml": 306.0,
-              "home_spread_odds": 105.0,
-              "away_spread_odds": -116.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -385.0,
-              "away_ml": 306.0,
-              "home_spread_odds": -107.0,
-              "away_spread_odds": -113.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -345.0,
-              "away_ml": 260.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -118.0,
-              "over_odds": -110.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -381.0,
-              "away_ml": 304.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -375.0,
-              "away_ml": 290.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -355.0,
-              "away_ml": 280.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -6.5,
-            "total": 48.5,
-            "home_ml": -278.0,
-            "away_ml": 225.0,
-            "spread_delta": -1.06,
-            "total_delta": 6.11
-          },
-          "model": null
-        },
-        {
-          "game_id": "41e2dd69bddd65d7e823d9ed61cc2afc",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Detroit Lions",
-          "away_team": "Tampa Bay Buccaneers",
-          "consensus": {
-            "home_ml": -214.67,
-            "away_ml": 179.22,
-            "home_spread": -3.5,
-            "home_spread_odds": -111.78,
-            "away_spread_odds": -107.11,
-            "total": 48.5,
-            "over_odds": -111.56,
-            "under_odds": -107.67,
-            "home_win_prob": 0.655749058442988
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -221.0,
-              "away_ml": 184.0,
-              "home_spread_odds": -118.0,
-              "away_spread_odds": -102.0,
-              "over_odds": -108.0,
-              "under_odds": -111.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -215.0,
-              "away_ml": 183.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -210.0,
-              "away_ml": 172.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -210.0,
-              "away_ml": 180.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -210.0,
-              "away_ml": 180.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -210.0,
-              "away_ml": 170.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -113.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -231.0,
-              "away_ml": 193.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -210.0,
-              "away_ml": 175.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -215.0,
-              "away_ml": 176.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -4.5,
-            "total": 49.5,
-            "home_ml": -218.0,
-            "away_ml": 180.0,
-            "spread_delta": 1.0,
-            "total_delta": -1.0
-          },
-          "model": null
-        },
-        {
-          "game_id": "cbe45bafcc2615fc1d96cbc12840377a",
-          "commence_et": "2026-11-22 13:00",
-          "home_team": "Philadelphia Eagles",
-          "away_team": "Pittsburgh Steelers",
-          "consensus": {
-            "home_ml": 168.44,
-            "away_ml": -199.89,
-            "home_spread": 3.56,
-            "home_spread_odds": -109.89,
-            "away_spread_odds": -86.67,
-            "total": 37.56,
-            "over_odds": -110.22,
-            "under_odds": -108.89,
-            "home_win_prob": 0.3585165149211755
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": 164.0,
-              "away_ml": -196.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -107.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": 170.0,
-              "away_ml": -200.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": 166.0,
-              "away_ml": -198.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": 175.0,
-              "away_ml": -202.0,
-              "home_spread_odds": -118.0,
-              "away_spread_odds": 107.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": 175.0,
-              "away_ml": -202.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": 170.0,
-              "away_ml": -210.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -113.0,
-              "over_odds": -108.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": 164.0,
-              "away_ml": -196.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 165.0,
-              "away_ml": -200.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -110.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": 167.0,
-              "away_ml": -195.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -5.5,
-            "total": 42.5,
-            "home_ml": -250.0,
-            "away_ml": 205.0,
-            "spread_delta": 9.06,
-            "total_delta": -4.94
-          },
-          "model": null
-        },
-        {
-          "game_id": "4b20b742b6168aaca4f25d87f11b1526",
-          "commence_et": "2026-11-22 16:05",
-          "home_team": "Los Angeles Chargers",
-          "away_team": "New York Jets",
-          "consensus": {
-            "home_ml": -172.22,
-            "away_ml": 145.56,
-            "home_spread": -3.0,
-            "home_spread_odds": -114.0,
-            "away_spread_odds": -104.78,
-            "total": 43.0,
-            "over_odds": -109.78,
-            "under_odds": -109.67,
-            "home_win_prob": 0.6083860973916931
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -173.0,
-              "away_ml": 146.0,
-              "home_spread_odds": -114.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -103.0,
-              "under_odds": -117.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -165.0,
-              "away_ml": 142.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -174.0,
-              "away_ml": 146.0,
-              "home_spread_odds": -116.0,
-              "away_spread_odds": -104.0,
-              "over_odds": -116.0,
-              "under_odds": -104.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -165.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -105.0,
-              "under_odds": -109.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -165.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -190.0,
-              "away_ml": 150.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -107.0,
-              "over_odds": -118.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -173.0,
-              "away_ml": 146.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -175.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -170.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -9.5,
-            "total": 41.5,
-            "home_ml": -440.0,
-            "away_ml": 340.0,
-            "spread_delta": 6.5,
-            "total_delta": 1.5
-          },
-          "model": null
-        },
-        {
-          "game_id": "1940706a79cbcbafacdcbf231069716b",
-          "commence_et": "2026-11-22 16:25",
-          "home_team": "Denver Broncos",
-          "away_team": "Las Vegas Raiders",
-          "consensus": {
-            "home_ml": -651.0,
-            "away_ml": 475.0,
-            "home_spread": -10.89,
-            "home_spread_odds": -110.22,
-            "away_spread_odds": -108.56,
-            "total": 41.28,
-            "over_odds": -109.67,
-            "under_odds": -109.67,
-            "home_win_prob": 0.8328975913667463
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -595.0,
-              "away_ml": 444.0,
-              "home_spread_odds": -111.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -117.0,
-              "under_odds": -103.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -600.0,
-              "away_ml": 450.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -700.0,
-              "away_ml": 500.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -670.0,
-              "away_ml": 488.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -670.0,
-              "away_ml": 488.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -625.0,
-              "away_ml": 430.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -115.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -699.0,
-              "away_ml": 500.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -650.0,
-              "away_ml": 500.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -105.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -650.0,
-              "away_ml": 475.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": -7.5,
-            "total": 41.5,
-            "home_ml": -375.0,
-            "away_ml": 295.0,
-            "spread_delta": -3.39,
-            "total_delta": -0.22
-          },
-          "model": null
-        },
-        {
-          "game_id": "8ba112fabf4e87639338a5f437c5abfe",
-          "commence_et": "2026-11-22 16:25",
-          "home_team": "New York Giants",
-          "away_team": "Jacksonville Jaguars",
-          "consensus": {
-            "home_ml": 227.67,
-            "away_ml": -278.33,
-            "home_spread": 5.94,
-            "home_spread_odds": -86.33,
-            "away_spread_odds": -110.11,
-            "total": 45.33,
-            "over_odds": -109.0,
-            "under_odds": -110.0,
-            "home_win_prob": 0.293203175375587
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": 218.0,
-              "away_ml": -264.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -107.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": 235.0,
-              "away_ml": -280.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": 220.0,
-              "away_ml": -270.0,
-              "home_spread_odds": 100.0,
-              "away_spread_odds": -120.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": 237.0,
-              "away_ml": -290.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -109.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": 237.0,
-              "away_ml": -290.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": 210.0,
-              "away_ml": -265.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": 237.0,
-              "away_ml": -291.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 225.0,
-              "away_ml": -275.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": 230.0,
-              "away_ml": -280.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-07-29 07:57:57",
-            "spread": 1.5,
-            "total": 46.5,
-            "home_ml": 105.0,
-            "away_ml": -125.0,
-            "spread_delta": 4.44,
-            "total_delta": -1.17
-          },
-          "model": null
-        },
-        {
-          "game_id": "60e1d27b083a335b722c2c852ea85612",
-          "commence_et": "2026-11-22 20:20",
-          "home_team": "San Francisco 49ers",
-          "away_team": "Minnesota Vikings",
-          "consensus": {
-            "home_ml": -181.0,
-            "away_ml": 153.78,
-            "home_spread": -3.5,
-            "home_spread_odds": -106.11,
-            "away_spread_odds": -112.44,
-            "total": 45.78,
-            "over_odds": -107.0,
-            "under_odds": -112.11,
-            "home_win_prob": 0.6204455833778397
-          },
-          "books": [
-            {
-              "book": "DraftKings",
-              "home_ml": -176.0,
-              "away_ml": 148.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -105.0,
-              "under_odds": -114.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -185.0,
-              "away_ml": 159.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -174.0,
-              "away_ml": 146.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -187.0,
-              "away_ml": 163.0,
-              "home_spread_odds": -103.0,
-              "away_spread_odds": -107.0,
-              "over_odds": -102.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -187.0,
-              "away_ml": 163.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -177.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -178.0,
-              "away_ml": 150.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -185.0,
-              "away_ml": 155.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -180.0,
-              "away_ml": 155.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-05-13 12:13:50",
-            "spread": -3.0,
-            "total": 46.5,
-            "home_ml": -170.0,
-            "away_ml": 142.0,
-            "spread_delta": -0.5,
-            "total_delta": -0.72
-          },
-          "model": null
-        },
         {
           "game_id": "3a60ed1d20004aa4d4772b2c1a2272e7",
           "commence_et": "2026-11-23 20:15",
@@ -1232,8 +22,8 @@
             "home_spread_odds": -85.44,
             "away_spread_odds": -111.0,
             "total": 54.78,
-            "over_odds": -109.67,
-            "under_odds": -109.33,
+            "over_odds": -86.67,
+            "under_odds": -110.22,
             "home_win_prob": 0.2839465354272339
           },
           "books": [
@@ -1247,15 +37,6 @@
               "under_odds": -103.0
             },
             {
-              "book": "BetUS",
-              "home_ml": 238.0,
-              "away_ml": -285.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
               "book": "FanDuel",
               "home_ml": 235.0,
               "away_ml": -290.0,
@@ -1265,18 +46,18 @@
               "under_odds": -110.0
             },
             {
-              "book": "LowVig.ag",
-              "home_ml": 239.0,
-              "away_ml": -292.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
+              "book": "BetMGM",
+              "home_ml": 240.0,
+              "away_ml": -295.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -105.0,
+              "under_odds": -112.0
             },
             {
-              "book": "BetOnline.ag",
-              "home_ml": 239.0,
-              "away_ml": -292.0,
+              "book": "MyBookie.ag",
+              "home_ml": 244.0,
+              "away_ml": -318.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -1292,24 +73,6 @@
               "under_odds": -112.0
             },
             {
-              "book": "MyBookie.ag",
-              "home_ml": 244.0,
-              "away_ml": -318.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 240.0,
-              "away_ml": -295.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -105.0,
-              "under_odds": -112.0
-            },
-            {
               "book": "Bovada",
               "home_ml": 235.0,
               "away_ml": -285.0,
@@ -1317,6 +80,33 @@
               "away_spread_odds": -112.0,
               "over_odds": -110.0,
               "under_odds": -110.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": 238.0,
+              "away_ml": -285.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": 239.0,
+              "away_ml": -292.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": 239.0,
+              "away_ml": -292.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -105.0,
+              "over_odds": 100.0,
+              "under_odds": -115.0
             }
           ],
           "line_movement": {
@@ -1336,40 +126,31 @@
       "key": "nba",
       "name": "NBA",
       "snapshot": {
-        "file": "nba_odds_api_data_2026-11-22-1734.csv",
-        "pulled_at_et": "2026-11-22 12:34:53"
+        "file": "nba_odds_api_data_2026-11-23-0216.csv",
+        "pulled_at_et": "2026-11-22 21:16:21"
       },
       "games": [
         {
-          "game_id": "222a2887819bb18d9b9572aef63d9b9e",
-          "commence_et": "2026-11-22 15:40",
-          "home_team": "Atlanta Hawks",
-          "away_team": "Detroit Pistons",
+          "game_id": "35ca45d3e548dc7207fd7f1696ab16f5",
+          "commence_et": "2026-11-23 19:10",
+          "home_team": "Charlotte Hornets",
+          "away_team": "Memphis Grizzlies",
           "consensus": {
-            "home_ml": 101.22,
-            "away_ml": -121.11,
-            "home_spread": 1.5,
-            "home_spread_odds": -110.33,
-            "away_spread_odds": -109.0,
-            "total": 223.78,
-            "over_odds": -109.33,
-            "under_odds": -111.22,
-            "home_win_prob": 0.4757022638845219
+            "home_ml": 135.2,
+            "away_ml": -163.6,
+            "home_spread": 3.69,
+            "home_spread_odds": -111.25,
+            "away_spread_odds": -108.0,
+            "total": 217.62,
+            "over_odds": -109.5,
+            "under_odds": -110.12,
+            "home_win_prob": 0.40654719895765984
           },
           "books": [
             {
               "book": "FanDuel",
-              "home_ml": 100.0,
-              "away_ml": -118.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": 100.0,
-              "away_ml": -123.0,
+              "home_ml": 136.0,
+              "away_ml": -162.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -1377,62 +158,569 @@
             },
             {
               "book": "DraftKings",
-              "home_ml": 105.0,
-              "away_ml": -124.0,
-              "home_spread_odds": -107.0,
-              "away_spread_odds": -113.0,
-              "over_odds": -111.0,
-              "under_odds": -109.0
+              "home_ml": 136.0,
+              "away_ml": -162.0,
+              "home_spread_odds": -109.0,
+              "away_spread_odds": -111.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": 133.0,
+              "away_ml": -167.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -109.0,
+              "under_odds": -114.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": 135.0,
+              "away_ml": -160.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": 136.0,
+              "away_ml": -167.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": 100.0,
-              "away_ml": -120.0,
+              "home_ml": null,
+              "away_ml": null,
               "home_spread_odds": -115.0,
               "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -111.0,
+              "away_spread_odds": -101.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": 3.69,
+            "total": 217.62,
+            "home_ml": 135.2,
+            "away_ml": -163.6,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "ac6fb079d66ef35a2a77e22b5e94ef8d",
+          "commence_et": "2026-11-23 19:10",
+          "home_team": "Philadelphia 76ers",
+          "away_team": "Portland Trail Blazers",
+          "consensus": {
+            "home_ml": -156.75,
+            "away_ml": 128.75,
+            "home_spread": -3.29,
+            "home_spread_odds": -107.86,
+            "away_spread_odds": -111.57,
+            "total": 229.29,
+            "over_odds": -109.29,
+            "under_odds": -110.14,
+            "home_win_prob": 0.5827344706222924
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": -152.0,
+              "away_ml": 128.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
               "over_odds": -105.0,
               "under_odds": -115.0
             },
             {
-              "book": "LowVig.ag",
-              "home_ml": 102.0,
-              "away_ml": -118.0,
-              "home_spread_odds": -111.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -102.0,
-              "under_odds": -113.0
+              "book": "DraftKings",
+              "home_ml": -155.0,
+              "away_ml": 130.0,
+              "home_spread_odds": -104.0,
+              "away_spread_odds": -116.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -165.0,
+              "away_ml": 132.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -113.0,
+              "under_odds": -109.0
             },
             {
               "book": "BetMGM",
-              "home_ml": 100.0,
-              "away_ml": -120.0,
+              "home_ml": -155.0,
+              "away_ml": 125.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": -3.29,
+            "total": 229.29,
+            "home_ml": -156.75,
+            "away_ml": 128.75,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "a72a1703f7a92b80768255d1d977a761",
+          "commence_et": "2026-11-23 19:40",
+          "home_team": "Minnesota Timberwolves",
+          "away_team": "Brooklyn Nets",
+          "consensus": {
+            "home_ml": -661.8,
+            "away_ml": 466.0,
+            "home_spread": -12.5,
+            "home_spread_odds": -109.71,
+            "away_spread_odds": -109.71,
+            "total": 224.86,
+            "over_odds": -77.14,
+            "under_odds": -114.14,
+            "home_win_prob": 0.8309960892610416
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": -590.0,
+              "away_ml": 440.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "DraftKings",
+              "home_ml": -700.0,
+              "away_ml": 505.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -670.0,
+              "away_ml": 440.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -112.0,
+              "over_odds": 112.0,
+              "under_odds": -137.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": -650.0,
+              "away_ml": 475.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -699.0,
+              "away_ml": 470.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": -12.5,
+            "total": 224.86,
+            "home_ml": -661.8,
+            "away_ml": 466.0,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "a5184238c27b9c3bfca29220f9d5d14a",
+          "commence_et": "2026-11-23 19:40",
+          "home_team": "Toronto Raptors",
+          "away_team": "Milwaukee Bucks",
+          "consensus": {
+            "home_ml": -510.6,
+            "away_ml": 378.2,
+            "home_spread": -11.21,
+            "home_spread_odds": -110.57,
+            "away_spread_odds": -108.71,
+            "total": 223.86,
+            "over_odds": -110.14,
+            "under_odds": -109.29,
+            "home_win_prob": 0.7999534251210534
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": -460.0,
+              "away_ml": 360.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -106.0,
+              "under_odds": -114.0
+            },
+            {
+              "book": "DraftKings",
+              "home_ml": -537.0,
+              "away_ml": 406.0,
+              "home_spread_odds": -117.0,
+              "away_spread_odds": -103.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -530.0,
+              "away_ml": 370.0,
+              "home_spread_odds": -118.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -113.0,
+              "under_odds": -109.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": -500.0,
+              "away_ml": 375.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -115.0,
+              "under_odds": -105.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -526.0,
+              "away_ml": 380.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": -11.21,
+            "total": 223.86,
+            "home_ml": -510.6,
+            "away_ml": 378.2,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "b8dfee1fca57ec870528a14c792ad73a",
+          "commence_et": "2026-11-23 20:10",
+          "home_team": "Chicago Bulls",
+          "away_team": "Cleveland Cavaliers",
+          "consensus": {
+            "home_ml": 237.0,
+            "away_ml": -297.5,
+            "home_spread": 7.5,
+            "home_spread_odds": -110.0,
+            "away_spread_odds": -110.0,
+            "total": 241.75,
+            "over_odds": -112.0,
+            "under_odds": -108.0,
+            "home_win_prob": 0.28391336178419013
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": 240.0,
+              "away_ml": -295.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -114.0,
+              "under_odds": -106.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": 234.0,
+              "away_ml": -300.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": 7.5,
+            "total": 241.75,
+            "home_ml": 237.0,
+            "away_ml": -297.5,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "6caeb7cce7c8340fed588f3badd83fe0",
+          "commence_et": "2026-11-23 20:10",
+          "home_team": "New Orleans Pelicans",
+          "away_team": "Phoenix Suns",
+          "consensus": {
+            "home_ml": 125.0,
+            "away_ml": -152.0,
+            "home_spread": 3.33,
+            "home_spread_odds": -112.17,
+            "away_spread_odds": -107.17,
+            "total": 233.83,
+            "over_odds": -109.5,
+            "under_odds": -109.83,
+            "home_win_prob": 0.4242424242424243
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": 124.0,
+              "away_ml": -146.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -112.0,
+              "under_odds": -108.0
+            },
+            {
+              "book": "DraftKings",
+              "home_ml": 126.0,
+              "away_ml": -150.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -106.0,
+              "under_odds": -114.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": 125.0,
+              "away_ml": -157.0,
+              "home_spread_odds": -120.0,
+              "away_spread_odds": -104.0,
+              "over_odds": -112.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": 125.0,
+              "away_ml": -155.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": 3.33,
+            "total": 233.83,
+            "home_ml": 125.0,
+            "away_ml": -152.0,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "db2311c331296d3328d71b842167dea4",
+          "commence_et": "2026-11-23 20:40",
+          "home_team": "Houston Rockets",
+          "away_team": "Los Angeles Clippers",
+          "consensus": {
+            "home_ml": -661.8,
+            "away_ml": 467.2,
+            "home_spread": -12.5,
+            "home_spread_odds": -110.88,
+            "away_spread_odds": -108.38,
+            "total": 224.69,
+            "over_odds": -111.25,
+            "under_odds": -109.25,
+            "home_win_prob": 0.8312933216072818
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": -590.0,
+              "away_ml": 440.0,
+              "home_spread_odds": -114.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "DraftKings",
+              "home_ml": -700.0,
+              "away_ml": 501.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -670.0,
+              "away_ml": 450.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -107.0,
+              "over_odds": -115.0,
+              "under_odds": -107.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": -650.0,
+              "away_ml": 475.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -118.0,
               "under_odds": -110.0
             },
             {
-              "book": "BetRivers",
-              "home_ml": 104.0,
-              "away_ml": -127.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -108.0,
-              "under_odds": -114.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": 100.0,
-              "away_ml": -120.0,
+              "book": "MyBookie.ag",
+              "home_ml": -699.0,
+              "away_ml": 470.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
+              "book": "BetOnline.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": null,
+              "away_ml": null,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            },
+            {
               "book": "BetUS",
-              "home_ml": 100.0,
-              "away_ml": -120.0,
+              "home_ml": null,
+              "away_ml": null,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -1440,673 +728,134 @@
             }
           ],
           "line_movement": {
-            "first_seen": "2026-11-21 20:55:29",
-            "spread": 2.31,
-            "total": 226.44,
-            "home_ml": 112.8,
-            "away_ml": -134.0,
-            "spread_delta": -0.81,
-            "total_delta": -2.66
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": -12.5,
+            "total": 224.69,
+            "home_ml": -661.8,
+            "away_ml": 467.2,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
           },
           "model": null
         },
         {
-          "game_id": "90da1cde4144fac00d41f2c0db2cc921",
-          "commence_et": "2026-11-22 18:10",
-          "home_team": "Miami Heat",
-          "away_team": "Oklahoma City Thunder",
+          "game_id": "3e9dc52cb055c0154839c4aec417955b",
+          "commence_et": "2026-11-23 22:10",
+          "home_team": "Los Angeles Lakers",
+          "away_team": "Utah Jazz",
           "consensus": {
-            "home_ml": -171.78,
-            "away_ml": 145.0,
-            "home_spread": -3.89,
-            "home_spread_odds": -111.0,
-            "away_spread_odds": -108.33,
-            "total": 231.39,
-            "over_odds": -110.67,
-            "under_odds": -109.0,
-            "home_win_prob": 0.6076177991196017
+            "home_ml": -796.25,
+            "away_ml": 540.75,
+            "home_spread": -13.75,
+            "home_spread_odds": -113.0,
+            "away_spread_odds": -109.5,
+            "total": 230.75,
+            "over_odds": -109.5,
+            "under_odds": -111.0,
+            "home_win_prob": 0.8505807189734874
           },
           "books": [
             {
               "book": "FanDuel",
-              "home_ml": -174.0,
-              "away_ml": 146.0,
+              "home_ml": -750.0,
+              "away_ml": 530.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
+            },
+            {
+              "book": "DraftKings",
+              "home_ml": -800.0,
+              "away_ml": 558.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetRivers",
+              "home_ml": -835.0,
+              "away_ml": 525.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -113.0,
+              "under_odds": -109.0
+            },
+            {
+              "book": "BetMGM",
+              "home_ml": -800.0,
+              "away_ml": 550.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -118.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            }
+          ],
+          "line_movement": {
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": -13.75,
+            "total": 230.75,
+            "home_ml": -796.25,
+            "away_ml": 540.75,
+            "spread_delta": 0.0,
+            "total_delta": 0.0
+          },
+          "model": null
+        },
+        {
+          "game_id": "17f31499f145cd9d3232819395d29448",
+          "commence_et": "2026-11-23 22:10",
+          "home_team": "Sacramento Kings",
+          "away_team": "San Antonio Spurs",
+          "consensus": {
+            "home_ml": 380.0,
+            "away_ml": -515.67,
+            "home_spread": 11.17,
+            "home_spread_odds": -114.33,
+            "away_spread_odds": -106.67,
+            "total": 225.17,
+            "over_odds": -108.67,
+            "under_odds": -112.33,
+            "home_win_prob": 0.19918884099898865
+          },
+          "books": [
+            {
+              "book": "FanDuel",
+              "home_ml": 400.0,
+              "away_ml": -520.0,
               "home_spread_odds": -115.0,
               "away_spread_odds": -105.0,
               "over_odds": -108.0,
               "under_odds": -112.0
             },
             {
-              "book": "MyBookie.ag",
-              "home_ml": -172.0,
-              "away_ml": 140.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
               "book": "DraftKings",
-              "home_ml": -173.0,
-              "away_ml": 146.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -107.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -170.0,
-              "away_ml": 149.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -170.0,
-              "away_ml": 150.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -180.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -167.0,
-              "away_ml": 138.0,
-              "home_spread_odds": -113.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -113.0,
-              "under_odds": -109.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -170.0,
-              "away_ml": 145.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -170.0,
-              "away_ml": 146.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-11-21 20:55:29",
-            "spread": -2.5,
-            "total": 231.12,
-            "home_ml": -142.8,
-            "away_ml": 118.8,
-            "spread_delta": -1.39,
-            "total_delta": 0.27
-          },
-          "model": null
-        },
-        {
-          "game_id": "15a079f55e23d26237844224f258c972",
-          "commence_et": "2026-11-22 19:10",
-          "home_team": "Chicago Bulls",
-          "away_team": "Denver Nuggets",
-          "consensus": {
-            "home_ml": 336.44,
-            "away_ml": -439.33,
-            "home_spread": 9.83,
-            "home_spread_odds": -108.33,
-            "away_spread_odds": -111.11,
-            "total": 235.78,
-            "over_odds": -109.89,
-            "under_odds": -109.78,
-            "home_win_prob": 0.21953059478387554
-          },
-          "books": [
-            {
-              "book": "FanDuel",
               "home_ml": 360.0,
-              "away_ml": -460.0,
-              "home_spread_odds": -114.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": 320.0,
-              "away_ml": -441.0,
+              "away_ml": -467.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "DraftKings",
-              "home_ml": 331.0,
-              "away_ml": -423.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -113.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": 334.0,
-              "away_ml": -425.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": 340.0,
-              "away_ml": -420.0,
-              "home_spread_odds": -101.0,
-              "away_spread_odds": -111.0,
-              "over_odds": -105.0,
-              "under_odds": -109.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 340.0,
-              "away_ml": -450.0,
-              "home_spread_odds": -102.0,
-              "away_spread_odds": -118.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
               "book": "BetRivers",
-              "home_ml": 350.0,
-              "away_ml": -480.0,
-              "home_spread_odds": -117.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -115.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": 320.0,
-              "away_ml": -430.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": 333.0,
-              "away_ml": -425.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-11-21 20:55:29",
-            "spread": 8.5,
-            "total": 237.38,
-            "home_ml": 280.8,
-            "away_ml": -358.6,
-            "spread_delta": 1.33,
-            "total_delta": -1.6
-          },
-          "model": null
-        },
-        {
-          "game_id": "1e7b9477c6c55aea5efd9c1a47039f5c",
-          "commence_et": "2026-11-22 19:10",
-          "home_team": "Utah Jazz",
-          "away_team": "Dallas Mavericks",
-          "consensus": {
-            "home_ml": -110.78,
-            "away_ml": -108.33,
-            "home_spread": 0.11,
-            "home_spread_odds": -111.56,
-            "away_spread_odds": -108.22,
-            "total": 225.06,
-            "over_odds": -109.78,
-            "under_odds": -109.78,
-            "home_win_prob": 0.502668113194944
-          },
-          "books": [
-            {
-              "book": "FanDuel",
-              "home_ml": -104.0,
-              "away_ml": -112.0,
+              "home_ml": 380.0,
+              "away_ml": -560.0,
               "home_spread_odds": -118.0,
-              "away_spread_odds": -104.0,
-              "over_odds": -114.0,
-              "under_odds": -106.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -108.0,
-              "away_ml": -113.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "DraftKings",
-              "home_ml": -110.0,
-              "away_ml": -108.0,
-              "home_spread_odds": -101.0,
-              "away_spread_odds": -120.0,
-              "over_odds": -107.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -108.0,
-              "away_ml": -112.0,
-              "home_spread_odds": -115.0,
               "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -106.0,
-              "away_ml": -110.0,
-              "home_spread_odds": -111.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -118.0,
-              "away_ml": -102.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -105.0,
+              "over_odds": -108.0,
               "under_odds": -115.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -113.0,
-              "away_ml": -108.0,
-              "home_spread_odds": -114.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -115.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
             }
           ],
           "line_movement": {
-            "first_seen": "2026-11-22 12:34:53",
-            "spread": 0.11,
-            "total": 225.06,
-            "home_ml": -110.78,
-            "away_ml": -108.33,
+            "first_seen": "2026-11-22 21:16:21",
+            "spread": 11.17,
+            "total": 225.17,
+            "home_ml": 380.0,
+            "away_ml": -515.67,
             "spread_delta": 0.0,
             "total_delta": 0.0
-          },
-          "model": null
-        },
-        {
-          "game_id": "335ad5604b51b7742fd1dee92d78da35",
-          "commence_et": "2026-11-22 19:10",
-          "home_team": "Washington Wizards",
-          "away_team": "Orlando Magic",
-          "consensus": {
-            "home_ml": 168.0,
-            "away_ml": -199.67,
-            "home_spread": 4.72,
-            "home_spread_odds": -108.78,
-            "away_spread_odds": -110.56,
-            "total": 219.56,
-            "over_odds": -110.11,
-            "under_odds": -109.44,
-            "home_win_prob": 0.35897840116072915
-          },
-          "books": [
-            {
-              "book": "FanDuel",
-              "home_ml": 166.0,
-              "away_ml": -198.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -106.0,
-              "under_odds": -114.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": 168.0,
-              "away_ml": -210.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "DraftKings",
-              "home_ml": 170.0,
-              "away_ml": -204.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": 170.0,
-              "away_ml": -195.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": 171.0,
-              "away_ml": -195.0,
-              "home_spread_odds": -111.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 165.0,
-              "away_ml": -200.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": 165.0,
-              "away_ml": -200.0,
-              "home_spread_odds": -107.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -115.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": 170.0,
-              "away_ml": -200.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": 167.0,
-              "away_ml": -195.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-11-21 20:55:29",
-            "spread": 5.56,
-            "total": 221.44,
-            "home_ml": 186.0,
-            "away_ml": -226.2,
-            "spread_delta": -0.84,
-            "total_delta": -1.88
-          },
-          "model": null
-        },
-        {
-          "game_id": "031fa761cc38e1b5afd9309b731b38b2",
-          "commence_et": "2026-11-22 20:10",
-          "home_team": "New York Knicks",
-          "away_team": "Indiana Pacers",
-          "consensus": {
-            "home_ml": -349.0,
-            "away_ml": 277.33,
-            "home_spread": -8.5,
-            "home_spread_odds": -110.11,
-            "away_spread_odds": -109.22,
-            "total": 214.11,
-            "over_odds": -108.89,
-            "under_odds": -110.89,
-            "home_win_prob": 0.7457360818677718
-          },
-          "books": [
-            {
-              "book": "FanDuel",
-              "home_ml": -350.0,
-              "away_ml": 280.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -106.0,
-              "under_odds": -114.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -340.0,
-              "away_ml": 265.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "DraftKings",
-              "home_ml": -344.0,
-              "away_ml": 276.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -111.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -345.0,
-              "away_ml": 278.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -342.0,
-              "away_ml": 282.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -350.0,
-              "away_ml": 280.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": -360.0,
-              "away_ml": 275.0,
-              "home_spread_odds": -117.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -112.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -360.0,
-              "away_ml": 280.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -350.0,
-              "away_ml": 280.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-11-22 12:34:53",
-            "spread": -8.5,
-            "total": 214.11,
-            "home_ml": -349.0,
-            "away_ml": 277.33,
-            "spread_delta": 0.0,
-            "total_delta": 0.0
-          },
-          "model": null
-        },
-        {
-          "game_id": "b8c5bdb50209c7d050400c7d28c32e30",
-          "commence_et": "2026-11-22 20:40",
-          "home_team": "Golden State Warriors",
-          "away_team": "Boston Celtics",
-          "consensus": {
-            "home_ml": 277.33,
-            "away_ml": -349.33,
-            "home_spread": 8.5,
-            "home_spread_odds": -109.78,
-            "away_spread_odds": -109.67,
-            "total": 210.44,
-            "over_odds": -111.11,
-            "under_odds": -108.56,
-            "home_win_prob": 0.2542240225470076
-          },
-          "books": [
-            {
-              "book": "FanDuel",
-              "home_ml": 275.0,
-              "away_ml": -340.0,
-              "home_spread_odds": -114.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -108.0,
-              "under_odds": -112.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": 270.0,
-              "away_ml": -350.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "DraftKings",
-              "home_ml": 286.0,
-              "away_ml": -359.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": 280.0,
-              "away_ml": -350.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": 285.0,
-              "away_ml": -345.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 275.0,
-              "away_ml": -350.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
-              "home_ml": 275.0,
-              "away_ml": -360.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -118.0,
-              "over_odds": -114.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": 270.0,
-              "away_ml": -340.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": 280.0,
-              "away_ml": -350.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            }
-          ],
-          "line_movement": {
-            "first_seen": "2026-11-21 20:55:29",
-            "spread": 9.5,
-            "total": 212.5,
-            "home_ml": 317.5,
-            "away_ml": -412.5,
-            "spread_delta": -1.0,
-            "total_delta": -2.06
           },
           "model": null
         }
