@@ -1,0 +1,242 @@
+{
+ "model": "basketball",
+ "title": "Basketball (NBA odds only, no model)",
+ "date": "2026-11-24",
+ "kind": "draft",
+ "generated_at": "2026-11-24T03:58:12+00:00",
+ "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1049 snapshot files from 2025-10-27 to 2026-11-23, newest pull 2026-11-23 16:52, 10 games in the latest file across 9 books.",
+ "status": {
+  "state": "none",
+  "summary": "Basketball has no predictive model in this repo. What exists is the NBA half of the unified odds snapshot: 1049 snapshot files from 2025-10-27 to 2026-11-23, newest pull 2026-11-23 16:52, 10 games in the latest file across 9 books.",
+  "source": "data/nba",
+  "as_of": "2026-11-23 16:52",
+  "blocks": [
+   {
+    "kind": "warn",
+    "text": "No NBA model, no picks, no grades. Every number on this page describes the odds feed, not a forecast. Do not read a win probability below as the repo's prediction: it is the bookmakers' consensus."
+   },
+   {
+    "kind": "kv",
+    "heading": "What exists",
+    "rows": [
+     [
+      "Predictive model",
+      "none (no NBA model folder, no NBA daily workflow)"
+     ],
+     [
+      "Odds snapshots on disk",
+      "1049 files, 2025-10-27 → 2026-11-23"
+     ],
+     [
+      "Newest snapshot pulled (ET)",
+      "2026-11-23 16:52"
+     ],
+     [
+      "Games in newest snapshot",
+      10
+     ],
+     [
+      "Bookmakers in newest snapshot",
+      "BetMGM, BetOnline.ag, BetRivers, BetUS, Bovada, DraftKings, FanDuel, LowVig.ag, MyBookie.ag"
+     ],
+     [
+      "Hand-dropped results files",
+      "december.csv, january.csv, november.csv, october.csv"
+     ],
+     [
+      "Cross-sport summary entry",
+      "status in_season, record —, last graded —"
+     ],
+     [
+      "Site slate block (48h window)",
+      "10 games, snapshot 2026-11-23 16:52:44"
+     ]
+    ],
+    "source": "data/nba, web/public/data/summary.json, web/public/data/slate.json",
+    "as_of": "2026-11-23 16:52"
+   },
+   {
+    "kind": "table",
+    "heading": "Workflow run health (unified odds, last 10 runs)",
+    "columns": [
+     "Workflow",
+     "Last conclusion",
+     "Last run (UTC)",
+     "Last success (UTC)",
+     "Failed/completed"
+    ],
+    "rows": [
+     [
+      "unified-odds.yml",
+      "success",
+      "2026-11-23 21:51",
+      "2026-11-23 21:51",
+      "0/10"
+     ]
+    ],
+    "source": "reports/model_review/_runs/unified-odds.yml.json (gh run list)",
+    "as_of": "2026-11-24"
+   },
+   {
+    "kind": "bullets",
+    "heading": "Known failures and caveats",
+    "items": [
+     "None detected from the committed files."
+    ]
+   }
+  ]
+ },
+ "features": {
+  "summary": "There is no model to describe. This is what a basketball board would need, from docs/MODEL_SOURCES.md.",
+  "source": "docs/MODEL_SOURCES.md",
+  "as_of": "2026-11-24",
+  "blocks": [
+   {
+    "kind": "bullets",
+    "heading": "What would be needed to build one",
+    "items": [
+     "A results spine (nba_api or Basketball Reference) with dates, scores, home/away and rest days",
+     "A betting-blind Elo tuned on held-out seasons, as the other four sports have",
+     "Then roster/availability inputs, the biggest signal in basketball"
+    ]
+   }
+  ]
+ },
+ "findings": {
+  "summary": "Odds-feed observations only.",
+  "source": "data/nba/nba_odds_api_data_latest.csv",
+  "as_of": "2026-11-23 16:52",
+  "blocks": [
+   {
+    "kind": "table",
+    "heading": "Newest snapshot: consensus lines",
+    "columns": [
+     "Tip-off (ET)",
+     "Game (away @ home)",
+     "Home spread",
+     "Total",
+     "Home win prob (book consensus)"
+    ],
+    "rows": [
+     [
+      "2026-11-23 19:10",
+      "Memphis Grizzlies @ Charlotte Hornets",
+      2.72,
+      213.33,
+      "43.9%"
+     ],
+     [
+      "2026-11-23 19:10",
+      "Portland Trail Blazers @ Philadelphia 76ers",
+      -2.5,
+      231.44,
+      "58.8%"
+     ],
+     [
+      "2026-11-23 19:40",
+      "Brooklyn Nets @ Minnesota Timberwolves",
+      -11.11,
+      223.17,
+      "84.5%"
+     ],
+     [
+      "2026-11-23 19:40",
+      "Oklahoma City Thunder @ Indiana Pacers",
+      5.89,
+      224.83,
+      "34.8%"
+     ],
+     [
+      "2026-11-23 19:40",
+      "Milwaukee Bucks @ Toronto Raptors",
+      -10.56,
+      222.5,
+      "81.9%"
+     ],
+     [
+      "2026-11-23 20:10",
+      "Cleveland Cavaliers @ Chicago Bulls",
+      8.67,
+      241.56,
+      "26.6%"
+     ],
+     [
+      "2026-11-23 20:10",
+      "Phoenix Suns @ New Orleans Pelicans",
+      3.11,
+      232.72,
+      "43.6%"
+     ],
+     [
+      "2026-11-23 20:40",
+      "Los Angeles Clippers @ Houston Rockets",
+      -12.61,
+      223.89,
+      "86.6%"
+     ],
+     [
+      "2026-11-23 22:10",
+      "Utah Jazz @ Los Angeles Lakers",
+      -13.5,
+      225.33,
+      "88.8%"
+     ],
+     [
+      "2026-11-23 22:10",
+      "San Antonio Spurs @ Sacramento Kings",
+      12.5,
+      224.44,
+      "18.0%"
+     ]
+    ],
+    "note": "Win probability is the de-vigged-free conversion of the average home moneyline; it is the market's number, not a model's."
+   }
+  ]
+ },
+ "report_card": {
+  "summary": "No report card: nothing is predicted, so nothing is graded. Accuracy, log loss, Brier and calibration do not exist for basketball.",
+  "source": "web/public/data/summary.json",
+  "as_of": "2026-11-23",
+  "blocks": [
+   {
+    "kind": "kv",
+    "rows": [
+     [
+      "Graded games",
+      0
+     ],
+     [
+      "Accuracy",
+      null
+     ],
+     [
+      "Log loss",
+      null
+     ],
+     [
+      "Brier",
+      null
+     ]
+    ]
+   }
+  ]
+ },
+ "improvements": {
+  "summary": "The only honest candidate is whether to build a model at all.",
+  "blocks": [
+   {
+    "kind": "bullets",
+    "items": [
+     "Decide whether basketball stays an odds-tracking page or gets a model (open question for TW).",
+     "If it gets one: the odds archive already holds 1049 snapshots since 2025-10-27, so a closing-line benchmark exists from day one."
+    ]
+   }
+  ]
+ },
+ "sources": [
+  "data/nba",
+  "docs/MODEL_SOURCES.md",
+  "web/public/data/slate.json",
+  "web/public/data/summary.json"
+ ]
+}
