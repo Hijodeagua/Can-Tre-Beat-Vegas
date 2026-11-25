@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-11-25T04:46:55Z",
+  "generated_at": "2026-11-25T19:44:11Z",
   "window_hours": 48,
   "sports": [
     {
       "key": "nfl",
       "name": "NFL",
       "snapshot": {
-        "file": "odds_api_data_2026-11-25-0446.csv",
-        "pulled_at_et": "2026-11-24 23:46:53"
+        "file": "odds_api_data_2026-11-25-1944.csv",
+        "pulled_at_et": "2026-11-25 14:44:09"
       },
       "games": [
         {
@@ -16,57 +16,57 @@
           "home_team": "Los Angeles Rams",
           "away_team": "Green Bay Packers",
           "consensus": {
-            "home_ml": -136.5,
-            "away_ml": 115.12,
-            "home_spread": -2.25,
-            "home_spread_odds": -111.88,
-            "away_spread_odds": -81.62,
-            "total": 43.94,
-            "over_odds": -85.0,
-            "under_odds": -84.12,
-            "home_win_prob": 0.5538904151139287
+            "home_ml": -141.11,
+            "away_ml": 119.44,
+            "home_spread": -2.44,
+            "home_spread_odds": -113.0,
+            "away_spread_odds": -60.33,
+            "total": 43.44,
+            "over_odds": -107.11,
+            "under_odds": -111.89,
+            "home_win_prob": 0.5622245279095109
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -134.0,
-              "away_ml": 114.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -121.0,
-              "under_odds": 101.0
+              "home_ml": -141.0,
+              "away_ml": 120.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -104.0,
+              "over_odds": -112.0,
+              "under_odds": -107.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -142.0,
-              "away_ml": 120.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -108.0,
-              "over_odds": 100.0,
-              "under_odds": -120.0
+              "home_ml": -144.0,
+              "away_ml": 122.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -108.0,
-              "under_odds": -110.0
+              "home_ml": -145.0,
+              "away_ml": 120.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": 100.0,
+              "over_odds": -105.0,
+              "under_odds": -112.0
             },
             {
               "book": "BetUS",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
+              "home_ml": -140.0,
+              "away_ml": 120.0,
               "home_spread_odds": -115.0,
               "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "over_odds": -105.0,
+              "under_odds": -115.0
             },
             {
               "book": "MyBookie.ag",
-              "home_ml": -140.0,
-              "away_ml": 115.0,
+              "home_ml": -142.0,
+              "away_ml": 121.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -74,30 +74,39 @@
             },
             {
               "book": "BetRivers",
-              "home_ml": -136.0,
-              "away_ml": 112.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -114.0,
-              "under_odds": -107.0
+              "home_ml": -141.0,
+              "away_ml": 115.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -107.0,
-              "away_spread_odds": -103.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
+              "home_ml": -140.0,
+              "away_ml": 120.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": 100.0,
+              "over_odds": -101.0,
+              "under_odds": -114.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": -135.0,
-              "away_ml": 115.0,
-              "home_spread_odds": -122.0,
-              "away_spread_odds": 102.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_ml": -140.0,
+              "away_ml": 120.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -104.0,
+              "under_odds": -116.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -137.0,
+              "away_ml": 117.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -112.0,
+              "under_odds": -108.0
             }
           ],
           "line_movement": {
@@ -106,8 +115,8 @@
             "total": 49.5,
             "home_ml": -204.0,
             "away_ml": 170.0,
-            "spread_delta": 1.75,
-            "total_delta": -5.56
+            "spread_delta": 1.56,
+            "total_delta": -6.06
           },
           "model": null
         },
@@ -117,48 +126,48 @@
           "home_team": "Detroit Lions",
           "away_team": "Chicago Bears",
           "consensus": {
-            "home_ml": 104.0,
-            "away_ml": -124.75,
-            "home_spread": 1.44,
-            "home_spread_odds": -109.62,
-            "away_spread_odds": -108.88,
-            "total": 55.38,
-            "over_odds": -108.5,
-            "under_odds": -110.62,
-            "home_win_prob": 0.4689717051998998
+            "home_ml": 50.75,
+            "away_ml": -121.0,
+            "home_spread": 1.06,
+            "home_spread_odds": -108.89,
+            "away_spread_odds": -109.78,
+            "total": 55.44,
+            "over_odds": -109.22,
+            "under_odds": -109.89,
+            "home_win_prob": 0.5478331463842393
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": 102.0,
-              "away_ml": -121.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -107.0,
+              "home_ml": 103.0,
+              "away_ml": -122.0,
+              "home_spread_odds": -109.0,
+              "away_spread_odds": -110.0,
               "over_odds": -104.0,
               "under_odds": -115.0
             },
             {
               "book": "FanDuel",
-              "home_ml": 108.0,
-              "away_ml": -126.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": 100.0,
-              "away_ml": -120.0,
-              "home_spread_odds": -110.0,
+              "home_ml": 104.0,
+              "away_ml": -122.0,
+              "home_spread_odds": -112.0,
               "away_spread_odds": -108.0,
               "over_odds": -112.0,
               "under_odds": -108.0
             },
             {
-              "book": "BetUS",
+              "book": "BetMGM",
               "home_ml": 100.0,
               "away_ml": -120.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -108.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": null,
+              "away_ml": null,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -166,8 +175,8 @@
             },
             {
               "book": "MyBookie.ag",
-              "home_ml": 112.0,
-              "away_ml": -137.0,
+              "home_ml": 100.0,
+              "away_ml": -123.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -175,30 +184,39 @@
             },
             {
               "book": "BetRivers",
-              "home_ml": 110.0,
-              "away_ml": -134.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_ml": 105.0,
+              "away_ml": -127.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -113.0,
+              "over_odds": -114.0,
+              "under_odds": -107.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": 100.0,
-              "away_ml": -120.0,
-              "home_spread_odds": -103.0,
-              "away_spread_odds": -107.0,
+              "home_ml": -103.0,
+              "away_ml": -117.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -105.0,
               "over_odds": -107.0,
               "under_odds": -107.0
             },
             {
               "book": "BetOnline.ag",
+              "home_ml": -103.0,
+              "away_ml": -117.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "Bovada",
               "home_ml": 100.0,
               "away_ml": -120.0,
               "home_spread_odds": -108.0,
               "away_spread_odds": -112.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "over_odds": -108.0,
+              "under_odds": -112.0
             }
           ],
           "line_movement": {
@@ -207,8 +225,8 @@
             "total": 52.5,
             "home_ml": -130.5,
             "away_ml": 111.0,
-            "spread_delta": 3.94,
-            "total_delta": 2.88
+            "spread_delta": 3.56,
+            "total_delta": 2.94
           },
           "model": null
         },
@@ -218,34 +236,34 @@
           "home_team": "Dallas Cowboys",
           "away_team": "Philadelphia Eagles",
           "consensus": {
-            "home_ml": -460.38,
-            "away_ml": 353.38,
-            "home_spread": -8.88,
-            "home_spread_odds": -56.62,
-            "away_spread_odds": -111.75,
-            "total": 48.0,
-            "over_odds": -107.75,
-            "under_odds": -111.38,
-            "home_win_prob": 0.788348225269238
+            "home_ml": -458.67,
+            "away_ml": 353.44,
+            "home_spread": -8.78,
+            "home_spread_odds": -109.11,
+            "away_spread_odds": -109.44,
+            "total": 47.89,
+            "over_odds": -111.11,
+            "under_odds": -85.78,
+            "home_win_prob": 0.7882593208666137
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -469.0,
-              "away_ml": 363.0,
+              "home_ml": -464.0,
+              "away_ml": 360.0,
               "home_spread_odds": -111.0,
               "away_spread_odds": -108.0,
-              "over_odds": -104.0,
-              "under_odds": -116.0
+              "over_odds": -116.0,
+              "under_odds": -103.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -490.0,
-              "away_ml": 380.0,
+              "home_ml": -480.0,
+              "away_ml": 370.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "over_odds": -120.0,
+              "under_odds": 100.0
             },
             {
               "book": "BetMGM",
@@ -262,13 +280,13 @@
               "away_ml": 340.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "MyBookie.ag",
               "home_ml": -459.0,
-              "away_ml": 334.0,
+              "away_ml": 345.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -285,21 +303,30 @@
             },
             {
               "book": "LowVig.ag",
-              "home_ml": -450.0,
-              "away_ml": 350.0,
-              "home_spread_odds": 100.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -104.0,
-              "under_odds": -110.0
+              "home_ml": -460.0,
+              "away_ml": 358.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": -450.0,
-              "away_ml": 350.0,
-              "home_spread_odds": 106.0,
-              "away_spread_odds": -126.0,
-              "over_odds": -107.0,
-              "under_odds": -113.0
+              "home_ml": -460.0,
+              "away_ml": 358.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -440.0,
+              "away_ml": 340.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             }
           ],
           "line_movement": {
@@ -308,8 +335,8 @@
             "total": 49.5,
             "home_ml": -5.5,
             "away_ml": -113.5,
-            "spread_delta": -8.88,
-            "total_delta": -1.5
+            "spread_delta": -8.78,
+            "total_delta": -1.61
           },
           "model": null
         },
@@ -319,25 +346,25 @@
           "home_team": "Buffalo Bills",
           "away_team": "Kansas City Chiefs",
           "consensus": {
-            "home_ml": -149.5,
-            "away_ml": 125.75,
-            "home_spread": -2.62,
-            "home_spread_odds": -88.25,
-            "away_spread_odds": 19.25,
-            "total": 47.31,
-            "over_odds": -108.12,
-            "under_odds": -110.88,
-            "home_win_prob": 0.5749546951960937
+            "home_ml": -151.44,
+            "away_ml": 128.33,
+            "home_spread": -2.83,
+            "home_spread_odds": -40.78,
+            "away_spread_odds": -45.11,
+            "total": 46.22,
+            "over_odds": -110.67,
+            "under_odds": -86.33,
+            "home_win_prob": 0.5789847005076255
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -149.0,
-              "away_ml": 126.0,
+              "home_ml": -148.0,
+              "away_ml": 125.0,
               "home_spread_odds": 100.0,
               "away_spread_odds": -120.0,
-              "over_odds": -102.0,
-              "under_odds": -117.0
+              "over_odds": -108.0,
+              "under_odds": -111.0
             },
             {
               "book": "FanDuel",
@@ -354,22 +381,22 @@
               "away_ml": 125.0,
               "home_spread_odds": -102.0,
               "away_spread_odds": -118.0,
-              "over_odds": -110.0,
-              "under_odds": -108.0
+              "over_odds": -108.0,
+              "under_odds": -110.0
             },
             {
               "book": "BetUS",
-              "home_ml": -145.0,
-              "away_ml": 125.0,
-              "home_spread_odds": -120.0,
-              "away_spread_odds": 100.0,
+              "home_ml": -155.0,
+              "away_ml": 134.0,
+              "home_spread_odds": 100.0,
+              "away_spread_odds": -120.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
               "book": "MyBookie.ag",
               "home_ml": -153.0,
-              "away_ml": 124.0,
+              "away_ml": 125.0,
               "home_spread_odds": -120.0,
               "away_spread_odds": 100.0,
               "over_odds": -110.0,
@@ -377,30 +404,39 @@
             },
             {
               "book": "BetRivers",
-              "home_ml": -157.0,
-              "away_ml": 128.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -112.0,
-              "under_odds": -109.0
+              "home_ml": -150.0,
+              "away_ml": 123.0,
+              "home_spread_odds": -104.0,
+              "away_spread_odds": -118.0,
+              "over_odds": -113.0,
+              "under_odds": -108.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": -145.0,
-              "away_ml": 125.0,
-              "home_spread_odds": -118.0,
-              "away_spread_odds": 107.0,
-              "over_odds": -104.0,
-              "under_odds": -110.0
+              "home_ml": -154.0,
+              "away_ml": 134.0,
+              "home_spread_odds": 102.0,
+              "away_spread_odds": -113.0,
+              "over_odds": -115.0,
+              "under_odds": 100.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": -145.0,
-              "away_ml": 125.0,
+              "home_ml": -154.0,
+              "away_ml": 134.0,
+              "home_spread_odds": -103.0,
+              "away_spread_odds": -117.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -147.0,
+              "away_ml": 127.0,
               "home_spread_odds": -120.0,
               "away_spread_odds": 100.0,
-              "over_odds": -107.0,
-              "under_odds": -113.0
+              "over_odds": -112.0,
+              "under_odds": -108.0
             }
           ],
           "line_movement": {
@@ -409,8 +445,8 @@
             "total": 50.5,
             "home_ml": -148.67,
             "away_ml": 125.0,
-            "spread_delta": -0.12,
-            "total_delta": -3.19
+            "spread_delta": -0.33,
+            "total_delta": -4.28
           },
           "model": null
         }
@@ -420,8 +456,8 @@
       "key": "nba",
       "name": "NBA",
       "snapshot": {
-        "file": "nba_odds_api_data_2026-11-25-0446.csv",
-        "pulled_at_et": "2026-11-24 23:46:53"
+        "file": "nba_odds_api_data_2026-11-25-1944.csv",
+        "pulled_at_et": "2026-11-25 14:44:09"
       },
       "games": [
         {
@@ -430,93 +466,93 @@
           "home_team": "Philadelphia 76ers",
           "away_team": "Miami Heat",
           "consensus": {
-            "home_ml": -114.44,
-            "away_ml": -82.56,
-            "home_spread": -0.83,
-            "home_spread_odds": -109.89,
-            "away_spread_odds": -110.33,
-            "total": 238.17,
-            "over_odds": -110.0,
-            "under_odds": -109.67,
-            "home_win_prob": 0.5412992604312915
+            "home_ml": -120.11,
+            "away_ml": 101.22,
+            "home_spread": -1.44,
+            "home_spread_odds": -109.33,
+            "away_spread_odds": -110.89,
+            "total": 237.61,
+            "over_odds": -109.67,
+            "under_odds": -109.89,
+            "home_win_prob": 0.5233602854313762
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -116.0,
-              "away_ml": -102.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -115.0,
-              "under_odds": -106.0
+              "home_ml": -119.0,
+              "away_ml": 101.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -104.0,
-              "away_ml": -112.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetRivers",
               "home_ml": -118.0,
-              "away_ml": -104.0,
-              "home_spread_odds": -122.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -108.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -106.0,
               "under_odds": -114.0
             },
             {
-              "book": "BetMGM",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "book": "BetRivers",
+              "home_ml": -120.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -109.0,
+              "away_spread_odds": -121.0,
+              "over_odds": -114.0,
+              "under_odds": -108.0
             },
             {
-              "book": "MyBookie.ag",
-              "home_ml": -114.0,
-              "away_ml": -107.0,
+              "book": "BetMGM",
+              "home_ml": -120.0,
+              "away_ml": 100.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "over_odds": -115.0,
+              "under_odds": -105.0
             },
             {
               "book": "Bovada",
               "home_ml": -120.0,
               "away_ml": 100.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": -120.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
-              "book": "BetOnline.ag",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
+              "book": "LowVig.ag",
+              "home_ml": -118.0,
+              "away_ml": 102.0,
+              "home_spread_odds": -104.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": -125.0,
+              "away_ml": 105.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
-              "book": "LowVig.ag",
-              "home_ml": -113.0,
-              "away_ml": -103.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
+              "book": "MyBookie.ag",
+              "home_ml": -121.0,
+              "away_ml": 103.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -529,8 +565,8 @@
             "total": 238.5,
             "home_ml": -162.0,
             "away_ml": 136.0,
-            "spread_delta": 2.67,
-            "total_delta": -0.33
+            "spread_delta": 2.06,
+            "total_delta": -0.89
           },
           "model": null
         },
@@ -540,95 +576,95 @@
           "home_team": "Charlotte Hornets",
           "away_team": "Chicago Bulls",
           "consensus": {
-            "home_ml": -156.78,
-            "away_ml": 132.33,
+            "home_ml": -165.22,
+            "away_ml": 139.78,
             "home_spread": -3.5,
-            "home_spread_odds": -105.89,
-            "away_spread_odds": -113.67,
-            "total": 222.11,
-            "over_odds": -111.11,
-            "under_odds": -109.44,
-            "home_win_prob": 0.5865235959943988
+            "home_spread_odds": -111.11,
+            "away_spread_odds": -108.33,
+            "total": 220.06,
+            "over_odds": -109.0,
+            "under_odds": -112.44,
+            "home_win_prob": 0.5989927287623408
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -155.0,
-              "away_ml": 130.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -114.0,
-              "under_odds": -106.0
+              "home_ml": -167.0,
+              "away_ml": 140.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -108.0,
+              "under_odds": -112.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -156.0,
-              "away_ml": 132.0,
-              "home_spread_odds": -104.0,
-              "away_spread_odds": -118.0,
+              "home_ml": -162.0,
+              "away_ml": 136.0,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -114.0,
               "over_odds": -106.0,
               "under_odds": -114.0
             },
             {
               "book": "BetRivers",
               "home_ml": -167.0,
-              "away_ml": 135.0,
+              "away_ml": 138.0,
               "home_spread_odds": -113.0,
-              "away_spread_odds": -109.0,
-              "over_odds": -115.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "BetMGM",
-              "home_ml": -160.0,
-              "away_ml": 135.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -118.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -120.0,
               "under_odds": -110.0
             },
             {
-              "book": "MyBookie.ag",
-              "home_ml": -164.0,
-              "away_ml": 133.0,
+              "book": "BetMGM",
+              "home_ml": -170.0,
+              "away_ml": 140.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -118.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -165.0,
+              "away_ml": 140.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": -165.0,
+              "away_ml": 145.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": -165.0,
+              "away_ml": 146.0,
+              "home_spread_odds": -111.0,
+              "away_spread_odds": -101.0,
+              "over_odds": -102.0,
+              "under_odds": -113.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": -165.0,
+              "away_ml": 142.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
-              "book": "Bovada",
-              "home_ml": -160.0,
-              "away_ml": 135.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -150.0,
-              "away_ml": 130.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -149.0,
-              "away_ml": 132.0,
-              "home_spread_odds": -101.0,
-              "away_spread_odds": -111.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -150.0,
-              "away_ml": 129.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "book": "MyBookie.ag",
+              "home_ml": -161.0,
+              "away_ml": 131.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             }
@@ -640,7 +676,7 @@
             "home_ml": -156.78,
             "away_ml": 132.33,
             "spread_delta": 0.0,
-            "total_delta": 0.0
+            "total_delta": -2.05
           },
           "model": null
         },
@@ -650,48 +686,84 @@
           "home_team": "New York Knicks",
           "away_team": "Cleveland Cavaliers",
           "consensus": {
-            "home_ml": -158.33,
-            "away_ml": 134.33,
-            "home_spread": -3.28,
-            "home_spread_odds": -110.33,
-            "away_spread_odds": -109.89,
-            "total": 219.89,
-            "over_odds": -110.22,
-            "under_odds": -110.11,
-            "home_win_prob": 0.5895254150623331
+            "home_ml": -128.33,
+            "away_ml": 107.78,
+            "home_spread": -1.67,
+            "home_spread_odds": -112.0,
+            "away_spread_odds": -108.22,
+            "total": 216.5,
+            "over_odds": -109.33,
+            "under_odds": -110.33,
+            "home_win_prob": 0.5387031119532939
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -163.0,
-              "away_ml": 137.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -112.0,
-              "under_odds": -108.0
-            },
-            {
-              "book": "FanDuel",
-              "home_ml": -156.0,
-              "away_ml": 132.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_ml": -130.0,
+              "away_ml": 110.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
               "over_odds": -108.0,
               "under_odds": -112.0
             },
             {
+              "book": "FanDuel",
+              "home_ml": -130.0,
+              "away_ml": 110.0,
+              "home_spread_odds": -114.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
               "book": "BetRivers",
-              "home_ml": -157.0,
-              "away_ml": 130.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -118.0,
-              "over_odds": -115.0,
-              "under_odds": -114.0
+              "home_ml": -124.0,
+              "away_ml": 102.0,
+              "home_spread_odds": -113.0,
+              "away_spread_odds": -117.0,
+              "over_odds": -113.0,
+              "under_odds": -110.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -160.0,
-              "away_ml": 135.0,
+              "home_ml": -135.0,
+              "away_ml": 110.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -125.0,
+              "away_ml": 105.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": -130.0,
+              "away_ml": 110.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -108.0,
+              "under_odds": -112.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": -128.0,
+              "away_ml": 112.0,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -105.0,
+              "under_odds": -109.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": -130.0,
+              "away_ml": 110.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -699,46 +771,10 @@
             },
             {
               "book": "MyBookie.ag",
-              "home_ml": -159.0,
-              "away_ml": 130.0,
+              "home_ml": -123.0,
+              "away_ml": 101.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -165.0,
-              "away_ml": 140.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -155.0,
-              "away_ml": 135.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -155.0,
-              "away_ml": 136.0,
-              "home_spread_odds": -111.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -107.0,
-              "under_odds": -107.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -155.0,
-              "away_ml": 134.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             }
@@ -749,8 +785,8 @@
             "total": 220.5,
             "home_ml": -225.0,
             "away_ml": 180.0,
-            "spread_delta": 2.22,
-            "total_delta": -0.61
+            "spread_delta": 3.83,
+            "total_delta": -4.0
           },
           "model": null
         },
@@ -760,60 +796,51 @@
           "home_team": "Oklahoma City Thunder",
           "away_team": "Minnesota Timberwolves",
           "consensus": {
-            "home_ml": -122.56,
-            "away_ml": 102.89,
+            "home_ml": -126.44,
+            "away_ml": 106.0,
             "home_spread": -1.67,
-            "home_spread_odds": -108.44,
-            "away_spread_odds": -111.0,
-            "total": 223.39,
-            "over_odds": -111.78,
-            "under_odds": -108.0,
-            "home_win_prob": 0.527696059273839
+            "home_spread_odds": -110.11,
+            "away_spread_odds": -110.11,
+            "total": 221.89,
+            "over_odds": -110.78,
+            "under_odds": -109.67,
+            "home_win_prob": 0.5349414178987995
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -119.0,
-              "away_ml": 101.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_ml": -125.0,
+              "away_ml": 105.0,
+              "home_spread_odds": -114.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -111.0,
+              "under_odds": -109.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -126.0,
-              "away_ml": 108.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -114.0,
-              "under_odds": -106.0
+              "home_ml": -134.0,
+              "away_ml": 114.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -112.0,
+              "under_odds": -108.0
             },
             {
               "book": "BetRivers",
-              "home_ml": -124.0,
-              "away_ml": 102.0,
-              "home_spread_odds": -109.0,
-              "away_spread_odds": -114.0,
+              "home_ml": -121.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -118.0,
               "over_odds": -109.0,
-              "under_odds": -114.0
+              "under_odds": -113.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -120.0,
-              "away_ml": 100.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -126.0,
-              "away_ml": 103.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
+              "home_ml": -130.0,
+              "away_ml": 105.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -118.0,
               "under_odds": -110.0
             },
             {
@@ -827,30 +854,39 @@
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": -120.0,
-              "away_ml": 100.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": -126.0,
+              "away_ml": 106.0,
+              "home_spread_odds": -107.0,
+              "away_spread_odds": -113.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": -118.0,
-              "away_ml": 102.0,
-              "home_spread_odds": -106.0,
-              "away_spread_odds": -106.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
+              "home_ml": -124.0,
+              "away_ml": 108.0,
+              "home_spread_odds": -103.0,
+              "away_spread_odds": -109.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
             },
             {
               "book": "BetUS",
-              "home_ml": -120.0,
-              "away_ml": 100.0,
+              "home_ml": -125.0,
+              "away_ml": 105.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -123.0,
+              "away_ml": 101.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             }
           ],
           "line_movement": {
@@ -860,7 +896,7 @@
             "home_ml": -375.0,
             "away_ml": 295.0,
             "spread_delta": 7.83,
-            "total_delta": -9.11
+            "total_delta": -10.61
           },
           "model": null
         },
@@ -870,57 +906,48 @@
           "home_team": "Milwaukee Bucks",
           "away_team": "Brooklyn Nets",
           "consensus": {
-            "home_ml": -114.5,
-            "away_ml": -105.17,
-            "home_spread": -0.44,
-            "home_spread_odds": -88.67,
-            "away_spread_odds": -42.0,
-            "total": 231.11,
-            "over_odds": -113.44,
-            "under_odds": -107.11,
-            "home_win_prob": 0.5101300885780157
+            "home_ml": -118.44,
+            "away_ml": 10.0,
+            "home_spread": -1.06,
+            "home_spread_odds": -112.33,
+            "away_spread_odds": -107.78,
+            "total": 234.0,
+            "over_odds": -110.78,
+            "under_odds": -108.89,
+            "home_win_prob": 0.37360204631743155
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -111.0,
-              "away_ml": -106.0,
-              "home_spread_odds": -102.0,
-              "away_spread_odds": -118.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": -117.0,
+              "away_ml": -101.0,
+              "home_spread_odds": -111.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -107.0,
+              "under_odds": -113.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -110.0,
-              "away_ml": -106.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": -118.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -112.0,
+              "away_spread_odds": -108.0,
+              "over_odds": -112.0,
+              "under_odds": -108.0
             },
             {
               "book": "BetRivers",
-              "home_ml": -120.0,
-              "away_ml": -104.0,
-              "home_spread_odds": -120.0,
-              "away_spread_odds": -104.0,
+              "home_ml": -117.0,
+              "away_ml": -105.0,
+              "home_spread_odds": -122.0,
+              "away_spread_odds": -108.0,
               "over_odds": -110.0,
               "under_odds": -112.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
-              "home_spread_odds": 100.0,
-              "away_spread_odds": -120.0,
-              "over_odds": -118.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -116.0,
-              "away_ml": -105.0,
+              "home_ml": -118.0,
+              "away_ml": -102.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -928,39 +955,48 @@
             },
             {
               "book": "Bovada",
-              "home_ml": -115.0,
-              "away_ml": -105.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_ml": -120.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": null,
-              "away_ml": null,
-              "home_spread_odds": -120.0,
-              "away_spread_odds": 100.0,
+              "home_ml": -120.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
               "over_odds": -115.0,
               "under_odds": -105.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": null,
-              "away_ml": null,
-              "home_spread_odds": -116.0,
-              "away_spread_odds": 104.0,
+              "home_ml": -118.0,
+              "away_ml": 102.0,
+              "home_spread_odds": -111.0,
+              "away_spread_odds": -101.0,
               "over_odds": -113.0,
               "under_odds": -102.0
             },
             {
               "book": "BetUS",
-              "home_ml": null,
-              "away_ml": null,
-              "home_spread_odds": -120.0,
-              "away_spread_odds": 100.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": -120.0,
+              "away_ml": 100.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -118.0,
+              "away_ml": -104.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             }
           ],
           "line_movement": {
@@ -969,8 +1005,8 @@
             "total": 231.11,
             "home_ml": -114.5,
             "away_ml": -105.17,
-            "spread_delta": 0.0,
-            "total_delta": 0.0
+            "spread_delta": -0.62,
+            "total_delta": 2.89
           },
           "model": null
         },
@@ -980,48 +1016,84 @@
           "home_team": "Memphis Grizzlies",
           "away_team": "Los Angeles Clippers",
           "consensus": {
-            "home_ml": -255.56,
-            "away_ml": 209.33,
-            "home_spread": -6.33,
-            "home_spread_odds": -111.22,
-            "away_spread_odds": -108.11,
-            "total": 229.72,
-            "over_odds": -108.22,
-            "under_odds": -111.67,
-            "home_win_prob": 0.6897608917145207
+            "home_ml": -268.0,
+            "away_ml": 218.44,
+            "home_spread": -7.11,
+            "home_spread_odds": -109.0,
+            "away_spread_odds": -110.67,
+            "total": 227.67,
+            "over_odds": -110.44,
+            "under_odds": -110.0,
+            "home_win_prob": 0.6987111386492041
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -264.0,
-              "away_ml": 217.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_ml": -269.0,
+              "away_ml": 220.0,
+              "home_spread_odds": -104.0,
+              "away_spread_odds": -116.0,
+              "over_odds": -112.0,
+              "under_odds": -108.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -245.0,
-              "away_ml": 205.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
+              "home_ml": -260.0,
+              "away_ml": 215.0,
+              "home_spread_odds": -104.0,
+              "away_spread_odds": -118.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
               "book": "BetRivers",
-              "home_ml": -278.0,
+              "home_ml": -275.0,
               "away_ml": 215.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -107.0,
-              "over_odds": -112.0,
-              "under_odds": -112.0
+              "home_spread_odds": -117.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -115.0,
+              "under_odds": -115.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -250.0,
-              "away_ml": 200.0,
+              "home_ml": -275.0,
+              "away_ml": 220.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "Bovada",
+              "home_ml": -270.0,
+              "away_ml": 220.0,
+              "home_spread_odds": -115.0,
+              "away_spread_odds": -105.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "BetOnline.ag",
+              "home_ml": -265.0,
+              "away_ml": 219.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "LowVig.ag",
+              "home_ml": -263.0,
+              "away_ml": 222.0,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
+            },
+            {
+              "book": "BetUS",
+              "home_ml": -265.0,
+              "away_ml": 223.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -1029,48 +1101,12 @@
             },
             {
               "book": "MyBookie.ag",
-              "home_ml": -265.0,
-              "away_ml": 210.0,
+              "home_ml": -270.0,
+              "away_ml": 212.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
-            },
-            {
-              "book": "Bovada",
-              "home_ml": -250.0,
-              "away_ml": 210.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "BetOnline.ag",
-              "home_ml": -250.0,
-              "away_ml": 207.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "LowVig.ag",
-              "home_ml": -248.0,
-              "away_ml": 210.0,
-              "home_spread_odds": -111.0,
-              "away_spread_odds": -101.0,
-              "over_odds": -102.0,
-              "under_odds": -113.0
-            },
-            {
-              "book": "BetUS",
-              "home_ml": -250.0,
-              "away_ml": 210.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
             }
           ],
           "line_movement": {
@@ -1079,8 +1115,8 @@
             "total": 229.72,
             "home_ml": -255.56,
             "away_ml": 209.33,
-            "spread_delta": 0.0,
-            "total_delta": 0.0
+            "spread_delta": -0.78,
+            "total_delta": -2.05
           },
           "model": null
         },
@@ -1090,68 +1126,59 @@
           "home_team": "Houston Rockets",
           "away_team": "Phoenix Suns",
           "consensus": {
-            "home_ml": -395.67,
-            "away_ml": 308.44,
-            "home_spread": -9.22,
-            "home_spread_odds": -108.0,
-            "away_spread_odds": -111.33,
-            "total": 224.11,
-            "over_odds": -109.0,
-            "under_odds": -110.56,
-            "home_win_prob": 0.7652793750695646
+            "home_ml": -389.56,
+            "away_ml": 305.44,
+            "home_spread": -9.28,
+            "home_spread_odds": -107.11,
+            "away_spread_odds": -112.22,
+            "total": 222.72,
+            "over_odds": -111.0,
+            "under_odds": -108.78,
+            "home_win_prob": 0.7633823693583776
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -406.0,
-              "away_ml": 319.0,
-              "home_spread_odds": -103.0,
-              "away_spread_odds": -117.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
+              "home_ml": -395.0,
+              "away_ml": 312.0,
+              "home_spread_odds": -104.0,
+              "away_spread_odds": -116.0,
+              "over_odds": -113.0,
+              "under_odds": -107.0
             },
             {
               "book": "FanDuel",
               "home_ml": -375.0,
               "away_ml": 300.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -112.0,
+              "under_odds": -108.0
             },
             {
               "book": "BetRivers",
               "home_ml": -360.0,
               "away_ml": 280.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -114.0,
-              "over_odds": -114.0,
-              "under_odds": -108.0
+              "home_spread_odds": -109.0,
+              "away_spread_odds": -113.0,
+              "over_odds": -112.0,
+              "under_odds": -112.0
             },
             {
               "book": "BetMGM",
               "home_ml": -400.0,
-              "away_ml": 300.0,
+              "away_ml": 310.0,
               "home_spread_odds": -105.0,
               "away_spread_odds": -115.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -410.0,
-              "away_ml": 310.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "over_odds": -115.0,
+              "under_odds": -105.0
             },
             {
               "book": "Bovada",
-              "home_ml": -415.0,
-              "away_ml": 310.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
+              "home_ml": -390.0,
+              "away_ml": 295.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
@@ -1181,6 +1208,15 @@
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -391.0,
+              "away_ml": 295.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             }
           ],
           "line_movement": {
@@ -1189,8 +1225,8 @@
             "total": 224.36,
             "home_ml": -422.2,
             "away_ml": 320.8,
-            "spread_delta": 0.28,
-            "total_delta": -0.25
+            "spread_delta": 0.22,
+            "total_delta": -1.64
           },
           "model": null
         },
@@ -1200,66 +1236,57 @@
           "home_team": "Golden State Warriors",
           "away_team": "Sacramento Kings",
           "consensus": {
-            "home_ml": -242.56,
-            "away_ml": 199.11,
-            "home_spread": -5.94,
-            "home_spread_odds": -109.0,
-            "away_spread_odds": -110.33,
-            "total": 218.39,
-            "over_odds": -112.0,
-            "under_odds": -107.67,
-            "home_win_prob": 0.6792753258194179
+            "home_ml": -268.67,
+            "away_ml": 219.33,
+            "home_spread": -6.78,
+            "home_spread_odds": -113.22,
+            "away_spread_odds": -107.22,
+            "total": 216.72,
+            "over_odds": -110.22,
+            "under_odds": -111.11,
+            "home_win_prob": 0.6994408781003952
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": -241.0,
-              "away_ml": 199.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
+              "home_ml": -264.0,
+              "away_ml": 217.0,
+              "home_spread_odds": -116.0,
+              "away_spread_odds": -104.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
               "book": "FanDuel",
-              "home_ml": -250.0,
-              "away_ml": 205.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "home_ml": -270.0,
+              "away_ml": 220.0,
+              "home_spread_odds": -118.0,
+              "away_spread_odds": -104.0,
+              "over_odds": -105.0,
+              "under_odds": -115.0
             },
             {
               "book": "BetRivers",
-              "home_ml": -265.0,
-              "away_ml": 205.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -115.0,
-              "under_odds": -107.0
+              "home_ml": -286.0,
+              "away_ml": 225.0,
+              "home_spread_odds": -121.0,
+              "away_spread_odds": -109.0,
+              "over_odds": -120.0,
+              "under_odds": -110.0
             },
             {
               "book": "BetMGM",
-              "home_ml": -235.0,
-              "away_ml": 195.0,
-              "home_spread_odds": -115.0,
-              "away_spread_odds": -105.0,
+              "home_ml": -275.0,
+              "away_ml": 225.0,
+              "home_spread_odds": -118.0,
+              "away_spread_odds": -102.0,
               "over_odds": -110.0,
-              "under_odds": -110.0
-            },
-            {
-              "book": "MyBookie.ag",
-              "home_ml": -244.0,
-              "away_ml": 193.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -110.0,
-              "under_odds": -110.0
+              "under_odds": -118.0
             },
             {
               "book": "Bovada",
-              "home_ml": -230.0,
-              "away_ml": 190.0,
+              "home_ml": -270.0,
+              "away_ml": 220.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
@@ -1267,30 +1294,39 @@
             },
             {
               "book": "BetOnline.ag",
-              "home_ml": -240.0,
-              "away_ml": 200.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": -260.0,
+              "away_ml": 215.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": -238.0,
-              "away_ml": 202.0,
-              "home_spread_odds": -101.0,
-              "away_spread_odds": -111.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
+              "home_ml": -258.0,
+              "away_ml": 218.0,
+              "home_spread_odds": -106.0,
+              "away_spread_odds": -106.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
             },
             {
               "book": "BetUS",
-              "home_ml": -240.0,
-              "away_ml": 203.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": -260.0,
+              "away_ml": 218.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": -275.0,
+              "away_ml": 216.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             }
           ],
           "line_movement": {
@@ -1299,8 +1335,8 @@
             "total": 218.39,
             "home_ml": -242.56,
             "away_ml": 199.11,
-            "spread_delta": 0.0,
-            "total_delta": 0.0
+            "spread_delta": -0.84,
+            "total_delta": -1.67
           },
           "model": null
         },
@@ -1310,97 +1346,97 @@
           "home_team": "Portland Trail Blazers",
           "away_team": "San Antonio Spurs",
           "consensus": {
-            "home_ml": 130.0,
-            "away_ml": -154.22,
-            "home_spread": 2.94,
-            "home_spread_odds": -108.11,
-            "away_spread_odds": -111.44,
-            "total": 225.72,
-            "over_odds": -112.89,
-            "under_odds": -107.67,
-            "home_win_prob": 0.4174891530333735
+            "home_ml": 136.78,
+            "away_ml": -162.33,
+            "home_spread": 3.39,
+            "home_spread_odds": -107.89,
+            "away_spread_odds": -112.22,
+            "total": 225.0,
+            "over_odds": -111.56,
+            "under_odds": -109.89,
+            "home_win_prob": 0.4056471915614424
           },
           "books": [
             {
               "book": "DraftKings",
-              "home_ml": 130.0,
-              "away_ml": -155.0,
-              "home_spread_odds": -112.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -105.0,
-              "under_odds": -115.0
+              "home_ml": 136.0,
+              "away_ml": -162.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
+              "over_odds": -107.0,
+              "under_odds": -114.0
             },
             {
               "book": "FanDuel",
-              "home_ml": 128.0,
-              "away_ml": -152.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
+              "home_ml": 138.0,
+              "away_ml": -164.0,
+              "home_spread_odds": -108.0,
+              "away_spread_odds": -112.0,
               "over_odds": -112.0,
               "under_odds": -108.0
             },
             {
               "book": "BetRivers",
-              "home_ml": 128.0,
-              "away_ml": -159.0,
-              "home_spread_odds": -104.0,
-              "away_spread_odds": -120.0,
-              "over_odds": -113.0,
-              "under_odds": -109.0
+              "home_ml": 120.0,
+              "away_ml": -148.0,
+              "home_spread_odds": -114.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -120.0,
+              "under_odds": -110.0
             },
             {
               "book": "BetMGM",
-              "home_ml": 125.0,
-              "away_ml": -155.0,
-              "home_spread_odds": -105.0,
-              "away_spread_odds": -115.0,
+              "home_ml": 140.0,
+              "away_ml": -170.0,
+              "home_spread_odds": -110.0,
+              "away_spread_odds": -110.0,
               "over_odds": -118.0,
               "under_odds": -110.0
             },
             {
-              "book": "MyBookie.ag",
-              "home_ml": 124.0,
-              "away_ml": -152.0,
+              "book": "Bovada",
+              "home_ml": 135.0,
+              "away_ml": -160.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
               "over_odds": -110.0,
               "under_odds": -110.0
             },
             {
-              "book": "Bovada",
-              "home_ml": 130.0,
-              "away_ml": -150.0,
-              "home_spread_odds": -110.0,
-              "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
-            },
-            {
               "book": "BetOnline.ag",
-              "home_ml": 135.0,
-              "away_ml": -155.0,
-              "home_spread_odds": -108.0,
-              "away_spread_odds": -112.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "home_ml": 140.0,
+              "away_ml": -160.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
             },
             {
               "book": "LowVig.ag",
-              "home_ml": 136.0,
-              "away_ml": -155.0,
-              "home_spread_odds": -104.0,
-              "away_spread_odds": -108.0,
-              "over_odds": -113.0,
-              "under_odds": -102.0
+              "home_ml": 141.0,
+              "away_ml": -160.0,
+              "home_spread_odds": -101.0,
+              "away_spread_odds": -111.0,
+              "over_odds": -107.0,
+              "under_odds": -107.0
             },
             {
               "book": "BetUS",
-              "home_ml": 134.0,
-              "away_ml": -155.0,
+              "home_ml": 138.0,
+              "away_ml": -160.0,
+              "home_spread_odds": -105.0,
+              "away_spread_odds": -115.0,
+              "over_odds": -110.0,
+              "under_odds": -110.0
+            },
+            {
+              "book": "MyBookie.ag",
+              "home_ml": 143.0,
+              "away_ml": -177.0,
               "home_spread_odds": -110.0,
               "away_spread_odds": -110.0,
-              "over_odds": -115.0,
-              "under_odds": -105.0
+              "over_odds": -110.0,
+              "under_odds": -110.0
             }
           ],
           "line_movement": {
@@ -1409,8 +1445,8 @@
             "total": 237.5,
             "home_ml": 142.0,
             "away_ml": -170.0,
-            "spread_delta": -1.56,
-            "total_delta": -11.78
+            "spread_delta": -1.11,
+            "total_delta": -12.5
           },
           "model": null
         }
