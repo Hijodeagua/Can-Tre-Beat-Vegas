@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-26T19:27:27+00:00",
- "run_date": "2026-11-26",
+ "generated_at": "2026-11-27T19:22:30+00:00",
+ "run_date": "2026-11-27",
  "season": 2026,
  "week": 13,
  "params": {
@@ -169,13 +169,13 @@
    "team": "Texas Tech",
    "conference": "Big 12",
    "conference_short": "Big 12",
-   "elo": 1819.6,
-   "wins": 10,
+   "elo": 1834.0,
+   "wins": 11,
    "losses": 1,
-   "conf_wins": 7,
+   "conf_wins": 8,
    "conf_losses": 1,
-   "pts_diff": 156,
-   "games": 311,
+   "pts_diff": 177,
+   "games": 312,
    "preseason_elo": 1755.0,
    "preseason_rank": 10,
    "rank": 11
@@ -631,21 +631,6 @@
    "rank": 41
   },
   {
-   "team": "TCU",
-   "conference": "Big 12",
-   "conference_short": "Big 12",
-   "elo": 1569.5,
-   "wins": 5,
-   "losses": 6,
-   "conf_wins": 3,
-   "conf_losses": 5,
-   "pts_diff": 61,
-   "games": 309,
-   "preseason_elo": 1648.0,
-   "preseason_rank": 23,
-   "rank": 42
-  },
-  {
    "team": "Louisiana Tech",
    "conference": "Sun Belt",
    "conference_short": "Sun Belt",
@@ -658,7 +643,7 @@
    "games": 311,
    "preseason_elo": 1400.1,
    "preseason_rank": 90,
-   "rank": 43
+   "rank": 42
   },
   {
    "team": "Arizona State",
@@ -673,7 +658,7 @@
    "games": 305,
    "preseason_elo": 1581.9,
    "preseason_rank": 36,
-   "rank": 44
+   "rank": 43
   },
   {
    "team": "Oklahoma State",
@@ -688,7 +673,7 @@
    "games": 309,
    "preseason_elo": 1304.8,
    "preseason_rank": 109,
-   "rank": 45
+   "rank": 44
   },
   {
    "team": "Georgia Southern",
@@ -703,7 +688,7 @@
    "games": 158,
    "preseason_elo": 1421.0,
    "preseason_rank": 84,
-   "rank": 46
+   "rank": 45
   },
   {
    "team": "James Madison",
@@ -718,7 +703,7 @@
    "games": 62,
    "preseason_elo": 1623.8,
    "preseason_rank": 30,
-   "rank": 47
+   "rank": 46
   },
   {
    "team": "New Mexico",
@@ -733,7 +718,7 @@
    "games": 306,
    "preseason_elo": 1461.5,
    "preseason_rank": 73,
-   "rank": 48
+   "rank": 47
   },
   {
    "team": "Memphis",
@@ -748,6 +733,21 @@
    "games": 311,
    "preseason_elo": 1441.3,
    "preseason_rank": 81,
+   "rank": 48
+  },
+  {
+   "team": "TCU",
+   "conference": "Big 12",
+   "conference_short": "Big 12",
+   "elo": 1555.1,
+   "wins": 5,
+   "losses": 7,
+   "conf_wins": 3,
+   "conf_losses": 6,
+   "pts_diff": 40,
+   "games": 310,
+   "preseason_elo": 1648.0,
+   "preseason_rank": 23,
    "rank": 49
   },
   {
@@ -2124,8 +2124,8 @@
    "short": "Big 12",
    "teams": 16,
    "avgElo": 1579.3,
-   "top4Elo": 1800.7,
-   "medianElo": 1560.8,
+   "top4Elo": 1804.3,
+   "medianElo": 1557.9,
    "bottom4Elo": 1416.4,
    "preseasonAvgElo": 1559.1,
    "topN": 4,
@@ -2266,31 +2266,6 @@
  },
  "slate": [
   {
-   "game_id": 401856879,
-   "date": "2026-11-26",
-   "season": 2026,
-   "week": 13,
-   "season_type": "regular",
-   "home_team": "Texas Tech",
-   "away_team": "TCU",
-   "home_conference": "Big 12",
-   "away_conference": "Big 12",
-   "neutral": false,
-   "home_fcs": false,
-   "away_fcs": false,
-   "elo_home_pre": 1819.6,
-   "elo_away_pre": 1569.5,
-   "p_home": 0.7988,
-   "p_home_elo": 0.8491,
-   "model": "elo+efficiency:random_forest",
-   "pick": "Texas Tech",
-   "pick_prob": 0.7988,
-   "pred_home_score": 34.8,
-   "pred_away_score": 18.0,
-   "pred_total": 52.7,
-   "notes": ""
-  },
-  {
    "game_id": 401866472,
    "date": "2026-11-27",
    "season": 2026,
@@ -2305,11 +2280,11 @@
    "away_fcs": false,
    "elo_home_pre": 1098.9,
    "elo_away_pre": 1440.2,
-   "p_home": 0.2576,
+   "p_home": 0.2483,
    "p_home_elo": 0.1576,
    "model": "elo+efficiency:random_forest",
    "pick": "Buffalo",
-   "pick_prob": 0.7424,
+   "pick_prob": 0.7517,
    "pred_home_score": 17.6,
    "pred_away_score": 33.6,
    "pred_total": 51.2,
@@ -2330,14 +2305,14 @@
    "away_fcs": false,
    "elo_home_pre": 1457.3,
    "elo_away_pre": 1620.4,
-   "p_home": 0.3968,
+   "p_home": 0.4037,
    "p_home_elo": 0.3428,
    "model": "elo+efficiency:random_forest",
    "pick": "Florida",
-   "pick_prob": 0.6032,
+   "pick_prob": 0.5963,
    "pred_home_score": 23.0,
    "pred_away_score": 29.2,
-   "pred_total": 52.2,
+   "pred_total": 52.1,
    "notes": ""
   },
   {
@@ -2355,11 +2330,11 @@
    "away_fcs": false,
    "elo_home_pre": 1843.3,
    "elo_away_pre": 1633.0,
-   "p_home": 0.69,
+   "p_home": 0.715,
    "p_home_elo": 0.8174,
    "model": "elo+efficiency:random_forest",
    "pick": "Iowa",
-   "pick_prob": 0.69,
+   "pick_prob": 0.715,
    "pred_home_score": 28.9,
    "pred_away_score": 14.4,
    "pred_total": 43.3,
@@ -2380,11 +2355,11 @@
    "away_fcs": false,
    "elo_home_pre": 1559.0,
    "elo_away_pre": 1135.4,
-   "p_home": 0.9349,
+   "p_home": 0.9385,
    "p_home_elo": 0.9386,
    "model": "elo+efficiency:random_forest",
    "pick": "Memphis",
-   "pick_prob": 0.9349,
+   "pick_prob": 0.9385,
    "pred_home_score": 43.2,
    "pred_away_score": 16.8,
    "pred_total": 60.1,
@@ -2405,11 +2380,11 @@
    "away_fcs": false,
    "elo_home_pre": 1559.5,
    "elo_away_pre": 1479.7,
-   "p_home": 0.6792,
+   "p_home": 0.6786,
    "p_home_elo": 0.6786,
    "model": "elo+efficiency:random_forest",
    "pick": "New Mexico",
-   "pick_prob": 0.6792,
+   "pick_prob": 0.6786,
    "pred_home_score": 27.7,
    "pred_away_score": 20.4,
    "pred_total": 48.1,
@@ -2430,11 +2405,11 @@
    "away_fcs": false,
    "elo_home_pre": 1443.0,
    "elo_away_pre": 1510.9,
-   "p_home": 0.4159,
+   "p_home": 0.4452,
    "p_home_elo": 0.4744,
    "model": "elo+efficiency:random_forest",
    "pick": "Toledo",
-   "pick_prob": 0.5841,
+   "pick_prob": 0.5548,
    "pred_home_score": 23.7,
    "pred_away_score": 24.6,
    "pred_total": 48.3,
@@ -2455,11 +2430,11 @@
    "away_fcs": false,
    "elo_home_pre": 1739.8,
    "elo_away_pre": 1456.7,
-   "p_home": 0.8914,
+   "p_home": 0.8762,
    "p_home_elo": 0.8719,
    "model": "elo+efficiency:random_forest",
    "pick": "Ole Miss",
-   "pick_prob": 0.8914,
+   "pick_prob": 0.8762,
    "pred_home_score": 38.0,
    "pred_away_score": 19.4,
    "pred_total": 57.4,
@@ -2480,11 +2455,11 @@
    "away_fcs": false,
    "elo_home_pre": 1210.3,
    "elo_away_pre": 1450.9,
-   "p_home": 0.2658,
+   "p_home": 0.2231,
    "p_home_elo": 0.2502,
    "model": "elo+efficiency:random_forest",
    "pick": "North Dakota State",
-   "pick_prob": 0.7342,
+   "pick_prob": 0.7769,
    "pred_home_score": 17.4,
    "pred_away_score": 27.9,
    "pred_total": 45.3,
@@ -2505,11 +2480,11 @@
    "away_fcs": false,
    "elo_home_pre": 1380.0,
    "elo_away_pre": 1322.8,
-   "p_home": 0.6519,
+   "p_home": 0.6535,
    "p_home_elo": 0.6495,
    "model": "elo+efficiency:random_forest",
    "pick": "South Alabama",
-   "pick_prob": 0.6519,
+   "pick_prob": 0.6535,
    "pred_home_score": 30.9,
    "pred_away_score": 24.9,
    "pred_total": 55.8,
@@ -2530,11 +2505,11 @@
    "away_fcs": false,
    "elo_home_pre": 1540.2,
    "elo_away_pre": 1896.0,
-   "p_home": 0.2633,
+   "p_home": 0.2546,
    "p_home_elo": 0.1467,
    "model": "elo+efficiency:random_forest",
    "pick": "Texas",
-   "pick_prob": 0.7367,
+   "pick_prob": 0.7454,
    "pred_home_score": 15.3,
    "pred_away_score": 32.1,
    "pred_total": 47.4,
@@ -2555,11 +2530,11 @@
    "away_fcs": false,
    "elo_home_pre": 1604.4,
    "elo_away_pre": 1480.0,
-   "p_home": 0.6268,
+   "p_home": 0.6381,
    "p_home_elo": 0.7318,
    "model": "elo+efficiency:random_forest",
    "pick": "UTSA",
-   "pick_prob": 0.6268,
+   "pick_prob": 0.6381,
    "pred_home_score": 35.1,
    "pred_away_score": 25.3,
    "pred_total": 60.4,
@@ -2605,46 +2580,1372 @@
    "away_fcs": false,
    "elo_home_pre": 1622.4,
    "elo_away_pre": 1533.9,
-   "p_home": 0.682,
+   "p_home": 0.7252,
    "p_home_elo": 0.6894,
    "model": "elo+efficiency:random_forest",
    "pick": "Wisconsin",
-   "pick_prob": 0.682,
+   "pick_prob": 0.7252,
    "pred_home_score": 25.1,
    "pred_away_score": 17.2,
    "pred_total": 42.3,
    "notes": ""
-  }
- ],
- "graded_today": [],
- "graded_recent": [
+  },
   {
-   "game_id": 401862830,
-   "date": "2026-11-19",
+   "game_id": 401856757,
+   "date": "2026-11-28",
    "season": 2026,
-   "week": 12,
-   "home_team": "Temple",
-   "away_team": "Rice",
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Alabama",
+   "away_team": "Auburn",
+   "home_conference": "SEC",
+   "away_conference": "SEC",
    "neutral": false,
    "home_fcs": false,
    "away_fcs": false,
-   "pick": "Temple",
-   "p_home": 0.6117,
-   "pick_prob": 0.6117,
-   "pred_home_score": 28.8,
-   "pred_away_score": 25.0,
-   "home_points": 27.0,
-   "away_points": 31.0,
-   "home_win": 0.0,
-   "pick_correct": false,
-   "log_loss": 0.946,
-   "brier": 0.3742,
-   "home_log_loss": 0.9997,
-   "d_ll": -0.0537,
-   "margin_err": 7.8,
-   "total_err": 4.2,
-   "graded_on": "2026-11-20"
+   "elo_home_pre": 1876.2,
+   "elo_away_pre": 1632.0,
+   "p_home": 0.8567,
+   "p_home_elo": 0.8447,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Alabama",
+   "pick_prob": 0.8567,
+   "pred_home_score": 33.5,
+   "pred_away_score": 17.0,
+   "pred_total": 50.5,
+   "notes": ""
   },
+  {
+   "game_id": 401856873,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Arizona",
+   "away_team": "Arizona State",
+   "home_conference": "Big 12",
+   "away_conference": "Big 12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1713.4,
+   "elo_away_pre": 1560.8,
+   "p_home": 0.7771,
+   "p_home_elo": 0.7624,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Arizona",
+   "pick_prob": 0.7771,
+   "pred_home_score": 32.8,
+   "pred_away_score": 21.5,
+   "pred_total": 54.3,
+   "notes": ""
+  },
+  {
+   "game_id": 401856758,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Arkansas",
+   "away_team": "LSU",
+   "home_conference": "SEC",
+   "away_conference": "SEC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1545.7,
+   "elo_away_pre": 1696.6,
+   "p_home": 0.2514,
+   "p_home_elo": 0.3588,
+   "model": "elo+efficiency:random_forest",
+   "pick": "LSU",
+   "pick_prob": 0.7486,
+   "pred_home_score": 23.4,
+   "pred_away_score": 28.8,
+   "pred_total": 52.2,
+   "notes": ""
+  },
+  {
+   "game_id": 401869939,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Arkansas State",
+   "away_team": "Troy",
+   "home_conference": "Sun Belt",
+   "away_conference": "Sun Belt",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1286.9,
+   "elo_away_pre": 1231.1,
+   "p_home": 0.5846,
+   "p_home_elo": 0.6477,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Arkansas State",
+   "pick_prob": 0.5846,
+   "pred_home_score": 28.4,
+   "pred_away_score": 22.4,
+   "pred_total": 50.8,
+   "notes": ""
+  },
+  {
+   "game_id": 401856876,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "BYU",
+   "away_team": "Cincinnati",
+   "home_conference": "Big 12",
+   "away_conference": "Big 12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1771.1,
+   "elo_away_pre": 1508.6,
+   "p_home": 0.8738,
+   "p_home_elo": 0.858,
+   "model": "elo+efficiency:random_forest",
+   "pick": "BYU",
+   "pick_prob": 0.8738,
+   "pred_home_score": 35.9,
+   "pred_away_score": 18.5,
+   "pred_total": 54.4,
+   "notes": ""
+  },
+  {
+   "game_id": 401866474,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Ball State",
+   "away_team": "Central Michigan",
+   "home_conference": "Mid-American",
+   "away_conference": "Mid-American",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1120.7,
+   "elo_away_pre": 1316.0,
+   "p_home": 0.2726,
+   "p_home_elo": 0.3023,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Central Michigan",
+   "pick_prob": 0.7274,
+   "pred_home_score": 20.7,
+   "pred_away_score": 28.6,
+   "pred_total": 49.3,
+   "notes": ""
+  },
+  {
+   "game_id": 401866475,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Bowling Green",
+   "away_team": "Massachusetts",
+   "home_conference": "Mid-American",
+   "away_conference": "Mid-American",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1191.5,
+   "elo_away_pre": 1125.1,
+   "p_home": 0.5534,
+   "p_home_elo": 0.6615,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Bowling Green",
+   "pick_prob": 0.5534,
+   "pred_home_score": 27.2,
+   "pred_away_score": 20.6,
+   "pred_total": 47.8,
+   "notes": ""
+  },
+  {
+   "game_id": 401858315,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "California",
+   "away_team": "Pittsburgh",
+   "home_conference": "ACC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1282.8,
+   "elo_away_pre": 1480.7,
+   "p_home": 0.2689,
+   "p_home_elo": 0.2992,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Pittsburgh",
+   "pick_prob": 0.7311,
+   "pred_home_score": 22.8,
+   "pred_away_score": 30.8,
+   "pred_total": 53.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401862842,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Charlotte",
+   "away_team": "Navy",
+   "home_conference": "American Athletic",
+   "away_conference": "American Athletic",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1111.0,
+   "elo_away_pre": 1445.8,
+   "p_home": 0.0883,
+   "p_home_elo": 0.1626,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Navy",
+   "pick_prob": 0.9117,
+   "pred_home_score": 20.1,
+   "pred_away_score": 35.8,
+   "pred_total": 56.0,
+   "notes": ""
+  },
+  {
+   "game_id": 401856764,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Clemson",
+   "away_team": "South Carolina",
+   "home_conference": "ACC",
+   "away_conference": "SEC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1597.0,
+   "elo_away_pre": 1611.3,
+   "p_home": 0.4969,
+   "p_home_elo": 0.5512,
+   "model": "elo+efficiency:random_forest",
+   "pick": "South Carolina",
+   "pick_prob": 0.5031,
+   "pred_home_score": 24.5,
+   "pred_away_score": 22.4,
+   "pred_total": 47.0,
+   "notes": ""
+  },
+  {
+   "game_id": 401856875,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Colorado",
+   "away_team": "UCF",
+   "home_conference": "Big 12",
+   "away_conference": "Big 12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1396.4,
+   "elo_away_pre": 1493.3,
+   "p_home": 0.5169,
+   "p_home_elo": 0.4328,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Colorado",
+   "pick_prob": 0.5169,
+   "pred_home_score": 25.8,
+   "pred_away_score": 28.2,
+   "pred_total": 54.0,
+   "notes": ""
+  },
+  {
+   "game_id": 401860926,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Colorado State",
+   "away_team": "Boise State",
+   "home_conference": "Pac-12",
+   "away_conference": "Pac-12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1150.2,
+   "elo_away_pre": 1651.2,
+   "p_home": 0.1463,
+   "p_home_elo": 0.0694,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Boise State",
+   "pick_prob": 0.8537,
+   "pred_home_score": 20.8,
+   "pred_away_score": 45.7,
+   "pred_total": 66.5,
+   "notes": ""
+  },
+  {
+   "game_id": 401871062,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Delaware",
+   "away_team": "Jacksonville State",
+   "home_conference": "Conference USA",
+   "away_conference": "Conference USA",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1379.4,
+   "elo_away_pre": 1390.9,
+   "p_home": 0.5329,
+   "p_home_elo": 0.5551,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Delaware",
+   "pick_prob": 0.5329,
+   "pred_home_score": 28.9,
+   "pred_away_score": 26.7,
+   "pred_total": 55.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401862837,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "East Carolina",
+   "away_team": "Florida Atlantic",
+   "home_conference": "American Athletic",
+   "away_conference": "American Athletic",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1491.6,
+   "elo_away_pre": 1462.1,
+   "p_home": 0.6591,
+   "p_home_elo": 0.6125,
+   "model": "elo+efficiency:random_forest",
+   "pick": "East Carolina",
+   "pick_prob": 0.6591,
+   "pred_home_score": 30.7,
+   "pred_away_score": 26.2,
+   "pred_total": 56.9,
+   "notes": ""
+  },
+  {
+   "game_id": 401871082,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Florida International",
+   "away_team": "Sam Houston",
+   "home_conference": "Conference USA",
+   "away_conference": "Conference USA",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1227.0,
+   "elo_away_pre": 1001.5,
+   "p_home": 0.7959,
+   "p_home_elo": 0.83,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Florida International",
+   "pick_prob": 0.7959,
+   "pred_home_score": 31.9,
+   "pred_away_score": 16.5,
+   "pred_total": 48.3,
+   "notes": ""
+  },
+  {
+   "game_id": 401860927,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Fresno State",
+   "away_team": "Oregon State",
+   "home_conference": "Pac-12",
+   "away_conference": "Pac-12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1468.6,
+   "elo_away_pre": 1391.3,
+   "p_home": 0.5395,
+   "p_home_elo": 0.6754,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Fresno State",
+   "pick_prob": 0.5395,
+   "pred_home_score": 31.2,
+   "pred_away_score": 24.0,
+   "pred_total": 55.2,
+   "notes": ""
+  },
+  {
+   "game_id": 401856760,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Georgia",
+   "away_team": "Georgia Tech",
+   "home_conference": "SEC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1996.9,
+   "elo_away_pre": 1411.3,
+   "p_home": 0.9642,
+   "p_home_elo": 0.9749,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Georgia",
+   "pick_prob": 0.9642,
+   "pred_home_score": 45.0,
+   "pred_away_score": 9.6,
+   "pred_total": 54.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401869954,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Georgia Southern",
+   "away_team": "Louisiana Tech",
+   "home_conference": "Sun Belt",
+   "away_conference": "Sun Belt",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1559.9,
+   "elo_away_pre": 1565.9,
+   "p_home": 0.5065,
+   "p_home_elo": 0.5631,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Georgia Southern",
+   "pick_prob": 0.5065,
+   "pred_home_score": 27.6,
+   "pred_away_score": 25.0,
+   "pred_total": 52.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401869959,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Georgia State",
+   "away_team": "Louisiana",
+   "home_conference": "Sun Belt",
+   "away_conference": "Sun Belt",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1299.2,
+   "elo_away_pre": 1473.0,
+   "p_home": 0.3547,
+   "p_home_elo": 0.329,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Louisiana",
+   "pick_prob": 0.6453,
+   "pred_home_score": 25.2,
+   "pred_away_score": 31.9,
+   "pred_total": 57.1,
+   "notes": ""
+  },
+  {
+   "game_id": 401864547,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Hawai'i",
+   "away_team": "Sacramento State",
+   "home_conference": "Mountain West",
+   "away_conference": "Mid-American",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1229.9,
+   "elo_away_pre": 1083.2,
+   "p_home": 0.7593,
+   "p_home_elo": 0.7563,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Hawai'i",
+   "pick_prob": 0.7593,
+   "pred_home_score": 28.5,
+   "pred_away_score": 17.4,
+   "pred_total": 45.9,
+   "notes": ""
+  },
+  {
+   "game_id": 401856874,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Houston",
+   "away_team": "Baylor",
+   "home_conference": "Big 12",
+   "away_conference": "Big 12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1635.5,
+   "elo_away_pre": 1579.7,
+   "p_home": 0.6402,
+   "p_home_elo": 0.6477,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Houston",
+   "pick_prob": 0.6402,
+   "pred_home_score": 30.2,
+   "pred_away_score": 24.2,
+   "pred_total": 54.3,
+   "notes": ""
+  },
+  {
+   "game_id": 401858538,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Indiana",
+   "away_team": "Purdue",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1924.1,
+   "elo_away_pre": 1355.3,
+   "p_home": 0.9494,
+   "p_home_elo": 0.9724,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Indiana",
+   "pick_prob": 0.9494,
+   "pred_home_score": 43.5,
+   "pred_away_score": 9.0,
+   "pred_total": 52.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401856878,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Iowa State",
+   "away_team": "Kansas State",
+   "home_conference": "Big 12",
+   "away_conference": "Big 12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1492.9,
+   "elo_away_pre": 1392.7,
+   "p_home": 0.6132,
+   "p_home_elo": 0.7035,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Iowa State",
+   "pick_prob": 0.6132,
+   "pred_home_score": 32.3,
+   "pred_away_score": 23.8,
+   "pred_total": 56.1,
+   "notes": ""
+  },
+  {
+   "game_id": 401869947,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "James Madison",
+   "away_team": "Coastal Carolina",
+   "home_conference": "Sun Belt",
+   "away_conference": "Sun Belt",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1559.7,
+   "elo_away_pre": 1272.7,
+   "p_home": 0.9245,
+   "p_home_elo": 0.8744,
+   "model": "elo+efficiency:random_forest",
+   "pick": "James Madison",
+   "pick_prob": 0.9245,
+   "pred_home_score": 38.0,
+   "pred_away_score": 19.2,
+   "pred_total": 57.2,
+   "notes": ""
+  },
+  {
+   "game_id": 401856761,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Kentucky",
+   "away_team": "Louisville",
+   "home_conference": "SEC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1584.7,
+   "elo_away_pre": 1723.3,
+   "p_home": 0.3133,
+   "p_home_elo": 0.3752,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Louisville",
+   "pick_prob": 0.6867,
+   "pred_home_score": 24.2,
+   "pred_away_score": 29.0,
+   "pred_total": 53.2,
+   "notes": ""
+  },
+  {
+   "game_id": 401858539,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Maryland",
+   "away_team": "Penn State",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1406.6,
+   "elo_away_pre": 1650.6,
+   "p_home": 0.2739,
+   "p_home_elo": 0.2466,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Penn State",
+   "pick_prob": 0.7261,
+   "pred_home_score": 21.0,
+   "pred_away_score": 31.6,
+   "pred_total": 52.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401858311,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Miami",
+   "away_team": "Boston College",
+   "home_conference": "ACC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1873.0,
+   "elo_away_pre": 1448.7,
+   "p_home": 0.963,
+   "p_home_elo": 0.9388,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Miami",
+   "pick_prob": 0.963,
+   "pred_home_score": 40.7,
+   "pred_away_score": 14.2,
+   "pred_total": 54.9,
+   "notes": ""
+  },
+  {
+   "game_id": 401871083,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Middle Tennessee",
+   "away_team": "New Mexico State",
+   "home_conference": "Conference USA",
+   "away_conference": "Conference USA",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1230.2,
+   "elo_away_pre": 1120.4,
+   "p_home": 0.6261,
+   "p_home_elo": 0.7149,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Middle Tennessee",
+   "pick_prob": 0.6261,
+   "pred_home_score": 31.2,
+   "pred_away_score": 22.2,
+   "pred_total": 53.4,
+   "notes": ""
+  },
+  {
+   "game_id": 401856763,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Missouri",
+   "away_team": "Oklahoma",
+   "home_conference": "SEC",
+   "away_conference": "SEC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1719.1,
+   "elo_away_pre": 1744.6,
+   "p_home": 0.5604,
+   "p_home_elo": 0.5351,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Missouri",
+   "pick_prob": 0.5604,
+   "pred_home_score": 23.7,
+   "pred_away_score": 22.2,
+   "pred_total": 45.9,
+   "notes": ""
+  },
+  {
+   "game_id": 401871063,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Missouri State",
+   "away_team": "Liberty",
+   "home_conference": "Conference USA",
+   "away_conference": "Conference USA",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1208.2,
+   "elo_away_pre": 1530.5,
+   "p_home": 0.0878,
+   "p_home_elo": 0.1726,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Liberty",
+   "pick_prob": 0.9122,
+   "pred_home_score": 18.8,
+   "pred_away_score": 33.8,
+   "pred_total": 52.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401858313,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "North Carolina",
+   "away_team": "NC State",
+   "home_conference": "ACC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1480.6,
+   "elo_away_pre": 1507.3,
+   "p_home": 0.6098,
+   "p_home_elo": 0.5334,
+   "model": "elo+efficiency:random_forest",
+   "pick": "North Carolina",
+   "pick_prob": 0.6098,
+   "pred_home_score": 27.2,
+   "pred_away_score": 25.8,
+   "pred_total": 53.0,
+   "notes": ""
+  },
+  {
+   "game_id": 401862843,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "North Texas",
+   "away_team": "UAB",
+   "home_conference": "American Athletic",
+   "away_conference": "American Athletic",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1499.1,
+   "elo_away_pre": 1386.8,
+   "p_home": 0.7865,
+   "p_home_elo": 0.718,
+   "model": "elo+efficiency:random_forest",
+   "pick": "North Texas",
+   "pick_prob": 0.7865,
+   "pred_home_score": 35.8,
+   "pred_away_score": 26.7,
+   "pred_total": 62.5,
+   "notes": ""
+  },
+  {
+   "game_id": 401864550,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Northern Illinois",
+   "away_team": "UTEP",
+   "home_conference": "Mountain West",
+   "away_conference": "Mountain West",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 996.7,
+   "elo_away_pre": 1001.8,
+   "p_home": 0.6394,
+   "p_home_elo": 0.5643,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Northern Illinois",
+   "pick_prob": 0.6394,
+   "pred_home_score": 25.5,
+   "pred_away_score": 22.9,
+   "pred_total": 48.4,
+   "notes": ""
+  },
+  {
+   "game_id": 401858537,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Northwestern",
+   "away_team": "Illinois",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1573.2,
+   "elo_away_pre": 1601.6,
+   "p_home": 0.624,
+   "p_home_elo": 0.531,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Northwestern",
+   "pick_prob": 0.624,
+   "pred_home_score": 24.4,
+   "pred_away_score": 23.1,
+   "pred_total": 47.5,
+   "notes": ""
+  },
+  {
+   "game_id": 401858540,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Ohio State",
+   "away_team": "Michigan",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1784.0,
+   "elo_away_pre": 1619.5,
+   "p_home": 0.8268,
+   "p_home_elo": 0.7746,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Ohio State",
+   "pick_prob": 0.8268,
+   "pred_home_score": 28.1,
+   "pred_away_score": 16.1,
+   "pred_total": 44.3,
+   "notes": ""
+  },
+  {
+   "game_id": 401856877,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Oklahoma State",
+   "away_team": "Kansas",
+   "home_conference": "Big 12",
+   "away_conference": "Big 12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1560.7,
+   "elo_away_pre": 1475.5,
+   "p_home": 0.6764,
+   "p_home_elo": 0.6854,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Oklahoma State",
+   "pick_prob": 0.6764,
+   "pred_home_score": 33.9,
+   "pred_away_score": 26.3,
+   "pred_total": 60.2,
+   "notes": ""
+  },
+  {
+   "game_id": 401871103,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Old Dominion",
+   "away_team": "Southern Miss",
+   "home_conference": "Sun Belt",
+   "away_conference": "Sun Belt",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1309.9,
+   "elo_away_pre": 1214.5,
+   "p_home": 0.666,
+   "p_home_elo": 0.6978,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Old Dominion",
+   "pick_prob": 0.666,
+   "pred_home_score": 30.9,
+   "pred_away_score": 22.7,
+   "pred_total": 53.7,
+   "notes": ""
+  },
+  {
+   "game_id": 401858541,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Oregon",
+   "away_team": "Washington",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1855.7,
+   "elo_away_pre": 1707.7,
+   "p_home": 0.7446,
+   "p_home_elo": 0.7576,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Oregon",
+   "pick_prob": 0.7446,
+   "pred_home_score": 31.2,
+   "pred_away_score": 20.0,
+   "pred_total": 51.2,
+   "notes": ""
+  },
+  {
+   "game_id": 401862841,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Rice",
+   "away_team": "Army",
+   "home_conference": "American Athletic",
+   "away_conference": "American Athletic",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1186.7,
+   "elo_away_pre": 1423.3,
+   "p_home": 0.365,
+   "p_home_elo": 0.2547,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Army",
+   "pick_prob": 0.635,
+   "pred_home_score": 20.6,
+   "pred_away_score": 30.9,
+   "pred_total": 51.5,
+   "notes": ""
+  },
+  {
+   "game_id": 401858542,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Rutgers",
+   "away_team": "Michigan State",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1366.8,
+   "elo_away_pre": 1427.7,
+   "p_home": 0.4113,
+   "p_home_elo": 0.4844,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Michigan State",
+   "pick_prob": 0.5887,
+   "pred_home_score": 24.7,
+   "pred_away_score": 25.2,
+   "pred_total": 49.9,
+   "notes": ""
+  },
+  {
+   "game_id": 401862839,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "South Florida",
+   "away_team": "Tulane",
+   "home_conference": "American Athletic",
+   "away_conference": "American Athletic",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1402.2,
+   "elo_away_pre": 1434.7,
+   "p_home": 0.7093,
+   "p_home_elo": 0.5252,
+   "model": "elo+efficiency:random_forest",
+   "pick": "South Florida",
+   "pick_prob": 0.7093,
+   "pred_home_score": 27.2,
+   "pred_away_score": 26.1,
+   "pred_total": 53.4,
+   "notes": ""
+  },
+  {
+   "game_id": 401858316,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Stanford",
+   "away_team": "SMU",
+   "home_conference": "ACC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1532.5,
+   "elo_away_pre": 1603.8,
+   "p_home": 0.274,
+   "p_home_elo": 0.4693,
+   "model": "elo+efficiency:random_forest",
+   "pick": "SMU",
+   "pick_prob": 0.726,
+   "pred_home_score": 27.9,
+   "pred_away_score": 29.0,
+   "pred_total": 56.9,
+   "notes": ""
+  },
+  {
+   "game_id": 401858314,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Syracuse",
+   "away_team": "Notre Dame",
+   "home_conference": "ACC",
+   "away_conference": "FBS Independents",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1365.6,
+   "elo_away_pre": 1881.8,
+   "p_home": 0.0922,
+   "p_home_elo": 0.0639,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Notre Dame",
+   "pick_prob": 0.9078,
+   "pred_home_score": 14.5,
+   "pred_away_score": 40.3,
+   "pred_total": 54.8,
+   "notes": ""
+  },
+  {
+   "game_id": 401858543,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "UCLA",
+   "away_team": "USC",
+   "home_conference": "Big Ten",
+   "away_conference": "Big Ten",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1739.9,
+   "elo_away_pre": 1738.0,
+   "p_home": 0.6518,
+   "p_home_elo": 0.5742,
+   "model": "elo+efficiency:random_forest",
+   "pick": "UCLA",
+   "pick_prob": 0.6518,
+   "pred_home_score": 26.9,
+   "pred_away_score": 23.9,
+   "pred_total": 50.8,
+   "notes": ""
+  },
+  {
+   "game_id": 401871102,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "UL Monroe",
+   "away_team": "Marshall",
+   "home_conference": "Sun Belt",
+   "away_conference": "Sun Belt",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1108.5,
+   "elo_away_pre": 1356.2,
+   "p_home": 0.3383,
+   "p_home_elo": 0.2428,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Marshall",
+   "pick_prob": 0.6617,
+   "pred_home_score": 20.8,
+   "pred_away_score": 31.7,
+   "pred_total": 52.5,
+   "notes": ""
+  },
+  {
+   "game_id": 401864548,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "UNLV",
+   "away_team": "Nevada",
+   "home_conference": "Mountain West",
+   "away_conference": "Mountain West",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1469.2,
+   "elo_away_pre": 1301.7,
+   "p_home": 0.7318,
+   "p_home_elo": 0.7776,
+   "model": "elo+efficiency:random_forest",
+   "pick": "UNLV",
+   "pick_prob": 0.7318,
+   "pred_home_score": 30.4,
+   "pred_away_score": 18.2,
+   "pred_total": 48.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401860928,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Utah State",
+   "away_team": "Texas State",
+   "home_conference": "Pac-12",
+   "away_conference": "Pac-12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1320.4,
+   "elo_away_pre": 1573.8,
+   "p_home": 0.2847,
+   "p_home_elo": 0.2367,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Texas State",
+   "pick_prob": 0.7153,
+   "pred_home_score": 23.8,
+   "pred_away_score": 34.9,
+   "pred_total": 58.7,
+   "notes": ""
+  },
+  {
+   "game_id": 401856765,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Vanderbilt",
+   "away_team": "Tennessee",
+   "home_conference": "SEC",
+   "away_conference": "SEC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1518.6,
+   "elo_away_pre": 1847.0,
+   "p_home": 0.2399,
+   "p_home_elo": 0.1676,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Tennessee",
+   "pick_prob": 0.7601,
+   "pred_home_score": 18.9,
+   "pred_away_score": 34.2,
+   "pred_total": 53.1,
+   "notes": ""
+  },
+  {
+   "game_id": 401858317,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Virginia Tech",
+   "away_team": "Virginia",
+   "home_conference": "ACC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1454.0,
+   "elo_away_pre": 1545.6,
+   "p_home": 0.4594,
+   "p_home_elo": 0.4404,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Virginia",
+   "pick_prob": 0.5406,
+   "pred_home_score": 24.8,
+   "pred_away_score": 27.0,
+   "pred_total": 51.7,
+   "notes": ""
+  },
+  {
+   "game_id": 401858312,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Wake Forest",
+   "away_team": "Duke",
+   "home_conference": "ACC",
+   "away_conference": "ACC",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1799.6,
+   "elo_away_pre": 1629.0,
+   "p_home": 0.8633,
+   "p_home_elo": 0.7808,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Wake Forest",
+   "pick_prob": 0.8633,
+   "pred_home_score": 33.5,
+   "pred_away_score": 21.1,
+   "pred_total": 54.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401860929,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Washington State",
+   "away_team": "San Diego State",
+   "home_conference": "Pac-12",
+   "away_conference": "Pac-12",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1305.0,
+   "elo_away_pre": 1420.2,
+   "p_home": 0.5079,
+   "p_home_elo": 0.4072,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Washington State",
+   "pick_prob": 0.5079,
+   "pred_home_score": 23.9,
+   "pred_away_score": 27.4,
+   "pred_total": 51.3,
+   "notes": ""
+  },
+  {
+   "game_id": 401870804,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Western Kentucky",
+   "away_team": "Kennesaw State",
+   "home_conference": "Conference USA",
+   "away_conference": "Conference USA",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1258.1,
+   "elo_away_pre": 1342.3,
+   "p_home": 0.3935,
+   "p_home_elo": 0.451,
+   "model": "elo+efficiency:random_forest",
+   "pick": "Kennesaw State",
+   "pick_prob": 0.6065,
+   "pred_home_score": 25.9,
+   "pred_away_score": 27.7,
+   "pred_total": 53.6,
+   "notes": ""
+  },
+  {
+   "game_id": 401861969,
+   "date": "2026-11-28",
+   "season": 2026,
+   "week": 13,
+   "season_type": "regular",
+   "home_team": "Wyoming",
+   "away_team": "UConn",
+   "home_conference": "Mountain West",
+   "away_conference": "FBS Independents",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "elo_home_pre": 1382.9,
+   "elo_away_pre": 1483.6,
+   "p_home": 0.4283,
+   "p_home_elo": 0.4275,
+   "model": "elo+efficiency:random_forest",
+   "pick": "UConn",
+   "pick_prob": 0.5717,
+   "pred_home_score": 23.7,
+   "pred_away_score": 26.4,
+   "pred_total": 50.1,
+   "notes": ""
+  }
+ ],
+ "graded_today": [
+  {
+   "game_id": 401856879,
+   "date": "2026-11-26",
+   "season": 2026,
+   "week": 13,
+   "home_team": "Texas Tech",
+   "away_team": "TCU",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "pick": "Texas Tech",
+   "p_home": 0.789,
+   "pick_prob": 0.789,
+   "pred_home_score": 34.8,
+   "pred_away_score": 18.0,
+   "home_points": 48.0,
+   "away_points": 27.0,
+   "home_win": 1.0,
+   "pick_correct": true,
+   "log_loss": 0.237,
+   "brier": 0.0445,
+   "home_log_loss": 0.4589,
+   "d_ll": -0.2219,
+   "margin_err": 4.2,
+   "total_err": 22.2,
+   "graded_on": "2026-11-27"
+  }
+ ],
+ "graded_recent": [
   {
    "game_id": 401864545,
    "date": "2026-11-20",
@@ -4426,32 +5727,59 @@
    "margin_err": 11.2,
    "total_err": 5.0,
    "graded_on": "2026-11-25"
+  },
+  {
+   "game_id": 401856879,
+   "date": "2026-11-26",
+   "season": 2026,
+   "week": 13,
+   "home_team": "Texas Tech",
+   "away_team": "TCU",
+   "neutral": false,
+   "home_fcs": false,
+   "away_fcs": false,
+   "pick": "Texas Tech",
+   "p_home": 0.789,
+   "pick_prob": 0.789,
+   "pred_home_score": 34.8,
+   "pred_away_score": 18.0,
+   "home_points": 48.0,
+   "away_points": 27.0,
+   "home_win": 1.0,
+   "pick_correct": true,
+   "log_loss": 0.237,
+   "brier": 0.0445,
+   "home_log_loss": 0.4589,
+   "d_ll": -0.2219,
+   "margin_err": 4.2,
+   "total_err": 22.2,
+   "graded_on": "2026-11-27"
   }
  ],
  "ledger": {
-  "graded": 808,
-  "correct": 600,
-  "accuracy": 0.7426,
-  "log_loss": 0.4981,
-  "brier": 0.1666,
-  "home_log_loss": 0.6469,
+  "graded": 809,
+  "correct": 601,
+  "accuracy": 0.7429,
+  "log_loss": 0.4978,
+  "brier": 0.1665,
+  "home_log_loss": 0.6467,
   "avg_margin_err": 13.1,
   "avg_total_err": 12.9,
-  "d_ll_mean": -0.14877,
-  "d_ll_se": 0.01602,
+  "d_ll_mean": -0.14886,
+  "d_ll_se": 0.016,
   "first_date": "2026-09-03",
-  "last_date": "2026-11-24",
+  "last_date": "2026-11-26",
   "fbs_only": {
-   "graded": 684,
-   "correct": 482,
-   "accuracy": 0.7047,
-   "log_loss": 0.5593,
-   "brier": 0.1891,
-   "home_log_loss": 0.6762,
+   "graded": 685,
+   "correct": 483,
+   "accuracy": 0.7051,
+   "log_loss": 0.5589,
+   "brier": 0.1889,
+   "home_log_loss": 0.6759,
    "avg_margin_err": 12.7,
    "avg_total_err": 13.0,
-   "d_ll_mean": -0.11687,
-   "d_ll_se": 0.01776
+   "d_ll_mean": -0.11703,
+   "d_ll_se": 0.01774
   },
   "by_week": {
    "1": {
@@ -4599,49 +5927,49 @@
     "d_ll_se": 0.05584
    },
    "13": {
-    "graded": 2,
-    "correct": 1,
-    "accuracy": 0.5,
-    "log_loss": 0.6325,
-    "brier": 0.2262,
-    "home_log_loss": 0.7293,
-    "avg_margin_err": 6.8,
-    "avg_total_err": 12.4,
-    "d_ll_mean": -0.0968,
-    "d_ll_se": 0.0833
+    "graded": 3,
+    "correct": 2,
+    "accuracy": 0.6667,
+    "log_loss": 0.5007,
+    "brier": 0.1656,
+    "home_log_loss": 0.6392,
+    "avg_margin_err": 5.9,
+    "avg_total_err": 15.7,
+    "d_ll_mean": -0.1385,
+    "d_ll_se": 0.06365
    }
   },
   "rolling": {
    "7d": {
     "graded": 67,
-    "correct": 50,
-    "accuracy": 0.7463,
-    "log_loss": 0.5178,
-    "brier": 0.1728,
-    "home_log_loss": 0.6688,
-    "avg_margin_err": 10.6,
-    "avg_total_err": 10.8,
-    "d_ll_mean": -0.15091,
-    "d_ll_se": 0.05709
+    "correct": 51,
+    "accuracy": 0.7612,
+    "log_loss": 0.5072,
+    "brier": 0.1678,
+    "home_log_loss": 0.6607,
+    "avg_margin_err": 10.5,
+    "avg_total_err": 11.1,
+    "d_ll_mean": -0.15343,
+    "d_ll_se": 0.05708
    },
    "30d": {
-    "graded": 258,
+    "graded": 257,
     "correct": 183,
-    "accuracy": 0.7093,
-    "log_loss": 0.552,
-    "brier": 0.1876,
-    "home_log_loss": 0.6964,
+    "accuracy": 0.7121,
+    "log_loss": 0.5496,
+    "brier": 0.1865,
+    "home_log_loss": 0.6952,
     "avg_margin_err": 12.6,
     "avg_total_err": 13.0,
-    "d_ll_mean": -0.14437,
-    "d_ll_se": 0.02753
+    "d_ll_mean": -0.14555,
+    "d_ll_se": 0.02764
    }
   }
  },
  "futures": {
   "season": 2026,
   "sims": 10000,
-  "remaining_games": 71,
+  "remaining_games": 70,
   "teams": [
    {
     "team": "Utah",
@@ -4656,9 +5984,9 @@
     "exp_wins": 12.0,
     "exp_losses": 0.0,
     "p_bowl": 1.0,
-    "p_undefeated": 0.9591,
+    "p_undefeated": 0.9593,
     "p_ccg": 1.0,
-    "p_conf_title": 0.6064
+    "p_conf_title": 0.5973
    },
    {
     "team": "Georgia",
@@ -4675,7 +6003,24 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.6568
+    "p_conf_title": 0.6587
+   },
+   {
+    "team": "Texas Tech",
+    "conference": "Big 12",
+    "elo": 1834.0,
+    "wins": 11,
+    "losses": 1,
+    "conf_wins": 8,
+    "conf_losses": 1,
+    "pts_diff": 177,
+    "games_left": 0,
+    "exp_wins": 11.0,
+    "exp_losses": 1.0,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 1.0,
+    "p_conf_title": 0.4027
    },
    {
     "team": "Notre Dame",
@@ -4709,24 +6054,7 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.6012
-   },
-   {
-    "team": "Texas Tech",
-    "conference": "Big 12",
-    "elo": 1819.6,
-    "wins": 10,
-    "losses": 1,
-    "conf_wins": 7,
-    "conf_losses": 1,
-    "pts_diff": 156,
-    "games_left": 1,
-    "exp_wins": 10.9,
-    "exp_losses": 1.1,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.9379,
-    "p_conf_title": 0.3734
+    "p_conf_title": 0.6017
    },
    {
     "team": "Wake Forest",
@@ -4743,7 +6071,7 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.3988
+    "p_conf_title": 0.3983
    },
    {
     "team": "Liberty",
@@ -4760,7 +6088,7 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.6835
+    "p_conf_title": 0.6919
    },
    {
     "team": "UCLA",
@@ -4776,8 +6104,8 @@
     "exp_losses": 1.4,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.8182,
-    "p_conf_title": 0.2585
+    "p_ccg": 0.8326,
+    "p_conf_title": 0.2591
    },
    {
     "team": "Indiana",
@@ -4793,8 +6121,8 @@
     "exp_losses": 2.0,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.4687,
-    "p_conf_title": 0.3291
+    "p_ccg": 0.4789,
+    "p_conf_title": 0.3359
    },
    {
     "team": "Texas",
@@ -4810,8 +6138,8 @@
     "exp_losses": 2.1,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3441,
-    "p_conf_title": 0.1295
+    "p_ccg": 0.341,
+    "p_conf_title": 0.1308
    },
    {
     "team": "BYU",
@@ -4827,8 +6155,8 @@
     "exp_losses": 2.1,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0621,
-    "p_conf_title": 0.0202
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
    },
    {
     "team": "Boise State",
@@ -4845,7 +6173,7 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.7971
+    "p_conf_title": 0.7801
    },
    {
     "team": "Alabama",
@@ -4861,8 +6189,8 @@
     "exp_losses": 2.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3314,
-    "p_conf_title": 0.113
+    "p_ccg": 0.3361,
+    "p_conf_title": 0.1136
    },
    {
     "team": "Tennessee",
@@ -4878,8 +6206,8 @@
     "exp_losses": 2.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3243,
-    "p_conf_title": 0.1007
+    "p_ccg": 0.3225,
+    "p_conf_title": 0.0968
    },
    {
     "team": "Iowa",
@@ -4895,8 +6223,25 @@
     "exp_losses": 2.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3756,
-    "p_conf_title": 0.2104
+    "p_ccg": 0.3583,
+    "p_conf_title": 0.2036
+   },
+   {
+    "team": "North Dakota State",
+    "conference": "Mountain West",
+    "elo": 1450.9,
+    "wins": 9,
+    "losses": 2,
+    "conf_wins": 6,
+    "conf_losses": 2,
+    "pts_diff": 160,
+    "games_left": 1,
+    "exp_wins": 9.8,
+    "exp_losses": 2.2,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.3927,
+    "p_conf_title": 0.1484
    },
    {
     "team": "UTSA",
@@ -4912,8 +6257,8 @@
     "exp_losses": 2.3,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.9052,
-    "p_conf_title": 0.5547
+    "p_ccg": 0.9049,
+    "p_conf_title": 0.5545
    },
    {
     "team": "New Mexico",
@@ -4929,25 +6274,8 @@
     "exp_losses": 2.3,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.8185,
-    "p_conf_title": 0.5379
-   },
-   {
-    "team": "North Dakota State",
-    "conference": "Mountain West",
-    "elo": 1450.9,
-    "wins": 9,
-    "losses": 2,
-    "conf_wins": 6,
-    "conf_losses": 2,
-    "pts_diff": 160,
-    "games_left": 1,
-    "exp_wins": 9.7,
-    "exp_losses": 2.3,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.398,
-    "p_conf_title": 0.1557
+    "p_ccg": 0.8149,
+    "p_conf_title": 0.5454
    },
    {
     "team": "Toledo",
@@ -4963,8 +6291,8 @@
     "exp_losses": 2.5,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.547,
-    "p_conf_title": 0.3297
+    "p_ccg": 0.5382,
+    "p_conf_title": 0.329
    },
    {
     "team": "Louisiana Tech",
@@ -4981,7 +6309,7 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.5234
+    "p_conf_title": 0.5208
    },
    {
     "team": "Air Force",
@@ -4997,8 +6325,8 @@
     "exp_losses": 2.7,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.1333,
-    "p_conf_title": 0.0749
+    "p_ccg": 0.1334,
+    "p_conf_title": 0.0777
    },
    {
     "team": "James Madison",
@@ -5014,8 +6342,8 @@
     "exp_losses": 3.1,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.15,
-    "p_conf_title": 0.0657
+    "p_ccg": 0.1503,
+    "p_conf_title": 0.0639
    },
    {
     "team": "Memphis",
@@ -5031,8 +6359,8 @@
     "exp_losses": 3.1,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.4946,
-    "p_conf_title": 0.2235
+    "p_ccg": 0.4887,
+    "p_conf_title": 0.2239
    },
    {
     "team": "Oregon",
@@ -5048,8 +6376,8 @@
     "exp_losses": 3.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3372,
-    "p_conf_title": 0.2019
+    "p_ccg": 0.3299,
+    "p_conf_title": 0.2013
    },
    {
     "team": "Arizona",
@@ -5082,25 +6410,8 @@
     "exp_losses": 3.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.8771,
-    "p_conf_title": 0.3787
-   },
-   {
-    "team": "Houston",
-    "conference": "Big 12",
-    "elo": 1635.5,
-    "wins": 8,
-    "losses": 3,
-    "conf_wins": 5,
-    "conf_losses": 3,
-    "pts_diff": 120,
-    "games_left": 1,
-    "exp_wins": 8.7,
-    "exp_losses": 3.3,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
+    "p_ccg": 0.8806,
+    "p_conf_title": 0.3742
    },
    {
     "team": "Louisiana",
@@ -5116,8 +6427,8 @@
     "exp_losses": 3.3,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0993,
-    "p_conf_title": 0.0343
+    "p_ccg": 0.1053,
+    "p_conf_title": 0.0358
    },
    {
     "team": "Louisville",
@@ -5128,6 +6439,23 @@
     "conf_wins": 7,
     "conf_losses": 2,
     "pts_diff": 168,
+    "games_left": 1,
+    "exp_wins": 8.6,
+    "exp_losses": 3.4,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
+   },
+   {
+    "team": "Houston",
+    "conference": "Big 12",
+    "elo": 1635.5,
+    "wins": 8,
+    "losses": 3,
+    "conf_wins": 5,
+    "conf_losses": 3,
+    "pts_diff": 120,
     "games_left": 1,
     "exp_wins": 8.6,
     "exp_losses": 3.4,
@@ -5150,8 +6478,25 @@
     "exp_losses": 3.5,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.494,
-    "p_conf_title": 0.2567
+    "p_ccg": 0.5016,
+    "p_conf_title": 0.2623
+   },
+   {
+    "team": "Jacksonville State",
+    "conference": "Conference USA",
+    "elo": 1390.9,
+    "wins": 8,
+    "losses": 3,
+    "conf_wins": 6,
+    "conf_losses": 1,
+    "pts_diff": 84,
+    "games_left": 1,
+    "exp_wins": 8.5,
+    "exp_losses": 3.5,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 1.0,
+    "p_conf_title": 0.3081
    },
    {
     "team": "USC",
@@ -5167,25 +6512,8 @@
     "exp_losses": 3.6,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0,
+    "p_ccg": 0.0001,
     "p_conf_title": 0.0
-   },
-   {
-    "team": "Jacksonville State",
-    "conference": "Conference USA",
-    "elo": 1390.9,
-    "wins": 8,
-    "losses": 3,
-    "conf_wins": 6,
-    "conf_losses": 1,
-    "pts_diff": 84,
-    "games_left": 1,
-    "exp_wins": 8.4,
-    "exp_losses": 3.6,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 1.0,
-    "p_conf_title": 0.3165
    },
    {
     "team": "Western Michigan",
@@ -5201,8 +6529,8 @@
     "exp_losses": 4.0,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0417,
-    "p_conf_title": 0.0171
+    "p_ccg": 0.0405,
+    "p_conf_title": 0.0177
    },
    {
     "team": "Miami (OH)",
@@ -5218,8 +6546,8 @@
     "exp_losses": 4.0,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0402,
-    "p_conf_title": 0.0178
+    "p_ccg": 0.0391,
+    "p_conf_title": 0.0168
    },
    {
     "team": "Ole Miss",
@@ -5253,7 +6581,7 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0001,
-    "p_conf_title": 0.0
+    "p_conf_title": 0.0001
    },
    {
     "team": "Texas State",
@@ -5286,8 +6614,8 @@
     "exp_losses": 4.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.2708,
-    "p_conf_title": 0.1209
+    "p_ccg": 0.2766,
+    "p_conf_title": 0.1189
    },
    {
     "team": "Wisconsin",
@@ -5303,8 +6631,8 @@
     "exp_losses": 4.3,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0002,
-    "p_conf_title": 0.0001
+    "p_ccg": 0.0001,
+    "p_conf_title": 0.0
    },
    {
     "team": "Florida",
@@ -5354,8 +6682,25 @@
     "exp_losses": 4.3,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3253,
-    "p_conf_title": 0.1198
+    "p_ccg": 0.3366,
+    "p_conf_title": 0.1221
+   },
+   {
+    "team": "Clemson",
+    "conference": "ACC",
+    "elo": 1597.0,
+    "wins": 7,
+    "losses": 4,
+    "conf_wins": 5,
+    "conf_losses": 3,
+    "pts_diff": 14,
+    "games_left": 1,
+    "exp_wins": 7.6,
+    "exp_losses": 4.4,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
    },
    {
     "team": "Georgia Southern",
@@ -5371,8 +6716,8 @@
     "exp_losses": 4.4,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.7507,
-    "p_conf_title": 0.3766
+    "p_ccg": 0.7444,
+    "p_conf_title": 0.3795
    },
    {
     "team": "East Carolina",
@@ -5388,8 +6733,8 @@
     "exp_losses": 4.4,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.2699,
-    "p_conf_title": 0.1
+    "p_ccg": 0.265,
+    "p_conf_title": 0.0981
    },
    {
     "team": "Oklahoma",
@@ -5405,8 +6750,8 @@
     "exp_losses": 4.5,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0002,
-    "p_conf_title": 0.0
+    "p_ccg": 0.0004,
+    "p_conf_title": 0.0001
    },
    {
     "team": "Missouri",
@@ -5434,23 +6779,6 @@
     "conf_wins": 5,
     "conf_losses": 3,
     "pts_diff": 64,
-    "games_left": 1,
-    "exp_wins": 7.5,
-    "exp_losses": 4.5,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
-   },
-   {
-    "team": "Clemson",
-    "conference": "ACC",
-    "elo": 1597.0,
-    "wins": 7,
-    "losses": 4,
-    "conf_wins": 5,
-    "conf_losses": 3,
-    "pts_diff": 14,
     "games_left": 1,
     "exp_wins": 7.5,
     "exp_losses": 4.5,
@@ -5507,8 +6835,25 @@
     "exp_losses": 4.6,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.3794,
-    "p_conf_title": 0.1106
+    "p_ccg": 0.3824,
+    "p_conf_title": 0.1096
+   },
+   {
+    "team": "App State",
+    "conference": "Sun Belt",
+    "elo": 1322.8,
+    "wins": 7,
+    "losses": 4,
+    "conf_wins": 4,
+    "conf_losses": 3,
+    "pts_diff": 22,
+    "games_left": 1,
+    "exp_wins": 7.4,
+    "exp_losses": 4.6,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
    },
    {
     "team": "Tulsa",
@@ -5524,25 +6869,8 @@
     "exp_losses": 4.7,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0002,
+    "p_ccg": 0.0006,
     "p_conf_title": 0.0001
-   },
-   {
-    "team": "App State",
-    "conference": "Sun Belt",
-    "elo": 1322.8,
-    "wins": 7,
-    "losses": 4,
-    "conf_wins": 4,
-    "conf_losses": 3,
-    "pts_diff": 22,
-    "games_left": 1,
-    "exp_wins": 7.3,
-    "exp_losses": 4.7,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
    },
    {
     "team": "Washington",
@@ -5613,23 +6941,6 @@
     "p_conf_title": 0.0
    },
    {
-    "team": "Marshall",
-    "conference": "Sun Belt",
-    "elo": 1356.2,
-    "wins": 6,
-    "losses": 5,
-    "conf_wins": 3,
-    "conf_losses": 4,
-    "pts_diff": -89,
-    "games_left": 1,
-    "exp_wins": 6.8,
-    "exp_losses": 5.2,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
-   },
-   {
     "team": "Penn State",
     "conference": "Big Ten",
     "elo": 1650.6,
@@ -5639,8 +6950,8 @@
     "conf_losses": 5,
     "pts_diff": 113,
     "games_left": 1,
-    "exp_wins": 6.7,
-    "exp_losses": 5.3,
+    "exp_wins": 6.8,
+    "exp_losses": 5.2,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
@@ -5681,14 +6992,14 @@
     "p_conf_title": 0.0
    },
    {
-    "team": "South Alabama",
+    "team": "Marshall",
     "conference": "Sun Belt",
-    "elo": 1380.0,
+    "elo": 1356.2,
     "wins": 6,
     "losses": 5,
-    "conf_wins": 4,
-    "conf_losses": 3,
-    "pts_diff": 20,
+    "conf_wins": 3,
+    "conf_losses": 4,
+    "pts_diff": -89,
     "games_left": 1,
     "exp_wins": 6.7,
     "exp_losses": 5.3,
@@ -5797,37 +7108,20 @@
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 1.0,
-    "p_conf_title": 0.2029
+    "p_conf_title": 0.2199
    },
    {
-    "team": "Delaware",
-    "conference": "Conference USA",
-    "elo": 1379.4,
+    "team": "South Alabama",
+    "conference": "Sun Belt",
+    "elo": 1380.0,
     "wins": 6,
     "losses": 5,
     "conf_wins": 4,
     "conf_losses": 3,
-    "pts_diff": 31,
+    "pts_diff": 20,
     "games_left": 1,
     "exp_wins": 6.6,
     "exp_losses": 5.4,
-    "p_bowl": 1.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
-   },
-   {
-    "team": "South Carolina",
-    "conference": "SEC",
-    "elo": 1611.3,
-    "wins": 6,
-    "losses": 5,
-    "conf_wins": 4,
-    "conf_losses": 5,
-    "pts_diff": 45,
-    "games_left": 1,
-    "exp_wins": 6.5,
-    "exp_losses": 5.5,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
@@ -5898,8 +7192,8 @@
     "exp_losses": 5.5,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0005,
-    "p_conf_title": 0.0001
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
    },
    {
     "team": "South Florida",
@@ -5919,14 +7213,31 @@
     "p_conf_title": 0.0
    },
    {
-    "team": "Virginia Tech",
-    "conference": "ACC",
-    "elo": 1454.0,
+    "team": "Delaware",
+    "conference": "Conference USA",
+    "elo": 1379.4,
     "wins": 6,
     "losses": 5,
-    "conf_wins": 3,
+    "conf_wins": 4,
+    "conf_losses": 3,
+    "pts_diff": 31,
+    "games_left": 1,
+    "exp_wins": 6.5,
+    "exp_losses": 5.5,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
+   },
+   {
+    "team": "South Carolina",
+    "conference": "SEC",
+    "elo": 1611.3,
+    "wins": 6,
+    "losses": 5,
+    "conf_wins": 4,
     "conf_losses": 5,
-    "pts_diff": 67,
+    "pts_diff": 45,
     "games_left": 1,
     "exp_wins": 6.4,
     "exp_losses": 5.6,
@@ -5945,8 +7256,25 @@
     "conf_losses": 4,
     "pts_diff": 103,
     "games_left": 1,
-    "exp_wins": 6.3,
-    "exp_losses": 5.7,
+    "exp_wins": 6.4,
+    "exp_losses": 5.6,
+    "p_bowl": 1.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
+   },
+   {
+    "team": "Virginia Tech",
+    "conference": "ACC",
+    "elo": 1454.0,
+    "wins": 6,
+    "losses": 5,
+    "conf_wins": 3,
+    "conf_losses": 5,
+    "pts_diff": 67,
+    "games_left": 1,
+    "exp_wins": 6.4,
+    "exp_losses": 5.6,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
@@ -6000,7 +7328,7 @@
     "exp_losses": 5.7,
     "p_bowl": 1.0,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0009,
+    "p_ccg": 0.0005,
     "p_conf_title": 0.0002
    },
    {
@@ -6049,10 +7377,10 @@
     "games_left": 2,
     "exp_wins": 6.2,
     "exp_losses": 5.8,
-    "p_bowl": 0.8565,
+    "p_bowl": 0.8503,
     "p_undefeated": 0.0,
-    "p_ccg": 0.0025,
-    "p_conf_title": 0.0012
+    "p_ccg": 0.0028,
+    "p_conf_title": 0.0007
    },
    {
     "team": "Cincinnati",
@@ -6083,7 +7411,7 @@
     "games_left": 1,
     "exp_wins": 5.7,
     "exp_losses": 6.3,
-    "p_bowl": 0.7057,
+    "p_bowl": 0.7028,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6100,7 +7428,7 @@
     "games_left": 1,
     "exp_wins": 5.7,
     "exp_losses": 6.3,
-    "p_bowl": 0.6987,
+    "p_bowl": 0.7028,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6117,7 +7445,7 @@
     "games_left": 1,
     "exp_wins": 5.5,
     "exp_losses": 6.5,
-    "p_bowl": 0.4623,
+    "p_bowl": 0.4612,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6134,7 +7462,7 @@
     "games_left": 1,
     "exp_wins": 5.5,
     "exp_losses": 6.5,
-    "p_bowl": 0.5377,
+    "p_bowl": 0.5388,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6151,7 +7479,7 @@
     "games_left": 1,
     "exp_wins": 5.5,
     "exp_losses": 6.5,
-    "p_bowl": 0.5406,
+    "p_bowl": 0.5461,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6168,7 +7496,7 @@
     "games_left": 2,
     "exp_wins": 5.4,
     "exp_losses": 6.6,
-    "p_bowl": 0.4543,
+    "p_bowl": 0.4522,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6185,7 +7513,7 @@
     "games_left": 1,
     "exp_wins": 5.3,
     "exp_losses": 6.7,
-    "p_bowl": 0.3476,
+    "p_bowl": 0.3398,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6202,24 +7530,7 @@
     "games_left": 1,
     "exp_wins": 5.3,
     "exp_losses": 6.7,
-    "p_bowl": 0.328,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
-   },
-   {
-    "team": "San José State",
-    "conference": "Mountain West",
-    "elo": 1210.3,
-    "wins": 5,
-    "losses": 7,
-    "conf_wins": 3,
-    "conf_losses": 5,
-    "pts_diff": -34,
-    "games_left": 1,
-    "exp_wins": 5.3,
-    "exp_losses": 7.7,
-    "p_bowl": 0.2575,
+    "p_bowl": 0.3297,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6236,7 +7547,7 @@
     "games_left": 1,
     "exp_wins": 5.3,
     "exp_losses": 6.7,
-    "p_bowl": 0.3372,
+    "p_bowl": 0.3488,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6253,24 +7564,24 @@
     "games_left": 1,
     "exp_wins": 5.2,
     "exp_losses": 6.8,
-    "p_bowl": 0.2262,
+    "p_bowl": 0.2201,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
    },
    {
-    "team": "TCU",
-    "conference": "Big 12",
-    "elo": 1569.5,
+    "team": "San José State",
+    "conference": "Mountain West",
+    "elo": 1210.3,
     "wins": 5,
-    "losses": 6,
+    "losses": 7,
     "conf_wins": 3,
     "conf_losses": 5,
-    "pts_diff": 61,
+    "pts_diff": -34,
     "games_left": 1,
-    "exp_wins": 5.1,
-    "exp_losses": 6.9,
-    "p_bowl": 0.1484,
+    "exp_wins": 5.2,
+    "exp_losses": 7.8,
+    "p_bowl": 0.2476,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6287,7 +7598,7 @@
     "games_left": 1,
     "exp_wins": 5.1,
     "exp_losses": 6.9,
-    "p_bowl": 0.1268,
+    "p_bowl": 0.1239,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6304,7 +7615,7 @@
     "games_left": 1,
     "exp_wins": 5.1,
     "exp_losses": 6.9,
-    "p_bowl": 0.0569,
+    "p_bowl": 0.0595,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6321,7 +7632,24 @@
     "games_left": 1,
     "exp_wins": 5.1,
     "exp_losses": 6.9,
-    "p_bowl": 0.0661,
+    "p_bowl": 0.0634,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
+   },
+   {
+    "team": "TCU",
+    "conference": "Big 12",
+    "elo": 1555.1,
+    "wins": 5,
+    "losses": 7,
+    "conf_wins": 3,
+    "conf_losses": 6,
+    "pts_diff": 40,
+    "games_left": 0,
+    "exp_wins": 5.0,
+    "exp_losses": 7.0,
+    "p_bowl": 0.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6338,7 +7666,7 @@
     "games_left": 1,
     "exp_wins": 5.0,
     "exp_losses": 7.0,
-    "p_bowl": 0.0409,
+    "p_bowl": 0.0407,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
     "p_conf_title": 0.0
@@ -6387,8 +7715,8 @@
     "conf_losses": 5,
     "pts_diff": -42,
     "games_left": 1,
-    "exp_wins": 4.7,
-    "exp_losses": 7.3,
+    "exp_wins": 4.6,
+    "exp_losses": 7.4,
     "p_bowl": 0.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
@@ -6446,6 +7774,23 @@
     "p_conf_title": 0.0
    },
    {
+    "team": "Troy",
+    "conference": "Sun Belt",
+    "elo": 1231.1,
+    "wins": 4,
+    "losses": 7,
+    "conf_wins": 2,
+    "conf_losses": 5,
+    "pts_diff": -86,
+    "games_left": 1,
+    "exp_wins": 4.4,
+    "exp_losses": 7.6,
+    "p_bowl": 0.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
+   },
+   {
     "team": "Kansas",
     "conference": "Big 12",
     "elo": 1475.5,
@@ -6454,23 +7799,6 @@
     "conf_wins": 2,
     "conf_losses": 6,
     "pts_diff": 63,
-    "games_left": 1,
-    "exp_wins": 4.3,
-    "exp_losses": 7.7,
-    "p_bowl": 0.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
-   },
-   {
-    "team": "Maryland",
-    "conference": "Big Ten",
-    "elo": 1406.6,
-    "wins": 4,
-    "losses": 7,
-    "conf_wins": 2,
-    "conf_losses": 6,
-    "pts_diff": -44,
     "games_left": 1,
     "exp_wins": 4.3,
     "exp_losses": 7.7,
@@ -6497,23 +7825,6 @@
     "p_conf_title": 0.0
    },
    {
-    "team": "Troy",
-    "conference": "Sun Belt",
-    "elo": 1231.1,
-    "wins": 4,
-    "losses": 7,
-    "conf_wins": 2,
-    "conf_losses": 5,
-    "pts_diff": -86,
-    "games_left": 1,
-    "exp_wins": 4.3,
-    "exp_losses": 7.7,
-    "p_bowl": 0.0,
-    "p_undefeated": 0.0,
-    "p_ccg": 0.0,
-    "p_conf_title": 0.0
-   },
-   {
     "team": "Vanderbilt",
     "conference": "SEC",
     "elo": 1518.6,
@@ -6522,6 +7833,23 @@
     "conf_wins": 1,
     "conf_losses": 7,
     "pts_diff": -80,
+    "games_left": 1,
+    "exp_wins": 4.2,
+    "exp_losses": 7.8,
+    "p_bowl": 0.0,
+    "p_undefeated": 0.0,
+    "p_ccg": 0.0,
+    "p_conf_title": 0.0
+   },
+   {
+    "team": "Maryland",
+    "conference": "Big Ten",
+    "elo": 1406.6,
+    "wins": 4,
+    "losses": 7,
+    "conf_wins": 2,
+    "conf_losses": 6,
+    "pts_diff": -44,
     "games_left": 1,
     "exp_wins": 4.2,
     "exp_losses": 7.8,
@@ -6846,8 +8174,8 @@
     "conf_losses": 6,
     "pts_diff": -114,
     "games_left": 1,
-    "exp_wins": 2.2,
-    "exp_losses": 9.8,
+    "exp_wins": 2.3,
+    "exp_losses": 9.7,
     "p_bowl": 0.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
@@ -6863,8 +8191,8 @@
     "conf_losses": 5,
     "pts_diff": -154,
     "games_left": 1,
-    "exp_wins": 2.2,
-    "exp_losses": 9.8,
+    "exp_wins": 2.3,
+    "exp_losses": 9.7,
     "p_bowl": 0.0,
     "p_undefeated": 0.0,
     "p_ccg": 0.0,
@@ -7030,7 +8358,7 @@
    "pass_epa_matchup_net",
    "rush_epa_matchup_net"
   ],
-  "n_train": 17778
+  "n_train": 17779
  },
  "feeds": {
   "weekly_summaries": {
@@ -7093,6 +8421,10 @@
     [
      "2026-11-26",
      1569.5
+    ],
+    [
+     "2026-11-27",
+     1555.1
     ]
    ],
    "North Carolina": [
@@ -7141,7 +8473,7 @@
      1527.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1480.6
     ]
    ],
@@ -7191,7 +8523,7 @@
      1729.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1738.0
     ]
    ],
@@ -7245,7 +8577,7 @@
      1219.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1210.3
     ]
    ],
@@ -7295,7 +8627,7 @@
      1498.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1545.6
     ]
    ],
@@ -7345,7 +8677,7 @@
      1435.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1507.3
     ]
    ],
@@ -7395,7 +8727,7 @@
      1448.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1450.9
     ]
    ],
@@ -7445,7 +8777,7 @@
      1377.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1390.9
     ]
    ],
@@ -7499,7 +8831,7 @@
      1195.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1214.5
     ]
    ],
@@ -7549,7 +8881,7 @@
      1098.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1083.2
     ]
    ],
@@ -7599,7 +8931,7 @@
      1504.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1532.5
     ]
    ],
@@ -7649,7 +8981,7 @@
      1261.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1229.9
     ]
    ],
@@ -7699,7 +9031,7 @@
      1528.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1457.3
     ]
    ],
@@ -7749,7 +9081,7 @@
      1144.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1120.4
     ]
    ],
@@ -7799,7 +9131,7 @@
      1460.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1469.2
     ]
    ],
@@ -7849,7 +9181,7 @@
      1598.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1559.0
     ]
    ],
@@ -7899,7 +9231,7 @@
      1345.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1366.8
     ]
    ],
@@ -7949,7 +9281,7 @@
      1140.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1125.1
     ]
    ],
@@ -7999,7 +9331,7 @@
      1414.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1493.3
     ]
    ],
@@ -8049,7 +9381,7 @@
      1786.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1799.6
     ]
    ],
@@ -8099,7 +9431,7 @@
      1083.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1098.9
     ]
    ],
@@ -8149,7 +9481,7 @@
      1355.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1379.4
     ]
    ],
@@ -8199,7 +9531,7 @@
      1313.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1342.3
     ]
    ],
@@ -8249,7 +9581,7 @@
      1404.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1440.2
     ]
    ],
@@ -8299,7 +9631,7 @@
      1689.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1719.1
     ]
    ],
@@ -8349,7 +9681,7 @@
      1424.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1411.3
     ]
    ],
@@ -8399,7 +9731,7 @@
      1419.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1396.4
     ]
    ],
@@ -8449,7 +9781,7 @@
      1506.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1533.9
     ]
    ],
@@ -8499,7 +9831,7 @@
      1879.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1898.6
     ]
    ],
@@ -8549,7 +9881,7 @@
      1632.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1601.6
     ]
    ],
@@ -8599,7 +9931,7 @@
      1397.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1386.8
     ]
    ],
@@ -8649,7 +9981,7 @@
      1389.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1355.3
     ]
    ],
@@ -8699,7 +10031,7 @@
      1307.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1299.2
     ]
    ],
@@ -8749,7 +10081,7 @@
      1721.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1744.6
     ]
    ],
@@ -8799,7 +10131,7 @@
      1007.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1001.8
     ]
    ],
@@ -8849,7 +10181,7 @@
      1482.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1475.5
     ]
    ],
@@ -8899,7 +10231,7 @@
      1440.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1427.7
     ]
    ],
@@ -8949,7 +10281,7 @@
      1500.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1510.9
     ]
    ],
@@ -8999,7 +10331,7 @@
      1868.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1873.0
     ]
    ],
@@ -9049,7 +10381,7 @@
      1461.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1468.6
     ]
    ],
@@ -9099,7 +10431,7 @@
      1875.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1876.2
     ]
    ],
@@ -9149,7 +10481,7 @@
      1459.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1491.6
     ]
    ],
@@ -9199,7 +10531,7 @@
      1622.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1635.5
     ]
    ],
@@ -9249,7 +10581,7 @@
      1362.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1391.3
     ]
    ],
@@ -9299,7 +10631,7 @@
      1413.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1400.8
     ]
    ],
@@ -9349,7 +10681,7 @@
      1292.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1272.7
     ]
    ],
@@ -9399,7 +10731,7 @@
      1401.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1365.6
     ]
    ],
@@ -9449,7 +10781,7 @@
      1963.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1924.1
     ]
    ],
@@ -9499,7 +10831,7 @@
      1534.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1499.1
     ]
    ],
@@ -9549,7 +10881,7 @@
      1597.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1633.0
     ]
    ],
@@ -9599,7 +10931,7 @@
      1436.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1443.0
     ]
    ],
@@ -9649,7 +10981,7 @@
      1465.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1483.6
     ]
    ],
@@ -9695,7 +11027,7 @@
      1455.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1423.3
     ]
    ],
@@ -9745,7 +11077,7 @@
      1202.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1191.5
     ]
    ],
@@ -9795,7 +11127,7 @@
      1647.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1559.7
     ]
    ],
@@ -9845,7 +11177,7 @@
      1513.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1530.5
     ]
    ],
@@ -9895,7 +11227,7 @@
      1501.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1480.7
     ]
    ],
@@ -9949,7 +11281,7 @@
      1418.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1456.7
     ]
    ],
@@ -9999,7 +11331,7 @@
      1819.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1784.0
     ]
    ],
@@ -10049,7 +11381,7 @@
      1127.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1120.7
     ]
    ],
@@ -10099,7 +11431,7 @@
      1626.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1611.3
     ]
    ],
@@ -10153,7 +11485,7 @@
      1113.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1095.1
     ]
    ],
@@ -10203,7 +11535,7 @@
      1614.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1584.7
     ]
    ],
@@ -10253,7 +11585,7 @@
      1571.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1492.9
     ]
    ],
@@ -10303,7 +11635,7 @@
      1474.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1479.7
     ]
    ],
@@ -10353,7 +11685,7 @@
      1168.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1135.4
     ]
    ],
@@ -10403,7 +11735,7 @@
      1981.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1996.9
     ]
    ],
@@ -10453,7 +11785,7 @@
      1630.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1632.0
     ]
    ],
@@ -10503,7 +11835,7 @@
      1603.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1579.7
     ]
    ],
@@ -10553,7 +11885,7 @@
      1820.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1847.0
     ]
    ],
@@ -10603,7 +11935,7 @@
      1884.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1896.0
     ]
    ],
@@ -10653,7 +11985,7 @@
      1556.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1573.8
     ]
    ],
@@ -10703,7 +12035,7 @@
      1485.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1508.6
     ]
    ],
@@ -10753,7 +12085,7 @@
      1412.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1448.7
     ]
    ],
@@ -10803,7 +12135,7 @@
      1693.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1629.0
     ]
    ],
@@ -10853,7 +12185,7 @@
      1399.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1434.7
     ]
    ],
@@ -10903,7 +12235,7 @@
      1842.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1855.7
     ]
    ],
@@ -10953,7 +12285,7 @@
      1685.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1651.2
     ]
    ],
@@ -11003,7 +12335,7 @@
      1672.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1650.6
     ]
    ],
@@ -11053,7 +12385,7 @@
      1347.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1356.2
     ]
    ],
@@ -11103,7 +12435,7 @@
      1120.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1111.0
     ]
    ],
@@ -11149,7 +12481,7 @@
      1406.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1445.8
     ]
    ],
@@ -11199,7 +12531,7 @@
      1593.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1604.4
     ]
    ],
@@ -11249,7 +12581,7 @@
      1318.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1322.8
     ]
    ],
@@ -11299,7 +12631,7 @@
      1471.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1480.0
     ]
    ],
@@ -11349,7 +12681,7 @@
      1528.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1560.7
     ]
    ],
@@ -11399,7 +12731,7 @@
      1557.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1545.7
     ]
    ],
@@ -11449,7 +12781,7 @@
      1812.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1843.3
     ]
    ],
@@ -11499,7 +12831,7 @@
      999.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      996.7
     ]
    ],
@@ -11549,7 +12881,7 @@
      1239.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1214.5
     ]
    ],
@@ -11599,7 +12931,7 @@
      1157.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1150.2
     ]
    ],
@@ -11649,7 +12981,7 @@
      1411.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1382.9
     ]
    ],
@@ -11699,7 +13031,7 @@
      1327.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1309.9
     ]
    ],
@@ -11749,7 +13081,7 @@
      1563.0
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1540.2
     ]
    ],
@@ -11799,7 +13131,7 @@
      1221.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1208.2
     ]
    ],
@@ -11849,7 +13181,7 @@
      1543.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1518.6
     ]
    ],
@@ -11901,6 +13233,10 @@
     [
      "2026-11-26",
      1819.6
+    ],
+    [
+     "2026-11-27",
+     1834.0
     ]
    ],
    "Kansas State": [
@@ -11949,7 +13285,7 @@
      1405.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1392.7
     ]
    ],
@@ -11999,7 +13335,7 @@
      1349.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1320.4
     ]
    ],
@@ -12049,7 +13385,7 @@
      1305.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1286.9
     ]
    ],
@@ -12099,7 +13435,7 @@
      1153.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1186.7
     ]
    ],
@@ -12149,7 +13485,7 @@
      1455.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1402.2
     ]
    ],
@@ -12199,7 +13535,7 @@
      1256.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1227.0
     ]
    ],
@@ -12249,7 +13585,7 @@
      1216.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1230.2
     ]
    ],
@@ -12299,7 +13635,7 @@
      1535.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1559.9
     ]
    ],
@@ -12349,7 +13685,7 @@
      1355.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1380.0
     ]
    ],
@@ -12399,7 +13735,7 @@
      1255.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1231.1
     ]
    ],
@@ -12449,7 +13785,7 @@
      1014.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1001.5
     ]
    ],
@@ -12499,7 +13835,7 @@
      1723.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1696.6
     ]
    ],
@@ -12549,7 +13885,7 @@
      1532.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1597.0
     ]
    ],
@@ -12599,7 +13935,7 @@
      1453.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1456.7
     ]
    ],
@@ -12649,7 +13985,7 @@
      1112.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1108.5
     ]
    ],
@@ -12699,7 +14035,7 @@
      1458.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1454.0
     ]
    ],
@@ -12749,7 +14085,7 @@
      1593.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1619.5
     ]
    ],
@@ -12803,7 +14139,7 @@
      1496.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1458.1
     ]
    ],
@@ -12853,7 +14189,7 @@
      1547.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1565.9
     ]
    ],
@@ -12903,7 +14239,7 @@
      1595.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1620.4
     ]
    ],
@@ -12953,7 +14289,7 @@
      1408.4
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1462.1
     ]
    ],
@@ -13003,7 +14339,7 @@
      1763.8
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1771.1
     ]
    ],
@@ -13053,7 +14389,7 @@
      1415.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1406.6
     ]
    ],
@@ -13103,7 +14439,7 @@
      1600.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1573.2
     ]
    ],
@@ -13153,7 +14489,7 @@
      1453.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1473.0
     ]
    ],
@@ -13203,7 +14539,7 @@
      1700.5
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1713.4
     ]
    ],
@@ -13253,7 +14589,7 @@
      1386.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1420.2
     ]
    ],
@@ -13303,7 +14639,7 @@
      1592.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1560.8
     ]
    ],
@@ -13353,7 +14689,7 @@
      1531.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1559.5
     ]
    ],
@@ -13403,7 +14739,7 @@
      1351.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1316.0
     ]
    ],
@@ -13453,7 +14789,7 @@
      1311.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1282.8
     ]
    ],
@@ -13503,7 +14839,7 @@
      1765.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1739.9
     ]
    ],
@@ -13553,7 +14889,7 @@
      1270.6
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1301.7
     ]
    ],
@@ -13603,7 +14939,7 @@
      1275.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1258.1
     ]
    ],
@@ -13653,7 +14989,7 @@
      1668.7
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1707.7
     ]
    ],
@@ -13703,7 +15039,7 @@
      1321.9
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1305.0
     ]
    ],
@@ -13753,7 +15089,7 @@
      1739.1
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1739.8
     ]
    ],
@@ -13803,7 +15139,7 @@
      1702.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1723.3
     ]
    ],
@@ -13853,7 +15189,7 @@
      1867.3
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1881.8
     ]
    ],
@@ -13903,7 +15239,7 @@
      1588.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1622.4
     ]
    ],
@@ -13953,7 +15289,7 @@
      1618.2
     ],
     [
-     "2026-11-26",
+     "2026-11-27",
      1603.8
     ]
    ]
@@ -13962,20 +15298,14 @@
  "elo_projection": {
   "season": 2026,
   "sims": 10000,
-  "from_date": "2026-11-26",
+  "from_date": "2026-11-27",
   "teams": {
    "Air Force": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1479.7,
      1479.7,
      1479.7
-    ],
-    [
-     "2026-11-27",
-     1468.5,
-     1468.5,
-     1503.5
     ],
     [
      "2026-11-28",
@@ -14004,16 +15334,10 @@
    ],
    "Akron": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1098.9,
      1098.9,
      1098.9
-    ],
-    [
-     "2026-11-27",
-     1093.4,
-     1093.4,
-     1128.4
     ],
     [
      "2026-11-28",
@@ -14041,12 +15365,6 @@
     ]
    ],
    "Alabama": [
-    [
-     "2026-11-26",
-     1876.2,
-     1876.2,
-     1876.2
-    ],
     [
      "2026-11-27",
      1876.2,
@@ -14080,16 +15398,10 @@
    ],
    "App State": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1322.8,
      1322.8,
      1322.8
-    ],
-    [
-     "2026-11-27",
-     1310.6,
-     1310.6,
-     1345.6
     ],
     [
      "2026-11-28",
@@ -14117,12 +15429,6 @@
     ]
    ],
    "Arizona": [
-    [
-     "2026-11-26",
-     1713.4,
-     1713.4,
-     1713.4
-    ],
     [
      "2026-11-27",
      1713.4,
@@ -14156,12 +15462,6 @@
    ],
    "Arizona State": [
     [
-     "2026-11-26",
-     1560.8,
-     1560.8,
-     1560.8
-    ],
-    [
      "2026-11-27",
      1560.8,
      1560.8,
@@ -14193,12 +15493,6 @@
     ]
    ],
    "Arkansas": [
-    [
-     "2026-11-26",
-     1545.7,
-     1545.7,
-     1545.7
-    ],
     [
      "2026-11-27",
      1545.7,
@@ -14232,12 +15526,6 @@
    ],
    "Arkansas State": [
     [
-     "2026-11-26",
-     1286.9,
-     1286.9,
-     1286.9
-    ],
-    [
      "2026-11-27",
      1286.9,
      1286.9,
@@ -14269,12 +15557,6 @@
     ]
    ],
    "Army": [
-    [
-     "2026-11-26",
-     1423.3,
-     1423.3,
-     1423.3
-    ],
     [
      "2026-11-27",
      1423.3,
@@ -14308,12 +15590,6 @@
    ],
    "Auburn": [
     [
-     "2026-11-26",
-     1632.0,
-     1632.0,
-     1632.0
-    ],
-    [
      "2026-11-27",
      1632.0,
      1632.0,
@@ -14345,12 +15621,6 @@
     ]
    ],
    "BYU": [
-    [
-     "2026-11-26",
-     1771.1,
-     1771.1,
-     1771.1
-    ],
     [
      "2026-11-27",
      1771.1,
@@ -14384,12 +15654,6 @@
    ],
    "Ball State": [
     [
-     "2026-11-26",
-     1120.7,
-     1120.7,
-     1120.7
-    ],
-    [
      "2026-11-27",
      1120.7,
      1120.7,
@@ -14421,12 +15685,6 @@
     ]
    ],
    "Baylor": [
-    [
-     "2026-11-26",
-     1579.7,
-     1579.7,
-     1579.7
-    ],
     [
      "2026-11-27",
      1579.7,
@@ -14460,12 +15718,6 @@
    ],
    "Boise State": [
     [
-     "2026-11-26",
-     1651.2,
-     1651.2,
-     1651.2
-    ],
-    [
      "2026-11-27",
      1651.2,
      1651.2,
@@ -14497,12 +15749,6 @@
     ]
    ],
    "Boston College": [
-    [
-     "2026-11-26",
-     1448.7,
-     1448.7,
-     1448.7
-    ],
     [
      "2026-11-27",
      1448.7,
@@ -14536,12 +15782,6 @@
    ],
    "Bowling Green": [
     [
-     "2026-11-26",
-     1191.5,
-     1191.5,
-     1191.5
-    ],
-    [
      "2026-11-27",
      1191.5,
      1191.5,
@@ -14574,16 +15814,10 @@
    ],
    "Buffalo": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1440.2,
      1440.2,
      1440.2
-    ],
-    [
-     "2026-11-27",
-     1445.7,
-     1410.7,
-     1445.7
     ],
     [
      "2026-11-28",
@@ -14611,12 +15845,6 @@
     ]
    ],
    "California": [
-    [
-     "2026-11-26",
-     1282.8,
-     1282.8,
-     1282.8
-    ],
     [
      "2026-11-27",
      1282.8,
@@ -14650,12 +15878,6 @@
    ],
    "Central Michigan": [
     [
-     "2026-11-26",
-     1316.0,
-     1316.0,
-     1316.0
-    ],
-    [
      "2026-11-27",
      1316.0,
      1316.0,
@@ -14687,12 +15909,6 @@
     ]
    ],
    "Charlotte": [
-    [
-     "2026-11-26",
-     1111.0,
-     1111.0,
-     1111.0
-    ],
     [
      "2026-11-27",
      1111.0,
@@ -14726,12 +15942,6 @@
    ],
    "Cincinnati": [
     [
-     "2026-11-26",
-     1508.6,
-     1508.6,
-     1508.6
-    ],
-    [
      "2026-11-27",
      1508.6,
      1508.6,
@@ -14763,12 +15973,6 @@
     ]
    ],
    "Clemson": [
-    [
-     "2026-11-26",
-     1597.0,
-     1597.0,
-     1597.0
-    ],
     [
      "2026-11-27",
      1597.0,
@@ -14802,12 +16006,6 @@
    ],
    "Coastal Carolina": [
     [
-     "2026-11-26",
-     1272.7,
-     1272.7,
-     1272.7
-    ],
-    [
      "2026-11-27",
      1272.7,
      1272.7,
@@ -14839,12 +16037,6 @@
     ]
    ],
    "Colorado": [
-    [
-     "2026-11-26",
-     1396.4,
-     1396.4,
-     1396.4
-    ],
     [
      "2026-11-27",
      1396.4,
@@ -14878,12 +16070,6 @@
    ],
    "Colorado State": [
     [
-     "2026-11-26",
-     1150.2,
-     1150.2,
-     1150.2
-    ],
-    [
      "2026-11-27",
      1150.2,
      1150.2,
@@ -14915,12 +16101,6 @@
     ]
    ],
    "Delaware": [
-    [
-     "2026-11-26",
-     1379.4,
-     1379.4,
-     1379.4
-    ],
     [
      "2026-11-27",
      1379.4,
@@ -14954,12 +16134,6 @@
    ],
    "Duke": [
     [
-     "2026-11-26",
-     1629.0,
-     1629.0,
-     1629.0
-    ],
-    [
      "2026-11-27",
      1629.0,
      1629.0,
@@ -14991,12 +16165,6 @@
     ]
    ],
    "East Carolina": [
-    [
-     "2026-11-26",
-     1491.6,
-     1491.6,
-     1491.6
-    ],
     [
      "2026-11-27",
      1491.6,
@@ -15030,12 +16198,6 @@
    ],
    "Eastern Michigan": [
     [
-     "2026-11-26",
-     1214.5,
-     1214.5,
-     1214.5
-    ],
-    [
      "2026-11-27",
      1214.5,
      1214.5,
@@ -15068,16 +16230,10 @@
    ],
    "Florida": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1620.4,
      1620.4,
      1620.4
-    ],
-    [
-     "2026-11-27",
-     1632.4,
-     1597.4,
-     1632.4
     ],
     [
      "2026-11-28",
@@ -15105,12 +16261,6 @@
     ]
    ],
    "Florida Atlantic": [
-    [
-     "2026-11-26",
-     1462.1,
-     1462.1,
-     1462.1
-    ],
     [
      "2026-11-27",
      1462.1,
@@ -15144,12 +16294,6 @@
    ],
    "Florida International": [
     [
-     "2026-11-26",
-     1227.0,
-     1227.0,
-     1227.0
-    ],
-    [
      "2026-11-27",
      1227.0,
      1227.0,
@@ -15182,16 +16326,10 @@
    ],
    "Florida State": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1457.3,
      1457.3,
      1457.3
-    ],
-    [
-     "2026-11-27",
-     1445.3,
-     1445.3,
-     1480.3
     ],
     [
      "2026-11-28",
@@ -15219,12 +16357,6 @@
     ]
    ],
    "Fresno State": [
-    [
-     "2026-11-26",
-     1468.6,
-     1468.6,
-     1468.6
-    ],
     [
      "2026-11-27",
      1468.6,
@@ -15258,12 +16390,6 @@
    ],
    "Georgia": [
     [
-     "2026-11-26",
-     1996.9,
-     1996.9,
-     1996.9
-    ],
-    [
      "2026-11-27",
      1996.9,
      1996.9,
@@ -15295,12 +16421,6 @@
     ]
    ],
    "Georgia Southern": [
-    [
-     "2026-11-26",
-     1559.9,
-     1559.9,
-     1559.9
-    ],
     [
      "2026-11-27",
      1559.9,
@@ -15334,12 +16454,6 @@
    ],
    "Georgia State": [
     [
-     "2026-11-26",
-     1299.2,
-     1299.2,
-     1299.2
-    ],
-    [
      "2026-11-27",
      1299.2,
      1299.2,
@@ -15371,12 +16485,6 @@
     ]
    ],
    "Georgia Tech": [
-    [
-     "2026-11-26",
-     1411.3,
-     1411.3,
-     1411.3
-    ],
     [
      "2026-11-27",
      1411.3,
@@ -15410,12 +16518,6 @@
    ],
    "Hawai'i": [
     [
-     "2026-11-26",
-     1229.9,
-     1229.9,
-     1229.9
-    ],
-    [
      "2026-11-27",
      1229.9,
      1229.9,
@@ -15447,12 +16549,6 @@
     ]
    ],
    "Houston": [
-    [
-     "2026-11-26",
-     1635.5,
-     1635.5,
-     1635.5
-    ],
     [
      "2026-11-27",
      1635.5,
@@ -15486,12 +16582,6 @@
    ],
    "Illinois": [
     [
-     "2026-11-26",
-     1601.6,
-     1601.6,
-     1601.6
-    ],
-    [
      "2026-11-27",
      1601.6,
      1601.6,
@@ -15523,12 +16613,6 @@
     ]
    ],
    "Indiana": [
-    [
-     "2026-11-26",
-     1924.1,
-     1924.1,
-     1924.1
-    ],
     [
      "2026-11-27",
      1924.1,
@@ -15562,16 +16646,10 @@
    ],
    "Iowa": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1843.3,
      1843.3,
      1843.3
-    ],
-    [
-     "2026-11-27",
-     1849.7,
-     1814.7,
-     1849.7
     ],
     [
      "2026-11-28",
@@ -15599,12 +16677,6 @@
     ]
    ],
    "Iowa State": [
-    [
-     "2026-11-26",
-     1492.9,
-     1492.9,
-     1492.9
-    ],
     [
      "2026-11-27",
      1492.9,
@@ -15638,12 +16710,6 @@
    ],
    "Jacksonville State": [
     [
-     "2026-11-26",
-     1390.9,
-     1390.9,
-     1390.9
-    ],
-    [
      "2026-11-27",
      1390.9,
      1390.9,
@@ -15675,12 +16741,6 @@
     ]
    ],
    "James Madison": [
-    [
-     "2026-11-26",
-     1559.7,
-     1559.7,
-     1559.7
-    ],
     [
      "2026-11-27",
      1559.7,
@@ -15714,12 +16774,6 @@
    ],
    "Kansas": [
     [
-     "2026-11-26",
-     1475.5,
-     1475.5,
-     1475.5
-    ],
-    [
      "2026-11-27",
      1475.5,
      1475.5,
@@ -15751,12 +16805,6 @@
     ]
    ],
    "Kansas State": [
-    [
-     "2026-11-26",
-     1392.7,
-     1392.7,
-     1392.7
-    ],
     [
      "2026-11-27",
      1392.7,
@@ -15790,12 +16838,6 @@
    ],
    "Kennesaw State": [
     [
-     "2026-11-26",
-     1342.3,
-     1342.3,
-     1342.3
-    ],
-    [
      "2026-11-27",
      1342.3,
      1342.3,
@@ -15827,12 +16869,6 @@
     ]
    ],
    "Kent State": [
-    [
-     "2026-11-26",
-     1095.1,
-     1095.1,
-     1095.1
-    ],
     [
      "2026-11-27",
      1095.1,
@@ -15866,12 +16902,6 @@
    ],
    "Kentucky": [
     [
-     "2026-11-26",
-     1584.7,
-     1584.7,
-     1584.7
-    ],
-    [
      "2026-11-27",
      1584.7,
      1584.7,
@@ -15903,12 +16933,6 @@
     ]
    ],
    "LSU": [
-    [
-     "2026-11-26",
-     1696.6,
-     1696.6,
-     1696.6
-    ],
     [
      "2026-11-27",
      1696.6,
@@ -15942,12 +16966,6 @@
    ],
    "Liberty": [
     [
-     "2026-11-26",
-     1530.5,
-     1530.5,
-     1530.5
-    ],
-    [
      "2026-11-27",
      1530.5,
      1530.5,
@@ -15979,12 +16997,6 @@
     ]
    ],
    "Louisiana": [
-    [
-     "2026-11-26",
-     1473.0,
-     1473.0,
-     1473.0
-    ],
     [
      "2026-11-27",
      1473.0,
@@ -16018,12 +17030,6 @@
    ],
    "Louisiana Tech": [
     [
-     "2026-11-26",
-     1565.9,
-     1565.9,
-     1565.9
-    ],
-    [
      "2026-11-27",
      1565.9,
      1565.9,
@@ -16055,12 +17061,6 @@
     ]
    ],
    "Louisville": [
-    [
-     "2026-11-26",
-     1723.3,
-     1723.3,
-     1723.3
-    ],
     [
      "2026-11-27",
      1723.3,
@@ -16094,12 +17094,6 @@
    ],
    "Marshall": [
     [
-     "2026-11-26",
-     1356.2,
-     1356.2,
-     1356.2
-    ],
-    [
      "2026-11-27",
      1356.2,
      1356.2,
@@ -16131,12 +17125,6 @@
     ]
    ],
    "Maryland": [
-    [
-     "2026-11-26",
-     1406.6,
-     1406.6,
-     1406.6
-    ],
     [
      "2026-11-27",
      1406.6,
@@ -16170,12 +17158,6 @@
    ],
    "Massachusetts": [
     [
-     "2026-11-26",
-     1125.1,
-     1125.1,
-     1125.1
-    ],
-    [
      "2026-11-27",
      1125.1,
      1125.1,
@@ -16208,16 +17190,10 @@
    ],
    "Memphis": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1559.0,
      1559.0,
      1559.0
-    ],
-    [
-     "2026-11-27",
-     1561.1,
-     1561.1,
-     1561.1
     ],
     [
      "2026-11-28",
@@ -16245,12 +17221,6 @@
     ]
    ],
    "Miami": [
-    [
-     "2026-11-26",
-     1873.0,
-     1873.0,
-     1873.0
-    ],
     [
      "2026-11-27",
      1873.0,
@@ -16284,12 +17254,6 @@
    ],
    "Miami (OH)": [
     [
-     "2026-11-26",
-     1456.7,
-     1456.7,
-     1456.7
-    ],
-    [
      "2026-11-27",
      1456.7,
      1456.7,
@@ -16321,12 +17285,6 @@
     ]
    ],
    "Michigan": [
-    [
-     "2026-11-26",
-     1619.5,
-     1619.5,
-     1619.5
-    ],
     [
      "2026-11-27",
      1619.5,
@@ -16360,12 +17318,6 @@
    ],
    "Michigan State": [
     [
-     "2026-11-26",
-     1427.7,
-     1427.7,
-     1427.7
-    ],
-    [
      "2026-11-27",
      1427.7,
      1427.7,
@@ -16397,12 +17349,6 @@
     ]
    ],
    "Middle Tennessee": [
-    [
-     "2026-11-26",
-     1230.2,
-     1230.2,
-     1230.2
-    ],
     [
      "2026-11-27",
      1230.2,
@@ -16436,16 +17382,10 @@
    ],
    "Minnesota": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1533.9,
      1533.9,
      1533.9
-    ],
-    [
-     "2026-11-27",
-     1523.0,
-     1523.0,
-     1558.0
     ],
     [
      "2026-11-28",
@@ -16474,16 +17414,10 @@
    ],
    "Mississippi State": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1456.7,
      1456.7,
      1456.7
-    ],
-    [
-     "2026-11-27",
-     1452.3,
-     1452.3,
-     1487.3
     ],
     [
      "2026-11-28",
@@ -16511,12 +17445,6 @@
     ]
    ],
    "Missouri": [
-    [
-     "2026-11-26",
-     1719.1,
-     1719.1,
-     1719.1
-    ],
     [
      "2026-11-27",
      1719.1,
@@ -16550,12 +17478,6 @@
    ],
    "Missouri State": [
     [
-     "2026-11-26",
-     1208.2,
-     1208.2,
-     1208.2
-    ],
-    [
      "2026-11-27",
      1208.2,
      1208.2,
@@ -16587,12 +17509,6 @@
     ]
    ],
    "NC State": [
-    [
-     "2026-11-26",
-     1507.3,
-     1507.3,
-     1507.3
-    ],
     [
      "2026-11-27",
      1507.3,
@@ -16626,12 +17542,6 @@
    ],
    "Navy": [
     [
-     "2026-11-26",
-     1445.8,
-     1445.8,
-     1445.8
-    ],
-    [
      "2026-11-27",
      1445.8,
      1445.8,
@@ -16664,16 +17574,10 @@
    ],
    "Nebraska": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1633.0,
      1633.0,
      1633.0
-    ],
-    [
-     "2026-11-27",
-     1626.6,
-     1626.6,
-     1661.6
     ],
     [
      "2026-11-28",
@@ -16701,12 +17605,6 @@
     ]
    ],
    "Nevada": [
-    [
-     "2026-11-26",
-     1301.7,
-     1301.7,
-     1301.7
-    ],
     [
      "2026-11-27",
      1301.7,
@@ -16740,16 +17638,10 @@
    ],
    "New Mexico": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1559.5,
      1559.5,
      1559.5
-    ],
-    [
-     "2026-11-27",
-     1570.8,
-     1535.8,
-     1570.8
     ],
     [
      "2026-11-28",
@@ -16777,12 +17669,6 @@
     ]
    ],
    "New Mexico State": [
-    [
-     "2026-11-26",
-     1120.4,
-     1120.4,
-     1120.4
-    ],
     [
      "2026-11-27",
      1120.4,
@@ -16816,12 +17702,6 @@
    ],
    "North Carolina": [
     [
-     "2026-11-26",
-     1480.6,
-     1480.6,
-     1480.6
-    ],
-    [
      "2026-11-27",
      1480.6,
      1480.6,
@@ -16854,16 +17734,10 @@
    ],
    "North Dakota State": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1450.9,
      1450.9,
      1450.9
-    ],
-    [
-     "2026-11-27",
-     1459.7,
-     1424.7,
-     1459.7
     ],
     [
      "2026-11-28",
@@ -16891,12 +17765,6 @@
     ]
    ],
    "North Texas": [
-    [
-     "2026-11-26",
-     1499.1,
-     1499.1,
-     1499.1
-    ],
     [
      "2026-11-27",
      1499.1,
@@ -16930,12 +17798,6 @@
    ],
    "Northern Illinois": [
     [
-     "2026-11-26",
-     996.7,
-     996.7,
-     996.7
-    ],
-    [
      "2026-11-27",
      996.7,
      996.7,
@@ -16967,12 +17829,6 @@
     ]
    ],
    "Northwestern": [
-    [
-     "2026-11-26",
-     1573.2,
-     1573.2,
-     1573.2
-    ],
     [
      "2026-11-27",
      1573.2,
@@ -17006,12 +17862,6 @@
    ],
    "Notre Dame": [
     [
-     "2026-11-26",
-     1881.8,
-     1881.8,
-     1881.8
-    ],
-    [
      "2026-11-27",
      1881.8,
      1881.8,
@@ -17044,16 +17894,10 @@
    ],
    "Ohio": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1443.0,
      1443.0,
      1443.0
-    ],
-    [
-     "2026-11-27",
-     1426.4,
-     1426.4,
-     1461.4
     ],
     [
      "2026-11-28",
@@ -17081,12 +17925,6 @@
     ]
    ],
    "Ohio State": [
-    [
-     "2026-11-26",
-     1784.0,
-     1784.0,
-     1784.0
-    ],
     [
      "2026-11-27",
      1784.0,
@@ -17120,12 +17958,6 @@
    ],
    "Oklahoma": [
     [
-     "2026-11-26",
-     1744.6,
-     1744.6,
-     1744.6
-    ],
-    [
      "2026-11-27",
      1744.6,
      1744.6,
@@ -17157,12 +17989,6 @@
     ]
    ],
    "Oklahoma State": [
-    [
-     "2026-11-26",
-     1560.7,
-     1560.7,
-     1560.7
-    ],
     [
      "2026-11-27",
      1560.7,
@@ -17196,12 +18022,6 @@
    ],
    "Old Dominion": [
     [
-     "2026-11-26",
-     1309.9,
-     1309.9,
-     1309.9
-    ],
-    [
      "2026-11-27",
      1309.9,
      1309.9,
@@ -17234,16 +18054,10 @@
    ],
    "Ole Miss": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1739.8,
      1739.8,
      1739.8
-    ],
-    [
-     "2026-11-27",
-     1744.3,
-     1709.3,
-     1744.3
     ],
     [
      "2026-11-28",
@@ -17271,12 +18085,6 @@
     ]
    ],
    "Oregon": [
-    [
-     "2026-11-26",
-     1855.7,
-     1855.7,
-     1855.7
-    ],
     [
      "2026-11-27",
      1855.7,
@@ -17310,12 +18118,6 @@
    ],
    "Oregon State": [
     [
-     "2026-11-26",
-     1391.3,
-     1391.3,
-     1391.3
-    ],
-    [
      "2026-11-27",
      1391.3,
      1391.3,
@@ -17347,12 +18149,6 @@
     ]
    ],
    "Penn State": [
-    [
-     "2026-11-26",
-     1650.6,
-     1650.6,
-     1650.6
-    ],
     [
      "2026-11-27",
      1650.6,
@@ -17386,12 +18182,6 @@
    ],
    "Pittsburgh": [
     [
-     "2026-11-26",
-     1480.7,
-     1480.7,
-     1480.7
-    ],
-    [
      "2026-11-27",
      1480.7,
      1480.7,
@@ -17423,12 +18213,6 @@
     ]
    ],
    "Purdue": [
-    [
-     "2026-11-26",
-     1355.3,
-     1355.3,
-     1355.3
-    ],
     [
      "2026-11-27",
      1355.3,
@@ -17462,12 +18246,6 @@
    ],
    "Rice": [
     [
-     "2026-11-26",
-     1186.7,
-     1186.7,
-     1186.7
-    ],
-    [
      "2026-11-27",
      1186.7,
      1186.7,
@@ -17499,12 +18277,6 @@
     ]
    ],
    "Rutgers": [
-    [
-     "2026-11-26",
-     1366.8,
-     1366.8,
-     1366.8
-    ],
     [
      "2026-11-27",
      1366.8,
@@ -17538,12 +18310,6 @@
    ],
    "SMU": [
     [
-     "2026-11-26",
-     1603.8,
-     1603.8,
-     1603.8
-    ],
-    [
      "2026-11-27",
      1603.8,
      1603.8,
@@ -17575,12 +18341,6 @@
     ]
    ],
    "Sacramento State": [
-    [
-     "2026-11-26",
-     1083.2,
-     1083.2,
-     1083.2
-    ],
     [
      "2026-11-27",
      1083.2,
@@ -17614,12 +18374,6 @@
    ],
    "Sam Houston": [
     [
-     "2026-11-26",
-     1001.5,
-     1001.5,
-     1001.5
-    ],
-    [
      "2026-11-27",
      1001.5,
      1001.5,
@@ -17651,12 +18405,6 @@
     ]
    ],
    "San Diego State": [
-    [
-     "2026-11-26",
-     1420.2,
-     1420.2,
-     1420.2
-    ],
     [
      "2026-11-27",
      1420.2,
@@ -17690,16 +18438,10 @@
    ],
    "San José State": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1210.3,
      1210.3,
      1210.3
-    ],
-    [
-     "2026-11-27",
-     1201.5,
-     1201.5,
-     1236.5
     ],
     [
      "2026-11-28",
@@ -17728,16 +18470,10 @@
    ],
    "South Alabama": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1380.0,
      1380.0,
      1380.0
-    ],
-    [
-     "2026-11-27",
-     1392.2,
-     1357.2,
-     1392.2
     ],
     [
      "2026-11-28",
@@ -17765,12 +18501,6 @@
     ]
    ],
    "South Carolina": [
-    [
-     "2026-11-26",
-     1611.3,
-     1611.3,
-     1611.3
-    ],
     [
      "2026-11-27",
      1611.3,
@@ -17804,12 +18534,6 @@
    ],
    "South Florida": [
     [
-     "2026-11-26",
-     1402.2,
-     1402.2,
-     1402.2
-    ],
-    [
      "2026-11-27",
      1402.2,
      1402.2,
@@ -17841,12 +18565,6 @@
     ]
    ],
    "Southern Miss": [
-    [
-     "2026-11-26",
-     1214.5,
-     1214.5,
-     1214.5
-    ],
     [
      "2026-11-27",
      1214.5,
@@ -17880,12 +18598,6 @@
    ],
    "Stanford": [
     [
-     "2026-11-26",
-     1532.5,
-     1532.5,
-     1532.5
-    ],
-    [
      "2026-11-27",
      1532.5,
      1532.5,
@@ -17917,12 +18629,6 @@
     ]
    ],
    "Syracuse": [
-    [
-     "2026-11-26",
-     1365.6,
-     1365.6,
-     1365.6
-    ],
     [
      "2026-11-27",
      1365.6,
@@ -17956,54 +18662,42 @@
    ],
    "TCU": [
     [
-     "2026-11-26",
-     1569.5,
-     1569.5,
-     1569.5
-    ],
-    [
      "2026-11-27",
-     1564.2,
-     1564.2,
-     1599.2
+     1555.1,
+     1555.1,
+     1555.1
     ],
     [
      "2026-11-28",
-     1564.2,
-     1564.2,
-     1599.2
+     1555.1,
+     1555.1,
+     1555.1
     ],
     [
      "2026-12-04",
-     1564.2,
-     1564.2,
-     1599.2
+     1555.1,
+     1555.1,
+     1555.1
     ],
     [
      "2026-12-05",
-     1564.2,
-     1564.2,
-     1599.2
+     1555.1,
+     1555.1,
+     1555.1
     ],
     [
      "2026-12-12",
-     1564.2,
-     1564.2,
-     1599.2
+     1555.1,
+     1555.1,
+     1555.1
     ]
    ],
    "Temple": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1135.4,
      1135.4,
      1135.4
-    ],
-    [
-     "2026-11-27",
-     1133.2,
-     1133.2,
-     1133.2
     ],
     [
      "2026-11-28",
@@ -18031,12 +18725,6 @@
     ]
    ],
    "Tennessee": [
-    [
-     "2026-11-26",
-     1847.0,
-     1847.0,
-     1847.0
-    ],
     [
      "2026-11-27",
      1847.0,
@@ -18070,16 +18758,10 @@
    ],
    "Texas": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1896.0,
      1896.0,
      1896.0
-    ],
-    [
-     "2026-11-27",
-     1901.1,
-     1866.1,
-     1901.1
     ],
     [
      "2026-11-28",
@@ -18108,16 +18790,10 @@
    ],
    "Texas A&M": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1540.2,
      1540.2,
      1540.2
-    ],
-    [
-     "2026-11-27",
-     1535.1,
-     1535.1,
-     1570.1
     ],
     [
      "2026-11-28",
@@ -18145,12 +18821,6 @@
     ]
    ],
    "Texas State": [
-    [
-     "2026-11-26",
-     1573.8,
-     1573.8,
-     1573.8
-    ],
     [
      "2026-11-27",
      1573.8,
@@ -18184,54 +18854,42 @@
    ],
    "Texas Tech": [
     [
-     "2026-11-26",
-     1819.6,
-     1819.6,
-     1819.6
-    ],
-    [
      "2026-11-27",
-     1824.9,
-     1789.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0
     ],
     [
      "2026-11-28",
-     1824.9,
-     1789.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0
     ],
     [
      "2026-12-04",
-     1824.9,
-     1789.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0
     ],
     [
      "2026-12-05",
-     1824.9,
-     1789.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0
     ],
     [
      "2026-12-12",
-     1824.9,
-     1789.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0
     ]
    ],
    "Toledo": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1510.9,
      1510.9,
      1510.9
-    ],
-    [
-     "2026-11-27",
-     1527.5,
-     1492.5,
-     1527.5
     ],
     [
      "2026-11-28",
@@ -18259,12 +18917,6 @@
     ]
    ],
    "Troy": [
-    [
-     "2026-11-26",
-     1231.1,
-     1231.1,
-     1231.1
-    ],
     [
      "2026-11-27",
      1231.1,
@@ -18298,12 +18950,6 @@
    ],
    "Tulane": [
     [
-     "2026-11-26",
-     1434.7,
-     1434.7,
-     1434.7
-    ],
-    [
      "2026-11-27",
      1434.7,
      1434.7,
@@ -18336,16 +18982,10 @@
    ],
    "Tulsa": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1480.0,
      1480.0,
      1480.0
-    ],
-    [
-     "2026-11-27",
-     1470.6,
-     1470.6,
-     1505.6
     ],
     [
      "2026-11-28",
@@ -18373,12 +19013,6 @@
     ]
    ],
    "UAB": [
-    [
-     "2026-11-26",
-     1386.8,
-     1386.8,
-     1386.8
-    ],
     [
      "2026-11-27",
      1386.8,
@@ -18412,12 +19046,6 @@
    ],
    "UCF": [
     [
-     "2026-11-26",
-     1493.3,
-     1493.3,
-     1493.3
-    ],
-    [
      "2026-11-27",
      1493.3,
      1493.3,
@@ -18449,12 +19077,6 @@
     ]
    ],
    "UCLA": [
-    [
-     "2026-11-26",
-     1739.9,
-     1739.9,
-     1739.9
-    ],
     [
      "2026-11-27",
      1739.9,
@@ -18488,12 +19110,6 @@
    ],
    "UConn": [
     [
-     "2026-11-26",
-     1483.6,
-     1483.6,
-     1483.6
-    ],
-    [
      "2026-11-27",
      1483.6,
      1483.6,
@@ -18525,12 +19141,6 @@
     ]
    ],
    "UL Monroe": [
-    [
-     "2026-11-26",
-     1108.5,
-     1108.5,
-     1108.5
-    ],
     [
      "2026-11-27",
      1108.5,
@@ -18564,12 +19174,6 @@
    ],
    "UNLV": [
     [
-     "2026-11-26",
-     1469.2,
-     1469.2,
-     1469.2
-    ],
-    [
      "2026-11-27",
      1469.2,
      1469.2,
@@ -18601,12 +19205,6 @@
     ]
    ],
    "USC": [
-    [
-     "2026-11-26",
-     1738.0,
-     1738.0,
-     1738.0
-    ],
     [
      "2026-11-27",
      1738.0,
@@ -18640,12 +19238,6 @@
    ],
    "UTEP": [
     [
-     "2026-11-26",
-     1001.8,
-     1001.8,
-     1001.8
-    ],
-    [
      "2026-11-27",
      1001.8,
      1001.8,
@@ -18678,16 +19270,10 @@
    ],
    "UTSA": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1604.4,
      1604.4,
      1604.4
-    ],
-    [
-     "2026-11-27",
-     1613.7,
-     1578.7,
-     1613.7
     ],
     [
      "2026-11-28",
@@ -18716,16 +19302,10 @@
    ],
    "Utah": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1898.6,
      1898.6,
      1898.6
-    ],
-    [
-     "2026-11-27",
-     1900.0,
-     1900.0,
-     1900.0
     ],
     [
      "2026-11-28",
@@ -18753,12 +19333,6 @@
     ]
    ],
    "Utah State": [
-    [
-     "2026-11-26",
-     1320.4,
-     1320.4,
-     1320.4
-    ],
     [
      "2026-11-27",
      1320.4,
@@ -18792,12 +19366,6 @@
    ],
    "Vanderbilt": [
     [
-     "2026-11-26",
-     1518.6,
-     1518.6,
-     1518.6
-    ],
-    [
      "2026-11-27",
      1518.6,
      1518.6,
@@ -18829,12 +19397,6 @@
     ]
    ],
    "Virginia": [
-    [
-     "2026-11-26",
-     1545.6,
-     1545.6,
-     1545.6
-    ],
     [
      "2026-11-27",
      1545.6,
@@ -18868,12 +19430,6 @@
    ],
    "Virginia Tech": [
     [
-     "2026-11-26",
-     1454.0,
-     1454.0,
-     1454.0
-    ],
-    [
      "2026-11-27",
      1454.0,
      1454.0,
@@ -18905,12 +19461,6 @@
     ]
    ],
    "Wake Forest": [
-    [
-     "2026-11-26",
-     1799.6,
-     1799.6,
-     1799.6
-    ],
     [
      "2026-11-27",
      1799.6,
@@ -18944,12 +19494,6 @@
    ],
    "Washington": [
     [
-     "2026-11-26",
-     1707.7,
-     1707.7,
-     1707.7
-    ],
-    [
      "2026-11-27",
      1707.7,
      1707.7,
@@ -18981,12 +19525,6 @@
     ]
    ],
    "Washington State": [
-    [
-     "2026-11-26",
-     1305.0,
-     1305.0,
-     1305.0
-    ],
     [
      "2026-11-27",
      1305.0,
@@ -19020,16 +19558,10 @@
    ],
    "West Virginia": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1400.8,
      1400.8,
      1400.8
-    ],
-    [
-     "2026-11-27",
-     1399.4,
-     1399.4,
-     1399.4
     ],
     [
      "2026-11-28",
@@ -19057,12 +19589,6 @@
     ]
    ],
    "Western Kentucky": [
-    [
-     "2026-11-26",
-     1258.1,
-     1258.1,
-     1258.1
-    ],
     [
      "2026-11-27",
      1258.1,
@@ -19096,12 +19622,6 @@
    ],
    "Western Michigan": [
     [
-     "2026-11-26",
-     1458.1,
-     1458.1,
-     1458.1
-    ],
-    [
      "2026-11-27",
      1458.1,
      1458.1,
@@ -19134,16 +19654,10 @@
    ],
    "Wisconsin": [
     [
-     "2026-11-26",
+     "2026-11-27",
      1622.4,
      1622.4,
      1622.4
-    ],
-    [
-     "2026-11-27",
-     1633.3,
-     1598.3,
-     1633.3
     ],
     [
      "2026-11-28",
@@ -19171,12 +19685,6 @@
     ]
    ],
    "Wyoming": [
-    [
-     "2026-11-26",
-     1382.9,
-     1382.9,
-     1382.9
-    ],
     [
      "2026-11-27",
      1382.9,
@@ -19216,20 +19724,17 @@
      1468.5,
      1468.5,
      1468.5,
-     1468.5,
      1468.5
     ],
     [
      1479.7,
-     1468.5,
-     1468.5,
-     1468.5,
-     1468.5,
-     1468.5
+     1503.5,
+     1503.5,
+     1503.5,
+     1503.5
     ],
     [
      1479.7,
-     1468.5,
      1468.5,
      1468.5,
      1468.5,
@@ -19239,15 +19744,6 @@
    "Akron": [
     [
      1098.9,
-     1128.4,
-     1128.4,
-     1128.4,
-     1128.4,
-     1128.4
-    ],
-    [
-     1098.9,
-     1093.4,
      1093.4,
      1093.4,
      1093.4,
@@ -19256,6 +19752,12 @@
     [
      1098.9,
      1093.4,
+     1093.4,
+     1093.4,
+     1093.4
+    ],
+    [
+     1098.9,
      1093.4,
      1093.4,
      1093.4,
@@ -19265,22 +19767,19 @@
    "Alabama": [
     [
      1876.2,
-     1876.2,
-     1846.6,
-     1846.6,
-     1846.6,
-     1846.6
+     1881.6,
+     1881.6,
+     1881.6,
+     1881.6
     ],
     [
      1876.2,
-     1876.2,
-     1846.6,
-     1846.6,
-     1846.6,
-     1846.6
+     1881.6,
+     1881.6,
+     1881.6,
+     1881.6
     ],
     [
-     1876.2,
      1876.2,
      1881.6,
      1881.6,
@@ -19291,15 +19790,6 @@
    "App State": [
     [
      1322.8,
-     1345.6,
-     1345.6,
-     1345.6,
-     1345.6,
-     1345.6
-    ],
-    [
-     1322.8,
-     1310.6,
      1310.6,
      1310.6,
      1310.6,
@@ -19310,14 +19800,19 @@
      1345.6,
      1345.6,
      1345.6,
-     1345.6,
      1345.6
+    ],
+    [
+     1322.8,
+     1310.6,
+     1310.6,
+     1310.6,
+     1310.6
     ]
    ],
    "Arizona": [
     [
      1713.4,
-     1713.4,
      1721.7,
      1721.7,
      1721.7,
@@ -19325,14 +19820,12 @@
     ],
     [
      1713.4,
-     1713.4,
-     1721.7,
-     1721.7,
-     1721.7,
-     1721.7
+     1686.7,
+     1686.7,
+     1686.7,
+     1686.7
     ],
     [
-     1713.4,
      1713.4,
      1721.7,
      1721.7,
@@ -19343,7 +19836,6 @@
    "Arizona State": [
     [
      1560.8,
-     1560.8,
      1552.5,
      1552.5,
      1552.5,
@@ -19351,14 +19843,12 @@
     ],
     [
      1560.8,
-     1560.8,
-     1552.5,
-     1552.5,
-     1552.5,
-     1552.5
+     1587.5,
+     1587.5,
+     1587.5,
+     1587.5
     ],
     [
-     1560.8,
      1560.8,
      1552.5,
      1552.5,
@@ -19369,6 +19859,12 @@
    "Arkansas": [
     [
      1545.7,
+     1533.1,
+     1533.1,
+     1533.1,
+     1533.1
+    ],
+    [
      1545.7,
      1533.1,
      1533.1,
@@ -19377,24 +19873,21 @@
     ],
     [
      1545.7,
-     1545.7,
      1533.1,
      1533.1,
      1533.1,
      1533.1
-    ],
-    [
-     1545.7,
-     1545.7,
-     1568.1,
-     1568.1,
-     1568.1,
-     1568.1
     ]
    ],
    "Arkansas State": [
     [
      1286.9,
+     1299.2,
+     1299.2,
+     1299.2,
+     1299.2
+    ],
+    [
      1286.9,
      1264.2,
      1264.2,
@@ -19402,15 +19895,6 @@
      1264.2
     ],
     [
-     1286.9,
-     1286.9,
-     1264.2,
-     1264.2,
-     1264.2,
-     1264.2
-    ],
-    [
-     1286.9,
      1286.9,
      1299.2,
      1299.2,
@@ -19421,48 +19905,42 @@
    "Army": [
     [
      1423.3,
-     1423.3,
-     1397.2,
-     1397.2,
-     1397.2,
-     1417.4
+     1432.2,
+     1432.2,
+     1432.2,
+     1450.6
     ],
     [
-     1423.3,
-     1423.3,
-     1432.2,
-     1432.2,
-     1432.2,
-     1415.6
-    ],
-    [
-     1423.3,
      1423.3,
      1432.2,
      1432.2,
      1432.2,
      1450.6
+    ],
+    [
+     1423.3,
+     1432.2,
+     1432.2,
+     1432.2,
+     1448.9
     ]
    ],
    "Auburn": [
     [
      1632.0,
-     1632.0,
-     1661.6,
-     1661.6,
-     1661.6,
-     1661.6
+     1626.6,
+     1626.6,
+     1626.6,
+     1626.6
     ],
     [
      1632.0,
-     1632.0,
-     1661.6,
-     1661.6,
-     1661.6,
-     1661.6
+     1626.6,
+     1626.6,
+     1626.6,
+     1626.6
     ],
     [
-     1632.0,
      1632.0,
      1626.6,
      1626.6,
@@ -19473,7 +19951,6 @@
    "BYU": [
     [
      1771.1,
-     1771.1,
      1776.1,
      1776.1,
      1776.1,
@@ -19481,14 +19958,12 @@
     ],
     [
      1771.1,
-     1771.1,
      1776.1,
      1776.1,
      1776.1,
      1776.1
     ],
     [
-     1771.1,
      1771.1,
      1776.1,
      1776.1,
@@ -19499,7 +19974,6 @@
    "Ball State": [
     [
      1120.7,
-     1120.7,
      1145.1,
      1145.1,
      1145.1,
@@ -19507,14 +19981,12 @@
     ],
     [
      1120.7,
-     1120.7,
-     1110.1,
-     1110.1,
-     1110.1,
-     1110.1
+     1145.1,
+     1145.1,
+     1145.1,
+     1145.1
     ],
     [
-     1120.7,
      1120.7,
      1110.1,
      1110.1,
@@ -19525,15 +19997,6 @@
    "Baylor": [
     [
      1579.7,
-     1579.7,
-     1567.4,
-     1567.4,
-     1567.4,
-     1567.4
-    ],
-    [
-     1579.7,
-     1579.7,
      1602.4,
      1602.4,
      1602.4,
@@ -19541,6 +20004,12 @@
     ],
     [
      1579.7,
+     1567.4,
+     1567.4,
+     1567.4,
+     1567.4
+    ],
+    [
      1579.7,
      1602.4,
      1602.4,
@@ -19551,7 +20020,6 @@
    "Boise State": [
     [
      1651.2,
-     1651.2,
      1653.7,
      1653.7,
      1653.7,
@@ -19559,14 +20027,12 @@
     ],
     [
      1651.2,
-     1651.2,
      1653.7,
      1653.7,
      1653.7,
      1653.7
     ],
     [
-     1651.2,
      1651.2,
      1653.7,
      1653.7,
@@ -19577,7 +20043,6 @@
    "Boston College": [
     [
      1448.7,
-     1448.7,
      1446.6,
      1446.6,
      1446.6,
@@ -19585,14 +20050,12 @@
     ],
     [
      1448.7,
-     1448.7,
      1446.6,
      1446.6,
      1446.6,
      1446.6
     ],
     [
-     1448.7,
      1448.7,
      1446.6,
      1446.6,
@@ -19603,7 +20066,6 @@
    "Bowling Green": [
     [
      1191.5,
-     1191.5,
      1203.4,
      1203.4,
      1203.4,
@@ -19611,14 +20073,12 @@
     ],
     [
      1191.5,
-     1191.5,
      1203.4,
      1203.4,
      1203.4,
      1203.4
     ],
     [
-     1191.5,
      1191.5,
      1203.4,
      1203.4,
@@ -19629,15 +20089,6 @@
    "Buffalo": [
     [
      1440.2,
-     1410.7,
-     1410.7,
-     1410.7,
-     1410.7,
-     1410.7
-    ],
-    [
-     1440.2,
-     1445.7,
      1445.7,
      1445.7,
      1445.7,
@@ -19646,6 +20097,12 @@
     [
      1440.2,
      1445.7,
+     1445.7,
+     1445.7,
+     1445.7
+    ],
+    [
+     1440.2,
      1445.7,
      1445.7,
      1445.7,
@@ -19655,32 +20112,28 @@
    "California": [
     [
      1282.8,
+     1272.4,
+     1272.4,
+     1272.4,
+     1272.4
+    ],
+    [
+     1282.8,
+     1272.4,
+     1272.4,
+     1272.4,
+     1272.4
+    ],
+    [
      1282.8,
      1307.4,
      1307.4,
      1307.4,
      1307.4
-    ],
-    [
-     1282.8,
-     1282.8,
-     1272.4,
-     1272.4,
-     1272.4,
-     1272.4
-    ],
-    [
-     1282.8,
-     1282.8,
-     1272.4,
-     1272.4,
-     1272.4,
-     1272.4
     ]
    ],
    "Central Michigan": [
     [
-     1316.0,
      1316.0,
      1291.6,
      1291.6,
@@ -19689,14 +20142,12 @@
     ],
     [
      1316.0,
-     1316.0,
-     1326.6,
-     1326.6,
-     1326.6,
-     1326.6
+     1291.6,
+     1291.6,
+     1291.6,
+     1291.6
     ],
     [
-     1316.0,
      1316.0,
      1326.6,
      1326.6,
@@ -19707,6 +20158,12 @@
    "Charlotte": [
     [
      1111.0,
+     1105.4,
+     1105.4,
+     1105.4,
+     1105.4
+    ],
+    [
      1111.0,
      1105.4,
      1105.4,
@@ -19715,25 +20172,15 @@
     ],
     [
      1111.0,
-     1111.0,
-     1105.4,
-     1105.4,
-     1105.4,
-     1105.4
-    ],
-    [
-     1111.0,
-     1111.0,
-     1105.4,
-     1105.4,
-     1105.4,
-     1105.4
+     1140.4,
+     1140.4,
+     1140.4,
+     1140.4
     ]
    ],
    "Cincinnati": [
     [
      1508.6,
-     1508.6,
      1503.6,
      1503.6,
      1503.6,
@@ -19741,14 +20188,12 @@
     ],
     [
      1508.6,
-     1508.6,
      1503.6,
      1503.6,
      1503.6,
      1503.6
     ],
     [
-     1508.6,
      1508.6,
      1503.6,
      1503.6,
@@ -19759,7 +20204,6 @@
    "Clemson": [
     [
      1597.0,
-     1597.0,
      1577.7,
      1577.7,
      1577.7,
@@ -19767,14 +20211,12 @@
     ],
     [
      1597.0,
-     1597.0,
-     1577.7,
-     1577.7,
-     1577.7,
-     1577.7
+     1612.7,
+     1612.7,
+     1612.7,
+     1612.7
     ],
     [
-     1597.0,
      1597.0,
      1612.7,
      1612.7,
@@ -19785,7 +20227,6 @@
    "Coastal Carolina": [
     [
      1272.7,
-     1272.7,
      1268.3,
      1268.3,
      1268.3,
@@ -19793,7 +20234,6 @@
     ],
     [
      1272.7,
-     1272.7,
      1303.3,
      1303.3,
      1303.3,
@@ -19801,16 +20241,21 @@
     ],
     [
      1272.7,
-     1272.7,
-     1303.3,
-     1303.3,
-     1303.3,
-     1303.3
+     1268.3,
+     1268.3,
+     1268.3,
+     1268.3
     ]
    ],
    "Colorado": [
     [
      1396.4,
+     1416.2,
+     1416.2,
+     1416.2,
+     1416.2
+    ],
+    [
      1396.4,
      1381.2,
      1381.2,
@@ -19818,15 +20263,6 @@
      1381.2
     ],
     [
-     1396.4,
-     1396.4,
-     1381.2,
-     1381.2,
-     1381.2,
-     1381.2
-    ],
-    [
-     1396.4,
      1396.4,
      1416.2,
      1416.2,
@@ -19837,7 +20273,6 @@
    "Colorado State": [
     [
      1150.2,
-     1150.2,
      1147.7,
      1147.7,
      1147.7,
@@ -19845,14 +20280,12 @@
     ],
     [
      1150.2,
-     1150.2,
      1147.7,
      1147.7,
      1147.7,
      1147.7
     ],
     [
-     1150.2,
      1150.2,
      1147.7,
      1147.7,
@@ -19863,14 +20296,12 @@
    "Delaware": [
     [
      1379.4,
-     1379.4,
-     1359.9,
-     1359.9,
-     1359.9,
-     1359.9
+     1394.9,
+     1394.9,
+     1394.9,
+     1394.9
     ],
     [
-     1379.4,
      1379.4,
      1394.9,
      1394.9,
@@ -19879,16 +20310,14 @@
     ],
     [
      1379.4,
-     1379.4,
-     1359.9,
-     1359.9,
-     1359.9,
-     1359.9
+     1394.9,
+     1394.9,
+     1394.9,
+     1394.9
     ]
    ],
    "Duke": [
     [
-     1629.0,
      1629.0,
      1621.3,
      1621.3,
@@ -19897,14 +20326,12 @@
     ],
     [
      1629.0,
-     1629.0,
-     1656.3,
-     1656.3,
-     1656.3,
-     1656.3
+     1621.3,
+     1621.3,
+     1621.3,
+     1621.3
     ],
     [
-     1629.0,
      1629.0,
      1621.3,
      1621.3,
@@ -19915,6 +20342,12 @@
    "East Carolina": [
     [
      1491.6,
+     1505.1,
+     1505.1,
+     1505.1,
+     1505.1
+    ],
+    [
      1491.6,
      1505.1,
      1505.1,
@@ -19923,19 +20356,10 @@
     ],
     [
      1491.6,
-     1491.6,
      1505.1,
      1505.1,
      1505.1,
      1505.1
-    ],
-    [
-     1491.6,
-     1491.6,
-     1470.1,
-     1470.1,
-     1470.1,
-     1470.1
     ]
    ],
    "Eastern Michigan": [
@@ -19944,7 +20368,6 @@
      1214.5,
      1214.5,
      1214.5,
-     1214.5,
      1214.5
     ],
     [
@@ -19952,11 +20375,9 @@
      1214.5,
      1214.5,
      1214.5,
-     1214.5,
      1214.5
     ],
     [
-     1214.5,
      1214.5,
      1214.5,
      1214.5,
@@ -19970,7 +20391,6 @@
      1632.4,
      1632.4,
      1632.4,
-     1632.4,
      1632.4
     ],
     [
@@ -19978,21 +20398,25 @@
      1597.4,
      1597.4,
      1597.4,
-     1597.4,
      1597.4
     ],
     [
      1620.4,
-     1597.4,
-     1597.4,
-     1597.4,
-     1597.4,
-     1597.4
+     1632.4,
+     1632.4,
+     1632.4,
+     1632.4
     ]
    ],
    "Florida Atlantic": [
     [
      1462.1,
+     1448.5,
+     1448.5,
+     1448.5,
+     1448.5
+    ],
+    [
      1462.1,
      1448.5,
      1448.5,
@@ -20001,25 +20425,15 @@
     ],
     [
      1462.1,
-     1462.1,
      1448.5,
      1448.5,
      1448.5,
      1448.5
-    ],
-    [
-     1462.1,
-     1462.1,
-     1483.5,
-     1483.5,
-     1483.5,
-     1483.5
     ]
    ],
    "Florida International": [
     [
      1227.0,
-     1227.0,
      1233.0,
      1233.0,
      1233.0,
@@ -20027,14 +20441,12 @@
     ],
     [
      1227.0,
-     1227.0,
-     1233.0,
-     1233.0,
-     1233.0,
-     1233.0
+     1198.0,
+     1198.0,
+     1198.0,
+     1198.0
     ],
     [
-     1227.0,
      1227.0,
      1233.0,
      1233.0,
@@ -20048,7 +20460,6 @@
      1445.3,
      1445.3,
      1445.3,
-     1445.3,
      1445.3
     ],
     [
@@ -20056,21 +20467,18 @@
      1480.3,
      1480.3,
      1480.3,
-     1480.3,
      1480.3
     ],
     [
      1457.3,
-     1480.3,
-     1480.3,
-     1480.3,
-     1480.3,
-     1480.3
+     1445.3,
+     1445.3,
+     1445.3,
+     1445.3
     ]
    ],
    "Fresno State": [
     [
-     1468.6,
      1468.6,
      1479.9,
      1479.9,
@@ -20079,25 +20487,22 @@
     ],
     [
      1468.6,
-     1468.6,
-     1444.9,
-     1444.9,
-     1444.9,
-     1444.9
+     1479.9,
+     1479.9,
+     1479.9,
+     1479.9
     ],
     [
      1468.6,
-     1468.6,
-     1444.9,
-     1444.9,
-     1444.9,
-     1444.9
+     1479.9,
+     1479.9,
+     1479.9,
+     1479.9
     ]
    ],
    "Georgia": [
     [
      1996.9,
-     1996.9,
      1997.8,
      1997.8,
      1997.8,
@@ -20105,14 +20510,12 @@
     ],
     [
      1996.9,
-     1996.9,
      1997.8,
      1997.8,
      1997.8,
      1997.8
     ],
     [
-     1996.9,
      1996.9,
      1997.8,
      1997.8,
@@ -20123,32 +20526,35 @@
    "Georgia Southern": [
     [
      1559.9,
+     1575.2,
+     1575.2,
+     1575.2,
+     1575.2
+    ],
+    [
+     1559.9,
+     1575.2,
+     1575.2,
+     1575.2,
+     1575.2
+    ],
+    [
      1559.9,
      1540.2,
      1540.2,
      1540.2,
      1540.2
-    ],
-    [
-     1559.9,
-     1559.9,
-     1575.2,
-     1575.2,
-     1575.2,
-     1575.2
-    ],
-    [
-     1559.9,
-     1559.9,
-     1575.2,
-     1575.2,
-     1575.2,
-     1575.2
     ]
    ],
    "Georgia State": [
     [
      1299.2,
+     1322.7,
+     1322.7,
+     1322.7,
+     1322.7
+    ],
+    [
      1299.2,
      1287.7,
      1287.7,
@@ -20156,15 +20562,6 @@
      1287.7
     ],
     [
-     1299.2,
-     1299.2,
-     1287.7,
-     1287.7,
-     1287.7,
-     1287.7
-    ],
-    [
-     1299.2,
      1299.2,
      1287.7,
      1287.7,
@@ -20175,7 +20572,6 @@
    "Georgia Tech": [
     [
      1411.3,
-     1411.3,
      1410.4,
      1410.4,
      1410.4,
@@ -20183,14 +20579,12 @@
     ],
     [
      1411.3,
-     1411.3,
      1410.4,
      1410.4,
      1410.4,
      1410.4
     ],
     [
-     1411.3,
      1411.3,
      1410.4,
      1410.4,
@@ -20201,6 +20595,12 @@
    "Hawai'i": [
     [
      1229.9,
+     1238.5,
+     1238.5,
+     1238.5,
+     1238.5
+    ],
+    [
      1229.9,
      1238.5,
      1238.5,
@@ -20209,32 +20609,14 @@
     ],
     [
      1229.9,
-     1229.9,
-     1238.5,
-     1238.5,
-     1238.5,
-     1238.5
-    ],
-    [
-     1229.9,
-     1229.9,
-     1238.5,
-     1238.5,
-     1238.5,
-     1238.5
+     1203.5,
+     1203.5,
+     1203.5,
+     1203.5
     ]
    ],
    "Houston": [
     [
-     1635.5,
-     1635.5,
-     1647.8,
-     1647.8,
-     1647.8,
-     1647.8
-    ],
-    [
-     1635.5,
      1635.5,
      1612.8,
      1612.8,
@@ -20243,6 +20625,12 @@
     ],
     [
      1635.5,
+     1647.8,
+     1647.8,
+     1647.8,
+     1647.8
+    ],
+    [
      1635.5,
      1612.8,
      1612.8,
@@ -20253,7 +20641,6 @@
    "Illinois": [
     [
      1601.6,
-     1601.6,
      1620.2,
      1620.2,
      1620.2,
@@ -20261,14 +20648,12 @@
     ],
     [
      1601.6,
-     1601.6,
      1585.2,
      1585.2,
      1585.2,
      1585.2
     ],
     [
-     1601.6,
      1601.6,
      1585.2,
      1585.2,
@@ -20279,7 +20664,6 @@
    "Indiana": [
     [
      1924.1,
-     1924.1,
      1925.1,
      1925.1,
      1925.1,
@@ -20287,14 +20671,12 @@
     ],
     [
      1924.1,
-     1924.1,
      1925.1,
      1925.1,
      1925.1,
      1925.1
     ],
     [
-     1924.1,
      1924.1,
      1925.1,
      1925.1,
@@ -20305,7 +20687,13 @@
    "Iowa": [
     [
      1843.3,
-     1814.7,
+     1849.7,
+     1849.7,
+     1849.7,
+     1849.7
+    ],
+    [
+     1843.3,
      1814.7,
      1814.7,
      1814.7,
@@ -20316,22 +20704,12 @@
      1849.7,
      1849.7,
      1849.7,
-     1849.7,
-     1849.7
-    ],
-    [
-     1843.3,
-     1849.7,
-     1849.7,
-     1849.7,
-     1849.7,
      1849.7
     ]
    ],
    "Iowa State": [
     [
      1492.9,
-     1492.9,
      1468.2,
      1468.2,
      1468.2,
@@ -20339,14 +20717,12 @@
     ],
     [
      1492.9,
-     1492.9,
-     1468.2,
-     1468.2,
-     1468.2,
-     1468.2
+     1503.2,
+     1503.2,
+     1503.2,
+     1503.2
     ],
     [
-     1492.9,
      1492.9,
      1503.2,
      1503.2,
@@ -20357,14 +20733,12 @@
    "Jacksonville State": [
     [
      1390.9,
-     1390.9,
-     1410.3,
-     1410.3,
-     1410.3,
-     1410.3
+     1375.3,
+     1375.3,
+     1375.3,
+     1375.3
     ],
     [
-     1390.9,
      1390.9,
      1375.3,
      1375.3,
@@ -20373,16 +20747,14 @@
     ],
     [
      1390.9,
-     1390.9,
-     1410.3,
-     1410.3,
-     1410.3,
-     1410.3
+     1375.3,
+     1375.3,
+     1375.3,
+     1375.3
     ]
    ],
    "James Madison": [
     [
-     1559.7,
      1559.7,
      1564.1,
      1564.1,
@@ -20391,7 +20763,6 @@
     ],
     [
      1559.7,
-     1559.7,
      1529.1,
      1529.1,
      1529.1,
@@ -20399,17 +20770,15 @@
     ],
     [
      1559.7,
-     1559.7,
-     1529.1,
-     1529.1,
-     1529.1,
-     1529.1
+     1564.1,
+     1564.1,
+     1564.1,
+     1564.1
     ]
    ],
    "Kansas": [
     [
      1475.5,
-     1475.5,
      1464.5,
      1464.5,
      1464.5,
@@ -20417,14 +20786,12 @@
     ],
     [
      1475.5,
-     1475.5,
      1464.5,
      1464.5,
      1464.5,
      1464.5
     ],
     [
-     1475.5,
      1475.5,
      1464.5,
      1464.5,
@@ -20435,7 +20802,6 @@
    "Kansas State": [
     [
      1392.7,
-     1392.7,
      1417.4,
      1417.4,
      1417.4,
@@ -20443,14 +20809,12 @@
     ],
     [
      1392.7,
-     1392.7,
-     1417.4,
-     1417.4,
-     1417.4,
-     1417.4
+     1382.4,
+     1382.4,
+     1382.4,
+     1382.4
     ],
     [
-     1392.7,
      1392.7,
      1382.4,
      1382.4,
@@ -20461,6 +20825,12 @@
    "Kennesaw State": [
     [
      1342.3,
+     1323.0,
+     1323.0,
+     1323.0,
+     1323.0
+    ],
+    [
      1342.3,
      1323.0,
      1323.0,
@@ -20469,19 +20839,10 @@
     ],
     [
      1342.3,
-     1342.3,
-     1323.0,
-     1323.0,
-     1323.0,
-     1323.0
-    ],
-    [
-     1342.3,
-     1342.3,
-     1323.0,
-     1323.0,
-     1323.0,
-     1323.0
+     1358.0,
+     1358.0,
+     1358.0,
+     1358.0
     ]
    ],
    "Kent State": [
@@ -20490,7 +20851,6 @@
      1095.1,
      1095.1,
      1095.1,
-     1095.1,
      1095.1
     ],
     [
@@ -20498,11 +20858,9 @@
      1095.1,
      1095.1,
      1095.1,
-     1095.1,
      1095.1
     ],
     [
-     1095.1,
      1095.1,
      1095.1,
      1095.1,
@@ -20513,14 +20871,12 @@
    "Kentucky": [
     [
      1584.7,
-     1584.7,
-     1606.6,
-     1606.6,
-     1606.6,
-     1606.6
+     1571.6,
+     1571.6,
+     1571.6,
+     1571.6
     ],
     [
-     1584.7,
      1584.7,
      1571.6,
      1571.6,
@@ -20529,16 +20885,21 @@
     ],
     [
      1584.7,
-     1584.7,
-     1606.6,
-     1606.6,
-     1606.6,
-     1606.6
+     1571.6,
+     1571.6,
+     1571.6,
+     1571.6
     ]
    ],
    "LSU": [
     [
      1696.6,
+     1709.1,
+     1709.1,
+     1709.1,
+     1709.1
+    ],
+    [
      1696.6,
      1709.1,
      1709.1,
@@ -20547,25 +20908,15 @@
     ],
     [
      1696.6,
-     1696.6,
      1709.1,
      1709.1,
      1709.1,
      1709.1
-    ],
-    [
-     1696.6,
-     1696.6,
-     1674.1,
-     1674.1,
-     1674.1,
-     1674.1
     ]
    ],
    "Liberty": [
     [
      1530.5,
-     1530.5,
      1536.5,
      1536.5,
      1536.5,
@@ -20573,14 +20924,12 @@
     ],
     [
      1530.5,
-     1530.5,
      1536.5,
      1536.5,
      1536.5,
      1536.5
     ],
     [
-     1530.5,
      1530.5,
      1536.5,
      1536.5,
@@ -20591,6 +20940,12 @@
    "Louisiana": [
     [
      1473.0,
+     1449.5,
+     1449.5,
+     1449.5,
+     1449.5
+    ],
+    [
      1473.0,
      1484.5,
      1484.5,
@@ -20598,15 +20953,6 @@
      1484.5
     ],
     [
-     1473.0,
-     1473.0,
-     1484.5,
-     1484.5,
-     1484.5,
-     1484.5
-    ],
-    [
-     1473.0,
      1473.0,
      1484.5,
      1484.5,
@@ -20617,40 +20963,28 @@
    "Louisiana Tech": [
     [
      1565.9,
+     1550.6,
+     1550.6,
+     1550.6,
+     1550.6
+    ],
+    [
+     1565.9,
+     1550.6,
+     1550.6,
+     1550.6,
+     1550.6
+    ],
+    [
      1565.9,
      1585.6,
      1585.6,
      1585.6,
      1585.6
-    ],
-    [
-     1565.9,
-     1565.9,
-     1550.6,
-     1550.6,
-     1550.6,
-     1550.6
-    ],
-    [
-     1565.9,
-     1565.9,
-     1550.6,
-     1550.6,
-     1550.6,
-     1550.6
     ]
    ],
    "Louisville": [
     [
-     1723.3,
-     1723.3,
-     1701.4,
-     1701.4,
-     1701.4,
-     1701.4
-    ],
-    [
-     1723.3,
      1723.3,
      1736.4,
      1736.4,
@@ -20659,16 +20993,21 @@
     ],
     [
      1723.3,
+     1736.4,
+     1736.4,
+     1736.4,
+     1736.4
+    ],
+    [
      1723.3,
-     1701.4,
-     1701.4,
-     1701.4,
-     1701.4
+     1736.4,
+     1736.4,
+     1736.4,
+     1736.4
     ]
    ],
    "Marshall": [
     [
-     1356.2,
      1356.2,
      1329.6,
      1329.6,
@@ -20677,25 +21016,22 @@
     ],
     [
      1356.2,
-     1356.2,
-     1364.6,
-     1364.6,
-     1364.6,
-     1364.6
+     1329.6,
+     1329.6,
+     1329.6,
+     1329.6
     ],
     [
      1356.2,
-     1356.2,
-     1364.6,
-     1364.6,
-     1364.6,
-     1364.6
+     1329.6,
+     1329.6,
+     1329.6,
+     1329.6
     ]
    ],
    "Maryland": [
     [
      1406.6,
-     1406.6,
      1398.0,
      1398.0,
      1398.0,
@@ -20703,14 +21039,12 @@
     ],
     [
      1406.6,
-     1406.6,
-     1398.0,
-     1398.0,
-     1398.0,
-     1398.0
+     1433.0,
+     1433.0,
+     1433.0,
+     1433.0
     ],
     [
-     1406.6,
      1406.6,
      1433.0,
      1433.0,
@@ -20721,7 +21055,6 @@
    "Massachusetts": [
     [
      1125.1,
-     1125.1,
      1113.3,
      1113.3,
      1113.3,
@@ -20729,14 +21062,12 @@
     ],
     [
      1125.1,
-     1125.1,
      1113.3,
      1113.3,
      1113.3,
      1113.3
     ],
     [
-     1125.1,
      1125.1,
      1113.3,
      1113.3,
@@ -20750,7 +21081,6 @@
      1561.1,
      1561.1,
      1561.1,
-     1561.1,
      1561.1
     ],
     [
@@ -20758,12 +21088,10 @@
      1561.1,
      1561.1,
      1561.1,
-     1561.1,
      1561.1
     ],
     [
      1559.0,
-     1561.1,
      1561.1,
      1561.1,
      1561.1,
@@ -20773,7 +21101,6 @@
    "Miami": [
     [
      1873.0,
-     1873.0,
      1875.1,
      1875.1,
      1875.1,
@@ -20781,14 +21108,12 @@
     ],
     [
      1873.0,
-     1873.0,
      1875.1,
      1875.1,
      1875.1,
      1875.1
     ],
     [
-     1873.0,
      1873.0,
      1875.1,
      1875.1,
@@ -20802,7 +21127,6 @@
      1456.7,
      1456.7,
      1456.7,
-     1456.7,
      1456.7
     ],
     [
@@ -20810,11 +21134,9 @@
      1456.7,
      1456.7,
      1456.7,
-     1456.7,
      1456.7
     ],
     [
-     1456.7,
      1456.7,
      1456.7,
      1456.7,
@@ -20825,22 +21147,19 @@
    "Michigan": [
     [
      1619.5,
-     1619.5,
-     1611.6,
-     1611.6,
-     1611.6,
-     1611.6
+     1646.6,
+     1646.6,
+     1646.6,
+     1646.6
     ],
     [
      1619.5,
-     1619.5,
-     1611.6,
-     1611.6,
-     1611.6,
-     1611.6
+     1646.6,
+     1646.6,
+     1646.6,
+     1646.6
     ],
     [
-     1619.5,
      1619.5,
      1611.6,
      1611.6,
@@ -20851,15 +21170,6 @@
    "Michigan State": [
     [
      1427.7,
-     1427.7,
-     1444.6,
-     1444.6,
-     1444.6,
-     1444.6
-    ],
-    [
-     1427.7,
-     1427.7,
      1409.6,
      1409.6,
      1409.6,
@@ -20867,24 +21177,21 @@
     ],
     [
      1427.7,
-     1427.7,
      1444.6,
      1444.6,
      1444.6,
      1444.6
+    ],
+    [
+     1427.7,
+     1409.6,
+     1409.6,
+     1409.6,
+     1409.6
     ]
    ],
    "Middle Tennessee": [
     [
-     1230.2,
-     1230.2,
-     1205.1,
-     1205.1,
-     1205.1,
-     1205.1
-    ],
-    [
-     1230.2,
      1230.2,
      1240.1,
      1240.1,
@@ -20893,6 +21200,12 @@
     ],
     [
      1230.2,
+     1240.1,
+     1240.1,
+     1240.1,
+     1240.1
+    ],
+    [
      1230.2,
      1240.1,
      1240.1,
@@ -20903,27 +21216,24 @@
    "Minnesota": [
     [
      1533.9,
-     1523.0,
-     1523.0,
-     1523.0,
-     1523.0,
-     1523.0
-    ],
-    [
-     1533.9,
-     1523.0,
-     1523.0,
-     1523.0,
-     1523.0,
-     1523.0
-    ],
-    [
-     1533.9,
-     1558.0,
      1558.0,
      1558.0,
      1558.0,
      1558.0
+    ],
+    [
+     1533.9,
+     1523.0,
+     1523.0,
+     1523.0,
+     1523.0
+    ],
+    [
+     1533.9,
+     1523.0,
+     1523.0,
+     1523.0,
+     1523.0
     ]
    ],
    "Mississippi State": [
@@ -20932,20 +21242,17 @@
      1452.3,
      1452.3,
      1452.3,
+     1452.3
+    ],
+    [
+     1456.7,
+     1452.3,
+     1452.3,
      1452.3,
      1452.3
     ],
     [
      1456.7,
-     1487.3,
-     1487.3,
-     1487.3,
-     1487.3,
-     1487.3
-    ],
-    [
-     1456.7,
-     1452.3,
      1452.3,
      1452.3,
      1452.3,
@@ -20955,15 +21262,6 @@
    "Missouri": [
     [
      1719.1,
-     1719.1,
-     1735.4,
-     1735.4,
-     1735.4,
-     1735.4
-    ],
-    [
-     1719.1,
-     1719.1,
      1700.4,
      1700.4,
      1700.4,
@@ -20971,6 +21269,12 @@
     ],
     [
      1719.1,
+     1700.4,
+     1700.4,
+     1700.4,
+     1700.4
+    ],
+    [
      1719.1,
      1735.4,
      1735.4,
@@ -20981,7 +21285,6 @@
    "Missouri State": [
     [
      1208.2,
-     1208.2,
      1202.2,
      1202.2,
      1202.2,
@@ -20989,14 +21292,12 @@
     ],
     [
      1208.2,
-     1208.2,
      1202.2,
      1202.2,
      1202.2,
      1202.2
     ],
     [
-     1208.2,
      1208.2,
      1202.2,
      1202.2,
@@ -21007,7 +21308,6 @@
    "NC State": [
     [
      1507.3,
-     1507.3,
      1491.0,
      1491.0,
      1491.0,
@@ -21015,14 +21315,12 @@
     ],
     [
      1507.3,
-     1507.3,
      1491.0,
      1491.0,
      1491.0,
      1491.0
     ],
     [
-     1507.3,
      1507.3,
      1526.0,
      1526.0,
@@ -21033,33 +21331,36 @@
    "Navy": [
     [
      1445.8,
-     1445.8,
      1451.5,
      1451.5,
      1451.5,
-     1431.3
+     1433.0
     ],
     [
-     1445.8,
-     1445.8,
-     1451.5,
-     1451.5,
-     1451.5,
-     1468.0
-    ],
-    [
-     1445.8,
      1445.8,
      1451.5,
      1451.5,
      1451.5,
      1433.0
+    ],
+    [
+     1445.8,
+     1416.5,
+     1416.5,
+     1416.5,
+     1399.8
     ]
    ],
    "Nebraska": [
     [
      1633.0,
-     1661.6,
+     1626.6,
+     1626.6,
+     1626.6,
+     1626.6
+    ],
+    [
+     1633.0,
      1661.6,
      1661.6,
      1661.6,
@@ -21070,29 +21371,11 @@
      1626.6,
      1626.6,
      1626.6,
-     1626.6,
-     1626.6
-    ],
-    [
-     1633.0,
-     1626.6,
-     1626.6,
-     1626.6,
-     1626.6,
      1626.6
     ]
    ],
    "Nevada": [
     [
-     1301.7,
-     1301.7,
-     1328.9,
-     1328.9,
-     1328.9,
-     1328.9
-    ],
-    [
-     1301.7,
      1301.7,
      1293.9,
      1293.9,
@@ -21101,11 +21384,17 @@
     ],
     [
      1301.7,
+     1293.9,
+     1293.9,
+     1293.9,
+     1293.9
+    ],
+    [
      1301.7,
-     1328.9,
-     1328.9,
-     1328.9,
-     1328.9
+     1293.9,
+     1293.9,
+     1293.9,
+     1293.9
     ]
    ],
    "New Mexico": [
@@ -21114,20 +21403,17 @@
      1570.8,
      1570.8,
      1570.8,
-     1570.8,
      1570.8
     ],
     [
      1559.5,
-     1570.8,
-     1570.8,
-     1570.8,
-     1570.8,
-     1570.8
+     1535.8,
+     1535.8,
+     1535.8,
+     1535.8
     ],
     [
      1559.5,
-     1570.8,
      1570.8,
      1570.8,
      1570.8,
@@ -21137,15 +21423,6 @@
    "New Mexico State": [
     [
      1120.4,
-     1120.4,
-     1145.4,
-     1145.4,
-     1145.4,
-     1145.4
-    ],
-    [
-     1120.4,
-     1120.4,
      1110.4,
      1110.4,
      1110.4,
@@ -21153,6 +21430,12 @@
     ],
     [
      1120.4,
+     1110.4,
+     1110.4,
+     1110.4,
+     1110.4
+    ],
+    [
      1120.4,
      1110.4,
      1110.4,
@@ -21163,7 +21446,6 @@
    "North Carolina": [
     [
      1480.6,
-     1480.6,
      1496.9,
      1496.9,
      1496.9,
@@ -21171,14 +21453,12 @@
     ],
     [
      1480.6,
-     1480.6,
      1496.9,
      1496.9,
      1496.9,
      1496.9
     ],
     [
-     1480.6,
      1480.6,
      1461.9,
      1461.9,
@@ -21189,7 +21469,13 @@
    "North Dakota State": [
     [
      1450.9,
-     1459.7,
+     1424.7,
+     1424.7,
+     1424.7,
+     1424.7
+    ],
+    [
+     1450.9,
      1459.7,
      1459.7,
      1459.7,
@@ -21197,15 +21483,6 @@
     ],
     [
      1450.9,
-     1459.7,
-     1459.7,
-     1459.7,
-     1459.7,
-     1459.7
-    ],
-    [
-     1450.9,
-     1459.7,
      1459.7,
      1459.7,
      1459.7,
@@ -21215,33 +21492,29 @@
    "North Texas": [
     [
      1499.1,
-     1499.1,
-     1474.0,
-     1474.0,
-     1474.0,
-     1474.0
+     1509.0,
+     1509.0,
+     1509.0,
+     1509.0
     ],
     [
-     1499.1,
-     1499.1,
-     1474.0,
-     1474.0,
-     1474.0,
-     1474.0
-    ],
-    [
-     1499.1,
      1499.1,
      1509.0,
      1509.0,
      1509.0,
      1509.0
+    ],
+    [
+     1499.1,
+     1474.0,
+     1474.0,
+     1474.0,
+     1474.0
     ]
    ],
    "Northern Illinois": [
     [
      996.7,
-     996.7,
      1011.9,
      1011.9,
      1011.9,
@@ -21249,14 +21522,12 @@
     ],
     [
      996.7,
-     996.7,
-     1011.9,
-     1011.9,
-     1011.9,
-     1011.9
+     976.9,
+     976.9,
+     976.9,
+     976.9
     ],
     [
-     996.7,
      996.7,
      1011.9,
      1011.9,
@@ -21267,7 +21538,6 @@
    "Northwestern": [
     [
      1573.2,
-     1573.2,
      1554.6,
      1554.6,
      1554.6,
@@ -21275,14 +21545,12 @@
     ],
     [
      1573.2,
-     1573.2,
      1589.6,
      1589.6,
      1589.6,
      1589.6
     ],
     [
-     1573.2,
      1573.2,
      1589.6,
      1589.6,
@@ -21293,7 +21561,6 @@
    "Notre Dame": [
     [
      1881.8,
-     1881.8,
      1884.0,
      1884.0,
      1884.0,
@@ -21301,14 +21568,12 @@
     ],
     [
      1881.8,
-     1881.8,
      1884.0,
      1884.0,
      1884.0,
      1884.0
     ],
     [
-     1881.8,
      1881.8,
      1884.0,
      1884.0,
@@ -21319,23 +21584,20 @@
    "Ohio": [
     [
      1443.0,
-     1426.4,
-     1426.4,
-     1426.4,
-     1426.4,
-     1426.4
-    ],
-    [
-     1443.0,
-     1426.4,
-     1426.4,
-     1426.4,
-     1426.4,
-     1426.4
+     1461.4,
+     1461.4,
+     1461.4,
+     1461.4
     ],
     [
      1443.0,
      1461.4,
+     1461.4,
+     1461.4,
+     1461.4
+    ],
+    [
+     1443.0,
      1461.4,
      1461.4,
      1461.4,
@@ -21345,22 +21607,19 @@
    "Ohio State": [
     [
      1784.0,
-     1784.0,
-     1791.9,
-     1791.9,
-     1791.9,
-     1791.9
+     1756.9,
+     1756.9,
+     1756.9,
+     1756.9
     ],
     [
      1784.0,
-     1784.0,
-     1791.9,
-     1791.9,
-     1791.9,
-     1791.9
+     1756.9,
+     1756.9,
+     1756.9,
+     1756.9
     ],
     [
-     1784.0,
      1784.0,
      1791.9,
      1791.9,
@@ -21371,15 +21630,6 @@
    "Oklahoma": [
     [
      1744.6,
-     1744.6,
-     1728.3,
-     1728.3,
-     1728.3,
-     1728.3
-    ],
-    [
-     1744.6,
-     1744.6,
      1763.3,
      1763.3,
      1763.3,
@@ -21387,6 +21637,12 @@
     ],
     [
      1744.6,
+     1763.3,
+     1763.3,
+     1763.3,
+     1763.3
+    ],
+    [
      1744.6,
      1728.3,
      1728.3,
@@ -21397,7 +21653,6 @@
    "Oklahoma State": [
     [
      1560.7,
-     1560.7,
      1571.8,
      1571.8,
      1571.8,
@@ -21405,14 +21660,12 @@
     ],
     [
      1560.7,
-     1560.7,
      1571.8,
      1571.8,
      1571.8,
      1571.8
     ],
     [
-     1560.7,
      1560.7,
      1571.8,
      1571.8,
@@ -21423,7 +21676,6 @@
    "Old Dominion": [
     [
      1309.9,
-     1309.9,
      1320.4,
      1320.4,
      1320.4,
@@ -21431,19 +21683,17 @@
     ],
     [
      1309.9,
+     1320.4,
+     1320.4,
+     1320.4,
+     1320.4
+    ],
+    [
      1309.9,
      1285.4,
      1285.4,
      1285.4,
      1285.4
-    ],
-    [
-     1309.9,
-     1309.9,
-     1320.4,
-     1320.4,
-     1320.4,
-     1320.4
     ]
    ],
    "Ole Miss": [
@@ -21452,20 +21702,17 @@
      1744.3,
      1744.3,
      1744.3,
+     1744.3
+    ],
+    [
+     1739.8,
+     1744.3,
+     1744.3,
      1744.3,
      1744.3
     ],
     [
      1739.8,
-     1709.3,
-     1709.3,
-     1709.3,
-     1709.3,
-     1709.3
-    ],
-    [
-     1739.8,
-     1744.3,
      1744.3,
      1744.3,
      1744.3,
@@ -21475,7 +21722,6 @@
    "Oregon": [
     [
      1855.7,
-     1855.7,
      1864.1,
      1864.1,
      1864.1,
@@ -21483,14 +21729,12 @@
     ],
     [
      1855.7,
-     1855.7,
-     1829.1,
-     1829.1,
-     1829.1,
-     1829.1
+     1864.1,
+     1864.1,
+     1864.1,
+     1864.1
     ],
     [
-     1855.7,
      1855.7,
      1864.1,
      1864.1,
@@ -21501,6 +21745,12 @@
    "Oregon State": [
     [
      1391.3,
+     1379.9,
+     1379.9,
+     1379.9,
+     1379.9
+    ],
+    [
      1391.3,
      1379.9,
      1379.9,
@@ -21509,25 +21759,15 @@
     ],
     [
      1391.3,
-     1391.3,
-     1414.9,
-     1414.9,
-     1414.9,
-     1414.9
-    ],
-    [
-     1391.3,
-     1391.3,
-     1414.9,
-     1414.9,
-     1414.9,
-     1414.9
+     1379.9,
+     1379.9,
+     1379.9,
+     1379.9
     ]
    ],
    "Penn State": [
     [
      1650.6,
-     1650.6,
      1659.3,
      1659.3,
      1659.3,
@@ -21535,14 +21775,12 @@
     ],
     [
      1650.6,
-     1650.6,
-     1659.3,
-     1659.3,
-     1659.3,
-     1659.3
+     1624.3,
+     1624.3,
+     1624.3,
+     1624.3
     ],
     [
-     1650.6,
      1650.6,
      1624.3,
      1624.3,
@@ -21553,33 +21791,29 @@
    "Pittsburgh": [
     [
      1480.7,
+     1491.2,
+     1491.2,
+     1491.2,
+     1491.2
+    ],
+    [
+     1480.7,
+     1491.2,
+     1491.2,
+     1491.2,
+     1491.2
+    ],
+    [
      1480.7,
      1456.2,
      1456.2,
      1456.2,
      1456.2
-    ],
-    [
-     1480.7,
-     1480.7,
-     1491.2,
-     1491.2,
-     1491.2,
-     1491.2
-    ],
-    [
-     1480.7,
-     1480.7,
-     1491.2,
-     1491.2,
-     1491.2,
-     1491.2
     ]
    ],
    "Purdue": [
     [
      1355.3,
-     1355.3,
      1354.4,
      1354.4,
      1354.4,
@@ -21587,14 +21821,12 @@
     ],
     [
      1355.3,
-     1355.3,
      1354.4,
      1354.4,
      1354.4,
      1354.4
     ],
     [
-     1355.3,
      1355.3,
      1354.4,
      1354.4,
@@ -21605,15 +21837,6 @@
    "Rice": [
     [
      1186.7,
-     1186.7,
-     1212.8,
-     1212.8,
-     1212.8,
-     1212.8
-    ],
-    [
-     1186.7,
-     1186.7,
      1177.8,
      1177.8,
      1177.8,
@@ -21621,6 +21844,12 @@
     ],
     [
      1186.7,
+     1177.8,
+     1177.8,
+     1177.8,
+     1177.8
+    ],
+    [
      1186.7,
      1177.8,
      1177.8,
@@ -21631,15 +21860,6 @@
    "Rutgers": [
     [
      1366.8,
-     1366.8,
-     1349.8,
-     1349.8,
-     1349.8,
-     1349.8
-    ],
-    [
-     1366.8,
-     1366.8,
      1384.8,
      1384.8,
      1384.8,
@@ -21647,17 +21867,22 @@
     ],
     [
      1366.8,
-     1366.8,
      1349.8,
      1349.8,
      1349.8,
      1349.8
+    ],
+    [
+     1366.8,
+     1384.8,
+     1384.8,
+     1384.8,
+     1384.8
     ]
    ],
    "SMU": [
     [
      1603.8,
-     1603.8,
      1585.2,
      1585.2,
      1585.2,
@@ -21665,14 +21890,12 @@
     ],
     [
      1603.8,
-     1603.8,
-     1585.2,
-     1585.2,
-     1585.2,
-     1585.2
+     1620.2,
+     1620.2,
+     1620.2,
+     1620.2
     ],
     [
-     1603.8,
      1603.8,
      1585.2,
      1585.2,
@@ -21683,6 +21906,12 @@
    "Sacramento State": [
     [
      1083.2,
+     1074.7,
+     1074.7,
+     1074.7,
+     1074.7
+    ],
+    [
      1083.2,
      1074.7,
      1074.7,
@@ -21691,25 +21920,15 @@
     ],
     [
      1083.2,
-     1083.2,
-     1074.7,
-     1074.7,
-     1074.7,
-     1074.7
-    ],
-    [
-     1083.2,
-     1083.2,
-     1074.7,
-     1074.7,
-     1074.7,
-     1074.7
+     1109.7,
+     1109.7,
+     1109.7,
+     1109.7
     ]
    ],
    "Sam Houston": [
     [
      1001.5,
-     1001.5,
      995.6,
      995.6,
      995.6,
@@ -21717,14 +21936,12 @@
     ],
     [
      1001.5,
-     1001.5,
-     995.6,
-     995.6,
-     995.6,
-     995.6
+     1030.6,
+     1030.6,
+     1030.6,
+     1030.6
     ],
     [
-     1001.5,
      1001.5,
      995.6,
      995.6,
@@ -21735,15 +21952,6 @@
    "San Diego State": [
     [
      1420.2,
-     1420.2,
-     1434.4,
-     1434.4,
-     1434.4,
-     1434.4
-    ],
-    [
-     1420.2,
-     1420.2,
      1399.4,
      1399.4,
      1399.4,
@@ -21751,6 +21959,12 @@
     ],
     [
      1420.2,
+     1399.4,
+     1399.4,
+     1399.4,
+     1399.4
+    ],
+    [
      1420.2,
      1434.4,
      1434.4,
@@ -21761,7 +21975,13 @@
    "San José State": [
     [
      1210.3,
-     1201.5,
+     1236.5,
+     1236.5,
+     1236.5,
+     1236.5
+    ],
+    [
+     1210.3,
      1201.5,
      1201.5,
      1201.5,
@@ -21769,15 +21989,6 @@
     ],
     [
      1210.3,
-     1201.5,
-     1201.5,
-     1201.5,
-     1201.5,
-     1201.5
-    ],
-    [
-     1210.3,
-     1201.5,
      1201.5,
      1201.5,
      1201.5,
@@ -21787,15 +21998,6 @@
    "South Alabama": [
     [
      1380.0,
-     1357.2,
-     1357.2,
-     1357.2,
-     1357.2,
-     1357.2
-    ],
-    [
-     1380.0,
-     1392.2,
      1392.2,
      1392.2,
      1392.2,
@@ -21806,14 +22008,19 @@
      1357.2,
      1357.2,
      1357.2,
-     1357.2,
      1357.2
+    ],
+    [
+     1380.0,
+     1392.2,
+     1392.2,
+     1392.2,
+     1392.2
     ]
    ],
    "South Carolina": [
     [
      1611.3,
-     1611.3,
      1630.6,
      1630.6,
      1630.6,
@@ -21821,14 +22028,12 @@
     ],
     [
      1611.3,
-     1611.3,
-     1630.6,
-     1630.6,
-     1630.6,
-     1630.6
+     1595.6,
+     1595.6,
+     1595.6,
+     1595.6
     ],
     [
-     1611.3,
      1611.3,
      1595.6,
      1595.6,
@@ -21839,7 +22044,6 @@
    "South Florida": [
     [
      1402.2,
-     1402.2,
      1418.9,
      1418.9,
      1418.9,
@@ -21847,14 +22051,12 @@
     ],
     [
      1402.2,
-     1402.2,
      1383.9,
      1383.9,
      1383.9,
      1383.9
     ],
     [
-     1402.2,
      1402.2,
      1418.9,
      1418.9,
@@ -21865,7 +22067,6 @@
    "Southern Miss": [
     [
      1214.5,
-     1214.5,
      1203.9,
      1203.9,
      1203.9,
@@ -21873,25 +22074,22 @@
     ],
     [
      1214.5,
+     1203.9,
+     1203.9,
+     1203.9,
+     1203.9
+    ],
+    [
      1214.5,
      1238.9,
      1238.9,
      1238.9,
      1238.9
-    ],
-    [
-     1214.5,
-     1214.5,
-     1203.9,
-     1203.9,
-     1203.9,
-     1203.9
     ]
    ],
    "Stanford": [
     [
      1532.5,
-     1532.5,
      1551.0,
      1551.0,
      1551.0,
@@ -21899,14 +22097,12 @@
     ],
     [
      1532.5,
-     1532.5,
-     1551.0,
-     1551.0,
-     1551.0,
-     1551.0
+     1516.0,
+     1516.0,
+     1516.0,
+     1516.0
     ],
     [
-     1532.5,
      1532.5,
      1551.0,
      1551.0,
@@ -21917,7 +22113,6 @@
    "Syracuse": [
     [
      1365.6,
-     1365.6,
      1363.3,
      1363.3,
      1363.3,
@@ -21925,14 +22120,12 @@
     ],
     [
      1365.6,
-     1365.6,
      1363.3,
      1363.3,
      1363.3,
      1363.3
     ],
     [
-     1365.6,
      1365.6,
      1363.3,
      1363.3,
@@ -21942,28 +22135,25 @@
    ],
    "TCU": [
     [
-     1569.5,
-     1564.2,
-     1564.2,
-     1564.2,
-     1564.2,
-     1564.2
+     1555.1,
+     1555.1,
+     1555.1,
+     1555.1,
+     1555.1
     ],
     [
-     1569.5,
-     1564.2,
-     1564.2,
-     1564.2,
-     1564.2,
-     1564.2
+     1555.1,
+     1555.1,
+     1555.1,
+     1555.1,
+     1555.1
     ],
     [
-     1569.5,
-     1564.2,
-     1564.2,
-     1564.2,
-     1564.2,
-     1564.2
+     1555.1,
+     1555.1,
+     1555.1,
+     1555.1,
+     1555.1
     ]
    ],
    "Temple": [
@@ -21972,7 +22162,6 @@
      1133.2,
      1133.2,
      1133.2,
-     1133.2,
      1133.2
     ],
     [
@@ -21980,12 +22169,10 @@
      1133.2,
      1133.2,
      1133.2,
-     1133.2,
      1133.2
     ],
     [
      1135.4,
-     1133.2,
      1133.2,
      1133.2,
      1133.2,
@@ -21995,7 +22182,6 @@
    "Tennessee": [
     [
      1847.0,
-     1847.0,
      1852.9,
      1852.9,
      1852.9,
@@ -22003,14 +22189,12 @@
     ],
     [
      1847.0,
-     1847.0,
      1852.9,
      1852.9,
      1852.9,
      1852.9
     ],
     [
-     1847.0,
      1847.0,
      1852.9,
      1852.9,
@@ -22024,7 +22208,6 @@
      1901.1,
      1901.1,
      1901.1,
-     1901.1,
      1901.1
     ],
     [
@@ -22032,12 +22215,10 @@
      1901.1,
      1901.1,
      1901.1,
-     1901.1,
      1901.1
     ],
     [
      1896.0,
-     1901.1,
      1901.1,
      1901.1,
      1901.1,
@@ -22050,7 +22231,6 @@
      1535.1,
      1535.1,
      1535.1,
-     1535.1,
      1535.1
     ],
     [
@@ -22058,12 +22238,10 @@
      1535.1,
      1535.1,
      1535.1,
-     1535.1,
      1535.1
     ],
     [
      1540.2,
-     1535.1,
      1535.1,
      1535.1,
      1535.1,
@@ -22073,14 +22251,12 @@
    "Texas State": [
     [
      1573.8,
-     1573.8,
      1547.0,
      1547.0,
      1547.0,
      1547.0
     ],
     [
-     1573.8,
      1573.8,
      1582.0,
      1582.0,
@@ -22089,59 +22265,52 @@
     ],
     [
      1573.8,
-     1573.8,
-     1547.0,
-     1547.0,
-     1547.0,
-     1547.0
+     1582.0,
+     1582.0,
+     1582.0,
+     1582.0
     ]
    ],
    "Texas Tech": [
     [
-     1819.6,
-     1824.9,
-     1824.9,
-     1824.9,
-     1824.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0,
+     1834.0,
+     1834.0
     ],
     [
-     1819.6,
-     1824.9,
-     1824.9,
-     1824.9,
-     1824.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0,
+     1834.0,
+     1834.0
     ],
     [
-     1819.6,
-     1824.9,
-     1824.9,
-     1824.9,
-     1824.9,
-     1824.9
+     1834.0,
+     1834.0,
+     1834.0,
+     1834.0,
+     1834.0
     ]
    ],
    "Toledo": [
     [
      1510.9,
-     1527.5,
-     1527.5,
-     1527.5,
-     1527.5,
-     1527.5
-    ],
-    [
-     1510.9,
-     1527.5,
-     1527.5,
-     1527.5,
-     1527.5,
-     1527.5
+     1492.5,
+     1492.5,
+     1492.5,
+     1492.5
     ],
     [
      1510.9,
      1492.5,
+     1492.5,
+     1492.5,
+     1492.5
+    ],
+    [
+     1510.9,
      1492.5,
      1492.5,
      1492.5,
@@ -22151,6 +22320,12 @@
    "Troy": [
     [
      1231.1,
+     1218.8,
+     1218.8,
+     1218.8,
+     1218.8
+    ],
+    [
      1231.1,
      1253.8,
      1253.8,
@@ -22158,15 +22333,6 @@
      1253.8
     ],
     [
-     1231.1,
-     1231.1,
-     1253.8,
-     1253.8,
-     1253.8,
-     1253.8
-    ],
-    [
-     1231.1,
      1231.1,
      1218.8,
      1218.8,
@@ -22177,7 +22343,6 @@
    "Tulane": [
     [
      1434.7,
-     1434.7,
      1418.1,
      1418.1,
      1418.1,
@@ -22185,14 +22350,12 @@
     ],
     [
      1434.7,
-     1434.7,
      1453.1,
      1453.1,
      1453.1,
      1453.1
     ],
     [
-     1434.7,
      1434.7,
      1418.1,
      1418.1,
@@ -22203,58 +22366,58 @@
    "Tulsa": [
     [
      1480.0,
-     1470.6,
-     1470.6,
-     1470.6,
-     1470.6,
-     1470.6
-    ],
-    [
-     1480.0,
-     1470.6,
-     1470.6,
-     1470.6,
-     1470.6,
-     1470.6
-    ],
-    [
-     1480.0,
-     1505.6,
      1505.6,
      1505.6,
      1505.6,
      1505.6
+    ],
+    [
+     1480.0,
+     1470.6,
+     1470.6,
+     1470.6,
+     1470.6
+    ],
+    [
+     1480.0,
+     1470.6,
+     1470.6,
+     1470.6,
+     1470.6
     ]
    ],
    "UAB": [
     [
      1386.8,
-     1386.8,
-     1412.0,
-     1412.0,
-     1412.0,
-     1412.0
+     1377.0,
+     1377.0,
+     1377.0,
+     1377.0
     ],
     [
-     1386.8,
-     1386.8,
-     1412.0,
-     1412.0,
-     1412.0,
-     1412.0
-    ],
-    [
-     1386.8,
      1386.8,
      1377.0,
      1377.0,
      1377.0,
      1377.0
+    ],
+    [
+     1386.8,
+     1412.0,
+     1412.0,
+     1412.0,
+     1412.0
     ]
    ],
    "UCF": [
     [
      1493.3,
+     1473.5,
+     1473.5,
+     1473.5,
+     1473.5
+    ],
+    [
      1493.3,
      1508.5,
      1508.5,
@@ -22262,15 +22425,6 @@
      1508.5
     ],
     [
-     1493.3,
-     1493.3,
-     1508.5,
-     1508.5,
-     1508.5,
-     1508.5
-    ],
-    [
-     1493.3,
      1493.3,
      1473.5,
      1473.5,
@@ -22281,7 +22435,6 @@
    "UCLA": [
     [
      1739.9,
-     1739.9,
      1754.8,
      1754.8,
      1754.8,
@@ -22289,14 +22442,12 @@
     ],
     [
      1739.9,
-     1739.9,
-     1719.8,
-     1719.8,
-     1719.8,
-     1719.8
+     1754.8,
+     1754.8,
+     1754.8,
+     1754.8
     ],
     [
-     1739.9,
      1739.9,
      1754.8,
      1754.8,
@@ -22307,6 +22458,12 @@
    "UConn": [
     [
      1483.6,
+     1498.6,
+     1498.6,
+     1498.6,
+     1498.6
+    ],
+    [
      1483.6,
      1498.6,
      1498.6,
@@ -22315,24 +22472,14 @@
     ],
     [
      1483.6,
-     1483.6,
      1498.6,
      1498.6,
      1498.6,
      1498.6
-    ],
-    [
-     1483.6,
-     1483.6,
-     1463.6,
-     1463.6,
-     1463.6,
-     1463.6
     ]
    ],
    "UL Monroe": [
     [
-     1108.5,
      1108.5,
      1135.0,
      1135.0,
@@ -22341,32 +22488,21 @@
     ],
     [
      1108.5,
-     1108.5,
-     1100.0,
-     1100.0,
-     1100.0,
-     1100.0
+     1135.0,
+     1135.0,
+     1135.0,
+     1135.0
     ],
     [
      1108.5,
-     1108.5,
-     1100.0,
-     1100.0,
-     1100.0,
-     1100.0
+     1135.0,
+     1135.0,
+     1135.0,
+     1135.0
     ]
    ],
    "UNLV": [
     [
-     1469.2,
-     1469.2,
-     1442.0,
-     1442.0,
-     1442.0,
-     1442.0
-    ],
-    [
-     1469.2,
      1469.2,
      1477.0,
      1477.0,
@@ -22375,16 +22511,21 @@
     ],
     [
      1469.2,
+     1477.0,
+     1477.0,
+     1477.0,
+     1477.0
+    ],
+    [
      1469.2,
-     1442.0,
-     1442.0,
-     1442.0,
-     1442.0
+     1477.0,
+     1477.0,
+     1477.0,
+     1477.0
     ]
    ],
    "USC": [
     [
-     1738.0,
      1738.0,
      1723.1,
      1723.1,
@@ -22393,14 +22534,12 @@
     ],
     [
      1738.0,
-     1738.0,
-     1758.1,
-     1758.1,
-     1758.1,
-     1758.1
+     1723.1,
+     1723.1,
+     1723.1,
+     1723.1
     ],
     [
-     1738.0,
      1738.0,
      1723.1,
      1723.1,
@@ -22411,7 +22550,6 @@
    "UTEP": [
     [
      1001.8,
-     1001.8,
      986.5,
      986.5,
      986.5,
@@ -22419,14 +22557,12 @@
     ],
     [
      1001.8,
-     1001.8,
-     986.5,
-     986.5,
-     986.5,
-     986.5
+     1021.5,
+     1021.5,
+     1021.5,
+     1021.5
     ],
     [
-     1001.8,
      1001.8,
      986.5,
      986.5,
@@ -22437,27 +22573,24 @@
    "UTSA": [
     [
      1604.4,
-     1613.7,
-     1613.7,
-     1613.7,
-     1613.7,
-     1613.7
-    ],
-    [
-     1604.4,
-     1613.7,
-     1613.7,
-     1613.7,
-     1613.7,
-     1613.7
-    ],
-    [
-     1604.4,
-     1578.7,
      1578.7,
      1578.7,
      1578.7,
      1578.7
+    ],
+    [
+     1604.4,
+     1613.7,
+     1613.7,
+     1613.7,
+     1613.7
+    ],
+    [
+     1604.4,
+     1613.7,
+     1613.7,
+     1613.7,
+     1613.7
     ]
    ],
    "Utah": [
@@ -22466,7 +22599,6 @@
      1900.0,
      1900.0,
      1900.0,
-     1900.0,
      1900.0
     ],
     [
@@ -22474,12 +22606,10 @@
      1900.0,
      1900.0,
      1900.0,
-     1900.0,
      1900.0
     ],
     [
      1898.6,
-     1900.0,
      1900.0,
      1900.0,
      1900.0,
@@ -22489,14 +22619,12 @@
    "Utah State": [
     [
      1320.4,
-     1320.4,
      1347.1,
      1347.1,
      1347.1,
      1347.1
     ],
     [
-     1320.4,
      1320.4,
      1312.1,
      1312.1,
@@ -22505,17 +22633,15 @@
     ],
     [
      1320.4,
-     1320.4,
-     1347.1,
-     1347.1,
-     1347.1,
-     1347.1
+     1312.1,
+     1312.1,
+     1312.1,
+     1312.1
     ]
    ],
    "Vanderbilt": [
     [
      1518.6,
-     1518.6,
      1512.7,
      1512.7,
      1512.7,
@@ -22523,14 +22649,12 @@
     ],
     [
      1518.6,
-     1518.6,
      1512.7,
      1512.7,
      1512.7,
      1512.7
     ],
     [
-     1518.6,
      1518.6,
      1512.7,
      1512.7,
@@ -22541,15 +22665,6 @@
    "Virginia": [
     [
      1545.6,
-     1545.6,
-     1526.0,
-     1526.0,
-     1526.0,
-     1526.0
-    ],
-    [
-     1545.6,
-     1545.6,
      1561.0,
      1561.0,
      1561.0,
@@ -22557,6 +22672,12 @@
     ],
     [
      1545.6,
+     1561.0,
+     1561.0,
+     1561.0,
+     1561.0
+    ],
+    [
      1545.6,
      1526.0,
      1526.0,
@@ -22567,15 +22688,6 @@
    "Virginia Tech": [
     [
      1454.0,
-     1454.0,
-     1473.6,
-     1473.6,
-     1473.6,
-     1473.6
-    ],
-    [
-     1454.0,
-     1454.0,
      1438.6,
      1438.6,
      1438.6,
@@ -22583,6 +22695,12 @@
     ],
     [
      1454.0,
+     1438.6,
+     1438.6,
+     1438.6,
+     1438.6
+    ],
+    [
      1454.0,
      1473.6,
      1473.6,
@@ -22593,7 +22711,6 @@
    "Wake Forest": [
     [
      1799.6,
-     1799.6,
      1807.3,
      1807.3,
      1807.3,
@@ -22601,14 +22718,12 @@
     ],
     [
      1799.6,
-     1799.6,
-     1772.3,
-     1772.3,
-     1772.3,
-     1772.3
+     1807.3,
+     1807.3,
+     1807.3,
+     1807.3
     ],
     [
-     1799.6,
      1799.6,
      1807.3,
      1807.3,
@@ -22619,7 +22734,6 @@
    "Washington": [
     [
      1707.7,
-     1707.7,
      1699.2,
      1699.2,
      1699.2,
@@ -22627,14 +22741,12 @@
     ],
     [
      1707.7,
-     1707.7,
-     1734.2,
-     1734.2,
-     1734.2,
-     1734.2
+     1699.2,
+     1699.2,
+     1699.2,
+     1699.2
     ],
     [
-     1707.7,
      1707.7,
      1699.2,
      1699.2,
@@ -22645,15 +22757,6 @@
    "Washington State": [
     [
      1305.0,
-     1305.0,
-     1290.7,
-     1290.7,
-     1290.7,
-     1290.7
-    ],
-    [
-     1305.0,
-     1305.0,
      1325.7,
      1325.7,
      1325.7,
@@ -22661,6 +22764,12 @@
     ],
     [
      1305.0,
+     1325.7,
+     1325.7,
+     1325.7,
+     1325.7
+    ],
+    [
      1305.0,
      1290.7,
      1290.7,
@@ -22674,7 +22783,6 @@
      1399.4,
      1399.4,
      1399.4,
-     1399.4,
      1399.4
     ],
     [
@@ -22682,12 +22790,10 @@
      1399.4,
      1399.4,
      1399.4,
-     1399.4,
      1399.4
     ],
     [
      1400.8,
-     1399.4,
      1399.4,
      1399.4,
      1399.4,
@@ -22697,6 +22803,12 @@
    "Western Kentucky": [
     [
      1258.1,
+     1277.3,
+     1277.3,
+     1277.3,
+     1277.3
+    ],
+    [
      1258.1,
      1277.3,
      1277.3,
@@ -22705,19 +22817,10 @@
     ],
     [
      1258.1,
-     1258.1,
-     1277.3,
-     1277.3,
-     1277.3,
-     1277.3
-    ],
-    [
-     1258.1,
-     1258.1,
-     1277.3,
-     1277.3,
-     1277.3,
-     1277.3
+     1242.3,
+     1242.3,
+     1242.3,
+     1242.3
     ]
    ],
    "Western Michigan": [
@@ -22726,7 +22829,6 @@
      1458.1,
      1458.1,
      1458.1,
-     1458.1,
      1458.1
     ],
     [
@@ -22734,11 +22836,9 @@
      1458.1,
      1458.1,
      1458.1,
-     1458.1,
      1458.1
     ],
     [
-     1458.1,
      1458.1,
      1458.1,
      1458.1,
@@ -22749,32 +22849,35 @@
    "Wisconsin": [
     [
      1622.4,
-     1633.3,
-     1633.3,
-     1633.3,
-     1633.3,
-     1633.3
-    ],
-    [
-     1622.4,
-     1633.3,
-     1633.3,
-     1633.3,
-     1633.3,
-     1633.3
-    ],
-    [
-     1622.4,
-     1598.3,
      1598.3,
      1598.3,
      1598.3,
      1598.3
+    ],
+    [
+     1622.4,
+     1633.3,
+     1633.3,
+     1633.3,
+     1633.3
+    ],
+    [
+     1622.4,
+     1633.3,
+     1633.3,
+     1633.3,
+     1633.3
     ]
    ],
    "Wyoming": [
     [
      1382.9,
+     1367.9,
+     1367.9,
+     1367.9,
+     1367.9
+    ],
+    [
      1382.9,
      1367.9,
      1367.9,
@@ -22783,19 +22886,10 @@
     ],
     [
      1382.9,
-     1382.9,
      1367.9,
      1367.9,
      1367.9,
      1367.9
-    ],
-    [
-     1382.9,
-     1382.9,
-     1402.9,
-     1402.9,
-     1402.9,
-     1402.9
     ]
    ]
   }
@@ -35557,10 +35651,10 @@
    {
     "season": 2026,
     "season_type": "regular",
-    "games": 516,
-    "correct": 347,
-    "ll_sum": 314.7609,
-    "brier_sum": 108.3116
+    "games": 517,
+    "correct": 348,
+    "ll_sum": 314.9245,
+    "brier_sum": 108.3344
    }
   ]
  }
