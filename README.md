@@ -71,6 +71,12 @@ which refuses an old or missing draft.
   tiered K-factors, friendlies barely weighted) plus a multinomial outcome
   model with host effects and FIFA-rating squad-strength hooks; predicts the
   2026 World Cup slate (`soccer/`, spec in `soccer/SPEC.md`)
+- **Player comparison (top-5 leagues)** — `/soccer/compare` on the site puts
+  up to five player-seasons side by side with per-90 numbers, percentile bars
+  against positional peers (same season, same position group) and a
+  similar-players list. Data is Understat's player block (goals, shots, key
+  passes, xG, xA, npxG, xGChain, xGBuildup), exported per season by
+  `soccer/clubs/data/understat_players.py` in the daily soccer workflow
 - **European club Elo (top-5 leagues + their second divisions)** — one Elo
   pool per country spanning EPL/Championship, Bundesliga/2. Bundesliga,
   La Liga/Segunda, Serie A/Serie B and Ligue 1/Ligue 2, so promoted clubs

@@ -115,6 +115,19 @@ jobs:
             echo "update_send=$(jq -r '.emails.update.send // false' $MANIFEST)"
           } >> "$GITHUB_OUTPUT"
 
+      # Player seasons for /soccer/compare, from the same Understat league
+      # payloads the pipeline's fetch just cached (so normally no extra
+      # requests). A backfill run exports every season. Never fatal: the
+      # page keeps whatever season files are already committed.
+      - name: Export player seasons
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARGS=(--from-cache)
+          [ "${{ github.event.inputs.understat_all }}" = "true" ] && ARGS+=(--all)
+          python -m soccer.clubs.data.understat_players "${ARGS[@]}"
+
       - name: Commit and push outputs
         shell: bash
         run: |

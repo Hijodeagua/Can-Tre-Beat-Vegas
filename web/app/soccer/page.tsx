@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { fmtTimestamp } from '@/app/lib/format';
 import { getSoccerLatest, type SoccerResultsFreshness } from '@/app/lib/soccer';
 import { accentVars, sportByKey } from '@/app/lib/sports';
@@ -83,6 +84,15 @@ export default function SoccerPage() {
         rating points through Champions/Europa/Conference League matches. MLS runs alongside
         them — its own single-tier pool, ratings and squad economics — but a different
         confederation means it never plays the ten above, so its Elo stays on its own scale.
+      </p>
+
+      <p className="mt-3 text-[14px]">
+        <Link href="/soccer/compare" className="font-semibold" style={{ color: 'var(--th-ink)' }}>
+          Player comparison →
+        </Link>{' '}
+        <span style={{ color: 'var(--th-muted)' }}>
+          per-90 numbers and percentile ranks for any two to five players in the top 5 leagues.
+        </span>
       </p>
 
       <ResultsFreshness fresh={soccer.results_freshness} />
