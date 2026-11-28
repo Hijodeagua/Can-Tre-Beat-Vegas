@@ -110,6 +110,8 @@ export type Mode = 'p90' | 'total';
 export interface StatDef {
   key: string;
   label: string;
+  /** Column header in the similar-players table; defaults to `label`. */
+  short?: string;
   /** Longer explanation, shown as the row's tooltip. */
   hint?: string;
   section: 'Playing time' | 'Shooting' | 'Creation' | 'Possession chains' | 'Discipline';
@@ -141,7 +143,7 @@ export const STATS: StatDef[] = [
 
   { key: 'goals', label: 'Goals', section: 'Shooting', kind: 'count',
     value: (p) => p.goals, digits: { p90: 2, total: 0 }, noSimilarity: true },
-  { key: 'npg', label: 'Non-penalty goals', section: 'Shooting', kind: 'count',
+  { key: 'npg', short: 'npG', label: 'Non-penalty goals', section: 'Shooting', kind: 'count',
     value: (p) => p.npg, digits: { p90: 2, total: 0 } },
   { key: 'xg', label: 'xG', hint: 'Expected goals, penalties included', section: 'Shooting',
     kind: 'count', value: (p) => p.xg, digits: { p90: 2, total: 1 }, noSimilarity: true },
@@ -149,7 +151,7 @@ export const STATS: StatDef[] = [
     kind: 'count', value: (p) => p.npxg, digits: { p90: 2, total: 1 } },
   { key: 'shots', label: 'Shots', section: 'Shooting', kind: 'count',
     value: (p) => p.shots, digits: { p90: 2, total: 0 } },
-  { key: 'npxg_shot', label: 'npxG per shot',
+  { key: 'npxg_shot', short: 'npxG/Sh', label: 'npxG per shot',
     hint: 'Average chance quality. Uses all shots, so penalty takers read slightly low.',
     section: 'Shooting', kind: 'raw', value: (p) => ratio(p.npxg, p.shots),
     digits: { p90: 2, total: 2 } },
@@ -162,7 +164,7 @@ export const STATS: StatDef[] = [
     value: (p) => p.assists, digits: { p90: 2, total: 0 }, noSimilarity: true },
   { key: 'xa', label: 'xA', hint: 'Expected assists: the xG of the shots a player set up',
     section: 'Creation', kind: 'count', value: (p) => p.xa, digits: { p90: 2, total: 1 } },
-  { key: 'key_passes', label: 'Key passes', hint: 'Passes leading directly to a shot',
+  { key: 'key_passes', short: 'KP', label: 'Key passes', hint: 'Passes leading directly to a shot',
     section: 'Creation', kind: 'count', value: (p) => p.key_passes, digits: { p90: 2, total: 0 } },
   { key: 'npxg_xa', label: 'npxG + xA', section: 'Creation', kind: 'count',
     value: (p) => sum(p.npxg, p.xa), digits: { p90: 2, total: 1 }, noSimilarity: true },
@@ -171,7 +173,7 @@ export const STATS: StatDef[] = [
     hint: 'xG of every possession the player touched that ended in a shot',
     section: 'Possession chains', kind: 'count', value: (p) => p.xgchain,
     digits: { p90: 2, total: 1 } },
-  { key: 'xgbuildup', label: 'xGBuildup',
+  { key: 'xgbuildup', short: 'xGBuild', label: 'xGBuildup',
     hint: 'xGChain without the shot and the key pass: involvement earlier in the move',
     section: 'Possession chains', kind: 'count', value: (p) => p.xgbuildup,
     digits: { p90: 2, total: 1 } },
@@ -274,46 +276,61 @@ export function percentile(
 /** Below this many ranked peers a percentile is not shown. */
 export const MIN_POOL = 10;
 
+/** The stats a playing-style profile is made of (everything not flagged `noSimilarity`). */
+export const PROFILE_STATS = STATS.filter((s) => !s.noSimilarity);
+
+export interface SimilarPlayer {
+  player: PlayerSeason;
+  /** 0-100: 100 minus the typical percentile gap to the subject across the profile. */
+  score: number;
+  /** Percentile per PROFILE_STATS entry, same order. */
+  profile: (number | null)[];
+}
+
 /**
- * Nearest statistical neighbours inside the pool: Euclidean distance over
- * z-scored per-90 style stats (shot volume and quality, creation,
- * possession-chain involvement). Returns the closest first, with a 0-100
- * similarity that is only meaningful relative to the others in the list.
+ * Similar players, found from the percentiles themselves: every player in
+ * the pool gets a profile (their per-90 percentile in each PROFILE_STATS
+ * entry, ranked in that same pool), and the closest profiles to the
+ * subject's win. "Closest" is the root-mean-square percentile gap, so two
+ * players who are 90th/85th/40th in the same places match, whatever their
+ * raw numbers. Returns the subject's own profile alongside.
  */
 export function similarPlayers(
   subject: PlayerSeason,
   pool: PlayerSeason[],
-  count = 8,
-): { player: PlayerSeason; score: number }[] {
-  const stats = STATS.filter((s) => !s.noSimilarity);
-  const cols = stats.map((stat) => {
-    const xs = pool.map((p) => statValue(stat, p, 'p90'));
-    const known = xs.filter((x): x is number => x !== null);
-    const mean = known.reduce((a, b) => a + b, 0) / Math.max(1, known.length);
-    const sd = Math.sqrt(
-      known.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, known.length),
-    );
-    return { stat, mean, sd };
-  });
-  const vector = (p: PlayerSeason) =>
-    cols.map(({ stat, mean, sd }) => {
-      const x = statValue(stat, p, 'p90');
-      return x === null || sd === 0 ? 0 : (x - mean) / sd;
-    });
-  const me = vector(subject);
-  const out = pool
+  count = 10,
+): { subject: (number | null)[]; similar: SimilarPlayer[] } {
+  const profile = (p: PlayerSeason) =>
+    PROFILE_STATS.map((stat) => percentile(stat, p, pool, 'p90'));
+  const me = profile(subject);
+  const similar = pool
     .filter((p) => p.key !== subject.key && p.id !== subject.id)
-    .map((p) => {
-      const v = vector(p);
-      const d = Math.sqrt(v.reduce((a, x, i) => a + (x - me[i]) ** 2, 0));
-      return { player: p, d };
+    .map((player) => {
+      const theirs = profile(player);
+      let total = 0;
+      let n = 0;
+      theirs.forEach((x, i) => {
+        const mine = me[i];
+        if (x === null || mine === null) return;
+        total += (x - mine) ** 2;
+        n += 1;
+      });
+      const gap = n ? Math.sqrt(total / n) : 100;
+      return { player, profile: theirs, gap };
     })
-    .sort((a, b) => a.d - b.d)
-    .slice(0, count);
-  // exp(-d / sqrt(k)) maps "identical" to 100 and falls off with distance
-  // in units of one standard deviation per stat.
-  const k = Math.sqrt(cols.length);
-  return out.map(({ player, d }) => ({ player, score: Math.round(100 * Math.exp(-d / k)) }));
+    .sort((a, b) => a.gap - b.gap)
+    .slice(0, count)
+    .map(({ player, profile: theirs, gap }) => ({
+      player, profile: theirs, score: Math.max(0, Math.round(100 - gap)),
+    }));
+  return { subject: me, similar };
+}
+
+/** 1 -> "1st", 92 -> "92nd", 13 -> "13th". */
+export function ordinal(n: number): string {
+  const tens = n % 100;
+  if (tens >= 11 && tens <= 13) return `${n}th`;
+  return `${n}${['th', 'st', 'nd', 'rd'][n % 10] ?? 'th'}`;
 }
 
 /** "José Giménez" matches "jose gim". */

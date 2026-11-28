@@ -373,6 +373,8 @@ class TestChart:
         checkpoint narrower than the last" then compares a point with
         itself. Compare the anchor to the end in that case, and the first
         checkpoint to the end whenever there is one in between."""
+        if not out["chart"]["projection"]:
+            pytest.skip("regular season complete: no run-in to project")
         widths = [
             [hi - lo for _, _, lo, hi in p["points"]]
             for p in out["chart"]["projection"].values()
@@ -392,6 +394,26 @@ class TestChart:
     def test_x_axis_is_matches_not_dates(self, out):
         assert out["chart"]["x_axis"] == "matches_played"
         assert out["chart"]["season_matches"] == mls.MATCHES_PER_CLUB
+
+
+class TestCompletedSeason:
+    """Once the last regular-season matchday is in, every club is on
+    MATCHES_PER_CLUB and the run-in is empty. The forecast still has to
+    run (it simulates the playoffs from the final table) and must not
+    try to read a projection checkpoint that was never taken."""
+
+    def test_a_finished_regular_season_forecasts_without_a_projection(
+            self, results):
+        out = F.forecast(results, "2025", n_sims=50, seed=1)
+        assert out["remaining_matches"] == 0
+        assert out["chart"]["projection"] == {}
+        assert len(out["chart"]["history"]) == len(mls.CONFERENCE)
+        assert len(out["clubs"]) == len(mls.CONFERENCE)
+        for c in out["clubs"]:
+            assert c["remaining"] == 0
+            assert c["exp_points"] == pytest.approx(c["points"])
+        assert sum(c["p_cup"] for c in out["clubs"]) == pytest.approx(
+            1.0, abs=0.02)
 
 
 class TestBracketPayload:

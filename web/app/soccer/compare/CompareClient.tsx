@@ -12,7 +12,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   fmtStat, fold, GROUP_LABEL, loadIndex, loadSeason, MIN_POOL, minutesFloor, peerPool,
-  percentile, similarPlayers, STATS, statValue,
+  ordinal, percentile, PROFILE_STATS, similarPlayers, STATS, statValue,
   type MinutesRule, type Mode, type PlayerIndex, type PlayerSeason, type PositionGroup,
   type Scope, type SeasonEntry,
 } from '@/app/lib/players';
@@ -37,6 +37,11 @@ function writeKeys(keys: string[]) {
   else url.searchParams.delete('p');
   // The keys are plain [0-9a-z_:,] - keep them readable rather than %-encoded.
   window.history.replaceState(null, '', url.toString().replace(/%3A/gi, ':').replace(/%2C/gi, ','));
+}
+
+/** "Goals" -> "goals" inside a sentence; "xG" and "npxG + xA" are left alone. */
+function plain(label: string): string {
+  return /^[A-Z][a-z -]+$/.test(label) ? label.toLowerCase() : label;
 }
 
 function Notice({ children }: { children: React.ReactNode }) {
@@ -323,11 +328,22 @@ export default function CompareClient() {
     [selected, seasons, groupRule, minutes, scope],
   );
 
+  // The first column is the subject: it gets the written summary and the
+  // similar-players search. Both always read per-90 percentiles.
+  const subject = columns[0];
+  const report = useMemo(() => {
+    if (!subject || !subject.group || subject.pool.length < MIN_POOL) return null;
+    const ranked = STATS
+      .filter((s) => !s.noRank && !s.lowerBetter && s.key !== 'min')
+      .map((stat) => ({ stat, pct: percentile(stat, subject.player, subject.pool, 'p90') }))
+      .filter((r): r is { stat: (typeof STATS)[number]; pct: number } => r.pct !== null)
+      .sort((a, b) => b.pct - a.pct);
+    return { top: ranked.slice(0, 3), low: ranked[ranked.length - 1] };
+  }, [subject]);
   const similar = useMemo(() => {
-    const first = columns[0];
-    if (!first || first.pool.length < MIN_POOL) return [];
-    return similarPlayers(first.player, first.pool.filter((p) => p.min >= first.floor));
-  }, [columns]);
+    if (!subject || !subject.group || subject.pool.length < MIN_POOL) return null;
+    return similarPlayers(subject.player, subject.pool);
+  }, [subject]);
 
   const add = (p: PlayerSeason) => {
     setKeys((prev) => (prev.includes(p.key) || prev.length >= MAX_PLAYERS ? prev : [...prev, p.key]));
@@ -395,6 +411,32 @@ export default function CompareClient() {
             ? 'Loading the linked players…'
             : 'Search for a player above to start a comparison. Add the same player from two seasons to see how they changed.'}
         </Notice>
+      )}
+
+      {subject && report && report.top.length > 0 && subject.group && (
+        <p
+          className="mt-5 rounded-lg border px-4 py-3 text-[15px] leading-normal"
+          style={{ borderColor: 'var(--th-border)', background: 'var(--th-card)', color: 'var(--th-ink)' }}
+        >
+          <b>{subject.player.name}</b> is in the{' '}
+          {report.top.map((r, i) => (
+            <span key={r.stat.key}>
+              {i > 0 && (i === report.top.length - 1 ? ' and ' : ', ')}
+              <b>{ordinal(r.pct)}{i === 0 ? ' percentile' : ''}</b>
+              {i === 0 ? ` of ${GROUP_LABEL[subject.group as PositionGroup].toLowerCase()}` : ''} for{' '}
+              {plain(r.stat.label)}
+            </span>
+          ))}
+          {report.low && report.low.pct < report.top[report.top.length - 1].pct
+            ? `; lowest is ${plain(report.low.stat.label)} (${ordinal(report.low.pct)}).`
+            : '.'}{' '}
+          <span className="text-[13px]" style={{ color: 'var(--th-muted)' }}>
+            Per 90, against {subject.pool.length}{' '}
+            {GROUP_LABEL[subject.group as PositionGroup].toLowerCase()} with {subject.floor}+ minutes
+            in {scope === 'top5' ? 'the top 5 leagues' : leagueName(subject.player.league)},{' '}
+            {subject.player.seasonLabel}.
+          </span>
+        </p>
       )}
 
       {columns.length > 0 && (
@@ -480,53 +522,79 @@ export default function CompareClient() {
         </p>
       )}
 
-      {similar.length > 0 && (
+      {subject && similar && similar.similar.length > 0 && (
         <section className="mt-8">
           <h3 className="pixel m-0 text-[10px]" style={{ color: 'var(--th-ink)' }}>
-            SIMILAR TO {columns[0].player.name.toUpperCase()}
+            PLAYERS LIKE {subject.player.name.toUpperCase()}
           </h3>
-          <p className="mt-2 text-[12px]" style={{ color: 'var(--th-muted)' }}>
-            Closest statistical profiles in {columns[0].player.seasonLabel} among the same peer
-            group, on per-90 shooting, creation and build-up numbers. Style, not quality.
+          <p className="mt-2 text-[12px] leading-normal" style={{ color: 'var(--th-muted)' }}>
+            Found from the percentiles: each number below is that player’s per-90 percentile
+            among the same {subject.pool.length} peers, and the match score is 100 minus the
+            typical gap to {subject.player.name}’s row. It measures a similar shape of game, not
+            equal quality.
           </p>
-          <ul className="m-0 mt-3 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2">
-            {similar.map(({ player, score }) => {
-              const used = taken.has(player.key);
-              const full = keys.length >= MAX_PLAYERS;
-              return (
-                <li
-                  key={player.key}
-                  className="flex items-center justify-between gap-3 rounded-md border px-3 py-2"
-                  style={{ borderColor: 'var(--th-border)', background: 'var(--th-card)' }}
-                >
-                  <div className="min-w-0">
-                    <div className="truncate text-[14px] font-semibold">{player.name}</div>
-                    <div className="truncate text-[12px]" style={{ color: 'var(--th-muted)' }}>
-                      {player.team} · {leagueName(player.league)} · {player.min.toLocaleString()}′
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <span className="text-[13px] tabular-nums" style={{ color: 'var(--th-muted)' }}>
-                      {score}
-                    </span>
-                    <button
-                      type="button"
-                      disabled={used || full}
-                      onClick={() => add(player)}
-                      className="rounded-md border px-2.5 py-1 text-[13px]"
-                      style={{
-                        borderColor: 'var(--th-border)',
-                        color: used || full ? 'var(--th-faint)' : 'var(--th-ink)',
-                        background: 'var(--th-inset)',
-                      }}
+          <div
+            className="mt-3 overflow-x-auto rounded-lg border"
+            style={{ borderColor: 'var(--th-border)', background: 'var(--th-card)' }}
+          >
+            <table className="w-full border-collapse text-[13px]" style={{ color: 'var(--th-ink)' }}>
+              <thead>
+                <tr style={{ background: 'var(--th-head-bg)', color: 'var(--th-head-ink)' }}>
+                  <th scope="col" className="px-3 py-2 text-left text-[12px] font-medium">Player</th>
+                  <th scope="col" className="px-2 py-2 text-right text-[12px] font-medium">Match</th>
+                  {PROFILE_STATS.map((stat) => (
+                    <th
+                      key={stat.key}
+                      scope="col"
+                      title={stat.hint ?? stat.label}
+                      className="px-2 py-2 text-right text-[12px] font-medium"
                     >
-                      {used ? 'Added' : 'Compare'}
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                      {stat.short ?? stat.label}
+                    </th>
+                  ))}
+                  <th scope="col" aria-label="Compare" className="px-3 py-2" />
+                </tr>
+              </thead>
+              <tbody>
+                <ProfileRow
+                  name={subject.player.name}
+                  sub={`${subject.player.team} · ${leagueName(subject.player.league)}`}
+                  profile={similar.subject}
+                  color={subject.color}
+                  highlight
+                />
+                {similar.similar.map(({ player, score, profile }) => {
+                  const used = taken.has(player.key);
+                  const full = keys.length >= MAX_PLAYERS;
+                  return (
+                    <ProfileRow
+                      key={player.key}
+                      name={player.name}
+                      sub={`${player.team} · ${leagueName(player.league)} · ${player.min.toLocaleString()}′`}
+                      profile={profile}
+                      score={score}
+                      color={subject.color}
+                      action={
+                        <button
+                          type="button"
+                          disabled={used || full}
+                          onClick={() => add(player)}
+                          className="rounded-md border px-2.5 py-1 text-[13px]"
+                          style={{
+                            borderColor: 'var(--th-border)',
+                            color: used || full ? 'var(--th-faint)' : 'var(--th-ink)',
+                            background: 'var(--th-inset)',
+                          }}
+                        >
+                          {used ? 'Added' : 'Compare'}
+                        </button>
+                      }
+                    />
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </section>
       )}
 
@@ -603,5 +671,50 @@ function SectionRows({ section, columns, mode }: { section: string; columns: Col
         );
       })}
     </>
+  );
+}
+
+/**
+ * One line of the similar-players table: a percentile per profile stat,
+ * each shaded by its size so two rows with the same shape look alike at a
+ * glance. The shade is the subject's series colour at pct% strength.
+ */
+function ProfileRow({
+  name, sub, profile, score, color, action, highlight,
+}: {
+  name: string;
+  sub: string;
+  profile: (number | null)[];
+  score?: number;
+  color: string;
+  action?: React.ReactNode;
+  highlight?: boolean;
+}) {
+  const border = { borderColor: 'var(--th-border)' };
+  return (
+    <tr style={highlight ? { background: 'var(--th-zebra)' } : undefined}>
+      <th scope="row" className="min-w-[170px] border-t px-3 py-2 text-left font-normal" style={border}>
+        <div className="text-[14px] font-semibold">{name}</div>
+        <div className="text-[12px]" style={{ color: 'var(--th-muted)' }}>{sub}</div>
+      </th>
+      <td className="border-t px-2 py-2 text-right font-semibold tabular-nums" style={border}>
+        {score ?? ''}
+      </td>
+      {profile.map((pct, i) => (
+        <td key={i} className="border-t px-1 py-2 text-right tabular-nums" style={border}>
+          <span
+            className="inline-block min-w-[34px] rounded-sm px-1.5 py-0.5 text-center"
+            style={{
+              background: pct === null
+                ? 'transparent'
+                : `color-mix(in srgb, ${color} ${Math.round(pct * 0.45)}%, transparent)`,
+            }}
+          >
+            {pct ?? '—'}
+          </span>
+        </td>
+      ))}
+      <td className="border-t px-3 py-2 text-right" style={border}>{action}</td>
+    </tr>
   );
 }

@@ -36,9 +36,10 @@ export default function ComparePage() {
         className="mt-4 text-[14px] leading-normal"
         style={{ color: 'var(--th-muted)', textWrap: 'pretty' } as React.CSSProperties}
       >
-        Put up to five player-seasons side by side. Every number comes with a percentile bar:
-        where that player ranks among players at the same position, in the same season, across
-        the Premier League, La Liga, Bundesliga, Serie A and Ligue 1.
+        Search a player to get their scouting report: where they rank, as a percentile, among
+        players at the same position in the same season across the Premier League, La Liga,
+        Bundesliga, Serie A and Ligue 1. Those percentiles are then used to find the players
+        most like them, and any of them can be added alongside to compare (up to five).
       </p>
 
       <CompareClient />

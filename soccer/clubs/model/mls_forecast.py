@@ -248,6 +248,12 @@ def _projection_block(snaps: np.ndarray, clubs: list[str], index: dict,
     Each series opens on the club's live rating so the projection joins
     the history line instead of floating beside it.
     """
+    if snaps.shape[0] == 0:
+        # Regular season complete: every club is on MATCHES_PER_CLUB, so
+        # there is no run-in to project and no checkpoint to read a
+        # median, band or sample from. The chart keeps its history and
+        # simply draws no projection.
+        return {}
     n_sims = snaps.shape[1]
     mid = n_sims // 2
     median_sim = np.argsort(snaps[-1], axis=0)[mid]
